@@ -102,14 +102,14 @@ const createPathProfile = (index: number): PathProfile => {
   const flattenStrength = randomInRange(1.9, 2.7);
   const flattenThreshold = randomInRange(0.38, 0.55);
 
-  // Calmer noise
+  // More organic noise
   const tangleFreq = randomInRange(3.8, 6.2);
   const tanglePhase = randomInRange(0, Math.PI * 2);
-  const tangleAmplitude = randomInRange(0.006, 0.015);
+  const tangleAmplitude = randomInRange(0.018, 0.042);  // 3x more wavy
 
   const lateralFreq = randomInRange(2.0, 3.4);
   const lateralPhase = randomInRange(0, Math.PI * 2);
-  const lateralAmp = randomInRange(0.008, 0.022);
+  const lateralAmp = randomInRange(0.025, 0.055);  // more horizontal flow
 
   const neutralDrift = randomInRange(-0.03, 0.03);
 
@@ -127,19 +127,19 @@ const createPathProfile = (index: number): PathProfile => {
     const noise =
       (Math.sin(t * tangleFreq + tanglePhase) * tangleAmplitude +
         Math.sin(t * tangleFreq * 0.5 + tanglePhase * 1.7) * (tangleAmplitude * 0.55)) *
-      clamp(0.35 + tightness * 0.75, 0.35, 1.0);
+      clamp(0.55 + tightness * 0.85, 0.55, 1.4);  // more noise influence
     const lateralShift =
-      Math.sin(t * lateralFreq + lateralPhase) * lateralAmp * (0.6 + t * 0.7);
+      Math.sin(t * lateralFreq + lateralPhase) * lateralAmp * (0.8 + t * 0.9);  // stronger shifts
 
     if (i <= pivotIndex) {
       const preP = clamp(t / PRESENT_X, 0, 1);
       const converge = Math.pow(preP, 1.35);
       const sharedY = clamp(
-        lerp(baseY, PIVOT_Y, converge) + noise * 0.45,
+        lerp(baseY, PIVOT_Y, converge) + noise * 0.85,  // more vertical wave
         0.04,
         0.96,
       );
-      const pt: Point = { x: xBase + lateralShift * 0.5, y: sharedY };
+      const pt: Point = { x: xBase + lateralShift * 0.8, y: sharedY };  // more horizontal wave
       neutral.push(pt);
       up.push(pt);
       down.push(pt);
@@ -149,13 +149,13 @@ const createPathProfile = (index: number): PathProfile => {
     const postP = clamp((t - PRESENT_X) / (1 - PRESENT_X), 0, 1);
 
     const neutralY = clamp(
-      PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.32,
+      PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.72,  // wavier
       0.04,
       0.96,
     );
 
     const upY = clamp(
-      PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.5,
+      PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85,  // more organic curve
       0.02,
       0.50,
     );
@@ -163,14 +163,14 @@ const createPathProfile = (index: number): PathProfile => {
     const downProgress = clamp(postP / flattenThreshold, 0, 1);
     const downShape = Math.pow(downProgress, flattenStrength);
     const downY = clamp(
-      PIVOT_Y + downDepth * downShape + noise * 0.50,
+      PIVOT_Y + downDepth * downShape + noise * 0.90,  // wavier descent
       0.06,
       0.96,
     );
 
-    neutral.push({ x: xBase + lateralShift * 0.45, y: neutralY });
-    up.push({ x: xBase + lateralShift, y: upY });
-    down.push({ x: xBase + lateralShift * 0.65, y: downY });
+    neutral.push({ x: xBase + lateralShift * 0.75, y: neutralY });  // more flow
+    up.push({ x: xBase + lateralShift * 1.2, y: upY });  // more horizontal movement
+    down.push({ x: xBase + lateralShift * 0.95, y: downY });  // more flow
   }
 
   return { neutral, up, down };
@@ -196,10 +196,10 @@ const spawnThread = (id: number, now: number): Thread => {
     id,
     path: pathProfile,
     float: {
-      amplitude: randomInRange(0.012, 0.024),     // stronger vertical sway
+      amplitude: randomInRange(0.028, 0.052),     // much more vertical flow
       speed: randomInRange(0.28, 0.64),           // quicker wobble
       phase: randomInRange(0, Math.PI * 2),
-      horizontalAmp: randomInRange(0.006, 0.016),
+      horizontalAmp: randomInRange(0.018, 0.038), // more horizontal drift
       horizontalPhase: randomInRange(0, Math.PI * 2),
       swaySpeed: randomInRange(0.16, 0.42),
     },
@@ -285,7 +285,7 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
 
       const afterMorph = Math.max(0, timestamp - thread.settleStart);
       const settleProgress = clamp(afterMorph / thread.settleMs, 0, 1);
-      const damping = 0.20 + 0.80 * Math.pow(1 - settleProgress, 1.4);
+      const damping = 0.50 + 0.50 * Math.pow(1 - settleProgress, 1.4);  // keep more motion
 
       const time = timestamp / 1000;
 
@@ -389,10 +389,10 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
       thread.settleMs = nextDirection === "up"
         ? 15000 + randomInRange(-2400, 3200)
         : 10000 + randomInRange(-2000, 2800);
-      thread.float.amplitude = randomInRange(0.016, 0.030);
+      thread.float.amplitude = randomInRange(0.035, 0.062);  // increased flow
       thread.float.speed = randomInRange(0.32, 0.78);
       thread.float.phase = randomInRange(0, Math.PI * 2);
-      thread.float.horizontalAmp = randomInRange(0.010, 0.022);
+      thread.float.horizontalAmp = randomInRange(0.022, 0.045);  // more drift
       thread.float.horizontalPhase = randomInRange(0, Math.PI * 2);
       thread.float.swaySpeed = randomInRange(0.20, 0.48);
     };
@@ -465,7 +465,7 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
 
         const afterMorph = Math.max(0, timestamp - thread.settleStart);
         const settleProgress = clamp(afterMorph / thread.settleMs, 0, 1);
-        const damping = 0.20 + 0.80 * Math.pow(1 - settleProgress, 1.4);
+        const damping = 0.50 + 0.50 * Math.pow(1 - settleProgress, 1.4);  // keep more motion
 
         const time = timestamp / 1000;
 
