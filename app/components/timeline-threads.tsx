@@ -21,8 +21,6 @@ type PathProfile = {
 
 type Direction = "up" | "down";
 
-type PathKey = "neutral" | Direction;
-
 type Thread = {
   id: number;
   path: PathProfile;
@@ -44,8 +42,8 @@ type Thread = {
   opacityBase: number;      // base opacity per-thread
   currentDirection: Direction;
   transition: {
-    from: PathKey;
-    to: Direction;
+    fromPath: Point[];      // snapshot of actual positions at transition start
+    toPath: Point[];        // target path generated from current state
     start: number;
     duration: number;
   };
@@ -191,9 +189,12 @@ const spawnThread = (id: number, now: number): Thread => {
   const direction: Direction = Math.random() < UP_FRACTION ? "up" : "down";
   const morphDuration = DURATION_MS + randomInRange(-1200, 1400);
 
+  const pathProfile = createPathProfile(id);
+  const targetPath = direction === "up" ? pathProfile.up : pathProfile.down;
+
   return {
     id,
-    path: createPathProfile(id),
+    path: pathProfile,
     float: {
       amplitude: randomInRange(0.012, 0.024),     // stronger vertical sway
       speed: randomInRange(0.28, 0.64),           // quicker wobble
@@ -210,8 +211,8 @@ const spawnThread = (id: number, now: number): Thread => {
     opacityBase: clamp(0.26 + id / (THREAD_COUNT * 6), 0.30, 0.44),
     currentDirection: direction,
     transition: {
-      from: "neutral",
-      to: direction,
+      fromPath: pathProfile.neutral,
+      toPath: targetPath,
       start: now - morphDuration,
       duration: morphDuration,
     },
@@ -228,7 +229,7 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const threadsRef = useRef<Thread[]>([]);
-  const animationIdRef = useRef<number>();
+  const animationIdRef = useRef<number | undefined>(undefined);
   const initializedRef = useRef(false);
   const nextTransitionAtRef = useRef<number | null>(null);
 
@@ -269,26 +270,116 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
     observer = ro;
     observer?.observe(container);
 
-    const getPathPoints = (thread: Thread, key: PathKey) => {
-      switch (key) {
-        case "up":
-          return thread.path.up;
-        case "down":
-          return thread.path.down;
-        default:
-          return thread.path.neutral;
+    // Calculate thread's actual current positions (normalized 0-1 coords)
+    const calculateCurrentPositions = (thread: Thread, timestamp: number): Point[] => {
+      const transition = thread.transition;
+      const fromPath = transition.fromPath;
+      const toPath = transition.toPath;
+
+      const duration = Math.max(transition.duration, 1);
+      const rawProgress = clamp((timestamp - transition.start) / duration, 0, 1);
+      const easedProgress =
+        thread.currentDirection === "up"
+          ? slowFastSettle(rawProgress)
+          : easeInCubic(rawProgress);
+
+      const afterMorph = Math.max(0, timestamp - thread.settleStart);
+      const settleProgress = clamp(afterMorph / thread.settleMs, 0, 1);
+      const damping = 0.20 + 0.80 * Math.pow(1 - settleProgress, 1.4);
+
+      const time = timestamp / 1000;
+
+      // Note: We need canvas dimensions but we're calculating normalized coords
+      // So we'll apply float in normalized space (small values)
+      const floatOffset =
+        Math.sin(time * thread.float.speed + thread.float.phase) *
+        (thread.float.amplitude * damping);
+      const horizontalSway =
+        Math.sin(time * thread.float.swaySpeed + thread.float.horizontalPhase) *
+        (thread.float.horizontalAmp * damping);
+
+      return toPath.map((target, idx) => {
+        const base = fromPath[idx];
+        const x = lerp(base.x, target.x, easedProgress);
+        const y = lerp(base.y, target.y, easedProgress);
+
+        const floatInfluence = 0.22 + (idx / SEGMENTS) * 0.78;
+        const turbulence =
+          Math.sin(
+            time * (0.38 + thread.float.speed * 0.6) +
+              idx * 0.14 +
+              thread.float.phase,
+          ) *
+          (thread.float.amplitude * damping) *
+          0.34;
+
+        return {
+          x: x + floatOffset * floatInfluence * 0.12 + horizontalSway * (0.4 + (idx / SEGMENTS) * 0.45),
+          y: y + floatOffset * floatInfluence + turbulence,
+        };
+      });
+    };
+
+    // Generate a physically plausible target path from current positions
+    const generateTargetPath = (
+      currentPositions: Point[],
+      direction: Direction,
+      thread: Thread,
+    ): Point[] => {
+      const targetPath: Point[] = [];
+      const pivotIndex = Math.round(PRESENT_X * (SEGMENTS - 1));
+
+      const upRise = randomInRange(0.38, 0.68);
+      const downDepth = randomInRange(0.28, 0.40);
+      const upCurve = randomInRange(0.35, 0.55);
+      const flattenStrength = randomInRange(1.9, 2.7);
+      const flattenThreshold = randomInRange(0.38, 0.55);
+
+      for (let i = 0; i < SEGMENTS; i++) {
+        const t = i / (SEGMENTS - 1);
+
+        // Pre-pivot: keep current positions (thread hasn't moved here yet)
+        if (i <= pivotIndex) {
+          targetPath.push({ ...currentPositions[i] });
+          continue;
+        }
+
+        // Post-pivot: generate new target based on direction
+        const postP = clamp((t - PRESENT_X) / (1 - PRESENT_X), 0, 1);
+        const pivotY = currentPositions[pivotIndex].y;
+        const currentX = currentPositions[i].x;
+
+        if (direction === "up") {
+          // Sharp rise from pivot that tapers off - looks like pulling up
+          const riseAmount = upRise * Math.pow(postP, upCurve);
+          const targetY = clamp(pivotY - riseAmount, 0.02, 0.50);
+          targetPath.push({ x: currentX, y: targetY });
+        } else {
+          // Gradual sink from pivot with flattening - looks like falling down
+          const sinkProgress = clamp(postP / flattenThreshold, 0, 1);
+          const sinkShape = Math.pow(sinkProgress, flattenStrength);
+          const targetY = clamp(pivotY + downDepth * sinkShape, 0.06, 0.96);
+          targetPath.push({ x: currentX, y: targetY });
+        }
       }
+
+      return targetPath;
     };
 
     const retargetThread = (thread: Thread, nextDirection: Direction, now: number) => {
-      const from: PathKey = thread.transition.to;
+      // Snapshot current actual positions (including float/turbulence)
+      const currentPositions = calculateCurrentPositions(thread, now);
+
+      // Generate physically plausible target path from current state
+      const targetPath = generateTargetPath(currentPositions, nextDirection, thread);
+
       const duration = nextDirection === "up"
         ? randomInRange(5600, 8200)
         : randomInRange(4200, 6400);
 
       thread.transition = {
-        from: from,
-        to: nextDirection,
+        fromPath: currentPositions,
+        toPath: targetPath,
         start: now,
         duration,
       };
@@ -362,13 +453,13 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
       for (let i = 0; i < threadsRef.current.length; i++) {
         const thread = threadsRef.current[i];
         const transition = thread.transition;
-        const from = getPathPoints(thread, transition.from);
-        const to = getPathPoints(thread, transition.to);
+        const from = transition.fromPath;
+        const to = transition.toPath;
 
         const duration = Math.max(transition.duration, 1);
         const rawProgress = clamp((timestamp - transition.start) / duration, 0, 1);
         const easedProgress =
-          transition.to === "up"
+          thread.currentDirection === "up"
             ? slowFastSettle(rawProgress)
             : easeInCubic(rawProgress);
 
@@ -441,10 +532,11 @@ export default function TimelineThreads({ className }: TimelineThreadsProps) {
 
         if (thread.isTransitioning && rawProgress >= 1) {
           thread.isTransitioning = false;
+          // Transition complete - lock to current position
           thread.transition = {
-            from: transition.to,
-            to: transition.to,
-            start: timestamp - 1,
+            fromPath: transition.toPath,
+            toPath: transition.toPath,
+            start: timestamp,
             duration: 1,
           };
           thread.settleStart = timestamp;
