@@ -3,9 +3,22 @@
 :root {
   --background: #f5f5f5;
   --foreground: #1a1a1a;
-  --color-accent-primary: #5515e0;
-  --color-accent-secondary: #9ba6fd;
-  --color-accent-tertiary: #b503a9;
+
+  /* Primary purple - main brand color */
+  --color-accent-primary: #9275E5;
+  --color-accent-primary-hover: #7557C7;
+
+  /* Secondary purple-blue - softer complement */
+  --color-accent-secondary: #A8C5FF;
+
+  /* Tertiary purple-pink - accent highlights */
+  --color-accent-tertiary: #C77DDA;
+
+  /* Semantic colors */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+
   --surface-card: #ffffff;
 }
 

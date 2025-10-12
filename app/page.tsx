@@ -118,7 +118,7 @@ export default function Home() {
               })}
             </div>
             <a
-              className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
+              className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
               href="#get-involved"
             >
               {isEnglish ? "Join Us" : "Únete"}
@@ -129,10 +129,10 @@ export default function Home() {
 
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         <section
-          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#f6f0ff] via-[#f5f5f5] to-[#9ba6fd1f] px-6 py-16 sm:px-16"
+          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 sm:px-16"
           id="about"
         >
-          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9ba6fd33] blur-3xl lg:block" />
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-6 max-w-3xl">
             <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
               {isEnglish ? "Mission" : "Misión"}
@@ -201,7 +201,7 @@ export default function Home() {
 
             <div>
               <a
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
                 href="https://baish.com.ar/#get-involved"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -343,7 +343,7 @@ export default function Home() {
                   <p className="text-sm text-slate-600">{activity.description}</p>
                 </div>
                 <div className="mt-6 space-y-3">
-                  <span className="inline-flex rounded-full bg-[#9ba6fd1f] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
+                  <span className="inline-flex rounded-full bg-[#9275E51a] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
                     {activity.status}
                   </span>
                   <a
@@ -437,7 +437,7 @@ export default function Home() {
                 type="email"
               />
               <button
-                className="w-full rounded-xl bg-[var(--color-accent-primary)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
+                className="w-full rounded-xl bg-[var(--color-accent-primary)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-primary-hover)]"
                 type="submit"
               >
                 {isEnglish ? "Subscribe" : "Suscribirse"}
