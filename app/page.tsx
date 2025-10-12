@@ -53,7 +53,7 @@ export default function Home() {
     return (
       <sup className="align-super text-xs">
         <a
-          className="text-emerald-600 hover:text-emerald-500"
+          className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
           href={note.href}
           rel="noopener noreferrer"
           target="_blank"
@@ -67,11 +67,11 @@ export default function Home() {
   const isEnglish = language === "en";
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4 sm:px-10">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white font-semibold">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-white font-semibold shadow-sm">
               B
             </div>
             <div>
@@ -98,7 +98,7 @@ export default function Home() {
             </a>
           </nav>
           <div className="flex items-center gap-3">
-            <div className="flex rounded-full border border-slate-200 p-1">
+            <div className="flex rounded-full border border-slate-200 bg-white/70 p-1">
               {LANGUAGES.map((lang) => {
                 const active = lang.code === language;
                 return (
@@ -106,7 +106,7 @@ export default function Home() {
                     key={lang.code}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
-                        ? "bg-emerald-600 text-white shadow-sm"
+                        ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
                         : "text-slate-600 hover:text-slate-900"
                     }`}
                     onClick={() => setLanguage(lang.code)}
@@ -118,7 +118,7 @@ export default function Home() {
               })}
             </div>
             <a
-              className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-400"
+              className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
               href="#get-involved"
             >
               {isEnglish ? "Join Us" : "Únete"}
@@ -127,14 +127,14 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
+      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         <section
-          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-emerald-50 via-white to-sky-100 px-6 py-16 sm:px-16"
+          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#f6f0ff] via-[#f5f5f5] to-[#9ba6fd1f] px-6 py-16 sm:px-16"
           id="about"
         >
-          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-emerald-200/50 blur-3xl lg:block" />
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9ba6fd33] blur-3xl lg:block" />
           <div className="relative space-y-6 max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.4em] text-emerald-500">
+            <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
               {isEnglish ? "Mission" : "Misión"}
             </p>
             <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
@@ -201,7 +201,7 @@ export default function Home() {
 
             <div>
               <a
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
                 href="https://baish.com.ar/#get-involved"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -218,7 +218,7 @@ export default function Home() {
           id="events"
         >
           <div className="space-y-4 text-center">
-            <p className="text-sm uppercase tracking-[0.4em] text-emerald-500">
+            <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
               {isEnglish ? "Upcoming Events" : "Próximos Eventos"}
             </p>
             <h2 className="text-3xl font-semibold text-slate-900">
@@ -264,7 +264,7 @@ export default function Home() {
                 className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6"
               >
                 <div className="space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
                     {event.date}
                   </p>
                   <h3 className="text-lg font-semibold text-slate-900">
@@ -275,7 +275,7 @@ export default function Home() {
                   </p>
                 </div>
                 <a
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-500"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
                   href="#contact"
                 >
                   {isEnglish ? "Subscribe to calendar" : "Suscribirse al calendario"}
@@ -343,11 +343,11 @@ export default function Home() {
                   <p className="text-sm text-slate-600">{activity.description}</p>
                 </div>
                 <div className="mt-6 space-y-3">
-                  <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                  <span className="inline-flex rounded-full bg-[#9ba6fd1f] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
                     {activity.status}
                   </span>
                   <a
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-500"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
                     href="#contact"
                   >
                     {isEnglish ? "Learn More" : "Más información"} →
@@ -404,7 +404,7 @@ export default function Home() {
                   <p className="text-sm text-slate-600">{resource.description}</p>
                 </div>
                 <a
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-500"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
                   href="#contact"
                 >
                   {isEnglish ? "View Resource" : "Ver recurso"} →
@@ -432,12 +432,12 @@ export default function Home() {
             <form className="mt-6 space-y-3">
               <input
                 aria-label={isEnglish ? "Email address" : "Correo electrónico"}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm placeholder:text-slate-400 focus:border-[var(--color-accent-primary)] focus:outline-none"
                 placeholder="example@gmail.com"
                 type="email"
               />
               <button
-                className="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                className="w-full rounded-xl bg-[var(--color-accent-primary)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-secondary)] hover:text-slate-900"
                 type="submit"
               >
                 {isEnglish ? "Subscribe" : "Suscribirse"}
@@ -464,7 +464,7 @@ export default function Home() {
               </p>
             </div>
             <a
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500 bg-white px-4 py-3 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-50"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--color-accent-primary)] bg-white px-4 py-3 text-sm font-semibold text-[var(--color-accent-primary)] transition hover:bg-[#f5f0ff]"
               href="https://t.me/baish"
               rel="noopener noreferrer"
               target="_blank"

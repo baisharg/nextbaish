@@ -1,29 +1,19 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Core application code lives under `app/`, using the Next.js App Router. `app/page.tsx` holds the landing view and `app/layout.tsx` wires shared fonts, metadata, and global styles.
-- Global styles are centralized in `app/globals.css`, which imports Tailwind CSS v4 utilities and defines light/dark design tokens.
-- Static assets (SVG icons and any future media) belong in `public/`, where Next.js serves them at the root URL.
-- Configuration lives in `next.config.ts`, `postcss.config.mjs`, and `tsconfig.json`. Update these before introducing framework-level changes so they remain a single source of truth.
+Source lives in `app/`, using the App Router with feature folders (e.g., `app/(marketing)/`). `app/page.tsx` renders the landing view and `app/layout.tsx` wires fonts, metadata, and global providers. Tailwind tokens and resets sit in `app/globals.css`; keep component-specific styles colocated with the component. Static assets belong in `public/` and serve from the root path. Adjust framework-wide settings in `next.config.ts`, `postcss.config.mjs`, or `tsconfig.json` before shipping cross-cutting changes so configuration stays the single source of truth.
 
 ## Build, Test, and Development Commands
-- `npm install` — install project dependencies for local work or CI setup.
-- `npm run dev` — start the Turbopack-driven development server at `http://localhost:3000`, hot-reloading changes under `app/`.
-- `npm run build` — produce an optimized production build; run this before deploying or validating breaking changes.
-- `npm run start` — launch the production server using the artifacts built by `npm run build`.
+Run `npm install` to sync dependencies. `npm run dev` starts the Turbopack dev server at http://localhost:3000 with hot reload. `npm run build` compiles a production bundle; execute it locally before opening a PR that touches build paths. `npm run start` boots the optimized server from the last build. If you introduce tests, add a `npm run test` script that proxies to the chosen runner so CI can invoke it consistently.
 
 ## Coding Style & Naming Conventions
-- TypeScript is required; keep `strict` mode happy by addressing type warnings instead of suppressing them.
-- Use functional React components with PascalCase filenames (e.g., `HeroSection.tsx`) and colocate feature-specific styles/components inside folders under `app/`.
-- Tailwind utility classes are preferred for styling; add custom tokens in `app/globals.css` when utilities fall short.
-- Prettier/Tailwind formatting is recommended (run `npx prettier --write .` if unsure); keep indentation at two spaces for TSX/JSON.
+TypeScript strict mode must stay green—fix type errors instead of suppressing them. Prefer functional React components in PascalCase files (`HeroSection.tsx`) and colocate related utilities in the same folder. Compose Tailwind CSS v4 utilities first; extend design tokens in `app/globals.css` only when a reusable semantic token emerges. Keep indentation at two spaces for TSX/JSON and run `npx prettier --write .` plus `npx tailwindcss --minify` when formatting or validating styles.
 
 ## Testing Guidelines
-- No automated test harness exists yet; when adding tests, prefer or Vitest for alignment with Next.js conventions.
-- Place future tests alongside features (e.g., `app/(marketing)/Hero.test.tsx`) and name them after the unit under test.
-- Ensure new features include coverage metrics or manual verification notes in the PR until formal tooling lands.
+No test script ships yet. When adding coverage, adopt Vitest + Testing Library for alignment with Next.js conventions, colocate specs beside the feature (`app/(marketing)/Hero.test.tsx`), and ensure they are fast enough for CI. Document manual verification steps in the PR description until automated checks exist. Failing tests or manual steps should block merges until resolved.
 
 ## Commit & Pull Request Guidelines
-- Write present-tense, concise commit messages (`Add hero carousel animation`) grouped by logical change.
-- Reference issue IDs in the commit body when relevant, and avoid bundling unrelated updates.
-- PRs should summarize motivation, implementation notes, and testing evidence (manual steps, screenshots, or logs). Include deployment considerations if configuration files changed.
+Write concise, present-tense commit subjects (`Add hero carousel animation`) and keep each commit focused on one concern. Reference issue IDs in the body when relevant. Pull requests should explain motivation, summarize implementation, list test evidence (commands, screenshots, or manual steps), and note deployment considerations if configuration or environment variables changed.
+
+## Configuration & Security Tips
+Store environment secrets outside the repo; prefer `.env.local` for developer-only values and avoid checking it in. When altering `next.config.ts` or Turbopack behavior, document the rationale in the PR to help reviewers gauge production impact. Validate third-party packages before adding them—dependency drift directly affects performance budgets and bundle size.
