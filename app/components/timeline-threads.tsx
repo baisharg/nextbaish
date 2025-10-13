@@ -28,8 +28,8 @@ type ThreadState = {
   lastFlipAt: number;
 };
 
-const THREAD_COUNT = 15;
-const SEGMENTS = 20;
+const THREAD_COUNT = 30;
+const SEGMENTS = 15;
 const PIVOT_X = 0.42;
 const PIVOT_Y = 0.54;
 const X_START = -0.18;
@@ -40,9 +40,9 @@ const SETTLE_BUFFER_MS = 900;
 const VIEWBOX_SIZE = 1000;
 
 const COLOR_PALETTE: HSL[] = [
-  { h: 259, s: 90, l: 68 },
-  { h: 233, s: 92, l: 74 },
-  { h: 304, s: 88, l: 70 },
+  { h: 259, s: 98, l: 68 },
+  { h: 233, s: 100, l: 74 },
+  { h: 304, s: 96, l: 70 },
 ];
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -68,9 +68,9 @@ const wrapHue = (h: number) => {
 const chooseColor = (rng: () => number) => {
   const base = COLOR_PALETTE[Math.floor(rng() * COLOR_PALETTE.length)];
   return {
-    h: wrapHue(base.h + randomInRangeWith(rng, -6, 6)),
-    s: clamp(base.s + randomInRangeWith(rng, -4, 6), 78, 100),
-    l: clamp(base.l + randomInRangeWith(rng, -4, 4), 60, 82),
+    h: wrapHue(base.h + randomInRangeWith(rng, -8, 8)),
+    s: clamp(base.s + randomInRangeWith(rng, -2, 2), 92, 100),
+    l: clamp(base.l + randomInRangeWith(rng, -6, 6), 58, 80),
   };
 };
 
@@ -87,10 +87,9 @@ const hslSolid = (hsl: HSL) =>
   `hsl(${wrapHue(hsl.h).toFixed(2)}, ${hsl.s.toFixed(2)}%, ${hsl.l.toFixed(2)}%)`;
 
 const gradientStopsFor = (color: HSL) => [
-  { offset: "0%", color: adjustColor(color, { h: -16, s: 6, l: 6 }) },
-  { offset: "38%", color: adjustColor(color, { h: -4, s: 4, l: 4 }) },
-  { offset: "68%", color: adjustColor(color, { h: 8, s: -2, l: -4 }) },
-  { offset: "100%", color: adjustColor(color, { h: 18, s: -6, l: -10 }) },
+  { offset: "0%", color: adjustColor(color, { h: -18, s: 0, l: 10 }) },
+  { offset: "50%", color: adjustColor(color, { h: 4, s: 0, l: 0 }) },
+  { offset: "100%", color: adjustColor(color, { h: 24, s: -3, l: -12 }) },
 ];
 
 const createPathProfile = (index: number, rng: () => number): PathProfile => {
@@ -107,9 +106,9 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
   const flattenStrength = randomInRangeWith(rng, 1.9, 2.7);
   const flattenThreshold = randomInRangeWith(rng, 0.38, 0.55);
 
-  const tangleFreq = randomInRangeWith(rng, 3.8, 6.2);
+  const tangleFreq = randomInRangeWith(rng, 5.5, 9.2);
   const tanglePhase = randomInRangeWith(rng, 0, Math.PI * 2);
-  const tangleAmplitude = randomInRangeWith(rng, 0.018, 0.042);
+  const tangleAmplitude = randomInRangeWith(rng, 0.028, 0.062);
 
   const lateralFreq = randomInRangeWith(rng, 2.0, 3.4);
   const lateralPhase = randomInRangeWith(rng, 0, Math.PI * 2);
@@ -209,8 +208,8 @@ const createThread = (id: number): ThreadState => {
   return {
     id,
     color: chooseColor(rng),
-    weight: randomInRangeWith(rng, 2.6, 4.0),
-    opacity: clamp(0.44 + id / (THREAD_COUNT * 4.2), 0.48, 0.72),
+    weight: randomInRangeWith(rng, 1.2, 2.2),
+    opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
     profile,
     direction,
     path: pointsToPath(profile[direction]),
@@ -310,16 +309,16 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
         className="h-full w-full"
       >
         <defs>
-          <filter id={filterId} x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+          <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.48 0"
-              result="softGlow"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0"
+              result="glow"
             />
             <feMerge>
-              <feMergeNode in="softGlow" />
+              <feMergeNode in="glow" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
@@ -365,27 +364,31 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
           strokeWidth={1}
         />
 
-        {threads.map((thread) => (
-          <path
-            key={thread.id}
-            d={thread.path}
-            fill="none"
-            stroke={`url(#${gradientBaseId}-${thread.id})`}
-            strokeOpacity={thread.opacity}
-            strokeWidth={thread.weight}
-            strokeLinecap="round"
-            filter={`url(#${filterId})`}
-            style={
-              prefersReducedMotion
-                ? undefined
-                : {
-                    transitionProperty: "d, stroke-opacity",
-                    transitionDuration: `${Math.max(0, Math.round(thread.duration))}ms`,
-                    transitionTimingFunction: thread.easing,
-                  }
-            }
-          />
-        ))}
+        <g
+          filter={`url(#${filterId})`}
+          style={{ willChange: "filter", transform: "translateZ(0)" }}
+        >
+          {threads.map((thread) => (
+            <path
+              key={thread.id}
+              d={thread.path}
+              fill="none"
+              stroke={`url(#${gradientBaseId}-${thread.id})`}
+              strokeOpacity={thread.opacity}
+              strokeWidth={thread.weight}
+              strokeLinecap="round"
+              style={
+                prefersReducedMotion
+                  ? undefined
+                  : {
+                      transitionProperty: "d, stroke-opacity",
+                      transitionDuration: `${Math.max(0, Math.round(thread.duration))}ms`,
+                      transitionTimingFunction: thread.easing,
+                    }
+              }
+            />
+          ))}
+        </g>
       </svg>
     </div>
   );
