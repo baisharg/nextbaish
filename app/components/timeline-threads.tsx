@@ -41,7 +41,7 @@ type ThreadState = {
 // CONSTANTS - Visual Layout
 // ============================================================================
 
-const THREAD_COUNT = 30;
+const THREAD_COUNT = 45;
 const SEGMENTS = 15;
 const PIVOT_X = 0.42;
 const PIVOT_Y = 0.54;
@@ -139,11 +139,24 @@ const adjustColor = (color: HSL, delta: Partial<HSL>) => ({
 const hslToString = (hsl: HSL) =>
   `hsl(${wrapHue(hsl.h).toFixed(2)}, ${hsl.s.toFixed(2)}%, ${hsl.l.toFixed(2)}%)`;
 
-const gradientStopsFor = (color: HSL) => [
-  { offset: "0%", color: adjustColor(color, { h: -18, s: 0, l: 10 }) },
-  { offset: "50%", color: adjustColor(color, { h: 4, s: 0, l: 0 }) },
-  { offset: "100%", color: adjustColor(color, { h: 24, s: -3, l: -12 }) },
-];
+const gradientStopsFor = (color: HSL, direction: Direction) => {
+  if (direction === "down") {
+    // Dying threads: fade from original color to black
+    return [
+      { offset: "0%", color: adjustColor(color, { h: -18, s: 0, l: 10 }) },
+      { offset: "40%", color: adjustColor(color, { h: 4, s: -20, l: -10 }) },
+      { offset: "70%", color: { h: 0, s: 0, l: 15 } }, // Dark gray
+      { offset: "100%", color: { h: 0, s: 0, l: 8 } }, // Almost black
+    ];
+  }
+
+  // Thriving threads: keep vibrant colors
+  return [
+    { offset: "0%", color: adjustColor(color, { h: -18, s: 0, l: 10 }) },
+    { offset: "50%", color: adjustColor(color, { h: 4, s: 0, l: 0 }) },
+    { offset: "100%", color: adjustColor(color, { h: 24, s: -3, l: -12 }) },
+  ];
+};
 
 // ============================================================================
 // PATH GENERATION - Core Logic
@@ -443,7 +456,7 @@ const createThread = (id: number): ThreadState => {
   return {
     id,
     color: chooseColor(rng),
-    weight: randomInRangeWith(rng, 1.2, 2.2),
+    weight: randomInRangeWith(rng, 0.8, 1.4),
     opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
     profile,
     direction,
@@ -636,21 +649,53 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
             <stop offset="75%" stopColor="rgba(188, 94, 255, 0.18)" />
             <stop offset="100%" stopColor="rgba(244, 173, 255, 0.30)" />
           </linearGradient>
-          {threads.map((thread) => (
-            <linearGradient
-              key={`grad-${thread.id}`}
-              id={`${gradientBaseId}-${thread.id}`}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2={`${VIEWBOX_SIZE}`}
-              gradientUnits="userSpaceOnUse"
-            >
-              {gradientStopsFor(thread.color).map((stop) => (
-                <stop key={stop.offset} offset={stop.offset} stopColor={hslToString(stop.color)} />
-              ))}
-            </linearGradient>
-          ))}
+          {threads.map((thread) => {
+            // For dying threads, gradient should fade based on Y position (descent toward bottom)
+            // Calculate the Y range for this thread's down path
+            const downPath = thread.profile.down;
+            let minY = Infinity;
+            let maxY = -Infinity;
+
+            for (let i = 0; i < downPath.length; i += 2) {
+              const y = downPath[i + 1];
+              minY = Math.min(minY, y);
+              maxY = Math.max(maxY, y);
+            }
+
+            // Gradient from top (pivot area) to bottom (extinction)
+            const y1 = minY * VIEWBOX_SIZE;
+            const y2 = maxY * VIEWBOX_SIZE;
+
+            return (
+              <linearGradient
+                key={`grad-${thread.id}`}
+                id={`${gradientBaseId}-${thread.id}`}
+                x1="0"
+                y1={y1}
+                x2="0"
+                y2={y2}
+                gradientUnits="userSpaceOnUse"
+              >
+                {thread.direction === "down" ? (
+                  // Dying threads: fade to black as they approach extinction Y
+                  <>
+                    <stop offset="0%" stopColor={hslToString(thread.color)} />
+                    <stop offset="30%" stopColor={hslToString(adjustColor(thread.color, { s: -10, l: -5 }))} />
+                    <stop offset="60%" stopColor={hslToString(adjustColor(thread.color, { s: -40, l: -25 }))} />
+                    <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
+                    <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
+                  </>
+                ) : (
+                  // Thriving threads: vibrant throughout
+                  <>
+                    <stop offset="0%" stopColor={hslToString(adjustColor(thread.color, { h: -18, s: 0, l: 10 }))} />
+                    <stop offset="50%" stopColor={hslToString(adjustColor(thread.color, { h: 4, s: 0, l: 0 }))} />
+                    <stop offset="100%" stopColor={hslToString(adjustColor(thread.color, { h: 24, s: -3, l: -12 }))} />
+                  </>
+                )}
+              </linearGradient>
+            );
+          })}
         </defs>
 
         <rect
