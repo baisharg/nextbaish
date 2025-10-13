@@ -97,9 +97,9 @@ self.onmessage = (event: MessageEvent<GenerateThreadsMessage>) => {
     const transferables: ArrayBuffer[] = [];
     threads.forEach((thread) => {
       transferables.push(
-        thread.profileNeutral.buffer,
-        thread.profileUp.buffer,
-        thread.profileDown.buffer
+        thread.profileNeutral.buffer as ArrayBuffer,
+        thread.profileUp.buffer as ArrayBuffer,
+        thread.profileDown.buffer as ArrayBuffer
       );
     });
 
