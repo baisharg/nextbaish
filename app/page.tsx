@@ -263,9 +263,12 @@ export default function Home() {
                 })}
               </div>
               <a
-                className={`rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap ${
-                  scrolled ? "px-3 py-2 text-xs" : "px-4 py-2 text-sm"
-                }`}
+                className="rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
+                style={{
+                  padding: scrolled ? '0.5rem 0.75rem' : '0.5rem 1rem',
+                  fontSize: scrolled ? '0.75rem' : '0.875rem',
+                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
                 href="#get-involved"
               >
                 {isEnglish ? "Join Us" : "Únete"}
