@@ -26,6 +26,14 @@ type ThreadState = {
   duration: number;
   easing: string;
   lastFlipAt: number;
+  swayPhase: number;
+  driftPhase: number;
+  swayFreq: number;
+  driftFreq: number;
+  swayAmp: number;
+  driftAmp: number;
+  targetDirection: Direction;
+  transitionStartTime: number;
 };
 
 const THREAD_COUNT = 30;
@@ -34,8 +42,8 @@ const PIVOT_X = 0.42;
 const PIVOT_Y = 0.54;
 const X_START = -0.18;
 const X_END = 1.15;
-const UP_FRACTION = 0.22;
-const FLIP_INTERVAL_MS = 6000;
+const UP_FRACTION = 1 / THREAD_COUNT; // Only one thread starts pointing up
+const FLIP_INTERVAL_MS = 8000; // Increased by 33% (was 6000)
 const SETTLE_BUFFER_MS = 900;
 const VIEWBOX_SIZE = 1000;
 
@@ -100,11 +108,15 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
   );
 
   const downDepth = randomInRangeWith(rng, 0.28, 0.40);
-  const upRise = randomInRangeWith(rng, 0.38, 0.68);
+  const upRise = randomInRangeWith(rng, 0.45, 0.85);
 
-  const upCurve = randomInRangeWith(rng, 0.35, 0.55);
-  const flattenStrength = randomInRangeWith(rng, 1.9, 2.7);
-  const flattenThreshold = randomInRangeWith(rng, 0.38, 0.55);
+  // upCurve: low values = exponential (steep), high values = logarithmic (leveling)
+  const upCurve = randomInRangeWith(rng, 0.4, 2.2);
+  const upStartY = randomInRangeWith(rng, 0.48, 0.58);
+  const flattenStrength = randomInRangeWith(rng, 25.0, 35.0);
+  // flattenThreshold: when thread reaches flat (0.2 = early/fast doom, 0.8 = late/slow doom)
+  const flattenThreshold = randomInRangeWith(rng, 0.20, 0.85);
+  const extinctionY = randomInRangeWith(rng, 0.84, 0.89);
 
   const tangleFreq = randomInRangeWith(rng, 5.5, 9.2);
   const tanglePhase = randomInRangeWith(rng, 0, Math.PI * 2);
@@ -134,10 +146,25 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
     const lateralShift =
       Math.sin(t * lateralFreq + lateralPhase) * lateralAmp * (0.8 + t * 0.9);
 
-    if (i <= pivotIndex) {
-      const preP = clamp(t / PIVOT_X, 0, 1);
-      const converge = Math.pow(preP, 1.35);
-      const sharedY = clamp(baseY + (PIVOT_Y - baseY) * converge + noise * 0.85, 0.04, 0.96);
+    // BEFORE PIVOT: All paths converge from baseY to PIVOT_Y
+    if (t <= PIVOT_X) {
+      const preP = t / PIVOT_X; // 0 at start, 1 at pivot
+      const convergeCurve = Math.pow(preP, 1.35);
+
+      // Compress vertical spread in the past - threads cluster tighter
+      // At pivot (preP=1), spreadFactor should be very small for tight ring
+      const spreadFactor = 0.25 + preP * 0.25; // Half as wide - reduced from 0.50 to 0.25
+      const compressedBaseY = PIVOT_Y + (baseY - PIVOT_Y) * spreadFactor;
+
+      // Add stronger convergence to PIVOT_Y at the end
+      const ringTightness = Math.pow(preP, 3.5); // Even stronger convergence
+      const sharedY = clamp(
+        compressedBaseY + (PIVOT_Y - compressedBaseY) * ringTightness + noise * 0.85 * (1 - preP * 0.95),
+        0.04,
+        0.96
+      );
+
+      // All three paths share the same Y before pivot (history is fixed)
       const sharedPoint: Point = { x: xBase + lateralShift * 0.8, y: sharedY };
       neutral.push(sharedPoint);
       up.push(sharedPoint);
@@ -145,17 +172,26 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
       continue;
     }
 
-    const postP = clamp((t - PIVOT_X) / (1 - PIVOT_X), 0, 1);
+    // AFTER PIVOT: Paths diverge
+    const postP = (t - PIVOT_X) / (1 - PIVOT_X); // 0 at pivot, 1 at end
 
+    // Neutral: slight drift
     const neutralY = clamp(PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.72, 0.04, 0.96);
-    const upY = clamp(PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85, 0.02, 0.50);
-
-    const downProgress = clamp(postP / flattenThreshold, 0, 1);
-    const downShape = Math.pow(downProgress, flattenStrength);
-    const downY = clamp(PIVOT_Y + downDepth * downShape + noise * 0.90, 0.06, 0.96);
-
     neutral.push({ x: xBase + lateralShift * 0.75, y: neutralY });
+
+    // Up: exponential/logarithmic rise from PIVOT_Y
+    const upY = clamp(PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85, -0.30, 0.96);
     up.push({ x: xBase + lateralShift * 1.2, y: upY });
+
+    // Down: descent to extinction, then flat
+    let downY: number;
+    if (postP < flattenThreshold) {
+      const downProgress = postP / flattenThreshold;
+      const downShape = Math.pow(downProgress, 2.2);
+      downY = clamp(PIVOT_Y + (extinctionY - PIVOT_Y) * downShape + noise * 0.85, 0.06, 0.96);
+    } else {
+      downY = extinctionY;
+    }
     down.push({ x: xBase + lateralShift * 0.95, y: downY });
   }
 
@@ -190,16 +226,95 @@ const pointsToPath = (points: Point[]) => {
   return path.join(" ");
 };
 
+const lerpPoints = (from: Point[], to: Point[], t: number): Point[] => {
+  return from.map((p, i) => ({
+    x: p.x + (to[i].x - p.x) * t,
+    y: p.y + (to[i].y - p.y) * t,
+  }));
+};
+
+const easeInOutCubic = (t: number): number => {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+};
+
+const pointsToPathWithSway = (
+  basePoints: Point[],
+  targetPoints: Point[],
+  time: number,
+  transitionStartTime: number,
+  duration: number,
+  swayPhase: number,
+  driftPhase: number,
+  swayFreq: number,
+  driftFreq: number,
+  swayAmp: number,
+  driftAmp: number,
+) => {
+  if (basePoints.length === 0) return "";
+
+  // Calculate transition progress
+  const transitionProgress = transitionStartTime > 0
+    ? Math.min((time - transitionStartTime) / duration, 1)
+    : 1;
+  const easedProgress = easeInOutCubic(transitionProgress);
+
+  // Interpolate between base and target if transitioning
+  const interpolatedPoints = transitionProgress < 1
+    ? lerpPoints(basePoints, targetPoints, easedProgress)
+    : targetPoints;
+
+  // Apply floating motion to points
+  const floatingPoints = interpolatedPoints.map((p, i) => {
+    const segmentFactor = i / (interpolatedPoints.length - 1); // 0 to 1 along the path
+    // Reduce sway near the pivot point (present) to keep the ring tight
+    const pivotDamping = 1 - Math.exp(-Math.pow((p.x - PIVOT_X) * 3, 2));
+
+    const swayOffset = Math.sin(time * swayFreq + swayPhase + segmentFactor * Math.PI) * swayAmp * pivotDamping;
+    const driftOffset = Math.cos(time * driftFreq + driftPhase + segmentFactor * Math.PI * 0.5) * driftAmp;
+
+    return {
+      x: p.x + driftOffset,
+      y: p.y + swayOffset,
+    };
+  });
+
+  const scaled = floatingPoints.map((p) => ({
+    x: Number((p.x * VIEWBOX_SIZE).toFixed(2)),
+    y: Number((p.y * VIEWBOX_SIZE).toFixed(2)),
+  }));
+
+  const path: string[] = [];
+  path.push(`M ${scaled[0].x} ${scaled[0].y}`);
+
+  for (let i = 1; i < scaled.length; i++) {
+    const prev = scaled[i - 1];
+    const current = scaled[i];
+    const prevPrev = scaled[i - 2] ?? prev;
+    const next = scaled[i + 1] ?? current;
+
+    const cp1x = prev.x + (current.x - prevPrev.x) / 6;
+    const cp1y = prev.y + (current.y - prevPrev.y) / 6;
+    const cp2x = current.x - (next.x - prev.x) / 6;
+    const cp2y = current.y - (next.y - prev.y) / 6;
+
+    path.push(`C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)} ${cp2x.toFixed(2)} ${cp2y.toFixed(2)} ${current.x.toFixed(2)} ${current.y.toFixed(2)}`);
+  }
+
+  return path.join(" ");
+};
+
 const directionDuration = (direction: Direction) =>
-  direction === "up" ? randomInRange(5200, 8200) : randomInRange(3400, 5800);
+  direction === "up" ? randomInRange(10400, 16400) : randomInRange(6800, 11600);
 
 const directionDurationSeeded = (direction: Direction, rng: () => number) =>
   direction === "up"
-    ? randomInRangeWith(rng, 5200, 8200)
-    : randomInRangeWith(rng, 3400, 5800);
+    ? randomInRangeWith(rng, 10400, 16400)
+    : randomInRangeWith(rng, 6800, 11600);
 
 const directionEasing = (direction: Direction) =>
-  direction === "up" ? "cubic-bezier(0.19, 1, 0.22, 1)" : "cubic-bezier(0.4, 0, 0.2, 1)";
+  direction === "up"
+    ? "cubic-bezier(0.65, 0, 0.35, 1)"  // slow start, fast middle, slow end
+    : "cubic-bezier(0.65, 0, 0.35, 1)";  // same curve for down
 
 const createThread = (id: number): ThreadState => {
   const rng = createSeededRandom(0x9e3779b9 ^ (id + 1));
@@ -216,6 +331,14 @@ const createThread = (id: number): ThreadState => {
     duration: directionDurationSeeded(direction, rng),
     easing: directionEasing(direction),
     lastFlipAt: 0,
+    swayPhase: randomInRangeWith(rng, 0, Math.PI * 2),
+    driftPhase: randomInRangeWith(rng, 0, Math.PI * 2),
+    swayFreq: randomInRangeWith(rng, 0.0008, 0.0015),
+    driftFreq: randomInRangeWith(rng, 0.0006, 0.0012),
+    swayAmp: randomInRangeWith(rng, 0.00375, 0.00875),
+    driftAmp: randomInRangeWith(rng, 0.003, 0.007),
+    targetDirection: direction,
+    transitionStartTime: 0,
   };
 };
 
@@ -238,9 +361,15 @@ type TimelineThreadsProps = { className?: string; style?: CSSProperties };
 
 export default function TimelineThreads({ className, style }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [threads, setThreads] = useState<ThreadState[]>(() =>
-    Array.from({ length: THREAD_COUNT }, (_, id) => createThread(id)),
-  );
+  const [threads, setThreads] = useState<ThreadState[]>(() => {
+    const initialThreads = Array.from({ length: THREAD_COUNT }, (_, id) => createThread(id));
+    // Ensure at least one thread starts pointing up
+    const hasUpThread = initialThreads.some((t) => t.direction === "up");
+    if (!hasUpThread) {
+      initialThreads[0] = { ...initialThreads[0], direction: "up", targetDirection: "up" };
+    }
+    return initialThreads;
+  });
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
 
@@ -255,6 +384,58 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
     );
   }, [prefersReducedMotion]);
 
+  // Floating animation loop
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+
+    let animationFrameId: number;
+    let lastFrameTime = performance.now();
+    const targetFps = 30;
+    const frameInterval = 1000 / targetFps;
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - lastFrameTime;
+
+      if (elapsed >= frameInterval) {
+        lastFrameTime = currentTime - (elapsed % frameInterval);
+
+        setThreads((prev) =>
+          prev.map((thread) => {
+            // Update direction if transition is complete
+            const isTransitioning = thread.transitionStartTime > 0 &&
+              currentTime - thread.transitionStartTime < thread.duration;
+            const shouldUpdateDirection = !isTransitioning &&
+              thread.direction !== thread.targetDirection;
+
+            return {
+              ...thread,
+              direction: shouldUpdateDirection ? thread.targetDirection : thread.direction,
+              path: pointsToPathWithSway(
+                thread.profile[thread.direction],
+                thread.profile[thread.targetDirection],
+                currentTime,
+                thread.transitionStartTime,
+                thread.duration,
+                thread.swayPhase,
+                thread.driftPhase,
+                thread.swayFreq,
+                thread.driftFreq,
+                thread.swayAmp,
+                thread.driftAmp,
+              ),
+            };
+          }),
+        );
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [prefersReducedMotion]);
+
+  // Direction flipping logic
   useEffect(() => {
     if (prefersReducedMotion) return undefined;
 
@@ -277,13 +458,20 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
 
         const nextDirection: Direction = target.direction === "down" ? "up" : "down";
 
+        // Check if this would leave us with no up threads
+        const upThreads = prev.filter((t) => t.direction === "up" || t.targetDirection === "up");
+        if (nextDirection === "down" && upThreads.length <= 1) {
+          // Don't flip the last up thread to down
+          return prev;
+        }
+
         return prev.map((thread) => {
           if (thread.id !== target!.id) return thread;
           const duration = directionDuration(nextDirection);
           return {
             ...thread,
-            direction: nextDirection,
-            path: pointsToPath(thread.profile[nextDirection]),
+            targetDirection: nextDirection,
+            transitionStartTime: now,
             duration,
             easing: directionEasing(nextDirection),
             lastFlipAt: now,
@@ -377,15 +565,6 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
               strokeOpacity={thread.opacity}
               strokeWidth={thread.weight}
               strokeLinecap="round"
-              style={
-                prefersReducedMotion
-                  ? undefined
-                  : {
-                      transitionProperty: "d, stroke-opacity",
-                      transitionDuration: `${Math.max(0, Math.round(thread.duration))}ms`,
-                      transitionTimingFunction: thread.easing,
-                    }
-              }
             />
           ))}
         </g>
