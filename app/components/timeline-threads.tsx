@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState, useId } from "react";
+import { useEffect, useState, useId, useRef } from "react";
 import type { CSSProperties } from "react";
 
-type Point = { x: number; y: number };
+// ============================================================================
+// TYPES
+// ============================================================================
 
 type PathProfile = {
-  neutral: Point[];
-  up: Point[];
-  down: Point[];
+  neutral: Float32Array;
+  up: Float32Array;
+  down: Float32Array;
 };
 
 type Direction = "up" | "down";
@@ -24,7 +26,6 @@ type ThreadState = {
   direction: Direction;
   path: string;
   duration: number;
-  easing: string;
   lastFlipAt: number;
   swayPhase: number;
   driftPhase: number;
@@ -36,15 +37,16 @@ type ThreadState = {
   transitionStartTime: number;
 };
 
+// ============================================================================
+// CONSTANTS - Visual Layout
+// ============================================================================
+
 const THREAD_COUNT = 30;
 const SEGMENTS = 15;
 const PIVOT_X = 0.42;
 const PIVOT_Y = 0.54;
 const X_START = -0.18;
 const X_END = 1.15;
-const UP_FRACTION = 1 / THREAD_COUNT; // Only one thread starts pointing up
-const FLIP_INTERVAL_MS = 8000; // Increased by 33% (was 6000)
-const SETTLE_BUFFER_MS = 900;
 const VIEWBOX_SIZE = 1000;
 
 const COLOR_PALETTE: HSL[] = [
@@ -52,6 +54,48 @@ const COLOR_PALETTE: HSL[] = [
   { h: 233, s: 100, l: 74 },
   { h: 304, s: 96, l: 70 },
 ];
+
+// ============================================================================
+// CONSTANTS - Animation Timing
+// ============================================================================
+
+const UP_FRACTION = 1 / THREAD_COUNT; // Only one thread starts pointing up
+const FLIP_INTERVAL_MS = 8000;
+const SETTLE_BUFFER_MS = 900;
+const TRANSITION_EASING = "cubic-bezier(0.65, 0, 0.35, 1)";
+const TARGET_FPS = 30;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
+// Transition duration ranges (ms)
+const UP_DURATION_MIN = 10400;
+const UP_DURATION_MAX = 16400;
+const DOWN_DURATION_MIN = 6800;
+const DOWN_DURATION_MAX = 11600;
+
+// ============================================================================
+// CONSTANTS - Math Precomputation
+// ============================================================================
+
+const BEZIER_CONTROL_FACTOR = 1 / 6;
+const GOLDEN_RATIO_SEED = 0x9e3779b9; // Golden ratio for seeded RNG
+
+// Precompute pivot damping for each segment (reduces sway near present)
+const PIVOT_DAMPING = new Float32Array(SEGMENTS);
+for (let i = 0; i < SEGMENTS; i++) {
+  const t = i / (SEGMENTS - 1);
+  const x = X_START + (X_END - X_START) * t;
+  PIVOT_DAMPING[i] = 1 - Math.exp(-Math.pow((x - PIVOT_X) * 3, 2));
+}
+
+// Precompute segment factors (0 to 1 along path)
+const SEGMENT_FACTORS = new Float32Array(SEGMENTS);
+for (let i = 0; i < SEGMENTS; i++) {
+  SEGMENT_FACTORS[i] = i / (SEGMENTS - 1);
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -67,6 +111,10 @@ const createSeededRandom = (seed: number) => {
 };
 
 const randomInRangeWith = (rng: () => number, min: number, max: number) => rng() * (max - min) + min;
+
+// ============================================================================
+// COLOR UTILITIES
+// ============================================================================
 
 const wrapHue = (h: number) => {
   const mod = h % 360;
@@ -88,10 +136,7 @@ const adjustColor = (color: HSL, delta: Partial<HSL>) => ({
   l: clamp(color.l + (delta.l ?? 0), 0, 100),
 });
 
-const hslString = (hsl: HSL, alpha = 1) =>
-  `hsla(${wrapHue(hsl.h).toFixed(2)}, ${hsl.s.toFixed(2)}%, ${hsl.l.toFixed(2)}%, ${alpha})`;
-
-const hslSolid = (hsl: HSL) =>
+const hslToString = (hsl: HSL) =>
   `hsl(${wrapHue(hsl.h).toFixed(2)}, ${hsl.s.toFixed(2)}%, ${hsl.l.toFixed(2)}%)`;
 
 const gradientStopsFor = (color: HSL) => [
@@ -99,6 +144,10 @@ const gradientStopsFor = (color: HSL) => [
   { offset: "50%", color: adjustColor(color, { h: 4, s: 0, l: 0 }) },
   { offset: "100%", color: adjustColor(color, { h: 24, s: -3, l: -12 }) },
 ];
+
+// ============================================================================
+// PATH GENERATION - Core Logic
+// ============================================================================
 
 const createPathProfile = (index: number, rng: () => number): PathProfile => {
   const baseY = clamp(
@@ -128,9 +177,10 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
 
   const neutralDrift = randomInRangeWith(rng, -0.03, 0.03);
 
-  const neutral: Point[] = [];
-  const up: Point[] = [];
-  const down: Point[] = [];
+  // Allocate Float32Arrays: 15 points = 30 floats (x0,y0, x1,y1, ...)
+  const neutral = new Float32Array(SEGMENTS * 2);
+  const up = new Float32Array(SEGMENTS * 2);
+  const down = new Float32Array(SEGMENTS * 2);
 
   const pivotIndex = Math.round(PIVOT_X * (SEGMENTS - 1));
 
@@ -145,6 +195,9 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
       clamp(0.55 + tightness * 0.85, 0.55, 1.4);
     const lateralShift =
       Math.sin(t * lateralFreq + lateralPhase) * lateralAmp * (0.8 + t * 0.9);
+
+    const xIndex = i * 2;
+    const yIndex = i * 2 + 1;
 
     // BEFORE PIVOT: All paths converge from baseY to PIVOT_Y
     if (t <= PIVOT_X) {
@@ -164,11 +217,14 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
         0.96
       );
 
-      // All three paths share the same Y before pivot (history is fixed)
-      const sharedPoint: Point = { x: xBase + lateralShift * 0.8, y: sharedY };
-      neutral.push(sharedPoint);
-      up.push(sharedPoint);
-      down.push(sharedPoint);
+      // All three paths share the same coordinates before pivot (history is fixed)
+      const sharedX = xBase + lateralShift * 0.8;
+      neutral[xIndex] = sharedX;
+      neutral[yIndex] = sharedY;
+      up[xIndex] = sharedX;
+      up[yIndex] = sharedY;
+      down[xIndex] = sharedX;
+      down[yIndex] = sharedY;
       continue;
     }
 
@@ -177,11 +233,13 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
 
     // Neutral: slight drift
     const neutralY = clamp(PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.72, 0.04, 0.96);
-    neutral.push({ x: xBase + lateralShift * 0.75, y: neutralY });
+    neutral[xIndex] = xBase + lateralShift * 0.75;
+    neutral[yIndex] = neutralY;
 
     // Up: exponential/logarithmic rise from PIVOT_Y
     const upY = clamp(PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85, -0.30, 0.96);
-    up.push({ x: xBase + lateralShift * 1.2, y: upY });
+    up[xIndex] = xBase + lateralShift * 1.2;
+    up[yIndex] = upY;
 
     // Down: descent to extinction, then flat
     let downY: number;
@@ -192,54 +250,87 @@ const createPathProfile = (index: number, rng: () => number): PathProfile => {
     } else {
       downY = extinctionY;
     }
-    down.push({ x: xBase + lateralShift * 0.95, y: downY });
+    down[xIndex] = xBase + lateralShift * 0.95;
+    down[yIndex] = downY;
   }
 
   return { neutral, up, down };
 };
 
-const pointsToPath = (points: Point[]) => {
-  if (points.length === 0) return "";
+// ============================================================================
+// PATH STRING GENERATION - Shared Bezier Builder
+// ============================================================================
 
-  const scaled = points.map((p) => ({
-    x: Number((p.x * VIEWBOX_SIZE).toFixed(2)),
-    y: Number((p.y * VIEWBOX_SIZE).toFixed(2)),
-  }));
+/**
+ * Builds SVG path string with cubic Bezier curves from Float32Array coordinates.
+ * Coordinates are stored as [x0,y0, x1,y1, ...] and scaled to VIEWBOX_SIZE.
+ */
+const buildCubicBezierPath = (points: Float32Array): string => {
+  const numPoints = points.length / 2;
+  if (numPoints === 0) return "";
 
-  const path: string[] = [];
-  path.push(`M ${scaled[0].x} ${scaled[0].y}`);
+  const path: string[] = new Array(numPoints);
 
-  for (let i = 1; i < scaled.length; i++) {
-    const prev = scaled[i - 1];
-    const current = scaled[i];
-    const prevPrev = scaled[i - 2] ?? prev;
-    const next = scaled[i + 1] ?? current;
+  // First point: M (move) command
+  const x0 = (points[0] * VIEWBOX_SIZE).toFixed(2);
+  const y0 = (points[1] * VIEWBOX_SIZE).toFixed(2);
+  path[0] = `M ${x0} ${y0}`;
 
-    const cp1x = prev.x + (current.x - prevPrev.x) / 6;
-    const cp1y = prev.y + (current.y - prevPrev.y) / 6;
-    const cp2x = current.x - (next.x - prev.x) / 6;
-    const cp2y = current.y - (next.y - prev.y) / 6;
+  // Remaining points: C (cubic Bezier) commands
+  for (let i = 1; i < numPoints; i++) {
+    const prevIdx = (i - 1) * 2;
+    const currIdx = i * 2;
+    const prevPrevIdx = i >= 2 ? (i - 2) * 2 : prevIdx;
+    const nextIdx = i < numPoints - 1 ? (i + 1) * 2 : currIdx;
 
-    path.push(`C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)} ${cp2x.toFixed(2)} ${cp2y.toFixed(2)} ${current.x.toFixed(2)} ${current.y.toFixed(2)}`);
+    // Scale coordinates to viewbox
+    const prevX = points[prevIdx] * VIEWBOX_SIZE;
+    const prevY = points[prevIdx + 1] * VIEWBOX_SIZE;
+    const currX = points[currIdx] * VIEWBOX_SIZE;
+    const currY = points[currIdx + 1] * VIEWBOX_SIZE;
+    const prevPrevX = points[prevPrevIdx] * VIEWBOX_SIZE;
+    const prevPrevY = points[prevPrevIdx + 1] * VIEWBOX_SIZE;
+    const nextX = points[nextIdx] * VIEWBOX_SIZE;
+    const nextY = points[nextIdx + 1] * VIEWBOX_SIZE;
+
+    // Compute control points using precomputed factor
+    const cp1x = (prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR).toFixed(2);
+    const cp1y = (prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR).toFixed(2);
+    const cp2x = (currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR).toFixed(2);
+    const cp2y = (currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR).toFixed(2);
+
+    path[i] = `C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${currX.toFixed(2)} ${currY.toFixed(2)}`;
   }
 
   return path.join(" ");
 };
 
-const lerpPoints = (from: Point[], to: Point[], t: number): Point[] => {
-  return from.map((p, i) => ({
-    x: p.x + (to[i].x - p.x) * t,
-    y: p.y + (to[i].y - p.y) * t,
-  }));
+/** Static path generation (no animation) */
+const pointsToStaticPath = (points: Float32Array): string => {
+  return buildCubicBezierPath(points);
 };
 
+/** Linear interpolation between two Float32Arrays */
+const lerpPoints = (from: Float32Array, to: Float32Array, t: number): Float32Array => {
+  const result = new Float32Array(from.length);
+  for (let i = 0; i < from.length; i++) {
+    result[i] = from[i] + (to[i] - from[i]) * t;
+  }
+  return result;
+};
+
+/** Easing function for smooth transitions */
 const easeInOutCubic = (t: number): number => {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 };
 
-const pointsToPathWithSway = (
-  basePoints: Point[],
-  targetPoints: Point[],
+/**
+ * Animated path generation with transitions and floating motion.
+ * Optimized to skip calculations when transition is complete.
+ */
+const pointsToAnimatedPath = (
+  basePoints: Float32Array,
+  targetPoints: Float32Array,
   time: number,
   transitionStartTime: number,
   duration: number,
@@ -249,75 +340,104 @@ const pointsToPathWithSway = (
   driftFreq: number,
   swayAmp: number,
   driftAmp: number,
-) => {
+): string => {
   if (basePoints.length === 0) return "";
 
-  // Calculate transition progress
-  const transitionProgress = transitionStartTime > 0
-    ? Math.min((time - transitionStartTime) / duration, 1)
-    : 1;
-  const easedProgress = easeInOutCubic(transitionProgress);
+  // OPTIMIZATION: Skip transition calculations if no transition active
+  let interpolatedPoints: Float32Array;
 
-  // Interpolate between base and target if transitioning
-  const interpolatedPoints = transitionProgress < 1
-    ? lerpPoints(basePoints, targetPoints, easedProgress)
-    : targetPoints;
+  if (transitionStartTime === 0) {
+    // No transition ever started, use target directly
+    interpolatedPoints = targetPoints;
+  } else {
+    const transitionProgress = Math.min((time - transitionStartTime) / duration, 1);
+
+    if (transitionProgress >= 1) {
+      // Transition complete, use target directly
+      interpolatedPoints = targetPoints;
+    } else {
+      // Active transition, interpolate
+      const easedProgress = easeInOutCubic(transitionProgress);
+      interpolatedPoints = lerpPoints(basePoints, targetPoints, easedProgress);
+    }
+  }
 
   // Apply floating motion to points
-  const floatingPoints = interpolatedPoints.map((p, i) => {
-    const segmentFactor = i / (interpolatedPoints.length - 1); // 0 to 1 along the path
-    // Reduce sway near the pivot point (present) to keep the ring tight
-    const pivotDamping = 1 - Math.exp(-Math.pow((p.x - PIVOT_X) * 3, 2));
+  const numPoints = interpolatedPoints.length / 2;
+  const floatingPoints = new Float32Array(interpolatedPoints.length);
+
+  for (let i = 0; i < numPoints; i++) {
+    const xIndex = i * 2;
+    const yIndex = i * 2 + 1;
+
+    // Use precomputed values
+    const segmentFactor = SEGMENT_FACTORS[i];
+    const pivotDamping = PIVOT_DAMPING[i];
 
     const swayOffset = Math.sin(time * swayFreq + swayPhase + segmentFactor * Math.PI) * swayAmp * pivotDamping;
     const driftOffset = Math.cos(time * driftFreq + driftPhase + segmentFactor * Math.PI * 0.5) * driftAmp;
 
-    return {
-      x: p.x + driftOffset,
-      y: p.y + swayOffset,
-    };
-  });
-
-  const scaled = floatingPoints.map((p) => ({
-    x: Number((p.x * VIEWBOX_SIZE).toFixed(2)),
-    y: Number((p.y * VIEWBOX_SIZE).toFixed(2)),
-  }));
-
-  const path: string[] = [];
-  path.push(`M ${scaled[0].x} ${scaled[0].y}`);
-
-  for (let i = 1; i < scaled.length; i++) {
-    const prev = scaled[i - 1];
-    const current = scaled[i];
-    const prevPrev = scaled[i - 2] ?? prev;
-    const next = scaled[i + 1] ?? current;
-
-    const cp1x = prev.x + (current.x - prevPrev.x) / 6;
-    const cp1y = prev.y + (current.y - prevPrev.y) / 6;
-    const cp2x = current.x - (next.x - prev.x) / 6;
-    const cp2y = current.y - (next.y - prev.y) / 6;
-
-    path.push(`C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)} ${cp2x.toFixed(2)} ${cp2y.toFixed(2)} ${current.x.toFixed(2)} ${current.y.toFixed(2)}`);
+    floatingPoints[xIndex] = interpolatedPoints[xIndex] + driftOffset;
+    floatingPoints[yIndex] = interpolatedPoints[yIndex] + swayOffset;
   }
 
-  return path.join(" ");
+  return buildCubicBezierPath(floatingPoints);
 };
 
+// ============================================================================
+// THREAD MANAGEMENT
+// ============================================================================
+
 const directionDuration = (direction: Direction) =>
-  direction === "up" ? randomInRange(10400, 16400) : randomInRange(6800, 11600);
+  direction === "up"
+    ? randomInRange(UP_DURATION_MIN, UP_DURATION_MAX)
+    : randomInRange(DOWN_DURATION_MIN, DOWN_DURATION_MAX);
 
 const directionDurationSeeded = (direction: Direction, rng: () => number) =>
   direction === "up"
-    ? randomInRangeWith(rng, 10400, 16400)
-    : randomInRangeWith(rng, 6800, 11600);
+    ? randomInRangeWith(rng, UP_DURATION_MIN, UP_DURATION_MAX)
+    : randomInRangeWith(rng, DOWN_DURATION_MIN, DOWN_DURATION_MAX);
 
-const directionEasing = (direction: Direction) =>
-  direction === "up"
-    ? "cubic-bezier(0.65, 0, 0.35, 1)"  // slow start, fast middle, slow end
-    : "cubic-bezier(0.65, 0, 0.35, 1)";  // same curve for down
+type FlipDecision = { threadId: number; direction: Direction } | null;
+
+/**
+ * Pure function to select which thread should flip direction.
+ * Returns null if no eligible threads or if flipping would violate constraints.
+ */
+const selectThreadToFlip = (
+  threads: ThreadState[],
+  now: number,
+  settleBufferMs: number = SETTLE_BUFFER_MS,
+  preferDownWeight: number = 0.75,
+): FlipDecision => {
+  const eligible = (dir: Direction) =>
+    threads.filter((thread) => thread.direction === dir && now - thread.lastFlipAt > settleBufferMs);
+
+  const pick = (dir: Direction) => {
+    const candidates = eligible(dir);
+    if (!candidates.length) return null;
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  };
+
+  // Prefer flipping down threads (75% chance), fallback to up threads
+  let target = Math.random() < preferDownWeight ? pick("down") : null;
+  if (!target) target = pick("up");
+  if (!target) target = pick("down");
+  if (!target) return null;
+
+  const nextDirection: Direction = target.direction === "down" ? "up" : "down";
+
+  // Ensure at least one thread stays pointing up
+  const upThreads = threads.filter((t) => t.direction === "up" || t.targetDirection === "up");
+  if (nextDirection === "down" && upThreads.length <= 1) {
+    return null;
+  }
+
+  return { threadId: target.id, direction: nextDirection };
+};
 
 const createThread = (id: number): ThreadState => {
-  const rng = createSeededRandom(0x9e3779b9 ^ (id + 1));
+  const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
   const profile = createPathProfile(id, rng);
   const direction: Direction = rng() < UP_FRACTION ? "up" : "down";
   return {
@@ -327,9 +447,8 @@ const createThread = (id: number): ThreadState => {
     opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
     profile,
     direction,
-    path: pointsToPath(profile[direction]),
+    path: pointsToStaticPath(profile[direction]),
     duration: directionDurationSeeded(direction, rng),
-    easing: directionEasing(direction),
     lastFlipAt: 0,
     swayPhase: randomInRangeWith(rng, 0, Math.PI * 2),
     driftPhase: randomInRangeWith(rng, 0, Math.PI * 2),
@@ -341,6 +460,10 @@ const createThread = (id: number): ThreadState => {
     transitionStartTime: 0,
   };
 };
+
+// ============================================================================
+// REACT COMPONENT
+// ============================================================================
 
 const usePrefersReducedMotion = () => {
   const [prefers, setPrefers] = useState(false);
@@ -361,6 +484,9 @@ type TimelineThreadsProps = { className?: string; style?: CSSProperties };
 
 export default function TimelineThreads({ className, style }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
   const [threads, setThreads] = useState<ThreadState[]>(() => {
     const initialThreads = Array.from({ length: THREAD_COUNT }, (_, id) => createThread(id));
     // Ensure at least one thread starts pointing up
@@ -373,31 +499,40 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
 
+  // IntersectionObserver to pause animation when off-screen
   useEffect(() => {
-    if (!prefersReducedMotion) return;
-    setThreads((prev) =>
-      prev.map((thread) => ({
-        ...thread,
-        duration: 0,
-        path: pointsToPath(thread.profile[thread.direction]),
-      })),
-    );
-  }, [prefersReducedMotion]);
+    if (!containerRef.current) return;
 
-  // Floating animation loop
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Floating animation loop (merged with reduced motion handling)
   useEffect(() => {
-    if (prefersReducedMotion) return undefined;
+    if (prefersReducedMotion || !isVisible) {
+      // Static paths for reduced motion or when off-screen
+      setThreads((prev) =>
+        prev.map((thread) => ({
+          ...thread,
+          path: pointsToStaticPath(thread.profile[thread.direction]),
+        })),
+      );
+      return undefined;
+    }
 
     let animationFrameId: number;
     let lastFrameTime = performance.now();
-    const targetFps = 30;
-    const frameInterval = 1000 / targetFps;
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - lastFrameTime;
 
-      if (elapsed >= frameInterval) {
-        lastFrameTime = currentTime - (elapsed % frameInterval);
+      if (elapsed >= FRAME_INTERVAL) {
+        lastFrameTime = currentTime - (elapsed % FRAME_INTERVAL);
 
         setThreads((prev) =>
           prev.map((thread) => {
@@ -410,7 +545,7 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
             return {
               ...thread,
               direction: shouldUpdateDirection ? thread.targetDirection : thread.direction,
-              path: pointsToPathWithSway(
+              path: pointsToAnimatedPath(
                 thread.profile[thread.direction],
                 thread.profile[thread.targetDirection],
                 currentTime,
@@ -433,47 +568,31 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
 
     animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, isVisible]);
 
   // Direction flipping logic
   useEffect(() => {
-    if (prefersReducedMotion) return undefined;
+    if (prefersReducedMotion || !isVisible) return undefined;
 
     const tick = () => {
       setThreads((prev) => {
         const now = typeof performance !== "undefined" ? performance.now() : Date.now();
-        const eligible = (dir: Direction) =>
-          prev.filter((thread) => thread.direction === dir && now - thread.lastFlipAt > SETTLE_BUFFER_MS);
 
-        const pick = (dir: Direction) => {
-          const candidates = eligible(dir);
-          if (!candidates.length) return null;
-          return candidates[Math.floor(Math.random() * candidates.length)];
-        };
+        // Use extracted pure function
+        const decision = selectThreadToFlip(prev, now);
+        if (!decision) return prev;
 
-        let target = Math.random() < 0.75 ? pick("down") : null;
-        if (!target) target = pick("up");
-        if (!target) target = pick("down");
-        if (!target) return prev;
-
-        const nextDirection: Direction = target.direction === "down" ? "up" : "down";
-
-        // Check if this would leave us with no up threads
-        const upThreads = prev.filter((t) => t.direction === "up" || t.targetDirection === "up");
-        if (nextDirection === "down" && upThreads.length <= 1) {
-          // Don't flip the last up thread to down
-          return prev;
-        }
+        const { threadId, direction: nextDirection } = decision;
 
         return prev.map((thread) => {
-          if (thread.id !== target!.id) return thread;
+          if (thread.id !== threadId) return thread;
+
           const duration = directionDuration(nextDirection);
           return {
             ...thread,
             targetDirection: nextDirection,
             transitionStartTime: now,
             duration,
-            easing: directionEasing(nextDirection),
             lastFlipAt: now,
           };
         });
@@ -482,12 +601,13 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
 
     const interval = window.setInterval(tick, FLIP_INTERVAL_MS);
     return () => window.clearInterval(interval);
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, isVisible]);
 
   const presentX = PIVOT_X * VIEWBOX_SIZE;
 
   return (
     <div
+      ref={containerRef}
       className={`pointer-events-none ${className ?? "absolute inset-0"}`}
       style={style}
     >
@@ -527,7 +647,7 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
               gradientUnits="userSpaceOnUse"
             >
               {gradientStopsFor(thread.color).map((stop) => (
-                <stop key={stop.offset} offset={stop.offset} stopColor={hslSolid(stop.color)} />
+                <stop key={stop.offset} offset={stop.offset} stopColor={hslToString(stop.color)} />
               ))}
             </linearGradient>
           ))}

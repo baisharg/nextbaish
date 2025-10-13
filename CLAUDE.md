@@ -19,7 +19,7 @@ This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScri
 - `app/layout.tsx` - Root layout with fonts (Geist Sans/Mono), metadata, and the TimelineThreads background component
 - `app/page.tsx` - Main landing page (client component) with bilingual content (English/Spanish) for BAISH AI Safety Hub
 - `app/globals.css` - Tailwind v4 imports and CSS custom properties for color tokens (`--color-accent-primary`, `--color-accent-secondary`, `--color-accent-tertiary`)
-- `app/components/timeline-threads.tsx` - Canvas-based animated background with thread morphing animation
+- `app/components/timeline-threads.tsx` - SVG-based animated background with thread morphing animation using Float32Array for memory efficiency
 
 ### TypeScript Configuration
 - Path alias: `@/*` maps to project root
@@ -39,10 +39,11 @@ This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScri
 - Geist font family loaded from `next/font/google`
 
 ### Performance Optimizations
-- **120fps Timeline Animation**: Uses Web Worker with OffscreenCanvas for physics/rendering off main thread
-- **Optimized parameters**: 15 threads × 20 segments, 1/120s timestep, reduced constraint iterations
-- **GPU acceleration**: CSS transforms, will-change hints, and containment for smooth scrolling
-- **Scroll optimization**: RAF-throttled scroll events with passive listeners
+- **30fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
+- **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
+- **Optimized parameters**: 30 threads × 15 segments, skip transition calculations when complete
+- **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
+- **Battery optimization**: IntersectionObserver pauses animation when component is off-screen
 
 ## Coding Conventions
 
