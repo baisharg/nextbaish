@@ -13,38 +13,6 @@ export default function Home() {
   const calendarContainerRef = useRef<HTMLDivElement | null>(null);
   const [calendarVisible, setCalendarVisible] = useState(false);
 
-  // Lightweight performance monitoring
-  useEffect(() => {
-    let frameCount = 0;
-    let lastReport = performance.now();
-    let lastFrameTime = performance.now();
-    let slowFrames = 0;
-
-    const measureFPS = () => {
-      frameCount++;
-      const now = performance.now();
-      const frameDuration = now - lastFrameTime;
-
-      if (frameDuration > 16.67) { // Slower than 60fps
-        slowFrames++;
-      }
-
-      if (now - lastReport > 3000) {
-        const fps = frameCount / ((now - lastReport) / 1000);
-        const slowPercent = (slowFrames / frameCount * 100).toFixed(1);
-        console.log(`[Main Thread] ${fps.toFixed(1)} fps | ${slowPercent}% frames >16ms`);
-        frameCount = 0;
-        slowFrames = 0;
-        lastReport = now;
-      }
-
-      lastFrameTime = now;
-      requestAnimationFrame(measureFPS);
-    };
-
-    const rafId = requestAnimationFrame(measureFPS);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
 
   useEffect(() => {
     const node = calendarContainerRef.current;
@@ -70,21 +38,11 @@ export default function Home() {
 
   useEffect(() => {
     let ticking = false;
-    let lastScrollTime = performance.now();
-    let scrollCount = 0;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const start = performance.now();
           setScrolled(window.scrollY > 100);
-          const end = performance.now();
-
-          scrollCount++;
-          if (scrollCount % 10 === 0) {
-            console.log(`[Scroll Performance] State update: ${(end - start).toFixed(2)}ms | Scroll events/sec: ${(1000 / (end - lastScrollTime) * 10).toFixed(0)}`);
-          }
-          lastScrollTime = end;
           ticking = false;
         });
         ticking = true;
