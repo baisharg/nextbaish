@@ -49,10 +49,11 @@ export default function AboutPage() {
 
           {/* Core Concepts Section */}
           <section
-            className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12"
+            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
             id="core-concepts"
           >
-            <div className="grid gap-12 lg:grid-cols-2">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative grid gap-12 lg:grid-cols-2">
               <div className="space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-3xl font-semibold text-slate-900">
@@ -139,18 +140,20 @@ export default function AboutPage() {
 
           {/* External Resources Section */}
           <section
-            className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12"
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
             id="external-resources"
           >
-            <div className="space-y-4">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-4">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {isEnglish ? "Learn More About AI Safety" : "Aprendé Más Sobre Seguridad en IA"}
               </h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="relative grid gap-6 md:grid-cols-2">
               {/* Alignment Forum */}
-              <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="space-y-4">
+              <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                <div className="relative space-y-4">
                   <div className="text-4xl">🔍</div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {isEnglish ? "Alignment Forum" : "Alignment Forum"}
@@ -166,7 +169,7 @@ export default function AboutPage() {
                 </div>
                 <a
                   href="https://alignmentforum.org/"
-                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                  className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -175,8 +178,9 @@ export default function AboutPage() {
               </article>
 
               {/* LessWrong */}
-              <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="space-y-4">
+              <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                <div className="relative space-y-4">
                   <div className="text-4xl">💡</div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {isEnglish ? "LessWrong" : "LessWrong"}
@@ -192,7 +196,7 @@ export default function AboutPage() {
                 </div>
                 <a
                   href="https://www.lesswrong.com/"
-                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                  className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -201,8 +205,9 @@ export default function AboutPage() {
               </article>
 
               {/* 80,000 Hours */}
-              <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="space-y-4">
+              <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                <div className="relative space-y-4">
                   <div className="text-4xl">🧠</div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {isEnglish ? "80,000 Hours" : "80,000 Hours"}
@@ -218,7 +223,7 @@ export default function AboutPage() {
                 </div>
                 <a
                   href="https://80000hours.org/problem-profiles/artificial-intelligence/"
-                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                  className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -227,8 +232,9 @@ export default function AboutPage() {
               </article>
 
               {/* Stampy's Wiki */}
-              <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="space-y-4">
+              <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                <div className="relative space-y-4">
                   <div className="text-4xl">📚</div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {isEnglish ? "Stampy's Wiki" : "Wiki de Stampy"}
@@ -244,7 +250,7 @@ export default function AboutPage() {
                 </div>
                 <a
                   href="https://aisafety.info/"
-                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                  className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -256,10 +262,11 @@ export default function AboutPage() {
 
           {/* Our Approach Section */}
           <section
-            className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12"
+            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
             id="our-approach"
           >
-            <div className="space-y-8">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-8">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {isEnglish ? "Our Approach" : "Nuestro Enfoque"}
               </h2>
@@ -337,15 +344,16 @@ export default function AboutPage() {
 
           {/* Team Section */}
           <section
-            className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12"
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
             id="team"
           >
-            <div className="space-y-4">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-4">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {isEnglish ? "Our Core Team" : "Equipo Principal"}
               </h2>
             </div>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {/* Eitan Sprejer */}
               <article className="flex flex-col items-center space-y-4 text-center">
                 <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full">

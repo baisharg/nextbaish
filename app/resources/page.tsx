@@ -316,8 +316,9 @@ export default function Resources() {
         </section>
 
         {/* Featured Video */}
-        <section className="rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-12">
-          <div className="space-y-4">
+        <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-8 shadow-sm sm:px-12">
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+          <div className="relative space-y-4">
             <div className="space-y-2">
               <h2 className="text-2xl font-semibold text-slate-900">
                 🎥 {isEnglish ? "Introduction to AI Safety" : "Introducción a la Seguridad en IA"}
@@ -360,13 +361,14 @@ export default function Resources() {
             <div className="grid gap-4 md:grid-cols-3">
               <button
                 onClick={() => setSelectedPathway("beginner")}
-                className={`group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
                   selectedPathway === "beginner"
                     ? "border-green-500 shadow-lg"
                     : "border-slate-200 hover:border-green-300 hover:shadow-md"
                 }`}
               >
-                <div className="space-y-3">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                <div className="relative space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-green-500"></div>
@@ -395,13 +397,14 @@ export default function Resources() {
 
               <button
                 onClick={() => setSelectedPathway("intermediate")}
-                className={`group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
                   selectedPathway === "intermediate"
                     ? "border-yellow-500 shadow-lg"
                     : "border-slate-200 hover:border-yellow-300 hover:shadow-md"
                 }`}
               >
-                <div className="space-y-3">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                <div className="relative space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
@@ -430,13 +433,14 @@ export default function Resources() {
 
               <button
                 onClick={() => setSelectedPathway("advanced")}
-                className={`group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
                   selectedPathway === "advanced"
                     ? "border-red-500 shadow-lg"
                     : "border-slate-200 hover:border-red-300 hover:shadow-md"
                 }`}
               >
-                <div className="space-y-3">
+                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                <div className="relative space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-red-500"></div>
@@ -484,8 +488,9 @@ export default function Resources() {
 
         {/* Quick Wins Section */}
         {quickWins.length > 0 && (
-          <section className="space-y-6 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="flex items-start justify-between">
+          <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative flex items-start justify-between">
               <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
                   ⚡ {isEnglish ? "Quick Wins" : "Victorias Rápidas"}
@@ -497,12 +502,13 @@ export default function Resources() {
                 </p>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {quickWins.map((resource) => (
                 <article
                   key={resource.id}
-                  className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
+                  <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button
                     onClick={() => toggleResourceComplete(resource.id)}
                     className="flex-shrink-0 mt-0.5"
@@ -608,8 +614,9 @@ export default function Resources() {
 
         {/* Latest Additions */}
         {latestResources.length > 0 && (
-          <section className="space-y-6 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="flex items-start justify-between">
+          <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative flex items-start justify-between">
               <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
                   🆕 {isEnglish ? "Latest Additions" : "Últimas Adiciones"}
@@ -621,12 +628,13 @@ export default function Resources() {
                 </p>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="relative grid gap-4 sm:grid-cols-2">
               {latestResources.map((resource) => (
                 <article
                   key={resource.id}
-                  className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
+                  <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button
                     onClick={() => toggleResourceComplete(resource.id)}
                     className="flex-shrink-0 mt-0.5"
@@ -675,8 +683,9 @@ export default function Resources() {
         )}
 
         {/* All Resources with Filters */}
-        <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-          <div className="space-y-6">
+        <section className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+          <div className="relative space-y-6">
             <div className="space-y-2">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {isEnglish ? "All Resources" : "Todos los Recursos"}
@@ -765,8 +774,9 @@ export default function Resources() {
               {filteredResources.map((resource) => (
                 <article
                   key={resource.id}
-                  className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
+                  <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button
                     onClick={() => toggleResourceComplete(resource.id)}
                     className="flex-shrink-0 mt-0.5"
@@ -785,7 +795,7 @@ export default function Resources() {
                       )}
                     </div>
                   </button>
-                  <div className="min-w-0 flex-1">
+                  <div className="relative min-w-0 flex-1">
                     <div className="mb-2 flex items-start gap-3">
                       <span className="text-xl">{RESOURCE_TYPE_ICONS[resource.type]}</span>
                       <div className="flex-1">
@@ -821,8 +831,9 @@ export default function Resources() {
         </section>
 
         {/* Next Steps CTA */}
-        <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:px-12">
-          <div className="mx-auto max-w-2xl space-y-6">
+        <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 text-center shadow-sm sm:px-12">
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+          <div className="relative mx-auto max-w-2xl space-y-6">
             <h2 className="text-3xl font-semibold text-slate-900">
               {isEnglish ? "Ready to Get Started?" : "¿Listo para Empezar?"}
             </h2>

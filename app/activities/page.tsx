@@ -105,8 +105,9 @@ export default function Activities() {
           </section>
 
           {/* Events Calendar Section */}
-          <section className="space-y-12 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="space-y-4 text-center">
+          <section className="relative overflow-hidden space-y-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-4 text-center">
               <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
                 {isEnglish ? "Upcoming Events" : "Próximos Eventos"}
               </p>
@@ -143,8 +144,9 @@ export default function Activities() {
           </section>
 
           {/* Mech Interp Course */}
-          <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="space-y-8">
+          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-8">
               <div className="space-y-4">
                 <div className="text-5xl">🧠</div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -304,11 +306,12 @@ export default function Activities() {
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                    <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                    <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {isEnglish ? "Course Details" : "Detalles del Curso"}
                     </h3>
-                    <dl className="space-y-3 text-sm">
+                    <dl className="relative space-y-3 text-sm">
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {isEnglish ? "Duration:" : "Duración:"}
@@ -356,7 +359,7 @@ export default function Activities() {
                         <dd className="text-slate-700">Dr. Laura Fernandez, Carlos Mendez</dd>
                       </div>
                     </dl>
-                    <div className="mt-6">
+                    <div className="relative mt-6">
                       <a
                         href="/contact#mech-interp"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
@@ -453,11 +456,12 @@ export default function Activities() {
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                    <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {isEnglish ? "Program Details" : "Detalles del Programa"}
                     </h3>
-                    <dl className="space-y-3 text-sm">
+                    <dl className="relative space-y-3 text-sm">
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {isEnglish ? "Duration:" : "Duración:"}
@@ -475,7 +479,7 @@ export default function Activities() {
                         </dd>
                       </div>
                     </dl>
-                    <div className="mt-6">
+                    <div className="relative mt-6">
                       <a
                         href="https://course.aisafetyfundamentals.com/alignment"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
@@ -492,8 +496,9 @@ export default function Activities() {
           </section>
 
           {/* Weekly Discussion Group */}
-          <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="space-y-8">
+          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative space-y-8">
               <div className="space-y-4">
                 <div className="text-5xl">💬</div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -572,11 +577,12 @@ export default function Activities() {
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                    <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                    <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {isEnglish ? "Next Discussion" : "Próxima Discusión"}
                     </h3>
-                    <dl className="space-y-3 text-sm">
+                    <dl className="relative space-y-3 text-sm">
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {isEnglish ? "Date:" : "Fecha:"}
@@ -618,7 +624,7 @@ export default function Activities() {
                         <dd className="text-slate-700">Eitan Sprejer</dd>
                       </div>
                     </dl>
-                    <div className="mt-6">
+                    <div className="relative mt-6">
                       <a
                         href="https://t.me/+zhSGhXrn56g1YjVh"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
@@ -755,11 +761,12 @@ export default function Activities() {
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+                    <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {isEnglish ? "Next Paper Session" : "Próxima Sesión de Paper"}
                     </h3>
-                    <dl className="space-y-3 text-sm">
+                    <dl className="relative space-y-3 text-sm">
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {isEnglish ? "Date:" : "Fecha:"}
@@ -801,7 +808,7 @@ export default function Activities() {
                         <dd className="text-slate-700">Eitan Sprejer</dd>
                       </div>
                     </dl>
-                    <div className="mt-6">
+                    <div className="relative mt-6">
                       <a
                         href="/resources#papers"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"

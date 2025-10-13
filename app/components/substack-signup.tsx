@@ -115,12 +115,13 @@ export default function SubstackSignup({ language }: Props) {
   };
 
   return (
-    <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6">
-      <div className="space-y-4">
+    <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
+      <div className="relative space-y-4">
         <h3 className="text-xl font-semibold text-slate-900">{copy.title}</h3>
         <p className="text-sm text-slate-600">{copy.description}</p>
       </div>
-      <form onSubmit={handleSubmit} className="mt-6 space-y-3" noValidate>
+      <form onSubmit={handleSubmit} className="relative mt-6 space-y-3" noValidate>
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="sr-only" htmlFor="substack-email">
             {copy.placeholder}
