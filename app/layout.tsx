@@ -4,6 +4,7 @@ import "./globals.css";
 import TimelineThreads from "./components/timeline-threads";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { LanguageProvider } from "./contexts/language-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,10 +57,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
       >
-        <TimelineThreads className="fixed inset-0 -z-10" style={{ opacity: 0.32 }} />
-        {children}
-        <SpeedInsights />
-        <Analytics />
+        <LanguageProvider>
+          <TimelineThreads className="fixed inset-0 -z-10" style={{ opacity: 0.32 }} />
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </LanguageProvider>
       </body>
     </html>
   );
