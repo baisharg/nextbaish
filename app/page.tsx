@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Script from "next/script";
+import SubstackSignup from "./components/substack-signup";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -14,6 +14,8 @@ export default function Home() {
     "en",
   );
   const [scrolled, setScrolled] = useState(false);
+  const calendarContainerRef = useRef<HTMLDivElement | null>(null);
+  const [calendarVisible, setCalendarVisible] = useState(false);
 
   // Lightweight performance monitoring
   useEffect(() => {
@@ -49,6 +51,28 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const node = calendarContainerRef.current;
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          setCalendarVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     let ticking = false;
     let lastScrollTime = performance.now();
     let scrollCount = 0;
@@ -57,7 +81,7 @@ export default function Home() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const start = performance.now();
-          setScrolled(window.scrollY > 50);
+          setScrolled(window.scrollY > 100);
           const end = performance.now();
 
           scrollCount++;
@@ -132,29 +156,34 @@ export default function Home() {
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
       <header
-        className="sticky top-0 z-20 will-change-transform"
+        className="sticky top-0 z-20 will-change-transform px-6 sm:px-10"
         style={{
           transform: 'translateZ(0)',
-          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
         }}
       >
-        <div className={`mx-auto max-w-6xl transition-all duration-300 ease-out ${
-          scrolled
-            ? "mt-4 rounded-full border border-slate-300 bg-white shadow-lg px-6 py-3"
-            : "border-b border-slate-200 bg-white/90 backdrop-blur px-6 py-4 sm:px-10"
-        }`}
+        <div
+          className="mx-auto transition-all border-slate-200"
           style={{
-            transform: scrolled ? 'scale(0.96)' : 'scale(1)',
-            transformOrigin: 'top center',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            maxWidth: scrolled ? '1100px' : '1280px',
+            marginTop: scrolled ? '1rem' : '0',
+            borderRadius: scrolled ? '9999px' : '0',
+            borderWidth: scrolled ? '1px' : '0 0 1px 0',
+            backgroundColor: scrolled ? 'rgb(255, 255, 255)' : 'transparent',
+            boxShadow: scrolled ? '0 10px 15px -3px rgb(0 0 0 / 0.1)' : 'none',
+            paddingLeft: scrolled ? '2rem' : '0',
+            paddingRight: scrolled ? '2rem' : '0',
+            paddingTop: scrolled ? '0.75rem' : '1rem',
+            paddingBottom: scrolled ? '0.75rem' : '1rem',
+            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-3 min-w-0">
               <div
                 style={{
-                  transform: scrolled ? 'scale(0.8)' : 'scale(1)',
-                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  transform: scrolled ? 'scale(0.85)' : 'scale(1)',
+                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
                 <Image
@@ -162,29 +191,42 @@ export default function Home() {
                   alt="BAISH Logo"
                   width={40}
                   height={40}
-                  className="object-contain"
+                  className="object-contain flex-shrink-0"
                   priority
                 />
               </div>
-              <div>
-                <p className="font-semibold text-lg">
-                  BAISH - Buenos Aires AI Safety Hub
-                </p>
+              <div className="overflow-hidden min-w-0 flex items-center">
                 <p
-                  className="text-xs uppercase tracking-[0.3em] text-slate-500 transition-opacity duration-300"
+                  className="font-semibold whitespace-nowrap"
                   style={{
-                    opacity: scrolled ? 0 : 1,
-                    height: scrolled ? 0 : 'auto',
-                    overflow: 'hidden'
+                    fontSize: scrolled ? '1rem' : '1.125rem',
+                    transition: 'font-size 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  Ensuring AI Benefits Humanity
+                  BAISH
                 </p>
+                <span
+                  className="font-semibold whitespace-nowrap"
+                  style={{
+                    fontSize: scrolled ? '1rem' : '1.125rem',
+                    marginLeft: '0.25rem',
+                    opacity: scrolled ? 0 : 1,
+                    maxWidth: scrolled ? '0px' : '500px',
+                    overflow: 'hidden',
+                    transition: 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), font-size 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                >
+                  - Buenos Aires AI Safety Hub
+                </span>
               </div>
             </div>
-            <nav className={`flex flex-wrap items-center text-sm font-medium text-slate-600 transition-all ${
-              scrolled ? "gap-4" : "gap-6"
-            }`}>
+            <nav
+              className="hidden md:flex items-center text-sm font-medium text-slate-600"
+              style={{
+                gap: scrolled ? '0.75rem' : '1.5rem',
+                transition: 'gap 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
               <a className="hover:text-slate-900" href="#about">
                 {isEnglish ? "About" : "Sobre nosotros"}
               </a>
@@ -198,8 +240,10 @@ export default function Home() {
                 {isEnglish ? "Contact" : "Contacto"}
               </a>
             </nav>
-            <div className="flex items-center gap-3">
-              <div className="flex rounded-full border border-slate-200 bg-white/70 p-1">
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
+                scrolled ? "hidden sm:flex" : "flex"
+              }`}>
                 {LANGUAGES.map((lang) => {
                   const active = lang.code === language;
                   return (
@@ -219,7 +263,9 @@ export default function Home() {
                 })}
               </div>
               <a
-                className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                className={`rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap ${
+                  scrolled ? "px-3 py-2 text-xs" : "px-4 py-2 text-sm"
+                }`}
                 href="#get-involved"
               >
                 {isEnglish ? "Join Us" : "Únete"}
@@ -334,19 +380,29 @@ export default function Home() {
                 : "Mantente al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos."}
             </p>
           </div>
-          <div className="flex justify-center">
-            <iframe
-              title="BAISH Event Calendar"
-              src="https://lu.ma/embed/calendar/cal-0oFAsTn5vpwcAwb/events?lt=light"
-              width="100%"
-              height="450"
-              frameBorder="0"
-              allowFullScreen
-              aria-hidden="false"
-              tabIndex={0}
-              className="rounded-xl border-0"
-              style={{ maxWidth: "800px" }}
-            />
+          <div className="flex justify-center" ref={calendarContainerRef}>
+            {calendarVisible ? (
+              <iframe
+                title="BAISH Event Calendar"
+                src="https://lu.ma/embed/calendar/cal-0oFAsTn5vpwcAwb/events?lt=light"
+                width="100%"
+                height="450"
+                frameBorder="0"
+                allowFullScreen
+                aria-hidden="false"
+                tabIndex={0}
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="rounded-xl border-0"
+                style={{ maxWidth: "800px" }}
+              />
+            ) : (
+              <div className="flex h-[450px] w-full max-w-[800px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500">
+                {isEnglish
+                  ? "Calendar loads once it's almost in view to keep the initial load quick."
+                  : "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida."}
+              </div>
+            )}
           </div>
           <div className="flex justify-center mt-6">
             <a
@@ -508,36 +564,7 @@ export default function Home() {
           className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:grid-cols-2"
           id="get-involved"
         >
-          <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6">
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-slate-900">
-                {isEnglish ? "Join our Mailing List" : "Únete a nuestra lista de correo"}
-              </h3>
-              <p className="text-sm text-slate-600">
-                {isEnglish
-                  ? "Stay updated with our activities, events, and opportunities."
-                  : "Mantente al tanto de nuestras actividades, eventos y oportunidades."}
-              </p>
-            </div>
-            <div className="mt-6" id="custom-substack-embed"></div>
-            <Script id="substack-config" strategy="afterInteractive">
-              {`
-                window.CustomSubstackWidget = {
-                  substackUrl: "baish.substack.com",
-                  placeholder: "example@gmail.com",
-                  buttonText: "${isEnglish ? "Subscribe" : "Suscribirse"}",
-                  theme: "custom",
-                  colors: {
-                    primary: "#9275E5",
-                    input: "#f5f5f5",
-                    email: "#606878",
-                    text: "#1a1a1a"
-                  }
-                };
-              `}
-            </Script>
-            <Script src="https://substackapi.com/widget.js" async />
-          </article>
+          <SubstackSignup language={language} />
 
           <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6">
             <div className="space-y-4">

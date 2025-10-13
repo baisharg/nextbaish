@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import TimelineThreadsWorker from "./components/timeline-threads-worker";
+import TimelineThreads from "./components/timeline-threads";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -56,7 +56,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
       >
-        <TimelineThreadsWorker className="fixed inset-0 -z-10" style={{ opacity: 0.15 }} />
+        <TimelineThreads className="fixed inset-0 -z-10" style={{ opacity: 0.32 }} />
         {children}
         <SpeedInsights />
         <Analytics />
