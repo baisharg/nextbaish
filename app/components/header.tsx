@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -12,8 +15,21 @@ interface HeaderProps {
   scrolled: boolean;
 }
 
+const TITLE_WORDS = ["Buenos", "Aires", "AI", "Safety", "Hub"] as const;
+
 export default function Header({ language, setLanguage, scrolled }: HeaderProps) {
   const isEnglish = language === "en";
+  const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [restWidths, setRestWidths] = useState<number[]>([]);
+  const [firstWidths, setFirstWidths] = useState<number[]>([]);
+
+  useEffect(() => {
+    const widths = restRefs.current.map((element) => element?.offsetWidth ?? 0);
+    setRestWidths(widths);
+    const leading = firstRefs.current.map((element) => element?.offsetWidth ?? 0);
+    setFirstWidths(leading);
+  }, [language]);
 
   return (
     <header
@@ -56,29 +72,69 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
                 priority
               />
             </div>
-            <div className="overflow-hidden min-w-0 flex items-center">
-              <p
-                className="font-semibold whitespace-nowrap"
+            <div className="overflow-hidden min-w-0 flex items-center" aria-label="Buenos Aires AI Safety Hub">
+              <div
+                className="flex items-center font-semibold text-slate-900"
                 style={{
                   fontSize: scrolled ? '1rem' : '1.125rem',
-                  transition: 'font-size 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+                  gap: scrolled ? '0.18rem' : '0.4rem',
+                  letterSpacing: scrolled ? '0.05em' : '0.01em',
+                  transition: 'font-size 0.6s cubic-bezier(0.4, 0, 0.2, 1), gap 0.6s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
-                BAISH
-              </p>
-              <span
-                className="font-semibold whitespace-nowrap"
-                style={{
-                  fontSize: scrolled ? '1rem' : '1.125rem',
-                  marginLeft: '0.25rem',
-                  opacity: scrolled ? 0 : 1,
-                  maxWidth: scrolled ? '0px' : '500px',
-                  overflow: 'hidden',
-                  transition: 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), font-size 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-              >
-                - Buenos Aires AI Safety Hub
-              </span>
+                {TITLE_WORDS.map((word, index) => {
+                  const rest = word.slice(1);
+                  const measuredWidth = restWidths[index];
+                  const firstWidth = firstWidths[index];
+                  const hideFirstOnCollapse = word === "AI";
+                  const collapseRest = scrolled && word !== "AI";
+
+                  return (
+                    <span key={word} className="relative flex">
+                      <span
+                        ref={(node) => {
+                          firstRefs.current[index] = node;
+                        }}
+                        className={`inline-block${hideFirstOnCollapse ? " overflow-hidden" : ""}`}
+                        style={{
+                          maxWidth:
+                            hideFirstOnCollapse && scrolled
+                              ? "0px"
+                              : hideFirstOnCollapse && firstWidth !== undefined
+                                ? `${firstWidth}px`
+                                : undefined,
+                          opacity: hideFirstOnCollapse && scrolled ? 0 : 1,
+                          transition: hideFirstOnCollapse
+                            ? "max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
+                            : "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                      >
+                        {word[0]}
+                      </span>
+                      <span
+                        ref={(node) => {
+                          restRefs.current[index] = node;
+                        }}
+                        className="inline-block overflow-hidden"
+                        style={{
+                          marginLeft: 0,
+                          maxWidth:
+                            collapseRest
+                              ? '0px'
+                              : measuredWidth !== undefined
+                                ? `${measuredWidth}px`
+                                : undefined,
+                          opacity: collapseRest ? 0 : 1,
+                          transition: 'max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {rest ? rest : ''}
+                      </span>
+                    </span>
+                  );
+                })}
+              </div>
             </div>
           </Link>
           <nav
