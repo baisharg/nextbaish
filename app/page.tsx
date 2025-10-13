@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Script from "next/script";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -11,6 +13,67 @@ export default function Home() {
   const [language, setLanguage] = useState<(typeof LANGUAGES)[number]["code"]>(
     "en",
   );
+  const [scrolled, setScrolled] = useState(false);
+
+  // Lightweight performance monitoring
+  useEffect(() => {
+    let frameCount = 0;
+    let lastReport = performance.now();
+    let lastFrameTime = performance.now();
+    let slowFrames = 0;
+
+    const measureFPS = () => {
+      frameCount++;
+      const now = performance.now();
+      const frameDuration = now - lastFrameTime;
+
+      if (frameDuration > 16.67) { // Slower than 60fps
+        slowFrames++;
+      }
+
+      if (now - lastReport > 3000) {
+        const fps = frameCount / ((now - lastReport) / 1000);
+        const slowPercent = (slowFrames / frameCount * 100).toFixed(1);
+        console.log(`[Main Thread] ${fps.toFixed(1)} fps | ${slowPercent}% frames >16ms`);
+        frameCount = 0;
+        slowFrames = 0;
+        lastReport = now;
+      }
+
+      lastFrameTime = now;
+      requestAnimationFrame(measureFPS);
+    };
+
+    const rafId = requestAnimationFrame(measureFPS);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
+  useEffect(() => {
+    let ticking = false;
+    let lastScrollTime = performance.now();
+    let scrollCount = 0;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const start = performance.now();
+          setScrolled(window.scrollY > 50);
+          const end = performance.now();
+
+          scrollCount++;
+          if (scrollCount % 10 === 0) {
+            console.log(`[Scroll Performance] State update: ${(end - start).toFixed(2)}ms | Scroll events/sec: ${(1000 / (end - lastScrollTime) * 10).toFixed(0)}`);
+          }
+          lastScrollTime = end;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const footnotes = [
     {
@@ -68,61 +131,100 @@ export default function Home() {
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4 sm:px-10">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-white font-semibold shadow-sm">
-              B
+      <header
+        className="sticky top-0 z-20 will-change-transform"
+        style={{
+          transform: 'translateZ(0)',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        }}
+      >
+        <div className={`mx-auto max-w-6xl transition-all duration-300 ease-out ${
+          scrolled
+            ? "mt-4 rounded-full border border-slate-300 bg-white shadow-lg px-6 py-3"
+            : "border-b border-slate-200 bg-white/90 backdrop-blur px-6 py-4 sm:px-10"
+        }`}
+          style={{
+            transform: scrolled ? 'scale(0.96)' : 'scale(1)',
+            transformOrigin: 'top center',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div
+                style={{
+                  transform: scrolled ? 'scale(0.8)' : 'scale(1)',
+                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+              >
+                <Image
+                  src="/jacarandashield.png"
+                  alt="BAISH Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div>
+                <p className="font-semibold text-lg">
+                  BAISH - Buenos Aires AI Safety Hub
+                </p>
+                <p
+                  className="text-xs uppercase tracking-[0.3em] text-slate-500 transition-opacity duration-300"
+                  style={{
+                    opacity: scrolled ? 0 : 1,
+                    height: scrolled ? 0 : 'auto',
+                    overflow: 'hidden'
+                  }}
+                >
+                  Ensuring AI Benefits Humanity
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-lg font-semibold">
-                BAISH - Buenos Aires AI Safety Hub
-              </p>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
-                Ensuring AI Benefits Humanity
-              </p>
+            <nav className={`flex flex-wrap items-center text-sm font-medium text-slate-600 transition-all ${
+              scrolled ? "gap-4" : "gap-6"
+            }`}>
+              <a className="hover:text-slate-900" href="#about">
+                {isEnglish ? "About" : "Sobre nosotros"}
+              </a>
+              <a className="hover:text-slate-900" href="#activities">
+                {isEnglish ? "Activities" : "Actividades"}
+              </a>
+              <a className="hover:text-slate-900" href="#resources">
+                {isEnglish ? "Resources" : "Recursos"}
+              </a>
+              <a className="hover:text-slate-900" href="#contact">
+                {isEnglish ? "Contact" : "Contacto"}
+              </a>
+            </nav>
+            <div className="flex items-center gap-3">
+              <div className="flex rounded-full border border-slate-200 bg-white/70 p-1">
+                {LANGUAGES.map((lang) => {
+                  const active = lang.code === language;
+                  return (
+                    <button
+                      key={lang.code}
+                      className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                        active
+                          ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+                          : "text-slate-600 hover:text-slate-900"
+                      }`}
+                      onClick={() => setLanguage(lang.code)}
+                      type="button"
+                    >
+                      {lang.label}
+                    </button>
+                  );
+                })}
+              </div>
+              <a
+                className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                href="#get-involved"
+              >
+                {isEnglish ? "Join Us" : "Únete"}
+              </a>
             </div>
-          </div>
-          <nav className="flex flex-wrap items-center gap-6 text-sm font-medium text-slate-600">
-            <a className="hover:text-slate-900" href="#about">
-              {isEnglish ? "About" : "Sobre nosotros"}
-            </a>
-            <a className="hover:text-slate-900" href="#activities">
-              {isEnglish ? "Activities" : "Actividades"}
-            </a>
-            <a className="hover:text-slate-900" href="#resources">
-              {isEnglish ? "Resources" : "Recursos"}
-            </a>
-            <a className="hover:text-slate-900" href="#contact">
-              {isEnglish ? "Contact" : "Contacto"}
-            </a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <div className="flex rounded-full border border-slate-200 bg-white/70 p-1">
-              {LANGUAGES.map((lang) => {
-                const active = lang.code === language;
-                return (
-                  <button
-                    key={lang.code}
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                      active
-                        ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
-                    onClick={() => setLanguage(lang.code)}
-                    type="button"
-                  >
-                    {lang.label}
-                  </button>
-                );
-              })}
-            </div>
-            <a
-              className="rounded-full bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
-              href="#get-involved"
-            >
-              {isEnglish ? "Join Us" : "Únete"}
-            </a>
           </div>
         </div>
       </header>
@@ -232,57 +334,45 @@ export default function Home() {
                 : "Mantente al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos."}
             </p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {[
-              {
-                date: isEnglish ? "Oct 14 · Tuesday · 2:30 PM" : "14 Oct · Martes · 14:30",
-                title: isEnglish
-                  ? "AIS Research Workshop — Session 4: The Transformer"
-                  : "Taller de Investigación AIS — Sesión 4: El Transformer",
-                host: "baish",
-                attendees: isEnglish ? "0 + infinity" : "0 + infinito",
-              },
-              {
-                date: isEnglish ? "Oct 18 · Saturday · 11:00 AM" : "18 Oct · Sábado · 11:00",
-                title: isEnglish
-                  ? "Policy Roundtable: Scaling Responsible AI"
-                  : "Mesa Redonda: Escalar la IA Responsable",
-                host: "baish",
-                attendees: isEnglish ? "12 confirmed" : "12 confirmados",
-              },
-              {
-                date: isEnglish ? "Oct 25 · Saturday · 4:00 PM" : "25 Oct · Sábado · 16:00",
-                title: isEnglish
-                  ? "Student Lightning Talks — Interpretability"
-                  : "Lightning Talks Estudiantiles — Interpretabilidad",
-                host: "baish",
-                attendees: isEnglish ? "18 registered" : "18 inscriptos",
-              },
-            ].map((event) => (
-              <article
-                key={event.title}
-                className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6"
+          <div className="flex justify-center">
+            <iframe
+              title="BAISH Event Calendar"
+              src="https://lu.ma/embed/calendar/cal-0oFAsTn5vpwcAwb/events?lt=light"
+              width="100%"
+              height="450"
+              frameBorder="0"
+              allowFullScreen
+              aria-hidden="false"
+              tabIndex={0}
+              className="rounded-xl border-0"
+              style={{ maxWidth: "800px" }}
+            />
+          </div>
+          <div className="flex justify-center mt-6">
+            <a
+              href="https://www.google.com/calendar/render?cid=http%3A%2F%2Fapi.lu.ma%2Fics%2Fget%3Fentity%3Dcalendar%26id%3Dcal-0oFAsTn5vpwcAwb"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <div className="space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
-                    {event.date}
-                  </p>
-                  <h3 className="text-lg font-semibold text-slate-900">
-                    {event.title}
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    {isEnglish ? "By" : "Por"} {event.host} · {event.attendees}
-                  </p>
-                </div>
-                <a
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
-                  href="#contact"
-                >
-                  {isEnglish ? "Subscribe to calendar" : "Suscribirse al calendario"}
-                  <span aria-hidden>→</span>
-                </a>
-              </article>
-            ))}
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              {isEnglish ? "Subscribe to Calendar" : "Suscribirse al calendario"}
+            </a>
           </div>
         </section>
 
@@ -429,25 +519,24 @@ export default function Home() {
                   : "Mantente al tanto de nuestras actividades, eventos y oportunidades."}
               </p>
             </div>
-            <form className="mt-6 space-y-3">
-              <input
-                aria-label={isEnglish ? "Email address" : "Correo electrónico"}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm placeholder:text-slate-400 focus:border-[var(--color-accent-primary)] focus:outline-none"
-                placeholder="example@gmail.com"
-                type="email"
-              />
-              <button
-                className="w-full rounded-xl bg-[var(--color-accent-primary)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-primary-hover)]"
-                type="submit"
-              >
-                {isEnglish ? "Subscribe" : "Suscribirse"}
-              </button>
-              <p className="text-xs text-slate-500">
-                {isEnglish
-                  ? "This embed is no longer supported. Please migrate to Substack."
-                  : "Este embed ya no es compatible. Migra a Substack."}
-              </p>
-            </form>
+            <div className="mt-6" id="custom-substack-embed"></div>
+            <Script id="substack-config" strategy="afterInteractive">
+              {`
+                window.CustomSubstackWidget = {
+                  substackUrl: "baish.substack.com",
+                  placeholder: "example@gmail.com",
+                  buttonText: "${isEnglish ? "Subscribe" : "Suscribirse"}",
+                  theme: "custom",
+                  colors: {
+                    primary: "#9275E5",
+                    input: "#f5f5f5",
+                    email: "#606878",
+                    text: "#1a1a1a"
+                  }
+                };
+              `}
+            </Script>
+            <Script src="https://substackapi.com/widget.js" async />
           </article>
 
           <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6">
@@ -465,7 +554,7 @@ export default function Home() {
             </div>
             <a
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--color-accent-primary)] bg-white px-4 py-3 text-sm font-semibold text-[var(--color-accent-primary)] transition hover:bg-[#f5f0ff]"
-              href="https://t.me/baish"
+              href="https://t.me/+zhSGhXrn56g1YjVh"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -479,33 +568,137 @@ export default function Home() {
         className="border-t border-slate-200 bg-white px-6 py-10 text-sm text-slate-600 sm:px-10"
         id="contact"
       >
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-base font-semibold text-slate-900">
-              Buenos Aires AI Safety Hub
-            </p>
-            <p>© {new Date().getFullYear()} BAISH. {isEnglish ? "All rights reserved." : "Todos los derechos reservados."}</p>
+        <div className="mx-auto max-w-6xl space-y-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/jacarandashield.png"
+                  alt="BAISH Logo"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                />
+                <p className="text-base font-semibold text-slate-900">
+                  Buenos Aires AI Safety Hub
+                </p>
+              </div>
+              <p>© {new Date().getFullYear()} BAISH. {isEnglish ? "All rights reserved." : "Todos los derechos reservados."}</p>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <a className="hover:text-slate-900" href="#about">
+                {isEnglish ? "About" : "Sobre nosotros"}
+              </a>
+              <a className="hover:text-slate-900" href="#activities">
+                {isEnglish ? "Activities" : "Actividades"}
+              </a>
+              <a className="hover:text-slate-900" href="#resources">
+                {isEnglish ? "Resources" : "Recursos"}
+              </a>
+              <a className="hover:text-slate-900" href="#get-involved">
+                {isEnglish ? "Get Involved" : "Participa"}
+              </a>
+              <a className="hover:text-slate-900" href="#contact">
+                {isEnglish ? "Contact" : "Contacto"}
+              </a>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-4">
-            <a className="hover:text-slate-900" href="#about">
-              {isEnglish ? "About" : "Sobre nosotros"}
-            </a>
-            <a className="hover:text-slate-900" href="#activities">
-              {isEnglish ? "Activities" : "Actividades"}
-            </a>
-            <a className="hover:text-slate-900" href="#resources">
-              {isEnglish ? "Resources" : "Recursos"}
-            </a>
-            <a className="hover:text-slate-900" href="#get-involved">
-              {isEnglish ? "Get Involved" : "Participa"}
-            </a>
-            <a className="hover:text-slate-900" href="#contact">
-              {isEnglish ? "Contact" : "Contacto"}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-6">
+            <div className="flex gap-4">
+              <a
+                href="https://www.instagram.com/baish_arg"
+                aria-label="Instagram"
+                className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/baish-arg"
+                aria-label="LinkedIn"
+                className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+              <a
+                href="https://t.me/+zhSGhXrn56g1YjVh"
+                aria-label="Telegram"
+                className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </a>
+              <a
+                href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                aria-label="WhatsApp"
+                className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+              </a>
+            </div>
+            <a className="hover:text-slate-900" href="#privacy">
+              {isEnglish ? "Privacy Policy" : "Política de privacidad"}
             </a>
           </div>
-          <a className="hover:text-slate-900" href="#privacy">
-            {isEnglish ? "Privacy Policy" : "Política de privacidad"}
-          </a>
         </div>
       </footer>
     </div>

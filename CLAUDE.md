@@ -5,9 +5,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 - `npm install` - Install dependencies
-- `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload
+- `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
 - `npm run build` - Compile production bundle (run before opening PRs that touch build paths)
 - `npm run start` - Run optimized production server from last build
+
+**Note:** Dev server should remain running at port 3000 during active development.
 
 ## Project Architecture
 
@@ -35,6 +37,12 @@ This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScri
 - Client components marked with `"use client"`
 - Static assets in `public/` served from root path
 - Geist font family loaded from `next/font/google`
+
+### Performance Optimizations
+- **120fps Timeline Animation**: Uses Web Worker with OffscreenCanvas for physics/rendering off main thread
+- **Optimized parameters**: 15 threads × 20 segments, 1/120s timestep, reduced constraint iterations
+- **GPU acceleration**: CSS transforms, will-change hints, and containment for smooth scrolling
+- **Scroll optimization**: RAF-throttled scroll events with passive listeners
 
 ## Coding Conventions
 
