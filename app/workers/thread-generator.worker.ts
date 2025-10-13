@@ -109,6 +109,6 @@ self.onmessage = (event: MessageEvent<GenerateThreadsMessage>) => {
       threads,
     };
 
-    self.postMessage(message, transferables);
+    self.postMessage(message, { transfer: transferables });
   }
 };
