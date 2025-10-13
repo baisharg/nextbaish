@@ -23,6 +23,7 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
   const [firstWidths, setFirstWidths] = useState<number[]>([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const widths = restRefs.current.map((element) => element?.offsetWidth ?? 0);
@@ -30,6 +31,37 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     const leading = firstRefs.current.map((element) => element?.offsetWidth ?? 0);
     setFirstWidths(leading);
   }, [language]);
+
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [mobileMenuOpen]);
+
+  const navLinks = [
+    { href: "/about", label: isEnglish ? "About" : "Sobre nosotros" },
+    { href: "/activities", label: isEnglish ? "Activities" : "Actividades" },
+    { href: "/research", label: isEnglish ? "Research" : "Investigación" },
+    { href: "/resources", label: isEnglish ? "Resources" : "Recursos" },
+    { href: "/contact", label: isEnglish ? "Contact" : "Contacto" },
+  ];
 
   return (
     <header
@@ -144,25 +176,19 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
               transition: 'gap 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
-            <Link className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full" href="/about">
-              {isEnglish ? "About" : "Sobre nosotros"}
-            </Link>
-            <Link className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full" href="/activities">
-              {isEnglish ? "Activities" : "Actividades"}
-            </Link>
-            <Link className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full" href="/research">
-              {isEnglish ? "Research" : "Investigación"}
-            </Link>
-            <Link className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full" href="/resources">
-              {isEnglish ? "Resources" : "Recursos"}
-            </Link>
-            <Link className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full" href="/contact">
-              {isEnglish ? "Contact" : "Contacto"}
-            </Link>
+            {navLinks.map(link => (
+              <Link
+                key={link.href}
+                className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full"
+                href={link.href}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
-              scrolled ? "hidden sm:flex" : "flex"
+              scrolled ? "hidden sm:flex" : "hidden md:flex"
             }`}>
               {LANGUAGES.map((lang) => {
                 const active = lang.code === language;
@@ -183,7 +209,7 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
               })}
             </div>
             <a
-              className="rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
+              className="hidden sm:inline-flex rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
               style={{
                 padding: scrolled ? '0.5rem 0.75rem' : '0.5rem 1rem',
                 fontSize: scrolled ? '0.75rem' : '0.875rem',
@@ -193,9 +219,143 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
             >
               {isEnglish ? "Join Us" : "Únete"}
             </a>
+
+            {/* Hamburger button */}
+            <button
+              className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? (isEnglish ? "Close menu" : "Cerrar menú") : (isEnglish ? "Open menu" : "Abrir menú")}
+              aria-expanded={mobileMenuOpen}
+              type="button"
+            >
+              <div className="w-5 h-4 flex flex-col justify-between">
+                <span
+                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  style={{
+                    transform: mobileMenuOpen ? 'rotate(45deg) translateY(7px)' : 'none',
+                  }}
+                />
+                <span
+                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  style={{
+                    opacity: mobileMenuOpen ? 0 : 1,
+                  }}
+                />
+                <span
+                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  style={{
+                    transform: mobileMenuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none',
+                  }}
+                />
+              </div>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            animation: 'fadeIn 0.3s ease-out',
+          }}
+        />
+      )}
+
+      {/* Mobile menu panel */}
+      <div
+        className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl z-40 md:hidden"
+        style={{
+          transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <div className="flex flex-col h-full">
+          {/* Mobile menu header */}
+          <div className="flex items-center justify-between p-6 border-b border-slate-200">
+            <span className="text-lg font-semibold text-slate-900">
+              {isEnglish ? "Menu" : "Menú"}
+            </span>
+            <button
+              className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label={isEnglish ? "Close menu" : "Cerrar menú"}
+              type="button"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile navigation links */}
+          <nav className="flex-1 overflow-y-auto p-6">
+            <ul className="space-y-1">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="block px-4 py-3 text-base font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* Language switcher in mobile menu */}
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <p className="px-4 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                {isEnglish ? "Language" : "Idioma"}
+              </p>
+              <div className="flex gap-2">
+                {LANGUAGES.map((lang) => {
+                  const active = lang.code === language;
+                  return (
+                    <button
+                      key={lang.code}
+                      className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition ${
+                        active
+                          ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                      onClick={() => setLanguage(lang.code)}
+                      type="button"
+                    >
+                      {lang.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
+
+          {/* Mobile menu footer with CTA */}
+          <div className="p-6 border-t border-slate-200">
+            <a
+              className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
+              href="#get-involved"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {isEnglish ? "Join Us" : "Únete"}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </header>
   );
 }
