@@ -185,7 +185,7 @@ export default function Home() {
 
             <div>
               <a
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                className="button-primary"
                 href="https://baish.com.ar/#get-involved"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -244,7 +244,7 @@ export default function Home() {
           <div className="flex justify-center mt-6">
             <a
               href="https://www.google.com/calendar/render?cid=http%3A%2F%2Fapi.lu.ma%2Fics%2Fget%3Fentity%3Dcalendar%26id%3Dcal-0oFAsTn5vpwcAwb"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+              className="button-secondary"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -280,61 +280,99 @@ export default function Home() {
                 : "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA."}
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               {
+                eyebrow: isEnglish ? "Course" : "Curso",
                 title: isEnglish ? "Mech Interp Course" : "Curso de Interp Mecánica",
                 description: isEnglish
                   ? "Intensive 1-month course on mechanistic interpretability methods."
                   : "Curso intensivo de 1 mes sobre métodos de interpretabilidad mecánica.",
-                status: isEnglish ? "Starts end of April 2025" : "Comienza fin de abril 2025",
+                metaItems: [
+                  { icon: "calendar", text: isEnglish ? "April 2025" : "Abril 2025" },
+                  { icon: "clock", text: isEnglish ? "1 month" : "1 mes" },
+                ],
               },
               {
+                eyebrow: isEnglish ? "Activities" : "Actividades",
                 title: isEnglish
                   ? "Weekly Discussion Group"
                   : "Grupo de Discusión Semanal",
                 description: isEnglish
                   ? "Weekly meetings to discuss recent papers, concepts, and developments in AI safety."
                   : "Reuniones semanales para discutir papers, conceptos y novedades de seguridad en IA.",
-                status: isEnglish ? "Every Tuesday @ 2pm" : "Todos los martes @ 14h",
+                metaItems: [
+                  { icon: "calendar", text: isEnglish ? "Tuesdays · 2pm" : "Martes · 14h" },
+                  { icon: "clock", text: isEnglish ? "1 hr" : "1 hr" },
+                ],
               },
               {
+                eyebrow: isEnglish ? "Activities" : "Actividades",
                 title: isEnglish ? "Paper Reading Club" : "Club de Lectura",
                 description: isEnglish
                   ? "Student-led presentations of AI safety papers."
                   : "Presentaciones lideradas por estudiantes sobre papers de seguridad en IA.",
-                status: isEnglish ? "Every Thursday @ 2pm" : "Todos los jueves @ 14h",
+                metaItems: [
+                  { icon: "calendar", text: isEnglish ? "Thursdays · 2pm" : "Jueves · 14h" },
+                  { icon: "clock", text: isEnglish ? "1 hr" : "1 hr" },
+                ],
               },
               {
+                eyebrow: isEnglish ? "Course" : "Curso",
                 title: isEnglish
-                  ? "AGI Safety Fundamentals Cohort"
-                  : "Cohorte Fundamentos de Seguridad AGI",
+                  ? "AGI Safety Fundamentals"
+                  : "Fundamentos de Seguridad AGI",
                 description: isEnglish
-                  ? "An 8-week guided course covering the essential concepts in AI alignment and safety."
+                  ? "An 8-week guided course covering essential concepts in AI alignment and safety."
                   : "Curso guiado de 8 semanas que cubre los conceptos esenciales de alineamiento y seguridad en IA.",
-                status: isEnglish ? "Starting in the second semester" : "Inicia en el segundo semestre",
+                metaItems: [
+                  { icon: "calendar", text: isEnglish ? "Semester 2" : "Semestre 2" },
+                  { icon: "clock", text: isEnglish ? "8 weeks" : "8 semanas" },
+                ],
               },
             ].map((activity) => (
               <article
                 key={activity.title}
-                className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-6 shadow-sm"
+                className="card-glass"
               >
-                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-                <div className="relative space-y-4">
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {activity.title}
-                  </h3>
-                  <p className="text-sm text-slate-600">{activity.description}</p>
+                <div className="card-eyebrow">{activity.eyebrow}</div>
+                <h3 className="card-title">{activity.title}</h3>
+                <p className="card-body">{activity.description}</p>
+
+                <div className="card-meta">
+                  {activity.metaItems.map((item, idx) => (
+                    <span key={idx} className="pill">
+                      {item.icon === "calendar" ? (
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                          <line x1="16" y1="2" x2="16" y2="6"></line>
+                          <line x1="8" y1="2" x2="8" y2="6"></line>
+                          <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                      ) : (
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                      )}
+                      {item.text}
+                    </span>
+                  ))}
                 </div>
-                <div className="relative mt-6 space-y-3">
-                  <span className="inline-flex rounded-full bg-[#9275E51a] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
-                    {activity.status}
-                  </span>
+
+                <div className="card-footer">
                   <a
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
+                    className="button-primary"
                     href="#contact"
                   >
-                    {isEnglish ? "Learn More" : "Más información"} →
+                    {isEnglish ? "Join now" : "Inscríbete"}
+                  </a>
+                  <a
+                    className="link-arrow"
+                    href="#contact"
+                  >
+                    {isEnglish ? "Learn more" : "Más info"}
+                    <span>→</span>
                   </a>
                 </div>
               </article>
@@ -357,44 +395,74 @@ export default function Home() {
                 : "Profundiza en la seguridad de IA con lecturas y herramientas seleccionadas."}
             </p>
           </div>
-          <div className="relative grid gap-6 md:grid-cols-3">
+          <div className="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
+                eyebrow: isEnglish ? "Resources" : "Recursos",
                 title: isEnglish ? "Starter Reading List" : "Lecturas Iniciales",
                 description: isEnglish
-                  ? "Foundational essays and papers to get oriented in alignment."
-                  : "Ensayos y papers fundamentales para orientarte en alineamiento.",
+                  ? "Foundational essays and papers to get oriented in AI alignment research."
+                  : "Ensayos y papers fundamentales para orientarte en investigación de alineamiento.",
+                metaItems: [
+                  { icon: "book", text: isEnglish ? "15+ papers" : "15+ papers" },
+                ],
               },
               {
+                eyebrow: isEnglish ? "Resources" : "Recursos",
                 title: isEnglish ? "Research Toolkit" : "Kit de Herramientas",
                 description: isEnglish
-                  ? "Code repositories, benchmarks, and experiment templates."
-                  : "Repositorios de código, benchmarks y plantillas de experimentos.",
+                  ? "Code repositories, benchmarks, and experiment templates for AI safety research."
+                  : "Repositorios de código, benchmarks y plantillas de experimentos para investigación.",
+                metaItems: [
+                  { icon: "book", text: isEnglish ? "Tools & code" : "Herramientas" },
+                ],
               },
               {
+                eyebrow: isEnglish ? "Resources" : "Recursos",
                 title: isEnglish ? "Community Handbook" : "Manual Comunitario",
                 description: isEnglish
-                  ? "Guidelines for hosting meetups and facilitating discussions."
-                  : "Guía para organizar encuentros y facilitar discusiones.",
+                  ? "Guidelines for hosting meetups and facilitating productive discussions."
+                  : "Guía para organizar encuentros y facilitar discusiones productivas.",
+                metaItems: [
+                  { icon: "book", text: isEnglish ? "Guide" : "Guía" },
+                ],
               },
             ].map((resource) => (
               <article
                 key={resource.title}
-                className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-6"
+                className="card-glass"
               >
-                <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-                <div className="relative space-y-3">
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {resource.title}
-                  </h3>
-                  <p className="text-sm text-slate-600">{resource.description}</p>
+                <div className="card-eyebrow">{resource.eyebrow}</div>
+                <h3 className="card-title">{resource.title}</h3>
+                <p className="card-body">{resource.description}</p>
+
+                <div className="card-meta">
+                  {resource.metaItems.map((item, idx) => (
+                    <span key={idx} className="pill">
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                      </svg>
+                      {item.text}
+                    </span>
+                  ))}
                 </div>
-                <a
-                  className="relative mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)]"
-                  href="#contact"
-                >
-                  {isEnglish ? "View Resource" : "Ver recurso"} →
-                </a>
+
+                <div className="card-footer">
+                  <a
+                    className="button-primary"
+                    href="#contact"
+                  >
+                    {isEnglish ? "View resource" : "Ver recurso"}
+                  </a>
+                  <a
+                    className="link-arrow"
+                    href="#contact"
+                  >
+                    {isEnglish ? "Learn more" : "Más info"}
+                    <span>→</span>
+                  </a>
+                </div>
               </article>
             ))}
           </div>
@@ -407,22 +475,20 @@ export default function Home() {
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <SubstackSignup language={language} />
 
-          <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-            <div className="relative space-y-4">
-              <h3 className="text-xl font-semibold text-slate-900">
-                {isEnglish
-                  ? "Join our Telegram Community"
-                  : "Únete a nuestra comunidad en Telegram"}
-              </h3>
-              <p className="text-sm text-slate-600">
-                {isEnglish
-                  ? "Connect with fellow students interested in AI safety."
-                  : "Conéctate con estudiantes interesados en la seguridad de IA."}
-              </p>
-            </div>
+          <article className="card-glass">
+            <div className="card-eyebrow">{isEnglish ? "Community" : "Comunidad"}</div>
+            <h3 className="card-title">
+              {isEnglish
+                ? "Join our Telegram Community"
+                : "Únete a nuestra comunidad en Telegram"}
+            </h3>
+            <p className="card-body">
+              {isEnglish
+                ? "Connect with fellow students interested in AI safety."
+                : "Conéctate con estudiantes interesados en la seguridad de IA."}
+            </p>
             <a
-              className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--color-accent-primary)] bg-white px-4 py-3 text-sm font-semibold text-[var(--color-accent-primary)] transition hover:bg-[#f5f0ff]"
+              className="button-outline mt-auto"
               href="https://t.me/+zhSGhXrn56g1YjVh"
               rel="noopener noreferrer"
               target="_blank"

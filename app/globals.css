@@ -19,6 +19,34 @@
   --color-error: #EF4444;
   --color-warning: #F59E0B;
 
+  /* Brand color scale */
+  --brand-600: #6D5BF5;
+  --brand-500: #7E6AF6;
+  --brand-400: #9388FF;
+  --brand-50: #F4F2FF;
+
+  /* Surface colors */
+  --surface: #FFFFFF;
+  --surface-muted: #FBFAFF;
+
+  /* Border & ring */
+  --border: #E8E5F5;
+  --ring: #D8D2FF;
+
+  /* Text hierarchy */
+  --text: #2A2444;
+  --text-strong: #171129;
+  --text-dim: #6B6580;
+
+  /* Radius & shadows */
+  --radius-16: 16px;
+  --shadow-1: 0 1px 2px rgba(17, 12, 46, 0.06), 0 8px 24px rgba(17, 12, 46, 0.06);
+  --shadow-2: 0 6px 16px rgba(17, 12, 46, 0.10);
+
+  /* Animation */
+  --dur: 160ms;
+  --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+
   --surface-card: #ffffff;
 }
 
@@ -75,4 +103,260 @@ header {
 canvas {
   transform: translateZ(0);
   will-change: contents;
+}
+
+/* Frosted Glass Cards */
+.card-glass {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.72));
+  backdrop-filter: saturate(120%) blur(8px);
+  border: 1px solid rgba(147, 136, 255, 0.35);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-1);
+  padding: 24px;
+  min-height: 240px;
+  transition: transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing), border-color var(--dur);
+}
+
+/* Gradient accent bar */
+.card-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(109, 91, 245, 0.18), rgba(147, 136, 255, 0) 40%);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+}
+
+.card-glass:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+.card-glass:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring), var(--shadow-2);
+}
+
+/* Card typography */
+.card-eyebrow {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brand-500);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin: 0 0 8px;
+}
+
+.card-body {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
+/* Meta pills */
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(126, 106, 246, 0.12);
+  border: 1px solid rgba(126, 106, 246, 0.25);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.pill svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.65;
+  stroke-width: 2.5;
+}
+
+/* Card footer */
+.card-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* Primary button */
+.button-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--brand-600);
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  transition: filter var(--dur) var(--easing), transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(109, 91, 245, 0.25);
+}
+
+.button-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(109, 91, 245, 0.35);
+}
+
+.button-primary:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Secondary button (light background) */
+.button-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--color-accent-secondary);
+  color: var(--text-strong);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  transition: filter var(--dur) var(--easing), transform var(--dur) var(--easing), background-color var(--dur) var(--easing);
+  cursor: pointer;
+}
+
+.button-secondary:hover {
+  background: var(--color-accent-tertiary);
+  transform: translateY(-1px);
+}
+
+.button-secondary:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Outline button (white with border) */
+.button-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--brand-600);
+  background: white;
+  color: var(--brand-600);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  transition: background-color var(--dur) var(--easing), transform var(--dur) var(--easing);
+  cursor: pointer;
+}
+
+.button-outline:hover {
+  background: var(--brand-50);
+  transform: translateY(-1px);
+}
+
+.button-outline:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Secondary link */
+.link-secondary {
+  color: var(--brand-600);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link-secondary:hover {
+  text-decoration: underline;
+}
+
+/* Link with arrow animation */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand-600);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+  transition: gap var(--dur) var(--easing);
+}
+
+.link-arrow:hover {
+  gap: 8px;
+}
+
+/* Form input styles */
+.input-field {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--text-strong);
+  transition: border-color var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.input-field::placeholder {
+  color: var(--text-dim);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-glass,
+  .button-primary,
+  .button-secondary,
+  .button-outline,
+  .link-arrow {
+    transition: none;
+    transform: none;
+  }
 }

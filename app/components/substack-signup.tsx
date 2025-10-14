@@ -115,13 +115,12 @@ export default function SubstackSignup({ language }: Props) {
   };
 
   return (
-    <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-      <div className="relative space-y-4">
-        <h3 className="text-xl font-semibold text-slate-900">{copy.title}</h3>
-        <p className="text-sm text-slate-600">{copy.description}</p>
-      </div>
-      <form onSubmit={handleSubmit} className="relative mt-6 space-y-3" noValidate>
+    <article className="card-glass">
+      <div className="card-eyebrow">{copy.title === "Join our Mailing List" ? "Newsletter" : "Boletín"}</div>
+      <h3 className="card-title">{copy.title}</h3>
+      <p className="card-body">{copy.description}</p>
+
+      <form onSubmit={handleSubmit} className="space-y-3 mt-auto" noValidate>
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="sr-only" htmlFor="substack-email">
             {copy.placeholder}
@@ -135,11 +134,11 @@ export default function SubstackSignup({ language }: Props) {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder={copy.placeholder}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]/40"
+            className="input-field flex-1"
           />
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-xl bg-[var(--color-accent-primary)] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)] disabled:cursor-not-allowed disabled:opacity-70"
+            className="button-primary whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
             disabled={status === "loading"}
           >
             {status === "loading" ? `${copy.button}…` : copy.button}
