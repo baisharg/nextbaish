@@ -8,7 +8,6 @@ import {
   type HSL,
   type PathProfile,
   THREAD_COUNT,
-  PIVOT_X,
   VIEWBOX_SIZE,
   FLIP_INTERVAL_MS,
   SETTLE_BUFFER_MS,
@@ -29,9 +28,26 @@ import {
   clamp,
 } from "../utils/thread-utils";
 
-// ============================================================================
+/**
+ * --------------------------------------------------------------------------------
+ * PERF CONSTANTS / PRECOMPUTATION (module scope)
+ * --------------------------------------------------------------------------------
+ * We precompute the segment phase offsets once (hot-path math), and keep small,
+ * reusable string buffers and typed arrays in thread state to avoid per-frame GC.
+ */
+const SEG_LEN = SEGMENT_FACTORS.length;
+// Phase offsets used every frame in sin/cos; precompute once.
+const SIN_OFFSETS = new Float32Array(SEG_LEN);
+const COS_OFFSETS = new Float32Array(SEG_LEN);
+for (let i = 0; i < SEG_LEN; i++) {
+  const s = SEGMENT_FACTORS[i];
+  SIN_OFFSETS[i] = s * Math.PI;
+  COS_OFFSETS[i] = s * Math.PI * 0.5;
+}
+
+// --------------------------------------------------------------------------------
 // TYPES
-// ============================================================================
+// --------------------------------------------------------------------------------
 
 type ThreadState = {
   id: number;
@@ -41,6 +57,8 @@ type ThreadState = {
   profile: PathProfile;
   direction: Direction;
   path: string;
+
+  // Timing / motion
   duration: number;
   lastFlipAt: number;
   swayPhase: number;
@@ -51,27 +69,47 @@ type ThreadState = {
   driftAmp: number;
   targetDirection: Direction;
   transitionStartTime: number;
+
+  // Scratch/derived for perf:
+  // - floatingPoints: final per-frame coordinates (drift + sway applied)
+  // - bounds for gradient (y1/y2 in absolute SVG coords)
+  // All arrays are sized to the path's point count and reused each frame.
+  floatingPoints: Float32Array;
+  y1: number;
+  y2: number;
+
+  // Precomputed gradient stop strings to avoid recomputing hsl every render
+  gradUp0: string;
+  gradUp50: string;
+  gradUp100: string;
+  gradDown0: string;
+  gradDown30: string;
+  gradDown60: string;
 };
 
-// ============================================================================
-// PATH STRING GENERATION
-// ============================================================================
+// --------------------------------------------------------------------------------
+// GEOMETRY → STRING (reuses numbers, avoids temporary arrays)
+// --------------------------------------------------------------------------------
 
+/**
+ * Builds a cubic Bezier path string from normalized points in [0..1] space,
+ * scaled to the SVG viewBox. No allocations besides the output string.
+ */
 const buildCubicBezierPath = (points: Float32Array): string => {
-  const numPoints = points.length / 2;
-  if (numPoints === 0) return "";
+  const n = points.length >>> 1; // number of (x,y) points
+  if (n === 0) return "";
 
-  const path: string[] = new Array(numPoints);
-
+  // Start "M x y"
   const x0 = (points[0] * VIEWBOX_SIZE).toFixed(2);
   const y0 = (points[1] * VIEWBOX_SIZE).toFixed(2);
-  path[0] = `M ${x0} ${y0}`;
+  // We'll assemble into a string array for faster concatenation.
+  const out: string[] = [`M ${x0} ${y0}`];
 
-  for (let i = 1; i < numPoints; i++) {
-    const prevIdx = (i - 1) * 2;
-    const currIdx = i * 2;
-    const prevPrevIdx = i >= 2 ? (i - 2) * 2 : prevIdx;
-    const nextIdx = i < numPoints - 1 ? (i + 1) * 2 : currIdx;
+  for (let i = 1; i < n; i++) {
+    const prevIdx = (i - 1) << 1;
+    const currIdx = i << 1;
+    const prevPrevIdx = i >= 2 ? ((i - 2) << 1) : prevIdx;
+    const nextIdx = i < n - 1 ? ((i + 1) << 1) : currIdx;
 
     const prevX = points[prevIdx] * VIEWBOX_SIZE;
     const prevY = points[prevIdx + 1] * VIEWBOX_SIZE;
@@ -87,28 +125,24 @@ const buildCubicBezierPath = (points: Float32Array): string => {
     const cp2x = (currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR).toFixed(2);
     const cp2y = (currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR).toFixed(2);
 
-    path[i] = `C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${currX.toFixed(2)} ${currY.toFixed(2)}`;
+    out.push(`C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${currX.toFixed(2)} ${currY.toFixed(2)}`);
   }
 
-  return path.join(" ");
+  return out.join(" ");
 };
 
-const pointsToStaticPath = (points: Float32Array): string => buildCubicBezierPath(points);
+const easeInOutCubic = (t: number): number =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-const lerpPoints = (from: Float32Array, to: Float32Array, t: number): Float32Array => {
-  const result = new Float32Array(from.length);
-  for (let i = 0; i < from.length; i++) {
-    result[i] = from[i] + (to[i] - from[i]) * t;
-  }
-  return result;
-};
-
-const easeInOutCubic = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-const pointsToAnimatedPath = (
-  basePoints: Float32Array,
-  targetPoints: Float32Array,
-  time: number,
+/**
+ * Writes final animated (drift+sway) coordinates into thread.floatingPoints.
+ * This fuses interpolation + drift/sway. No new arrays per frame.
+ */
+const writeAnimatedPoints = (
+  target: Float32Array,
+  base: Float32Array,
+  into: Float32Array,
+  now: number,
   transitionStartTime: number,
   duration: number,
   swayPhase: number,
@@ -117,47 +151,41 @@ const pointsToAnimatedPath = (
   driftFreq: number,
   swayAmp: number,
   driftAmp: number,
-): string => {
-  if (basePoints.length === 0) return "";
+): void => {
+  const n = into.length >>> 1;
 
-  let interpolatedPoints: Float32Array;
-
-  if (transitionStartTime === 0) {
-    interpolatedPoints = targetPoints;
-  } else {
-    const transitionProgress = Math.min((time - transitionStartTime) / duration, 1);
-
-    if (transitionProgress >= 1) {
-      interpolatedPoints = targetPoints;
-    } else {
-      const easedProgress = easeInOutCubic(transitionProgress);
-      interpolatedPoints = lerpPoints(basePoints, targetPoints, easedProgress);
-    }
+  // Compute transition factor once.
+  let t = 1;
+  if (transitionStartTime > 0) {
+    const progress = Math.min((now - transitionStartTime) / duration, 1);
+    t = progress >= 1 ? 1 : easeInOutCubic(progress);
   }
 
-  const numPoints = interpolatedPoints.length / 2;
-  const floatingPoints = new Float32Array(interpolatedPoints.length);
+  // Reuse precomputed phase offsets (hot path).
+  for (let i = 0; i < n; i++) {
+    const xi = i << 1;
+    const yi = xi + 1;
 
-  for (let i = 0; i < numPoints; i++) {
-    const xIndex = i * 2;
-    const yIndex = i * 2 + 1;
+    // Interpolate (or copy if t === 1 and we're using the target already).
+    const bx = base[xi];
+    const by = base[yi];
+    const tx = target[xi];
+    const ty = target[yi];
+    const ix = bx + (tx - bx) * t;
+    const iy = by + (ty - by) * t;
 
-    const segmentFactor = SEGMENT_FACTORS[i];
-    const pivotDamping = PIVOT_DAMPING[i];
+    // Apply drift (x) and sway (y) with pivot damping per segment.
+    const swayOffset = Math.sin(now * swayFreq + swayPhase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
+    const driftOffset = Math.cos(now * driftFreq + driftPhase + COS_OFFSETS[i]) * driftAmp;
 
-    const swayOffset = Math.sin(time * swayFreq + swayPhase + segmentFactor * Math.PI) * swayAmp * pivotDamping;
-    const driftOffset = Math.cos(time * driftFreq + driftPhase + segmentFactor * Math.PI * 0.5) * driftAmp;
-
-    floatingPoints[xIndex] = interpolatedPoints[xIndex] + driftOffset;
-    floatingPoints[yIndex] = interpolatedPoints[yIndex] + swayOffset;
+    into[xi] = ix + driftOffset;
+    into[yi] = iy + swayOffset;
   }
-
-  return buildCubicBezierPath(floatingPoints);
 };
 
-// ============================================================================
+// --------------------------------------------------------------------------------
 // THREAD MANAGEMENT
-// ============================================================================
+// --------------------------------------------------------------------------------
 
 type FlipDecision = { threadId: number; direction: Direction } | null;
 
@@ -173,7 +201,7 @@ const selectThreadToFlip = (
   const pick = (dir: Direction) => {
     const candidates = eligible(dir);
     if (!candidates.length) return null;
-    return candidates[Math.floor(Math.random() * candidates.length)];
+    return candidates[(Math.random() * candidates.length) | 0];
   };
 
   let target = Math.random() < preferDownWeight ? pick("down") : null;
@@ -183,26 +211,39 @@ const selectThreadToFlip = (
 
   const nextDirection: Direction = target.direction === "down" ? "up" : "down";
 
+  // Ensure at least one "up" thread remains.
   const upThreads = threads.filter((t) => t.direction === "up" || t.targetDirection === "up");
-  if (nextDirection === "down" && upThreads.length <= 1) {
-    return null;
-  }
+  if (nextDirection === "down" && upThreads.length <= 1) return null;
 
   return { threadId: target.id, direction: nextDirection };
 };
 
+// Factory (main-thread) — unchanged visuals; we add scratch + gradient bounds/stops.
 const createThread = (id: number): ThreadState => {
   const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
   const profile = createPathProfile(id, rng);
   const direction: Direction = rng() < UP_FRACTION ? "up" : "down";
+
+  // Gradient y-bounds (based on "down" path as before).
+  let minY = Infinity;
+  let maxY = -Infinity;
+  const down = profile.down;
+  for (let i = 0; i < down.length; i += 2) {
+    const y = down[i + 1];
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+
+  const color = chooseColor(rng);
+
   return {
     id,
-    color: chooseColor(rng),
+    color,
     weight: randomInRangeWith(rng, 0.8, 1.4),
     opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
     profile,
     direction,
-    path: pointsToStaticPath(profile[direction]),
+    path: buildCubicBezierPath(profile[direction]),
     duration: directionDurationSeeded(direction, rng),
     lastFlipAt: 0,
     swayPhase: randomInRangeWith(rng, 0, Math.PI * 2),
@@ -213,24 +254,49 @@ const createThread = (id: number): ThreadState => {
     driftAmp: randomInRangeWith(rng, 0.003, 0.007),
     targetDirection: direction,
     transitionStartTime: 0,
+
+    // Scratch buffers + gradient bounds/stops:
+    floatingPoints: new Float32Array(profile.down.length),
+    y1: minY * VIEWBOX_SIZE,
+    y2: maxY * VIEWBOX_SIZE,
+
+    gradUp0: hslToString(adjustColor(color, { h: -18, s: 0, l: 10 })),
+    gradUp50: hslToString(adjustColor(color, { h: 4, s: 0, l: 0 })),
+    gradUp100: hslToString(adjustColor(color, { h: 24, s: -3, l: -12 })),
+    gradDown0: hslToString(color),
+    gradDown30: hslToString(adjustColor(color, { s: -10, l: -5 })),
+    gradDown60: hslToString(adjustColor(color, { s: -40, l: -25 })),
   };
 };
 
+// Worker → ThreadState (keeps visuals; adds scratch + gradient precompute)
 const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
-  const profile = {
+  const profile: PathProfile = {
     neutral: data.profileNeutral,
     up: data.profileUp,
     down: data.profileDown,
   };
 
+  // Gradient y-bounds from "down" path.
+  let minY = Infinity;
+  let maxY = -Infinity;
+  const down = profile.down;
+  for (let i = 0; i < down.length; i += 2) {
+    const y = down[i + 1];
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+
+  const color = data.color;
+
   return {
     id: data.id,
-    color: data.color,
+    color,
     weight: data.weight,
     opacity: data.opacity,
     profile,
     direction: data.direction,
-    path: pointsToStaticPath(profile[data.direction]),
+    path: buildCubicBezierPath(profile[data.direction]),
     duration: data.duration,
     lastFlipAt: 0,
     swayPhase: data.swayPhase,
@@ -241,16 +307,26 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
     driftAmp: data.driftAmp,
     targetDirection: data.direction,
     transitionStartTime: 0,
+
+    floatingPoints: new Float32Array(profile.down.length),
+    y1: minY * VIEWBOX_SIZE,
+    y2: maxY * VIEWBOX_SIZE,
+
+    gradUp0: hslToString(adjustColor(color, { h: -18, s: 0, l: 10 })),
+    gradUp50: hslToString(adjustColor(color, { h: 4, s: 0, l: 0 })),
+    gradUp100: hslToString(adjustColor(color, { h: 24, s: -3, l: -12 })),
+    gradDown0: hslToString(color),
+    gradDown30: hslToString(adjustColor(color, { s: -10, l: -5 })),
+    gradDown60: hslToString(adjustColor(color, { s: -40, l: -25 })),
   };
 };
 
-// ============================================================================
+// --------------------------------------------------------------------------------
 // REACT COMPONENT
-// ============================================================================
+// --------------------------------------------------------------------------------
 
 const usePrefersReducedMotion = () => {
   const [prefers, setPrefers] = useState(false);
-
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -259,12 +335,10 @@ const usePrefersReducedMotion = () => {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
-
   return prefers;
 };
 
 type TimelineThreadsProps = { className?: string; style?: CSSProperties };
-
 type PathRefMap = Map<number, SVGPathElement>;
 
 function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
@@ -278,27 +352,24 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const threadsRef = useRef<ThreadState[]>([]);
   const pathRefs = useRef<PathRefMap>(new Map());
 
+  // Stable registrar; called with a closure per thread on first render only.
   const registerPath = (id: number) => (node: SVGPathElement | null) => {
-    if (node) {
-      pathRefs.current.set(id, node);
-    } else {
-      pathRefs.current.delete(id);
-    }
+    if (node) pathRefs.current.set(id, node);
+    else pathRefs.current.delete(id);
   };
 
   const syncThreads = (incoming: ThreadState[]) => {
     const normalized = incoming.map((thread) => ({
       ...thread,
-      path: pointsToStaticPath(thread.profile[thread.direction]),
+      path: buildCubicBezierPath(thread.profile[thread.direction]),
       targetDirection: thread.targetDirection ?? thread.direction,
       transitionStartTime: 0,
     }));
-
-    threadsRef.current = normalized.map((thread) => ({ ...thread }));
+    threadsRef.current = normalized.map((t) => ({ ...t }));
     setThreads(normalized);
   };
 
-  // Initialize threads using Web Worker with fallback
+  // Initialize threads via Worker (with main-thread fallback)
   useEffect(() => {
     let mounted = true;
     let worker: Worker | null = null;
@@ -316,12 +387,9 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
 
     try {
       worker = new Worker(new URL("../workers/thread-generator.worker.ts", import.meta.url));
-
+      // If the worker is too slow, fall back to main thread to avoid blocking visuals.
       fallbackTimeout = setTimeout(() => {
-        if (mounted && threadsRef.current.length === 0) {
-          console.warn("Worker timeout, falling back to main thread");
-          initThreadsFromMain();
-        }
+        if (mounted && threadsRef.current.length === 0) initThreadsFromMain();
       }, 1000);
 
       worker.onmessage = (event: MessageEvent<ThreadsGeneratedMessage>) => {
@@ -333,16 +401,12 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
         }
       };
 
-      worker.onerror = (error) => {
-        console.error("Worker error:", error);
-        if (mounted && threadsRef.current.length === 0) {
-          initThreadsFromMain();
-        }
+      worker.onerror = () => {
+        if (mounted && threadsRef.current.length === 0) initThreadsFromMain();
       };
 
       worker.postMessage({ type: "generateThreads", count: THREAD_COUNT });
-    } catch (error) {
-      console.warn("Failed to create worker, using main thread:", error);
+    } catch {
       initThreadsFromMain();
     }
 
@@ -353,15 +417,15 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     };
   }, []);
 
-  // Defer animation until page is interactive
+  // Defer animation until page is fully loaded / idle
   useEffect(() => {
     if (threads.length === 0) return;
 
-    const enableAnimation = () => {
+    const enable = () => {
       const requestIdle =
         typeof window !== "undefined"
           ? ((window as typeof window & {
-              requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
+              requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number;
             }).requestIdleCallback)
           : undefined;
 
@@ -372,28 +436,24 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
       }
     };
 
-    if (document.readyState === "complete") {
-      enableAnimation();
-    } else {
-      window.addEventListener("load", enableAnimation);
-      return () => window.removeEventListener("load", enableAnimation);
+    if (document.readyState === "complete") enable();
+    else {
+      const onLoad = () => enable();
+      window.addEventListener("load", onLoad, { once: true, passive: true });
+      return () => window.removeEventListener("load", onLoad);
     }
   }, [threads.length]);
 
-  // IntersectionObserver to pause animation when off-screen
+  // Pause when off-screen
   useEffect(() => {
     if (!containerRef.current) return;
-
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), {
-      threshold: 0,
-    });
-
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0 });
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
   const setStaticPathForThread = (thread: ThreadState) => {
-    const staticPath = pointsToStaticPath(thread.profile[thread.direction]);
+    const staticPath = buildCubicBezierPath(thread.profile[thread.direction]);
     thread.path = staticPath;
     thread.targetDirection = thread.direction;
     thread.transitionStartTime = 0;
@@ -404,7 +464,12 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     }
   };
 
-  // Floating animation loop
+  /**
+   * Single rAF loop:
+   *  - throttled by FRAME_INTERVAL
+   *  - drives both path animation and direction flipping (no setInterval)
+   *  - avoids per-frame allocations by reusing per-thread buffers
+   */
   useEffect(() => {
     if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
       if (threadsRef.current.length > 0) {
@@ -413,24 +478,44 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
       return;
     }
 
-    let animationFrameId: number;
+    let rafId = 0;
     let lastFrameTime = performance.now();
+    let lastFlipCheck = lastFrameTime;
 
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - lastFrameTime;
+    const animate = (now: number) => {
+      const elapsed = now - lastFrameTime;
 
       if (elapsed >= FRAME_INTERVAL) {
-        lastFrameTime = currentTime - (elapsed % FRAME_INTERVAL);
+        lastFrameTime = now - (elapsed % FRAME_INTERVAL);
 
         const runtimeThreads = threadsRef.current;
+
+        // Flip decision on interval — integrated here for one scheduler.
+        if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
+          lastFlipCheck = now;
+          const decision = selectThreadToFlip(runtimeThreads, now);
+          if (decision) {
+            const { threadId, direction: nextDirection } = decision;
+            const t = runtimeThreads.find((x) => x.id === threadId);
+            if (t) {
+              t.duration = directionDuration(nextDirection);
+              t.targetDirection = nextDirection;
+              t.transitionStartTime = now;
+              t.lastFlipAt = now;
+            }
+          }
+        }
+
+        // Animate all paths with fused math into reusable buffers.
         for (const thread of runtimeThreads) {
           const basePoints = thread.profile[thread.direction];
           const targetPoints = thread.profile[thread.targetDirection];
 
-          const newPath = pointsToAnimatedPath(
-            basePoints,
+          writeAnimatedPoints(
             targetPoints,
-            currentTime,
+            basePoints,
+            thread.floatingPoints,
+            now,
             thread.transitionStartTime,
             thread.duration,
             thread.swayPhase,
@@ -441,59 +526,32 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
             thread.driftAmp,
           );
 
+          const newPath = buildCubicBezierPath(thread.floatingPoints);
           thread.path = newPath;
-          const pathElement = pathRefs.current.get(thread.id);
-          if (pathElement) {
-            pathElement.setAttribute("d", newPath);
+
+          const el = pathRefs.current.get(thread.id);
+          if (el) {
+            el.setAttribute("d", newPath);
           }
 
           const isTransitioning =
-            thread.transitionStartTime > 0 && currentTime - thread.transitionStartTime < thread.duration;
+            thread.transitionStartTime > 0 && now - thread.transitionStartTime < thread.duration;
 
           if (!isTransitioning && thread.direction !== thread.targetDirection) {
             thread.direction = thread.targetDirection;
-            if (pathElement) {
-              pathElement.setAttribute("stroke", `url(#${gradientBaseId}-${thread.id}-${thread.direction})`);
+            if (el) {
+              el.setAttribute("stroke", `url(#${gradientBaseId}-${thread.id}-${thread.direction})`);
             }
           }
         }
       }
 
-      animationFrameId = requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     };
 
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
   }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId]);
-
-  // Direction flipping logic
-  useEffect(() => {
-    if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) return;
-
-    const tick = () => {
-      const runtimeThreads = threadsRef.current;
-      if (runtimeThreads.length === 0) return;
-
-      const now = typeof performance !== "undefined" ? performance.now() : Date.now();
-      const decision = selectThreadToFlip(runtimeThreads, now);
-      if (!decision) return;
-
-      const { threadId, direction: nextDirection } = decision;
-      const thread = runtimeThreads.find((t) => t.id === threadId);
-      if (!thread) return;
-
-      const duration = directionDuration(nextDirection);
-      thread.targetDirection = nextDirection;
-      thread.transitionStartTime = now;
-      thread.duration = duration;
-      thread.lastFlipAt = now;
-    };
-
-    const interval = window.setInterval(tick, FLIP_INTERVAL_MS);
-    return () => window.clearInterval(interval);
-  }, [prefersReducedMotion, isVisible, shouldAnimate]);
-
-  const presentX = PIVOT_X * VIEWBOX_SIZE;
 
   if (threads.length === 0) {
     return (
@@ -526,54 +584,31 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+
           <linearGradient id={`${filterId}-overlay`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="rgba(118, 123, 255, 0.38)" />
             <stop offset="42%" stopColor="rgba(219, 126, 255, 0.22)" />
             <stop offset="75%" stopColor="rgba(188, 94, 255, 0.18)" />
             <stop offset="100%" stopColor="rgba(244, 173, 255, 0.30)" />
           </linearGradient>
+
           {threads.map((thread) => {
-            const downPath = thread.profile.down;
-            let minY = Infinity;
-            let maxY = -Infinity;
-
-            for (let i = 0; i < downPath.length; i += 2) {
-              const y = downPath[i + 1];
-              minY = Math.min(minY, y);
-              maxY = Math.max(maxY, y);
-            }
-
-            const y1 = minY * VIEWBOX_SIZE;
-            const y2 = maxY * VIEWBOX_SIZE;
             const baseId = `${gradientBaseId}-${thread.id}`;
-
             return (
               <Fragment key={`grad-${thread.id}`}>
-                <linearGradient
-                  id={`${baseId}-down`}
-                  x1="0"
-                  y1={y1}
-                  x2="0"
-                  y2={y2}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop offset="0%" stopColor={hslToString(thread.color)} />
-                  <stop offset="30%" stopColor={hslToString(adjustColor(thread.color, { s: -10, l: -5 }))} />
-                  <stop offset="60%" stopColor={hslToString(adjustColor(thread.color, { s: -40, l: -25 }))} />
+                {/* DOWN gradient */}
+                <linearGradient id={`${baseId}-down`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor={thread.gradDown0} />
+                  <stop offset="30%" stopColor={thread.gradDown30} />
+                  <stop offset="60%" stopColor={thread.gradDown60} />
                   <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
                   <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
                 </linearGradient>
-                <linearGradient
-                  id={`${baseId}-up`}
-                  x1="0"
-                  y1={y1}
-                  x2="0"
-                  y2={y2}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop offset="0%" stopColor={hslToString(adjustColor(thread.color, { h: -18, s: 0, l: 10 }))} />
-                  <stop offset="50%" stopColor={hslToString(adjustColor(thread.color, { h: 4, s: 0, l: 0 }))} />
-                  <stop offset="100%" stopColor={hslToString(adjustColor(thread.color, { h: 24, s: -3, l: -12 }))} />
+                {/* UP gradient */}
+                <linearGradient id={`${baseId}-up`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor={thread.gradUp0} />
+                  <stop offset="50%" stopColor={thread.gradUp50} />
+                  <stop offset="100%" stopColor={thread.gradUp100} />
                 </linearGradient>
               </Fragment>
             );
@@ -588,15 +623,6 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
           fill={`url(#${filterId}-overlay)`}
           opacity={0.9}
           style={{ mixBlendMode: "screen" }}
-        />
-
-        <line
-          x1={presentX}
-          x2={presentX}
-          y1={0}
-          y2={VIEWBOX_SIZE}
-          stroke="rgba(30, 30, 60, 0.08)"
-          strokeWidth={1}
         />
 
         <g filter={`url(#${filterId})`} style={{ willChange: "filter", transform: "translateZ(0)" }}>
