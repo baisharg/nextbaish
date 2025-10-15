@@ -1,47 +1,40 @@
 "use client";
 
-import { createContext, useContext, useState, useLayoutEffect, useEffect, ReactNode } from "react";
-
-type Language = "en" | "es";
+import { createContext, useContext, type ReactNode } from "react";
+import type { AppLocale } from "../../i18n.config";
+import type { Dictionary } from "@/app/[locale]/dictionaries";
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  locale: AppLocale;
+  dict: Dictionary;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Load language preference from localStorage synchronously before paint
-  useLayoutEffect(() => {
-    const savedLanguage = localStorage.getItem("baish-language");
-    if (savedLanguage === "en" || savedLanguage === "es") {
-      setLanguage(savedLanguage);
-    }
-    setIsInitialized(true);
-  }, []);
-
-  // Save language preference to localStorage whenever it changes
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem("baish-language", language);
-    }
-  }, [language, isInitialized]);
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+export function LanguageProvider({
+  children,
+  initialLanguage,
+  dictionary,
+}: {
+  children: ReactNode;
+  initialLanguage: AppLocale;
+  dictionary: Dictionary;
+}) {
+  return <LanguageContext.Provider value={{ locale: initialLanguage, dict: dictionary }}>{children}</LanguageContext.Provider>;
 }
 
-export function useLanguage() {
+export function useLocale() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    throw new Error("useLocale must be used within a LanguageProvider");
   }
-  return context;
+  return context.locale;
+}
+
+export function useDict() {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error("useDict must be used within a LanguageProvider");
+  }
+  return context.dict;
 }

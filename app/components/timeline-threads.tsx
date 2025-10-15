@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useId, useRef } from "react";
+import { Fragment, memo, useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { WorkerThreadData, ThreadsGeneratedMessage } from "../workers/thread-generator.worker";
 import {
@@ -8,9 +8,7 @@ import {
   type HSL,
   type PathProfile,
   THREAD_COUNT,
-  SEGMENTS,
   PIVOT_X,
-  PIVOT_Y,
   VIEWBOX_SIZE,
   FLIP_INTERVAL_MS,
   SETTLE_BUFFER_MS,
@@ -22,7 +20,6 @@ import {
   UP_FRACTION,
   adjustColor,
   hslToString,
-  randomInRange,
   createSeededRandom,
   chooseColor,
   createPathProfile,
@@ -96,9 +93,7 @@ const buildCubicBezierPath = (points: Float32Array): string => {
   return path.join(" ");
 };
 
-const pointsToStaticPath = (points: Float32Array): string => {
-  return buildCubicBezierPath(points);
-};
+const pointsToStaticPath = (points: Float32Array): string => buildCubicBezierPath(points);
 
 const lerpPoints = (from: Float32Array, to: Float32Array, t: number): Float32Array => {
   const result = new Float32Array(from.length);
@@ -108,9 +103,7 @@ const lerpPoints = (from: Float32Array, to: Float32Array, t: number): Float32Arr
   return result;
 };
 
-const easeInOutCubic = (t: number): number => {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-};
+const easeInOutCubic = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 const pointsToAnimatedPath = (
   basePoints: Float32Array,
@@ -272,7 +265,9 @@ const usePrefersReducedMotion = () => {
 
 type TimelineThreadsProps = { className?: string; style?: CSSProperties };
 
-export default function TimelineThreads({ className, style }: TimelineThreadsProps) {
+type PathRefMap = Map<number, SVGPathElement>;
+
+function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -280,6 +275,28 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
+  const threadsRef = useRef<ThreadState[]>([]);
+  const pathRefs = useRef<PathRefMap>(new Map());
+
+  const registerPath = (id: number) => (node: SVGPathElement | null) => {
+    if (node) {
+      pathRefs.current.set(id, node);
+    } else {
+      pathRefs.current.delete(id);
+    }
+  };
+
+  const syncThreads = (incoming: ThreadState[]) => {
+    const normalized = incoming.map((thread) => ({
+      ...thread,
+      path: pointsToStaticPath(thread.profile[thread.direction]),
+      targetDirection: thread.targetDirection ?? thread.direction,
+      transitionStartTime: 0,
+    }));
+
+    threadsRef.current = normalized.map((thread) => ({ ...thread }));
+    setThreads(normalized);
+  };
 
   // Initialize threads using Web Worker with fallback
   useEffect(() => {
@@ -294,14 +311,14 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
       if (!hasUpThread) {
         mainThreads[0] = { ...mainThreads[0], direction: "up", targetDirection: "up" };
       }
-      setThreads(mainThreads);
+      syncThreads(mainThreads);
     };
 
     try {
       worker = new Worker(new URL("../workers/thread-generator.worker.ts", import.meta.url));
 
       fallbackTimeout = setTimeout(() => {
-        if (mounted && threads.length === 0) {
+        if (mounted && threadsRef.current.length === 0) {
           console.warn("Worker timeout, falling back to main thread");
           initThreadsFromMain();
         }
@@ -312,13 +329,13 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
         if (event.data.type === "threadsGenerated") {
           if (fallbackTimeout) clearTimeout(fallbackTimeout);
           const workerThreads = event.data.threads.map(workerDataToThreadState);
-          setThreads(workerThreads);
+          syncThreads(workerThreads);
         }
       };
 
       worker.onerror = (error) => {
         console.error("Worker error:", error);
-        if (mounted && threads.length === 0) {
+        if (mounted && threadsRef.current.length === 0) {
           initThreadsFromMain();
         }
       };
@@ -336,13 +353,20 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
     };
   }, []);
 
-  // Defer animation until page is interactive (Phase 1 optimization)
+  // Defer animation until page is interactive
   useEffect(() => {
     if (threads.length === 0) return;
 
     const enableAnimation = () => {
-      if (typeof requestIdleCallback !== "undefined") {
-        requestIdleCallback(() => setShouldAnimate(true), { timeout: 2000 });
+      const requestIdle =
+        typeof window !== "undefined"
+          ? ((window as typeof window & {
+              requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
+            }).requestIdleCallback)
+          : undefined;
+
+      if (typeof requestIdle === "function") {
+        requestIdle(() => setShouldAnimate(true), { timeout: 2000 });
       } else {
         setTimeout(() => setShouldAnimate(true), 100);
       }
@@ -360,27 +384,33 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0 }
-    );
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), {
+      threshold: 0,
+    });
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
+  const setStaticPathForThread = (thread: ThreadState) => {
+    const staticPath = pointsToStaticPath(thread.profile[thread.direction]);
+    thread.path = staticPath;
+    thread.targetDirection = thread.direction;
+    thread.transitionStartTime = 0;
+    const pathElement = pathRefs.current.get(thread.id);
+    if (pathElement) {
+      pathElement.setAttribute("d", staticPath);
+      pathElement.setAttribute("stroke", `url(#${gradientBaseId}-${thread.id}-${thread.direction})`);
+    }
+  };
+
   // Floating animation loop
   useEffect(() => {
-    if (prefersReducedMotion || !isVisible || !shouldAnimate || threads.length === 0) {
-      if (threads.length > 0) {
-        setThreads((prev) =>
-          prev.map((thread) => ({
-            ...thread,
-            path: pointsToStaticPath(thread.profile[thread.direction]),
-          })),
-        );
+    if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
+      if (threadsRef.current.length > 0) {
+        threadsRef.current.forEach(setStaticPathForThread);
       }
-      return undefined;
+      return;
     }
 
     let animationFrameId: number;
@@ -392,32 +422,41 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
       if (elapsed >= FRAME_INTERVAL) {
         lastFrameTime = currentTime - (elapsed % FRAME_INTERVAL);
 
-        setThreads((prev) =>
-          prev.map((thread) => {
-            const isTransitioning = thread.transitionStartTime > 0 &&
-              currentTime - thread.transitionStartTime < thread.duration;
-            const shouldUpdateDirection = !isTransitioning &&
-              thread.direction !== thread.targetDirection;
+        const runtimeThreads = threadsRef.current;
+        for (const thread of runtimeThreads) {
+          const basePoints = thread.profile[thread.direction];
+          const targetPoints = thread.profile[thread.targetDirection];
 
-            return {
-              ...thread,
-              direction: shouldUpdateDirection ? thread.targetDirection : thread.direction,
-              path: pointsToAnimatedPath(
-                thread.profile[thread.direction],
-                thread.profile[thread.targetDirection],
-                currentTime,
-                thread.transitionStartTime,
-                thread.duration,
-                thread.swayPhase,
-                thread.driftPhase,
-                thread.swayFreq,
-                thread.driftFreq,
-                thread.swayAmp,
-                thread.driftAmp,
-              ),
-            };
-          }),
-        );
+          const newPath = pointsToAnimatedPath(
+            basePoints,
+            targetPoints,
+            currentTime,
+            thread.transitionStartTime,
+            thread.duration,
+            thread.swayPhase,
+            thread.driftPhase,
+            thread.swayFreq,
+            thread.driftFreq,
+            thread.swayAmp,
+            thread.driftAmp,
+          );
+
+          thread.path = newPath;
+          const pathElement = pathRefs.current.get(thread.id);
+          if (pathElement) {
+            pathElement.setAttribute("d", newPath);
+          }
+
+          const isTransitioning =
+            thread.transitionStartTime > 0 && currentTime - thread.transitionStartTime < thread.duration;
+
+          if (!isTransitioning && thread.direction !== thread.targetDirection) {
+            thread.direction = thread.targetDirection;
+            if (pathElement) {
+              pathElement.setAttribute("stroke", `url(#${gradientBaseId}-${thread.id}-${thread.direction})`);
+            }
+          }
+        }
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -425,43 +464,37 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
 
     animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [prefersReducedMotion, isVisible, shouldAnimate, threads.length]);
+  }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId]);
 
   // Direction flipping logic
   useEffect(() => {
-    if (prefersReducedMotion || !isVisible || !shouldAnimate || threads.length === 0) return undefined;
+    if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) return;
 
     const tick = () => {
-      setThreads((prev) => {
-        const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+      const runtimeThreads = threadsRef.current;
+      if (runtimeThreads.length === 0) return;
 
-        const decision = selectThreadToFlip(prev, now);
-        if (!decision) return prev;
+      const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+      const decision = selectThreadToFlip(runtimeThreads, now);
+      if (!decision) return;
 
-        const { threadId, direction: nextDirection } = decision;
+      const { threadId, direction: nextDirection } = decision;
+      const thread = runtimeThreads.find((t) => t.id === threadId);
+      if (!thread) return;
 
-        return prev.map((thread) => {
-          if (thread.id !== threadId) return thread;
-
-          const duration = directionDuration(nextDirection);
-          return {
-            ...thread,
-            targetDirection: nextDirection,
-            transitionStartTime: now,
-            duration,
-            lastFlipAt: now,
-          };
-        });
-      });
+      const duration = directionDuration(nextDirection);
+      thread.targetDirection = nextDirection;
+      thread.transitionStartTime = now;
+      thread.duration = duration;
+      thread.lastFlipAt = now;
     };
 
     const interval = window.setInterval(tick, FLIP_INTERVAL_MS);
     return () => window.clearInterval(interval);
-  }, [prefersReducedMotion, isVisible, shouldAnimate, threads.length]);
+  }, [prefersReducedMotion, isVisible, shouldAnimate]);
 
   const presentX = PIVOT_X * VIEWBOX_SIZE;
 
-  // Don't render until threads are loaded
   if (threads.length === 0) {
     return (
       <div
@@ -478,11 +511,7 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
       className={`pointer-events-none ${className ?? "absolute inset-0"}`}
       style={style}
     >
-      <svg
-        viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
-        preserveAspectRatio="none"
-        className="h-full w-full"
-      >
+      <svg viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`} preserveAspectRatio="none" className="h-full w-full">
         <defs>
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
@@ -516,33 +545,37 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
 
             const y1 = minY * VIEWBOX_SIZE;
             const y2 = maxY * VIEWBOX_SIZE;
+            const baseId = `${gradientBaseId}-${thread.id}`;
 
             return (
-              <linearGradient
-                key={`grad-${thread.id}`}
-                id={`${gradientBaseId}-${thread.id}`}
-                x1="0"
-                y1={y1}
-                x2="0"
-                y2={y2}
-                gradientUnits="userSpaceOnUse"
-              >
-                {thread.direction === "down" ? (
-                  <>
-                    <stop offset="0%" stopColor={hslToString(thread.color)} />
-                    <stop offset="30%" stopColor={hslToString(adjustColor(thread.color, { s: -10, l: -5 }))} />
-                    <stop offset="60%" stopColor={hslToString(adjustColor(thread.color, { s: -40, l: -25 }))} />
-                    <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
-                    <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
-                  </>
-                ) : (
-                  <>
-                    <stop offset="0%" stopColor={hslToString(adjustColor(thread.color, { h: -18, s: 0, l: 10 }))} />
-                    <stop offset="50%" stopColor={hslToString(adjustColor(thread.color, { h: 4, s: 0, l: 0 }))} />
-                    <stop offset="100%" stopColor={hslToString(adjustColor(thread.color, { h: 24, s: -3, l: -12 }))} />
-                  </>
-                )}
-              </linearGradient>
+              <Fragment key={`grad-${thread.id}`}>
+                <linearGradient
+                  id={`${baseId}-down`}
+                  x1="0"
+                  y1={y1}
+                  x2="0"
+                  y2={y2}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor={hslToString(thread.color)} />
+                  <stop offset="30%" stopColor={hslToString(adjustColor(thread.color, { s: -10, l: -5 }))} />
+                  <stop offset="60%" stopColor={hslToString(adjustColor(thread.color, { s: -40, l: -25 }))} />
+                  <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
+                  <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
+                </linearGradient>
+                <linearGradient
+                  id={`${baseId}-up`}
+                  x1="0"
+                  y1={y1}
+                  x2="0"
+                  y2={y2}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor={hslToString(adjustColor(thread.color, { h: -18, s: 0, l: 10 }))} />
+                  <stop offset="50%" stopColor={hslToString(adjustColor(thread.color, { h: 4, s: 0, l: 0 }))} />
+                  <stop offset="100%" stopColor={hslToString(adjustColor(thread.color, { h: 24, s: -3, l: -12 }))} />
+                </linearGradient>
+              </Fragment>
             );
           })}
         </defs>
@@ -566,19 +599,17 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
           strokeWidth={1}
         />
 
-        <g
-          filter={`url(#${filterId})`}
-          style={{ willChange: "filter", transform: "translateZ(0)" }}
-        >
+        <g filter={`url(#${filterId})`} style={{ willChange: "filter", transform: "translateZ(0)" }}>
           {threads.map((thread) => (
             <path
               key={thread.id}
               d={thread.path}
               fill="none"
-              stroke={`url(#${gradientBaseId}-${thread.id})`}
+              stroke={`url(#${gradientBaseId}-${thread.id}-${thread.direction})`}
               strokeOpacity={thread.opacity}
               strokeWidth={thread.weight}
               strokeLinecap="round"
+              ref={registerPath(thread.id)}
             />
           ))}
         </g>
@@ -586,3 +617,5 @@ export default function TimelineThreads({ className, style }: TimelineThreadsPro
     </div>
   );
 }
+
+export default memo(TimelineThreadsComponent);

@@ -3,6 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import type { AppLocale } from "@/i18n.config";
+import type { Dictionary } from "@/app/[locale]/dictionaries";
+import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -10,16 +14,16 @@ const LANGUAGES = [
 ] as const;
 
 interface HeaderProps {
-  language: "en" | "es";
-  setLanguage: (lang: "en" | "es") => void;
+  locale: AppLocale;
+  t: Dictionary["header"];
   scrolled: boolean;
 }
 
 const TITLE_WORDS = ["Buenos", "Aires", "AI", "Safety", "Hub"] as const;
-const COLLAPSE_BUFFER = 80; // Pixels of extra space needed before re-expanding
+const COLLAPSE_BUFFER = 80;
 
-export default function Header({ language, setLanguage, scrolled }: HeaderProps) {
-  const isEnglish = language === "en";
+export default function Header({ locale, t, scrolled }: HeaderProps) {
+  const pathname = usePathname() ?? "/";
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
@@ -34,9 +38,8 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     setRestWidths(widths);
     const leading = firstRefs.current.map((element) => element?.offsetWidth ?? 0);
     setFirstWidths(leading);
-  }, [language]);
+  }, [locale]);
 
-  // Detect narrow viewport
   useEffect(() => {
     const checkWidth = () => {
       setIsNarrow(window.innerWidth < 480);
@@ -47,7 +50,6 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     return () => window.removeEventListener('resize', checkWidth);
   }, []);
 
-  // Detect title overflow (when text is being clipped)
   useEffect(() => {
     const container = titleContainerRef.current;
     if (!container) return;
@@ -56,24 +58,17 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
       const scrollWidth = container.scrollWidth;
       const clientWidth = container.clientWidth;
 
-      // Use hysteresis to prevent jiggling:
-      // - Collapse when text is overflowing
-      // - Only expand when there's significant extra space
       setIsCramped((prevCramped) => {
         if (prevCramped) {
-          // Currently collapsed: only expand if there's buffer space
           return clientWidth < scrollWidth + COLLAPSE_BUFFER;
         } else {
-          // Currently expanded: collapse if overflowing
           return scrollWidth > clientWidth;
         }
       });
     };
 
-    // Initial check
     checkOverflow();
 
-    // Use ResizeObserver for efficient monitoring
     const resizeObserver = new ResizeObserver(() => {
       checkOverflow();
     });
@@ -83,9 +78,8 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     return () => {
       resizeObserver.disconnect();
     };
-  }, [language, restWidths, firstWidths]); // Re-check when language or widths change
+  }, [locale, restWidths, firstWidths]);
 
-  // Body scroll lock when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -97,7 +91,6 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     };
   }, [mobileMenuOpen]);
 
-  // Close on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -108,12 +101,27 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
     return () => document.removeEventListener('keydown', handleEscape);
   }, [mobileMenuOpen]);
 
+  const withLocale = (path: string) => {
+    if (!path.startsWith("/")) return path;
+    if (path === "/") {
+      return `/${locale}`;
+    }
+    return `/${locale}${path}`;
+  };
+
+  const buildLangSwitchHref = (newLocale: AppLocale) => {
+    const withoutLocale = pathname.replace(LOCALE_PREFIX_REGEX, "") || "/";
+    const normalisedPath = withoutLocale.startsWith("/") ? withoutLocale : `/${withoutLocale}`;
+    const pathSegment = normalisedPath === "/" ? "" : normalisedPath;
+    return `/${newLocale}${pathSegment}`;
+  };
+
   const navLinks = [
-    { href: "/about", label: isEnglish ? "About" : "Sobre nosotros" },
-    { href: "/activities", label: isEnglish ? "Activities" : "Actividades" },
-    { href: "/research", label: isEnglish ? "Research" : "Investigación" },
-    { href: "/resources", label: isEnglish ? "Resources" : "Recursos" },
-    { href: "/contact", label: isEnglish ? "Contact" : "Contacto" },
+    { href: withLocale("/about"), label: t.nav.about },
+    { href: withLocale("/activities"), label: t.nav.activities },
+    { href: withLocale("/research"), label: t.nav.research },
+    { href: withLocale("/resources"), label: t.nav.resources },
+    { href: withLocale("/contact"), label: t.nav.contact },
   ];
 
   return (
@@ -141,7 +149,7 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
         }}
       >
         <div className="flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
+          <Link href={withLocale("/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
             <div
               className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
               style={{
@@ -245,20 +253,19 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
               scrolled ? "hidden sm:flex" : "hidden md:flex"
             }`}>
               {LANGUAGES.map((lang) => {
-                const active = lang.code === language;
+                const active = lang.code === locale;
                 return (
-                  <button
+                  <Link
                     key={lang.code}
+                    href={buildLangSwitchHref(lang.code)}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
-                        ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+                        ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
                         : "text-slate-600 hover:text-slate-900"
                     }`}
-                    onClick={() => setLanguage(lang.code)}
-                    type="button"
                   >
-                    {lang.label}
-                  </button>
+                    {t.languages[lang.code]}
+                  </Link>
                 );
               })}
             </div>
@@ -271,14 +278,13 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
               }}
               href="#get-involved"
             >
-              {isEnglish ? "Join Us" : "Únete"}
+              {t.cta}
             </a>
 
-            {/* Hamburger button */}
             <button
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={mobileMenuOpen ? (isEnglish ? "Close menu" : "Cerrar menú") : (isEnglish ? "Open menu" : "Abrir menú")}
+              aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu}
               aria-expanded={mobileMenuOpen}
               type="button"
             >
@@ -307,7 +313,6 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
@@ -318,7 +323,6 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
         />
       )}
 
-      {/* Mobile menu panel */}
       <div
         className="fixed top-0 right-0 w-full z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] shadow-xl overflow-hidden"
         style={{
@@ -327,15 +331,14 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
         }}
       >
         <div className="flex flex-col">
-          {/* Mobile menu header */}
           <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200">
             <span className="text-lg font-semibold text-slate-900">
-              {isEnglish ? "Menu" : "Menú"}
+              {t.menu}
             </span>
             <button
               className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/60 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
               onClick={() => setMobileMenuOpen(false)}
-              aria-label={isEnglish ? "Close menu" : "Cerrar menú"}
+              aria-label={t.closeMenu}
               type="button"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -344,11 +347,9 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
             </button>
           </div>
 
-          {/* Mobile navigation links */}
           <nav className="px-4 py-6 sm:px-6">
-            {/* Home link with logo */}
             <Link
-              href="/"
+              href={withLocale("/")}
               className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -377,41 +378,39 @@ export default function Header({ language, setLanguage, scrolled }: HeaderProps)
               ))}
             </ul>
 
-            {/* Language switcher in mobile menu */}
             <div className="mt-8 pt-8 border-t border-slate-200">
               <p className="px-4 mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
-                {isEnglish ? "Language" : "Idioma"}
+                {t.language}
               </p>
               <div className="flex gap-3">
                 {LANGUAGES.map((lang) => {
-                  const active = lang.code === language;
+                  const active = lang.code === locale;
                   return (
-                    <button
+                    <Link
                       key={lang.code}
-                      className={`flex-1 rounded-lg px-4 py-3 text-base font-medium transition ${
+                      href={buildLangSwitchHref(lang.code)}
+                      className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
                         active
-                          ? "bg-[var(--color-accent-primary)] text-white shadow-sm"
+                          ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
                           : "bg-white/60 text-slate-700 hover:bg-white"
                       }`}
-                      onClick={() => setLanguage(lang.code)}
-                      type="button"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      {lang.label}
-                    </button>
+                      {t.languages[lang.code]}
+                    </Link>
                   );
                 })}
               </div>
             </div>
           </nav>
 
-          {/* Mobile menu footer with CTA */}
           <div className="p-4 sm:p-6 border-t border-slate-200">
             <a
               className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
               href="#get-involved"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {isEnglish ? "Join Us" : "Únete"}
+              {t.cta}
             </a>
           </div>
         </div>

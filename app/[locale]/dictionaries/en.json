@@ -1,0 +1,398 @@
+{
+  "header": {
+    "nav": {
+      "about": "About",
+      "activities": "Activities",
+      "research": "Research",
+      "resources": "Resources",
+      "contact": "Contact"
+    },
+    "cta": "Join Us",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu"
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "nav": {
+      "about": "About",
+      "activities": "Activities",
+      "research": "Research",
+      "resources": "Resources",
+      "contact": "Contact",
+      "getInvolved": "Get Involved",
+      "privacyPolicy": "Privacy Policy"
+    }
+  },
+  "substack": {
+    "eyebrow": "Newsletter",
+    "title": "Join our Mailing List",
+    "description": "Stay updated with our activities, events, and opportunities.",
+    "placeholder": "you@example.com",
+    "button": "Subscribe",
+    "disclaimer": "We'll only email when something important is happening.",
+    "success": "You're subscribed! Check your inbox for the welcome email.",
+    "confirm": "Almost done — please confirm the subscription from your inbox.",
+    "genericError": "Something went wrong. Please try again.",
+    "networkError": "Connection failed. Please check your internet and retry."
+  },
+  "home": {
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "mission": {
+      "eyebrow": "Mission",
+      "title": "Ensuring AI Benefits Humanity",
+      "paragraph1": "As artificial intelligence models advance in capabilities{footnote1}, we expect them to have an increasingly profound impact on our society{footnote2}. It is essential that this impact is positive, and that the decisions made by these systems are transparent, reliable, and accountable{footnote3} to the people affected by them.",
+      "paragraph2": "We believe that reducing the risks associated with advanced AI models{footnote4} is one of the most important challenges of our time. We also believe it is an open and exciting problem{footnote5}, with ample opportunities for more researchers to advance in this field{footnote6}.",
+      "paragraph3": "BAISH's mission is to support students in entering this field and conducting research on this topic.",
+      "cta": "Get Involved"
+    },
+    "events": {
+      "eyebrow": "Upcoming Events",
+      "title": "Join our community workshops and meetups",
+      "description": "Stay current on AI safety discussions, research sprints, and collaboration spaces.",
+      "calendarPlaceholder": "Calendar loads once it's almost in view to keep the initial load quick.",
+      "subscribe": "Subscribe to Calendar"
+    },
+    "activities": {
+      "title": "Our Activities",
+      "description": "Explore recurring programs designed to grow the AI safety community.",
+      "items": {
+        "mechInterp": {
+          "eyebrow": "Course",
+          "title": "Mech Interp Course",
+          "description": "Intensive 1-month course on mechanistic interpretability methods.",
+          "schedule": "April 2025",
+          "duration": "1 month"
+        },
+        "discussion": {
+          "eyebrow": "Activities",
+          "title": "Weekly Discussion Group",
+          "description": "Weekly meetings to discuss recent papers, concepts, and developments in AI safety.",
+          "schedule": "Tuesdays · 2pm",
+          "duration": "1 hr"
+        },
+        "reading": {
+          "eyebrow": "Activities",
+          "title": "Paper Reading Club",
+          "description": "Student-led presentations of AI safety papers.",
+          "schedule": "Thursdays · 2pm",
+          "duration": "1 hr"
+        },
+        "fundamentals": {
+          "eyebrow": "Course",
+          "title": "AGI Safety Fundamentals",
+          "description": "An 8-week guided course covering essential concepts in AI alignment and safety.",
+          "schedule": "Semester 2",
+          "duration": "8 weeks"
+        }
+      },
+      "joinNow": "Join now",
+      "learnMore": "Learn more"
+    },
+    "resources": {
+      "title": "Resources",
+      "description": "Dive deeper into AI safety with curated readings and tools.",
+      "items": {
+        "reading": {
+          "eyebrow": "Resources",
+          "title": "Starter Reading List",
+          "description": "Foundational essays and papers to get oriented in AI alignment research.",
+          "meta": "15+ papers"
+        },
+        "toolkit": {
+          "eyebrow": "Resources",
+          "title": "Research Toolkit",
+          "description": "Code repositories, benchmarks, and experiment templates for AI safety research.",
+          "meta": "Tools & code"
+        },
+        "handbook": {
+          "eyebrow": "Resources",
+          "title": "Community Handbook",
+          "description": "Guidelines for hosting meetups and facilitating productive discussions.",
+          "meta": "Guide"
+        }
+      },
+      "viewResource": "View resource",
+      "learnMore": "Learn more"
+    },
+    "getInvolved": {
+      "communityEyebrow": "Community",
+      "communityTitle": "Join our Telegram Community",
+      "communityDescription": "Connect with fellow students interested in AI safety.",
+      "telegramCta": "Join Telegram Group"
+    }
+  },
+  "about": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "About AI Safety"
+    },
+    "title": "Understanding AI Safety",
+    "coreConcepts": {
+      "whatIsAiSafety": {
+        "title": "What is AI Safety?",
+        "content": "AI Safety is a research field focused on ensuring that advanced artificial intelligence systems remain beneficial, aligned with human values, and under human control as they become more capable. It encompasses technical research areas like alignment, interpretability, and robustness, as well as governance considerations about how AI systems should be developed and deployed."
+      },
+      "whyItMatters": {
+        "title": "Why It Matters",
+        "content": "As AI systems become more powerful and autonomous, they may develop capabilities that could lead to unintended consequences if not properly designed and controlled. The stakes are high: advanced AI could help solve humanity's greatest challenges, but also poses significant risks if developed without adequate safety measures. The field aims to maximize the benefits while minimizing potential harms."
+      },
+      "risks": {
+        "title": "Key Risks & Challenges",
+        "alignment": {
+          "title": "Alignment Problem",
+          "description": "Ensuring AI systems pursue goals aligned with human values and intentions, even as they become more capable."
+        },
+        "interpretability": {
+          "title": "Interpretability",
+          "description": "Developing techniques to understand how AI systems make decisions and represent knowledge."
+        },
+        "robustness": {
+          "title": "Robustness",
+          "description": "Creating systems that behave safely even when deployed in new environments or facing unexpected situations."
+        },
+        "powerSeeking": {
+          "title": "Power-seeking Behavior",
+          "description": "Preventing AI systems from developing instrumental goals that conflict with human welfare."
+        },
+        "coordination": {
+          "title": "Coordination Challenges",
+          "description": "Ensuring that safety standards are maintained across all major AI development efforts globally."
+        }
+      }
+    },
+    "externalResources": {
+      "title": "Learn More About AI Safety",
+      "alignmentForum": {
+        "title": "Alignment Forum",
+        "description": "A forum dedicated to technical research in AI alignment, with papers and discussions from leading researchers.",
+        "level": "Technical",
+        "cta": "Visit"
+      },
+      "lessWrong": {
+        "title": "LessWrong",
+        "description": "A community blog focused on human rationality and the implications of artificial intelligence.",
+        "level": "Intermediate",
+        "cta": "Visit"
+      },
+      "eightyK": {
+        "title": "80,000 Hours",
+        "description": "Career guidance for working on the world's most pressing problems, including AI safety.",
+        "level": "Introductory",
+        "cta": "Visit"
+      },
+      "stampy": {
+        "title": "Stampy's Wiki",
+        "description": "A collaborative wiki providing accessible explanations of AI alignment concepts.",
+        "level": "Introductory",
+        "cta": "Visit"
+      }
+    },
+    "ourApproach": {
+      "title": "Our Approach",
+      "focusAreas": {
+        "title": "Focus Areas",
+        "intro": "At BAISH - Buenos Aires AI Safety Hub, we focus on several key areas within AI safety research:",
+        "items": [
+          "Mechanistic interpretability of neural networks",
+          "Alignment techniques for large language models",
+          "Robust training methodologies",
+          "Value learning and preference inference"
+        ]
+      },
+      "contribution": {
+        "title": "Our Contribution",
+        "intro": "We contribute to the field through:",
+        "items": [
+          "Supporting student research projects",
+          "Developing educational resources in Spanish",
+          "Building a regional community of AI safety researchers",
+          "Organizing workshops and training programs",
+          "Mentoring students interested in AI safety careers"
+        ]
+      }
+    },
+    "team": {
+      "title": "Our Core Team",
+      "roles": {
+        "coDirector": "Co-founding Director",
+        "commDirector": "Communications Director",
+        "advisor": "Advisor"
+      }
+    }
+  },
+  "activities": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Activities"
+    },
+    "title": "Our Activities",
+    "description": "Join our community and participate in AI safety research and learning",
+    "subscribeCalendar": "Subscribe to Events Calendar"
+  },
+  "contact": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Contact"
+    },
+    "title": "Contact Us",
+    "description": "Get in touch with our team and join our community",
+    "cards": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Join our community channel for discussions and updates:"
+      },
+      "location": {
+        "title": "Location",
+        "description": "We're based at the Department of Computer Science:"
+      },
+      "social": {
+        "title": "Social Media",
+        "description": "Follow us for updates and announcements:"
+      }
+    },
+    "form": {
+      "title": "Contact Us",
+      "description": "Get in touch with our team and join our community",
+      "nameLabel": "What is your name?",
+      "emailLabel": "What is your email?",
+      "messageLabel": "Message",
+      "clearForm": "Clear form",
+      "submit": "Submit"
+    },
+    "getInvolved": {
+      "title": "Get Involved",
+      "description": "There are multiple ways to participate in our community and activities.",
+      "newsletter": {
+        "title": "Join our Mailing List",
+        "description": "Stay updated with our events, activities, and opportunities by subscribing to our mailing list. We send monthly newsletters and important announcements."
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions"
+    }
+  },
+  "research": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Research"
+    },
+    "title": "Our Research",
+    "filterBy": "Filter by:",
+    "filters": {
+      "all": "All",
+      "interpretability": "Interpretability",
+      "alignment": "Alignment",
+      "robustness": "Robustness",
+      "valueLearning": "Value Learning"
+    }
+  },
+  "resources": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Resources"
+    },
+    "title": "Learning Resources",
+    "description": "Curated materials for exploring AI safety concepts with progress tracking",
+    "learningPath": {
+      "title": "Your Learning Path",
+      "description": "Choose your level to see personalized recommendations",
+      "beginner": {
+        "title": "Beginner",
+        "description": "No technical background needed"
+      },
+      "intermediate": {
+        "title": "Intermediate",
+        "description": "Some ML/AI knowledge"
+      },
+      "advanced": {
+        "title": "Advanced",
+        "description": "Strong technical background"
+      },
+      "viewing": "Viewing {level} resources",
+      "clearFilter": "Clear filter"
+    },
+    "sections": {
+      "quickWins": {
+        "title": "Quick Wins",
+        "description": "15-30 minute resources for busy learners"
+      },
+      "communityPicks": {
+        "title": "Community Picks",
+        "description": "Most recommended by BAISH members"
+      },
+      "latest": {
+        "title": "Latest Additions",
+        "description": "Recently added to our collection"
+      },
+      "allResources": {
+        "title": "All Resources",
+        "description": "Filter by type, topic, or difficulty level",
+        "showing": "Showing {count} of {total} resources"
+      }
+    },
+    "filters": {
+      "type": "Type:",
+      "topic": "Topic:",
+      "all": "All"
+    },
+    "actions": {
+      "markComplete": "Mark Complete",
+      "completed": "✓ Completed",
+      "start": "Start"
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "description": "Join our community to discuss these resources and learn together",
+      "studyGroups": "Join Study Groups",
+      "getInTouch": "Get in Touch"
+    }
+  },
+  "privacyPolicy": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Privacy Policy"
+    },
+    "title": "Privacy Policy",
+    "sections": {
+      "approach": {
+        "title": "Our Approach to Privacy",
+        "content": "At BAISH (Buenos Aires AI Safety Hub), we are committed to respecting your privacy. This Privacy Policy outlines our practices regarding the collection, use, and protection of your information when you use our website and services."
+      },
+      "dataCollection": {
+        "title": "Data Collection",
+        "content": "We collect minimal personal information. The only personal data we collect is email addresses when users voluntarily sign up for our newsletter through Substack. This information is stored and managed by Substack according to their privacy policy."
+      },
+      "noTracking": {
+        "title": "No Tracking or Cookies",
+        "content": "We do not use cookies, analytics, tracking tools, or any other technology to collect data about you. We do not monitor your browsing activities or gather information about your online behaviors."
+      },
+      "thirdParty": {
+        "title": "Third-Party Services",
+        "content": "Our newsletter is managed through Substack. When you subscribe to our newsletter, your email address is shared with and stored by Substack. Please refer to",
+        "substackLink": "Substack's Privacy Policy",
+        "content2": "to understand how they handle your information."
+      },
+      "rights": {
+        "title": "Your Rights",
+        "content": "You have the right to unsubscribe from our newsletter at any time by clicking the unsubscribe link in any of our emails or by contacting us directly. If you have any questions about your data or wish to access, correct, or delete your information, please contact us."
+      },
+      "changes": {
+        "title": "Changes to This Policy",
+        "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "content": "If you have any questions about this Privacy Policy, please contact us through our",
+        "contactLink": "Contact page"
+      }
+    }
+  }
+}

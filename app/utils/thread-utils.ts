@@ -37,7 +37,6 @@ export const COLOR_PALETTE: HSL[] = [
 export const UP_FRACTION = 1 / THREAD_COUNT;
 export const FLIP_INTERVAL_MS = 8000;
 export const SETTLE_BUFFER_MS = 900;
-export const TRANSITION_EASING = "cubic-bezier(0.65, 0, 0.35, 1)";
 export const TARGET_FPS = 30;
 export const FRAME_INTERVAL = 1000 / TARGET_FPS;
 

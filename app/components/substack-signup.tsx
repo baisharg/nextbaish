@@ -1,57 +1,16 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-
-type LanguageCode = "en" | "es";
+import type { Dictionary } from "@/app/[locale]/dictionaries";
 
 type Props = {
-  language: LanguageCode;
+  t: Dictionary["substack"];
 };
 
 type SubmitState = "idle" | "loading" | "success" | "error";
 
-const COPY: Record<
-  LanguageCode,
-  {
-    title: string;
-    description: string;
-    placeholder: string;
-    button: string;
-    disclaimer: string;
-    success: string;
-    confirm: string;
-    genericError: string;
-    networkError: string;
-  }
-> = {
-  en: {
-    title: "Join our Mailing List",
-    description: "Stay updated with our activities, events, and opportunities.",
-    placeholder: "you@example.com",
-    button: "Subscribe",
-    disclaimer: "We'll only email when something important is happening.",
-    success: "You're subscribed! Check your inbox for the welcome email.",
-    confirm: "Almost done — please confirm the subscription from your inbox.",
-    genericError: "Something went wrong. Please try again.",
-    networkError: "Connection failed. Please check your internet and retry.",
-  },
-  es: {
-    title: "Únete a nuestra lista de correo",
-    description:
-      "Mantente al tanto de nuestras actividades, eventos y oportunidades.",
-    placeholder: "tu@email.com",
-    button: "Suscribirse",
-    disclaimer: "Solo enviaremos correos cuando haya novedades importantes.",
-    success: "¡Te suscribiste! Revisa tu correo para el mensaje de bienvenida.",
-    confirm:
-      "Queda un paso — confirma la suscripción desde tu bandeja de entrada.",
-    genericError: "Ocurrió un error. Intenta nuevamente.",
-    networkError: "Fallo de conexión. Verifica tu internet e inténtalo otra vez.",
-  },
-};
-
-export default function SubstackSignup({ language }: Props) {
-  const copy = COPY[language];
+export default function SubstackSignup({ t }: Props) {
+  const copy = t;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
@@ -116,7 +75,7 @@ export default function SubstackSignup({ language }: Props) {
 
   return (
     <article className="card-glass">
-      <div className="card-eyebrow">{copy.title === "Join our Mailing List" ? "Newsletter" : "Boletín"}</div>
+      <div className="card-eyebrow">{copy.eyebrow}</div>
       <h3 className="card-title">{copy.title}</h3>
       <p className="card-body">{copy.description}</p>
 

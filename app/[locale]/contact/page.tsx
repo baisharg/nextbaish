@@ -1,15 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import Script from "next/script";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import { useLanguage } from "../contexts/language-context";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
+import { useLocale, useDict } from "@/app/contexts/language-context";
 
 export default function ContactPage() {
-  const { language, setLanguage } = useLanguage();
+  const locale = useLocale();
+  const isEnglish = locale === "en";
+  const dict = useDict();
   const [scrolled, setScrolled] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const withLocale = useMemo(() => {
+    return (path: string) => {
+      if (!path.startsWith("/")) return path;
+      if (path === "/") {
+        return `/${locale}`;
+      }
+      return `/${locale}${path}`;
+    };
+  }, [locale]);
 
   // Scroll effect for header
   useEffect(() => {
@@ -27,7 +39,6 @@ export default function ContactPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isEnglish = language === "en";
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -65,24 +76,24 @@ export default function ContactPage() {
       answer: isEnglish ? (
         <>
           We recommend starting with our beginner resources on the{" "}
-          <a
-            href="/resources"
+          <Link
+            href={withLocale("/resources")}
             className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
           >
             Resources page
-          </a>{" "}
+          </Link>{" "}
           and joining our weekly discussion group. The discussion group is a great place to ask
           questions and learn from others in an informal setting.
         </>
       ) : (
         <>
           Te recomendamos empezar con nuestros recursos principiantes en la{" "}
-          <a
-            href="/resources"
+          <Link
+            href={withLocale("/resources")}
             className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
           >
             página de Recursos
-          </a>{" "}
+          </Link>{" "}
           y unirte a nuestro grupo de reuniones de grupo. El grupo de reuniones de grupo es un gran
           lugar para hacer preguntas y aprender de otros en un entorno informal.
         </>
@@ -121,15 +132,15 @@ export default function ContactPage() {
   return (
     <>
       <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <Header language={language} setLanguage={setLanguage} scrolled={scrolled} />
+        <Header locale={locale} t={dict.header} scrolled={scrolled} />
 
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
           <section className="space-y-4">
             <div className="text-sm text-slate-600">
-              <a href="/" className="hover:text-[var(--color-accent-primary)] transition">
+              <Link href={withLocale("/")} className="hover:text-[var(--color-accent-primary)] transition">
                 {isEnglish ? "Home" : "Inicio"}
-              </a>
+              </Link>
               {" / "}
               <span>{isEnglish ? "Contact" : "Contacto"}</span>
             </div>
@@ -463,7 +474,7 @@ export default function ContactPage() {
           </section>
         </main>
 
-        <Footer language={language} />
+        <Footer locale={locale} t={dict.footer} />
       </div>
 
       {/* Substack Widget Script */}

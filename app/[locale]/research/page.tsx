@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import { useLanguage } from "../contexts/language-context";
+import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
+import { useLocale, useDict } from "@/app/contexts/language-context";
 
 type ProjectCategory = "all" | "interpretability" | "alignment" | "robustness" | "value-learning";
 
@@ -18,9 +19,20 @@ interface Project {
 }
 
 export default function ResearchPage() {
-  const { language, setLanguage } = useLanguage();
+  const locale = useLocale();
+  const isEnglish = locale === "en";
+  const dict = useDict();
   const [scrolled, setScrolled] = useState(false);
   const [filter, setFilter] = useState<ProjectCategory>("all");
+  const withLocale = useMemo(() => {
+    return (path: string) => {
+      if (!path.startsWith("/")) return path;
+      if (path === "/") {
+        return `/${locale}`;
+      }
+      return `/${locale}${path}`;
+    };
+  }, [locale]);
 
   // Scroll effect for header
   useEffect(() => {
@@ -38,7 +50,6 @@ export default function ResearchPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isEnglish = language === "en";
 
   // Research projects data
   const projects: Project[] = [
@@ -126,13 +137,13 @@ export default function ResearchPage() {
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <Header language={language} setLanguage={setLanguage} scrolled={scrolled} />
+        <Header locale={locale} t={dict.header} scrolled={scrolled} />
 
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
           <section className="space-y-4">
             <div className="text-sm text-slate-600">
-              <a href="/" className="hover:text-slate-900">Home</a>
+              <Link href={withLocale("/")} className="hover:text-slate-900">Home</Link>
               {" / "}
               <span>{isEnglish ? "Research" : "Investigación"}</span>
             </div>
@@ -512,7 +523,7 @@ export default function ResearchPage() {
           </section>
         </main>
 
-        <Footer language={language} />
+        <Footer locale={locale} t={dict.footer} />
       </div>
   );
 }

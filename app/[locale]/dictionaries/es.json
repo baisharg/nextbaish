@@ -1,0 +1,398 @@
+{
+  "header": {
+    "nav": {
+      "about": "Sobre nosotros",
+      "activities": "Actividades",
+      "research": "Investigación",
+      "resources": "Recursos",
+      "contact": "Contacto"
+    },
+    "cta": "Únete",
+    "language": "Idioma",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "menu": "Menú",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú"
+  },
+  "footer": {
+    "copyright": "Todos los derechos reservados.",
+    "nav": {
+      "about": "Sobre nosotros",
+      "activities": "Actividades",
+      "research": "Investigación",
+      "resources": "Recursos",
+      "contact": "Contacto",
+      "getInvolved": "Participa",
+      "privacyPolicy": "Política de privacidad"
+    }
+  },
+  "substack": {
+    "eyebrow": "Boletín",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Mantente al tanto de nuestras actividades, eventos y oportunidades.",
+    "placeholder": "tu@email.com",
+    "button": "Suscribirse",
+    "disclaimer": "Solo enviaremos correos cuando haya novedades importantes.",
+    "success": "¡Te suscribiste! Revisa tu correo para el mensaje de bienvenida.",
+    "confirm": "Queda un paso — confirma la suscripción desde tu bandeja de entrada.",
+    "genericError": "Ocurrió un error. Intenta nuevamente.",
+    "networkError": "Fallo de conexión. Verifica tu internet e inténtalo otra vez."
+  },
+  "home": {
+    "breadcrumb": {
+      "home": "Inicio"
+    },
+    "mission": {
+      "eyebrow": "Misión",
+      "title": "Asegurando que la IA Beneficie a la Humanidad",
+      "paragraph1": "A medida que los modelos de inteligencia artificial avanzan en capacidades{footnote1}, esperamos que tengan un impacto cada vez más profundo en nuestra sociedad{footnote2}. Es esencial que este impacto sea positivo, y que las decisiones tomadas por estos sistemas sean transparentes, confiables y responsables{footnote3} ante las personas afectadas por ellos.",
+      "paragraph2": "Creemos que reducir los riesgos asociados a modelos avanzados de IA{footnote4} es uno de los desafíos más importantes de nuestro tiempo. También creemos que es un problema abierto y apasionante{footnote5}, con amplias oportunidades para que más investigadores avancen en este campo{footnote6}.",
+      "paragraph3": "La misión de BAISH es apoyar a estudiantes a entrar a este campo y a realizar investigaciones sobre este tema.",
+      "cta": "Participa"
+    },
+    "events": {
+      "eyebrow": "Próximos Eventos",
+      "title": "Únete a nuestros talleres y encuentros comunitarios",
+      "description": "Mantente al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
+      "calendarPlaceholder": "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida.",
+      "subscribe": "Suscribirse al calendario"
+    },
+    "activities": {
+      "title": "Nuestras Actividades",
+      "description": "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA.",
+      "items": {
+        "mechInterp": {
+          "eyebrow": "Curso",
+          "title": "Curso de Interp Mecánica",
+          "description": "Curso intensivo de 1 mes sobre métodos de interpretabilidad mecánica.",
+          "schedule": "Abril 2025",
+          "duration": "1 mes"
+        },
+        "discussion": {
+          "eyebrow": "Actividades",
+          "title": "Grupo de Discusión Semanal",
+          "description": "Reuniones semanales para discutir papers, conceptos y novedades de seguridad en IA.",
+          "schedule": "Martes · 14h",
+          "duration": "1 hr"
+        },
+        "reading": {
+          "eyebrow": "Actividades",
+          "title": "Club de Lectura",
+          "description": "Presentaciones lideradas por estudiantes sobre papers de seguridad en IA.",
+          "schedule": "Jueves · 14h",
+          "duration": "1 hr"
+        },
+        "fundamentals": {
+          "eyebrow": "Curso",
+          "title": "Fundamentos de Seguridad AGI",
+          "description": "Curso guiado de 8 semanas que cubre los conceptos esenciales de alineamiento y seguridad en IA.",
+          "schedule": "Semestre 2",
+          "duration": "8 semanas"
+        }
+      },
+      "joinNow": "Inscríbete",
+      "learnMore": "Más info"
+    },
+    "resources": {
+      "title": "Recursos",
+      "description": "Profundiza en la seguridad de IA con lecturas y herramientas seleccionadas.",
+      "items": {
+        "reading": {
+          "eyebrow": "Recursos",
+          "title": "Lecturas Iniciales",
+          "description": "Ensayos y papers fundamentales para orientarte en investigación de alineamiento.",
+          "meta": "15+ papers"
+        },
+        "toolkit": {
+          "eyebrow": "Recursos",
+          "title": "Kit de Herramientas",
+          "description": "Repositorios de código, benchmarks y plantillas de experimentos para investigación.",
+          "meta": "Herramientas"
+        },
+        "handbook": {
+          "eyebrow": "Recursos",
+          "title": "Manual Comunitario",
+          "description": "Guía para organizar encuentros y facilitar discusiones productivas.",
+          "meta": "Guía"
+        }
+      },
+      "viewResource": "Ver recurso",
+      "learnMore": "Más info"
+    },
+    "getInvolved": {
+      "communityEyebrow": "Comunidad",
+      "communityTitle": "Únete a nuestra comunidad en Telegram",
+      "communityDescription": "Conéctate con estudiantes interesados en la seguridad de IA.",
+      "telegramCta": "Unirse al grupo de Telegram"
+    }
+  },
+  "about": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Seguridad en IA"
+    },
+    "title": "Entendiendo la Seguridad en IA",
+    "coreConcepts": {
+      "whatIsAiSafety": {
+        "title": "¿Qué es la Seguridad en IA?",
+        "content": "La Seguridad en IA es un campo de investigación enfocado en asegurar que los sistemas avanzados de inteligencia artificial sigan siendo beneficiosos, alineados con los valores humanos y bajo control humano a medida que se vuelven más capaces. Abarca áreas técnicas de investigación como alineamiento, interpretabilidad y robustez, así como consideraciones de gobernanza sobre cómo deberían desarrollarse e implementarse los sistemas de IA."
+      },
+      "whyItMatters": {
+        "title": "¿Por qué es Importante?",
+        "content": "A medida que los sistemas de IA se vuelven más poderosos y autónomos, pueden desarrollar capacidades que podrían llevar a consecuencias no deseadas si no están diseñados y controlados adecuadamente. Lo que está en juego es importante: la IA avanzada podría ayudar a resolver los mayores desafíos de la humanidad, pero también presenta riesgos significativos si se desarrolla sin medidas de seguridad adecuadas. El campo busca maximizar los beneficios mientras minimiza los daños potenciales."
+      },
+      "risks": {
+        "title": "Riesgos y Desafíos Principales",
+        "alignment": {
+          "title": "Problema de Alineamiento",
+          "description": "Asegurar que los sistemas de IA persigan objetivos alineados con los valores e intenciones humanas, incluso cuando se vuelven más capaces."
+        },
+        "interpretability": {
+          "title": "Interpretabilidad",
+          "description": "Desarrollar técnicas para entender cómo los sistemas de IA toman decisiones y representan conocimiento."
+        },
+        "robustness": {
+          "title": "Robustez",
+          "description": "Crear sistemas que se comporten de manera segura incluso cuando se implementan en nuevos entornos o enfrentan situaciones inesperadas."
+        },
+        "powerSeeking": {
+          "title": "Comportamiento de Búsqueda de Poder",
+          "description": "Prevenir que los sistemas de IA desarrollen objetivos instrumentales que entren en conflicto con el bienestar humano."
+        },
+        "coordination": {
+          "title": "Desafíos de Coordinación",
+          "description": "Garantizar que se mantengan estándares de seguridad en todos los principales esfuerzos de desarrollo de IA a nivel mundial."
+        }
+      }
+    },
+    "externalResources": {
+      "title": "Aprendé Más Sobre Seguridad en IA",
+      "alignmentForum": {
+        "title": "Alignment Forum",
+        "description": "Un foro dedicado a la investigación técnica en alineamiento de IA, con papers y discusiones de investigadores destacados.",
+        "level": "Técnico",
+        "cta": "Visitar"
+      },
+      "lessWrong": {
+        "title": "LessWrong",
+        "description": "Un blog comunitario enfocado en la racionalidad humana y las implicaciones de la inteligencia artificial.",
+        "level": "Intermedio",
+        "cta": "Visitar"
+      },
+      "eightyK": {
+        "title": "80,000 Hours",
+        "description": "Orientación profesional para trabajar en los problemas más urgentes del mundo, incluida la seguridad de la IA.",
+        "level": "Introductorio",
+        "cta": "Visitar"
+      },
+      "stampy": {
+        "title": "Wiki de Stampy",
+        "description": "Una wiki colaborativa que proporciona explicaciones accesibles de conceptos de alineamiento de IA.",
+        "level": "Introductorio",
+        "cta": "Visitar"
+      }
+    },
+    "ourApproach": {
+      "title": "Nuestro Enfoque",
+      "focusAreas": {
+        "title": "Áreas de Enfoque",
+        "intro": "En BAISH - Buenos Aires AI Safety Hub, nos enfocamos en varias áreas clave dentro de la investigación de seguridad en IA:",
+        "items": [
+          "Interpretabilidad mecánica de redes neuronales",
+          "Técnicas de alineamiento para modelos grandes de lenguaje",
+          "Metodologías de entrenamiento robustas",
+          "Aprendizaje de valores e inferencia de preferencias"
+        ]
+      },
+      "contribution": {
+        "title": "Nuestra Contribución",
+        "intro": "Contribuimos al campo a través de:",
+        "items": [
+          "Apoyando proyectos de investigación estudiantil",
+          "Desarrollando recursos educativos en español",
+          "Construyendo una comunidad regional de investigadores en seguridad de IA",
+          "Organizando talleres y programas de formación",
+          "Mentoreando a estudiantes interesados en carreras de seguridad en IA"
+        ]
+      }
+    },
+    "team": {
+      "title": "Equipo Principal",
+      "roles": {
+        "coDirector": "Co-director Fundador",
+        "commDirector": "Director de Comunicación",
+        "advisor": "Advisor"
+      }
+    }
+  },
+  "activities": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Actividades"
+    },
+    "title": "Nuestras Actividades",
+    "description": "Únete a nuestra comunidad y participa en investigación y aprendizaje de seguridad en IA",
+    "subscribeCalendar": "Suscribirse al calendario de eventos"
+  },
+  "contact": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Contacto"
+    },
+    "title": "Contactanos",
+    "description": "Comunicate con la comunidad de BAISH",
+    "cards": {
+      "telegram": {
+        "title": "Telegram",
+        "description": "Sumate a nuestro canal de comunidad para discusiones y actualizaciones:"
+      },
+      "location": {
+        "title": "Ubicación",
+        "description": "Estamos ubicados en el Departamento de Ciencias de la Computación:"
+      },
+      "social": {
+        "title": "Redes Sociales",
+        "description": "Seguinos para actualizaciones y anuncios:"
+      }
+    },
+    "form": {
+      "title": "Contactanos",
+      "description": "Comunicate con la comunidad de BAISH",
+      "nameLabel": "¿Cuál es tu nombre?",
+      "emailLabel": "¿Cuál es tu correo electrónico?",
+      "messageLabel": "Mensaje",
+      "clearForm": "Limpiar formulario",
+      "submit": "Enviar"
+    },
+    "getInvolved": {
+      "title": "Sumate",
+      "description": "Hay múltiples formas de participar en nuestra comunidad y actividades.",
+      "newsletter": {
+        "title": "Suscribite a Nuestra Lista de Correo",
+        "description": "Mantenete al día con nuestros eventos, actividades y oportunidades suscribiéndote a nuestra lista de correo. Te enviamos newsletters mensuales y anuncios importantes."
+      }
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes"
+    }
+  },
+  "research": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Investigación"
+    },
+    "title": "Nuestra Investigación",
+    "filterBy": "Filtrar por:",
+    "filters": {
+      "all": "Todos",
+      "interpretability": "Interpretabilidad",
+      "alignment": "Alineamiento",
+      "robustness": "Robustez",
+      "valueLearning": "Aprendizaje de Valores"
+    }
+  },
+  "resources": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Recursos"
+    },
+    "title": "Recursos de Aprendizaje",
+    "description": "Materiales curados para explorar conceptos de seguridad en IA con seguimiento de progreso",
+    "learningPath": {
+      "title": "Tu Camino de Aprendizaje",
+      "description": "Elige tu nivel para ver recomendaciones personalizadas",
+      "beginner": {
+        "title": "Principiante",
+        "description": "No se requiere formación técnica"
+      },
+      "intermediate": {
+        "title": "Intermedio",
+        "description": "Algo de conocimiento en ML/IA"
+      },
+      "advanced": {
+        "title": "Avanzado",
+        "description": "Sólida formación técnica"
+      },
+      "viewing": "Viendo recursos de nivel {level}",
+      "clearFilter": "Limpiar filtro"
+    },
+    "sections": {
+      "quickWins": {
+        "title": "Victorias Rápidas",
+        "description": "Recursos de 15-30 minutos para estudiantes ocupados"
+      },
+      "communityPicks": {
+        "title": "Favoritos de la Comunidad",
+        "description": "Más recomendados por miembros de BAISH"
+      },
+      "latest": {
+        "title": "Últimas Adiciones",
+        "description": "Recientemente agregados a nuestra colección"
+      },
+      "allResources": {
+        "title": "Todos los Recursos",
+        "description": "Filtrar por tipo, tema o nivel de dificultad",
+        "showing": "Mostrando {count} de {total} recursos"
+      }
+    },
+    "filters": {
+      "type": "Tipo:",
+      "topic": "Tema:",
+      "all": "Todos"
+    },
+    "actions": {
+      "markComplete": "Marcar Completo",
+      "completed": "✓ Completado",
+      "start": "Empezar"
+    },
+    "cta": {
+      "title": "¿Listo para Empezar?",
+      "description": "Únete a nuestra comunidad para discutir estos recursos y aprender juntos",
+      "studyGroups": "Únete a Grupos de Estudio",
+      "getInTouch": "Contactar"
+    }
+  },
+  "privacyPolicy": {
+    "breadcrumb": {
+      "home": "Inicio",
+      "current": "Política de Privacidad"
+    },
+    "title": "Política de Privacidad",
+    "sections": {
+      "approach": {
+        "title": "Nuestro Enfoque de Privacidad",
+        "content": "En BAISH (Buenos Aires AI Safety Hub), estamos comprometidos a respetar tu privacidad. Esta Política de Privacidad describe nuestras prácticas con respecto a la recopilación, uso y protección de tu información cuando utilizas nuestro sitio web y servicios."
+      },
+      "dataCollection": {
+        "title": "Recopilación de Datos",
+        "content": "Recopilamos información personal mínima. Los únicos datos personales que recopilamos son las direcciones de correo electrónico cuando los usuarios se registran voluntariamente para recibir nuestro boletín a través de Substack. Esta información es almacenada y gestionada por Substack de acuerdo con su política de privacidad."
+      },
+      "noTracking": {
+        "title": "Sin Seguimiento ni Cookies",
+        "content": "No utilizamos cookies, análisis, herramientas de seguimiento ni ninguna otra tecnología para recopilar datos sobre ti. No monitoreamos tus actividades de navegación ni recopilamos información sobre tus comportamientos en línea."
+      },
+      "thirdParty": {
+        "title": "Servicios de Terceros",
+        "content": "Nuestro boletín se gestiona a través de Substack. Cuando te suscribes a nuestro boletín, tu dirección de correo electrónico se comparte y almacena con Substack. Consulta la",
+        "substackLink": "Política de Privacidad de Substack",
+        "content2": "para comprender cómo manejan tu información."
+      },
+      "rights": {
+        "title": "Tus Derechos",
+        "content": "Tienes derecho a cancelar la suscripción a nuestro boletín en cualquier momento haciendo clic en el enlace para cancelar la suscripción en cualquiera de nuestros correos electrónicos o contactándonos directamente. Si tienes alguna pregunta sobre tus datos o deseas acceder, corregir o eliminar tu información, contáctanos."
+      },
+      "changes": {
+        "title": "Cambios a Esta Política",
+        "content": "Podemos actualizar esta Política de Privacidad de vez en cuando. Te notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página."
+      },
+      "contact": {
+        "title": "Contáctanos",
+        "content": "Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos a través de nuestra",
+        "contactLink": "página de Contacto"
+      }
+    }
+  }
+}

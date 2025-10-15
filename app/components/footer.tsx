@@ -1,11 +1,21 @@
 import Image from "next/image";
+import Link from "next/link";
+import type { AppLocale } from "@/i18n.config";
+import type { Dictionary } from "@/app/[locale]/dictionaries";
 
 interface FooterProps {
-  language: "en" | "es";
+  locale: AppLocale;
+  t: Dictionary["footer"];
 }
 
-export default function Footer({ language }: FooterProps) {
-  const isEnglish = language === "en";
+export default function Footer({ locale, t }: FooterProps) {
+  const withLocale = (path: string) => {
+    if (!path.startsWith("/")) return path;
+    if (path === "/") {
+      return `/${locale}`;
+    }
+    return `/${locale}${path}`;
+  };
 
   return (
     <footer
@@ -27,27 +37,27 @@ export default function Footer({ language }: FooterProps) {
                 Buenos Aires AI Safety Hub
               </p>
             </div>
-            <p>© {new Date().getFullYear()} BAISH. {isEnglish ? "All rights reserved." : "Todos los derechos reservados."}</p>
+            <p>© {new Date().getFullYear()} BAISH. {t.copyright}</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <a className="hover:text-slate-900" href="/about">
-              {isEnglish ? "About" : "Sobre nosotros"}
-            </a>
-            <a className="hover:text-slate-900" href="/activities">
-              {isEnglish ? "Activities" : "Actividades"}
-            </a>
-            <a className="hover:text-slate-900" href="/research">
-              {isEnglish ? "Research" : "Investigación"}
-            </a>
-            <a className="hover:text-slate-900" href="/resources">
-              {isEnglish ? "Resources" : "Recursos"}
-            </a>
+            <Link className="hover:text-slate-900" href={withLocale("/about")}>
+              {t.nav.about}
+            </Link>
+            <Link className="hover:text-slate-900" href={withLocale("/activities")}>
+              {t.nav.activities}
+            </Link>
+            <Link className="hover:text-slate-900" href={withLocale("/research")}>
+              {t.nav.research}
+            </Link>
+            <Link className="hover:text-slate-900" href={withLocale("/resources")}>
+              {t.nav.resources}
+            </Link>
             <a className="hover:text-slate-900" href="#get-involved">
-              {isEnglish ? "Get Involved" : "Participa"}
+              {t.nav.getInvolved}
             </a>
-            <a className="hover:text-slate-900" href="/contact">
-              {isEnglish ? "Contact" : "Contacto"}
-            </a>
+            <Link className="hover:text-slate-900" href={withLocale("/contact")}>
+              {t.nav.contact}
+            </Link>
           </div>
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-6">
@@ -142,9 +152,9 @@ export default function Footer({ language }: FooterProps) {
               </svg>
             </a>
           </div>
-          <a className="hover:text-slate-900" href="/privacy-policy">
-            {isEnglish ? "Privacy Policy" : "Política de privacidad"}
-          </a>
+          <Link className="hover:text-slate-900" href={withLocale("/privacy-policy")}>
+            {t.nav.privacyPolicy}
+          </Link>
         </div>
       </div>
     </footer>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
+import { useLocale, useDict } from "@/app/contexts/language-context";
 
 type ResourceType = "video" | "paper" | "course" | "article" | "wiki" | "book";
 type ResourceTopic = "alignment" | "interpretability" | "robustness" | "governance" | "general";
@@ -39,17 +40,16 @@ const DIFFICULTY_COLORS = {
   advanced: "bg-red-100 text-red-700",
 };
 
-import { useLanguage } from "../contexts/language-context";
-
 export default function Resources() {
-  const { language, setLanguage } = useLanguage();
+  const locale = useLocale();
+  const isEnglish = locale === "en";
+  const dict = useDict();
   const [scrolled, setScrolled] = useState(false);
   const [selectedPathway, setSelectedPathway] = useState<DifficultyLevel | "all">("all");
   const [typeFilter, setTypeFilter] = useState<ResourceType | "all">("all");
   const [topicFilter, setTopicFilter] = useState<ResourceTopic | "all">("all");
   const [completedResources, setCompletedResources] = useState<Set<string>>(new Set());
 
-  const isEnglish = language === "en";
 
   // Load completed resources from localStorage
   useEffect(() => {
@@ -264,7 +264,44 @@ export default function Resources() {
     },
   ];
 
+  const totalsByDifficulty: Record<DifficultyLevel, number> = {
+    beginner: 0,
+    intermediate: 0,
+    advanced: 0,
+  };
+
+  const completedByDifficulty: Record<DifficultyLevel, number> = {
+    beginner: 0,
+    intermediate: 0,
+    advanced: 0,
+  };
+
+  allResources.forEach((resource) => {
+    totalsByDifficulty[resource.difficulty] += 1;
+    if (completedResources.has(resource.id)) {
+      completedByDifficulty[resource.difficulty] += 1;
+    }
+  });
+
+  const progressForDifficulty = (difficulty: DifficultyLevel) => {
+    const total = totalsByDifficulty[difficulty];
+    if (!total) {
+      return 0;
+    }
+    return Math.min(100, (completedByDifficulty[difficulty] / total) * 100);
+  };
+
   // Filter resources
+  const withLocale = useMemo(() => {
+    return (path: string) => {
+      if (!path.startsWith("/")) return path;
+      if (path === "/") {
+        return `/${locale}`;
+      }
+      return `/${locale}${path}`;
+    };
+  }, [locale]);
+
   const filteredResources = allResources.filter((resource) => {
     if (selectedPathway !== "all" && resource.difficulty !== selectedPathway) return false;
     if (typeFilter !== "all" && resource.type !== typeFilter) return false;
@@ -289,13 +326,13 @@ export default function Resources() {
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <Header language={language} setLanguage={setLanguage} scrolled={scrolled} />
+      <Header locale={locale} t={dict.header} scrolled={scrolled} />
 
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
         <section className="space-y-6">
           <div className="text-sm text-slate-600">
-            <Link href="/" className="hover:text-[var(--color-accent-primary)] transition">
+            <Link href={withLocale("/")} className="hover:text-[var(--color-accent-primary)] transition">
               {isEnglish ? "Home" : "Inicio"}
             </Link>
             {" / "}
@@ -386,9 +423,7 @@ export default function Resources() {
                     <div className="h-1.5 w-full rounded-full bg-slate-100">
                       <div
                         className="h-1.5 rounded-full bg-green-500 transition-all"
-                        style={{
-                          width: `${(completedResources.size / allResources.filter(r => r.difficulty === "beginner").length) * 100}%`
-                        }}
+                        style={{ width: `${progressForDifficulty("beginner")}%` }}
                       ></div>
                     </div>
                   </div>
@@ -422,9 +457,7 @@ export default function Resources() {
                     <div className="h-1.5 w-full rounded-full bg-slate-100">
                       <div
                         className="h-1.5 rounded-full bg-yellow-500 transition-all"
-                        style={{
-                          width: `${(completedResources.size / allResources.filter(r => r.difficulty === "intermediate").length) * 100}%`
-                        }}
+                        style={{ width: `${progressForDifficulty("intermediate")}%` }}
                       ></div>
                     </div>
                   </div>
@@ -458,9 +491,7 @@ export default function Resources() {
                     <div className="h-1.5 w-full rounded-full bg-slate-100">
                       <div
                         className="h-1.5 rounded-full bg-red-500 transition-all"
-                        style={{
-                          width: `${(completedResources.size / allResources.filter(r => r.difficulty === "advanced").length) * 100}%`
-                        }}
+                        style={{ width: `${progressForDifficulty("advanced")}%` }}
                       ></div>
                     </div>
                   </div>
@@ -844,13 +875,13 @@ export default function Resources() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
-                href="/activities"
+                href={withLocale("/activities")}
                 className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-6 py-3 font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
               >
                 {isEnglish ? "Join Study Groups" : "Únete a Grupos de Estudio"} →
               </Link>
               <Link
-                href="/contact"
+                href={withLocale("/contact")}
                 className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-900 transition hover:bg-slate-50"
               >
                 {isEnglish ? "Get in Touch" : "Contactar"}
@@ -860,7 +891,7 @@ export default function Resources() {
         </section>
       </main>
 
-      <Footer language={language} />
+      <Footer locale={locale} t={dict.footer} />
     </div>
   );
 }
