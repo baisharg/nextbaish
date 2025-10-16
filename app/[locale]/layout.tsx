@@ -13,9 +13,10 @@ import "../globals.css";
 const ibmPlexSerif = IBM_Plex_Serif({
   variable: "--font-plex-serif",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "600"], // Reduced to only essential weights
   display: "swap",
   preload: true,
+  fallback: ["Georgia", "serif"],
 });
 
 const geistSans = Geist({
@@ -23,13 +24,15 @@ const geistSans = Geist({
   subsets: ["latin"],
   display: "swap",
   preload: true,
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
-  preload: true,
+  preload: false, // Not critical for initial render
+  fallback: ["monospace"],
 });
 
 const TIMELINE_STYLE: CSSProperties = { opacity: 0.32 };
@@ -69,6 +72,14 @@ export async function generateMetadata({
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     },
     manifest: "/site.webmanifest",
+    // Performance: preconnect to critical domains
+    other: {
+      "link": [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "dns-prefetch", href: "https://lu.ma" },
+        { rel: "dns-prefetch", href: "https://substackapi.com" },
+      ],
+    },
   };
 }
 

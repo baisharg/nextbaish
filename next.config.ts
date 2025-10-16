@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
   // Security & performance
   poweredByHeader: false,
   compress: true,
+
+  // Experimental features for better performance
+  experimental: {
+    // Enable optimizePackageImports for better tree-shaking
+    optimizePackageImports: ["@vercel/analytics", "@vercel/speed-insights"],
+  },
 };
 
 export default nextConfig;

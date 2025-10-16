@@ -1,9 +1,19 @@
-import SubstackSignup from "@/app/components/substack-signup";
+import dynamic from "next/dynamic";
 import PageWrapper from "@/app/components/page-wrapper";
-import CalendarSection from "@/app/components/calendar-section";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+
+// Lazy load below-the-fold components for better initial load
+const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
+  loading: () => (
+    <div className="flex h-[450px] w-full items-center justify-center rounded-xl bg-slate-50 animate-pulse" />
+  ),
+});
+
+const SubstackSignup = dynamic(() => import("@/app/components/substack-signup"), {
+  loading: () => <div className="card-glass h-64 animate-pulse" />,
+});
 
 const FOOTNOTES = [
   { id: 1, href: "https://epochai.org/trends", label: "1" },
