@@ -16,7 +16,6 @@ import {
   PIVOT_DAMPING,
   SEGMENT_FACTORS,
   GOLDEN_RATIO_SEED,
-  UP_FRACTION,
   adjustColor,
   hslToString,
   createSeededRandom,
@@ -26,6 +25,7 @@ import {
   directionDurationSeeded,
   randomInRangeWith,
   clamp,
+  getUpFraction,
 } from "../utils/thread-utils";
 
 /**
@@ -45,6 +45,80 @@ for (let i = 0; i < SEG_LEN; i++) {
   COS_OFFSETS[i] = s * Math.PI * 0.5;
 }
 
+type PerformanceProfile = {
+  threadCount: number;
+  blurStdDeviation: number;
+  frameInterval: number;
+};
+
+const DEFAULT_PERFORMANCE_PROFILE: PerformanceProfile = {
+  threadCount: THREAD_COUNT,
+  blurStdDeviation: 3.5,
+  frameInterval: FRAME_INTERVAL,
+};
+
+const LOW_POWER_FRAME_INTERVAL = 1000 / 26;
+
+type NavigatorConnection = {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (type: string, listener: () => void) => void;
+  removeEventListener?: (type: string, listener: () => void) => void;
+};
+
+type NavigatorWithConnection = Navigator & {
+  connection?: NavigatorConnection;
+};
+
+const profilesEqual = (a: PerformanceProfile, b: PerformanceProfile) =>
+  a.threadCount === b.threadCount &&
+  Math.abs(a.blurStdDeviation - b.blurStdDeviation) < 0.01 &&
+  Math.abs(a.frameInterval - b.frameInterval) < 0.01;
+
+const computePerformanceProfile = (): PerformanceProfile => {
+  if (typeof window === "undefined") {
+    return DEFAULT_PERFORMANCE_PROFILE;
+  }
+
+  const width = window.innerWidth || 0;
+  const dpr = window.devicePixelRatio || 1;
+  const nav = (typeof navigator !== "undefined" ? (navigator as NavigatorWithConnection) : undefined);
+  const hardware = nav?.hardwareConcurrency ?? 0;
+  const saveData = Boolean(nav?.connection?.saveData);
+  const effectiveType = nav?.connection?.effectiveType ?? "";
+  const isSlowConnection = effectiveType.includes("2g") || effectiveType.includes("slow-2g");
+
+  let threadScale = 1;
+  if (width <= 480) threadScale = 0.72;
+  else if (width <= 640) threadScale = 0.82;
+  else if (width <= 820) threadScale = 0.9;
+
+  if (dpr >= 3) {
+    threadScale *= 0.92;
+  }
+
+  const minThreads = Math.max(Math.round(THREAD_COUNT * 0.6), 28);
+  const scaled = THREAD_COUNT * threadScale;
+  const threadCount = Math.round(clamp(scaled, minThreads, THREAD_COUNT));
+
+  let blurStdDeviation = 3.5;
+  if (dpr >= 3.5) blurStdDeviation = 1.8;
+  else if (dpr >= 3) blurStdDeviation = 2.1;
+  else if (dpr >= 2) blurStdDeviation = 2.75;
+  if (width <= 480) blurStdDeviation *= 0.9;
+  blurStdDeviation = Math.max(1.6, Number(blurStdDeviation.toFixed(2)));
+
+  const lowPowerHardware = hardware > 0 && hardware <= 4;
+  const lowPower = lowPowerHardware || saveData || isSlowConnection || width <= 480;
+  const frameInterval = lowPower ? Math.max(FRAME_INTERVAL, LOW_POWER_FRAME_INTERVAL) : FRAME_INTERVAL;
+
+  return {
+    threadCount,
+    blurStdDeviation,
+    frameInterval,
+  };
+};
+
 // --------------------------------------------------------------------------------
 // TYPES
 // --------------------------------------------------------------------------------
@@ -57,6 +131,7 @@ type ThreadState = {
   profile: PathProfile;
   direction: Direction;
   path: string;
+  pathBuffer: string[];
 
   // Timing / motion
   duration: number;
@@ -91,19 +166,35 @@ type ThreadState = {
 // GEOMETRY → STRING (reuses numbers, avoids temporary arrays)
 // --------------------------------------------------------------------------------
 
+const formatCoord = (value: number): string => {
+  const scaled = Math.round(value * 100);
+  const sign = scaled < 0 ? "-" : "";
+  const absScaled = Math.abs(scaled);
+  const integer = Math.floor(absScaled / 100);
+  const fraction = absScaled % 100;
+
+  if (fraction === 0) {
+    return `${sign}${integer}`;
+  }
+
+  const paddedFraction = fraction < 10 ? `0${fraction}` : `${fraction}`;
+  return `${sign}${integer}.${paddedFraction}`;
+};
+
 /**
  * Builds a cubic Bezier path string from normalized points in [0..1] space,
- * scaled to the SVG viewBox. No allocations besides the output string.
+ * scaled to the SVG viewBox. Reuses an optional buffer to avoid per-frame allocations.
  */
-const buildCubicBezierPath = (points: Float32Array): string => {
+const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string => {
   const n = points.length >>> 1; // number of (x,y) points
   if (n === 0) return "";
 
-  // Start "M x y"
-  const x0 = (points[0] * VIEWBOX_SIZE).toFixed(2);
-  const y0 = (points[1] * VIEWBOX_SIZE).toFixed(2);
-  // We'll assemble into a string array for faster concatenation.
-  const out: string[] = [`M ${x0} ${y0}`];
+  const out = buffer ?? [];
+  out.length = 0;
+
+  const x0 = points[0] * VIEWBOX_SIZE;
+  const y0 = points[1] * VIEWBOX_SIZE;
+  out.push(`M ${formatCoord(x0)} ${formatCoord(y0)}`);
 
   for (let i = 1; i < n; i++) {
     const prevIdx = (i - 1) << 1;
@@ -120,12 +211,14 @@ const buildCubicBezierPath = (points: Float32Array): string => {
     const nextX = points[nextIdx] * VIEWBOX_SIZE;
     const nextY = points[nextIdx + 1] * VIEWBOX_SIZE;
 
-    const cp1x = (prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR).toFixed(2);
-    const cp1y = (prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR).toFixed(2);
-    const cp2x = (currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR).toFixed(2);
-    const cp2y = (currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR).toFixed(2);
+    const cp1x = prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR;
+    const cp1y = prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR;
+    const cp2x = currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR;
+    const cp2y = currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR;
 
-    out.push(`C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${currX.toFixed(2)} ${currY.toFixed(2)}`);
+    out.push(
+      `C ${formatCoord(cp1x)} ${formatCoord(cp1y)} ${formatCoord(cp2x)} ${formatCoord(cp2y)} ${formatCoord(currX)} ${formatCoord(currY)}`,
+    );
   }
 
   return out.join(" ");
@@ -219,10 +312,12 @@ const selectThreadToFlip = (
 };
 
 // Factory (main-thread) — unchanged visuals; we add scratch + gradient bounds/stops.
-const createThread = (id: number): ThreadState => {
+const createThread = (id: number, totalThreads: number): ThreadState => {
   const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
-  const profile = createPathProfile(id, rng);
-  const direction: Direction = rng() < UP_FRACTION ? "up" : "down";
+  const profile = createPathProfile(id, rng, totalThreads);
+  const upFraction = getUpFraction(totalThreads);
+  const direction: Direction = rng() < upFraction ? "up" : "down";
+  const pathBuffer: string[] = [];
 
   // Gradient y-bounds (based on "down" path as before).
   let minY = Infinity;
@@ -240,10 +335,11 @@ const createThread = (id: number): ThreadState => {
     id,
     color,
     weight: randomInRangeWith(rng, 0.8, 1.4),
-    opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
+    opacity: clamp(0.52 + id / (totalThreads * 3.5), 0.56, 0.82),
     profile,
     direction,
-    path: buildCubicBezierPath(profile[direction]),
+    pathBuffer,
+    path: buildCubicBezierPath(profile[direction], pathBuffer),
     duration: directionDurationSeeded(direction, rng),
     lastFlipAt: 0,
     swayPhase: randomInRangeWith(rng, 0, Math.PI * 2),
@@ -288,6 +384,7 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
   }
 
   const color = data.color;
+  const pathBuffer: string[] = [];
 
   return {
     id: data.id,
@@ -296,7 +393,8 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
     opacity: data.opacity,
     profile,
     direction: data.direction,
-    path: buildCubicBezierPath(profile[data.direction]),
+    pathBuffer,
+    path: buildCubicBezierPath(profile[data.direction], pathBuffer),
     duration: data.duration,
     lastFlipAt: 0,
     swayPhase: data.swayPhase,
@@ -347,10 +445,52 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [threads, setThreads] = useState<ThreadState[]>([]);
+  const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
+  const { threadCount, frameInterval, blurStdDeviation } = performanceProfile;
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
   const threadsRef = useRef<ThreadState[]>([]);
   const pathRefs = useRef<PathRefMap>(new Map());
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let rafId = 0;
+    const updateProfile = () => {
+      const next = computePerformanceProfile();
+      setPerformanceProfile((prev) => (profilesEqual(prev, next) ? prev : next));
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateProfile();
+      });
+    };
+
+    updateProfile();
+
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
+    window.addEventListener("orientationchange", scheduleUpdate);
+
+    const nav = (typeof navigator !== "undefined" ? (navigator as NavigatorWithConnection) : undefined);
+    const connection = nav?.connection;
+    const detachConnection =
+      connection && typeof connection.addEventListener === "function"
+        ? (() => {
+            connection.addEventListener("change", scheduleUpdate);
+            return () => connection.removeEventListener?.("change", scheduleUpdate);
+          })()
+        : undefined;
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", scheduleUpdate);
+      window.removeEventListener("orientationchange", scheduleUpdate);
+      detachConnection?.();
+    };
+  }, []);
 
   // Stable registrar; called with a closure per thread on first render only.
   const registerPath = (id: number) => (node: SVGPathElement | null) => {
@@ -359,25 +499,35 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   };
 
   const syncThreads = (incoming: ThreadState[]) => {
-    const normalized = incoming.map((thread) => ({
-      ...thread,
-      path: buildCubicBezierPath(thread.profile[thread.direction]),
-      targetDirection: thread.targetDirection ?? thread.direction,
-      transitionStartTime: 0,
-    }));
+    const normalized = incoming.map((thread) => {
+      const pathBuffer = thread.pathBuffer ?? [];
+      const path = buildCubicBezierPath(thread.profile[thread.direction], pathBuffer);
+      return {
+        ...thread,
+        pathBuffer,
+        path,
+        targetDirection: thread.targetDirection ?? thread.direction,
+        transitionStartTime: 0,
+      };
+    });
     threadsRef.current = normalized.map((t) => ({ ...t }));
     setThreads(normalized);
   };
 
   // Initialize threads via Worker (with main-thread fallback)
   useEffect(() => {
+    const totalThreads = Math.max(threadCount, 1);
+
+    threadsRef.current = [];
+    setThreads([]);
+
     let mounted = true;
     let worker: Worker | null = null;
     let fallbackTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const initThreadsFromMain = () => {
       if (!mounted) return;
-      const mainThreads = Array.from({ length: THREAD_COUNT }, (_, id) => createThread(id));
+      const mainThreads = Array.from({ length: totalThreads }, (_, id) => createThread(id, totalThreads));
       const hasUpThread = mainThreads.some((t) => t.direction === "up");
       if (!hasUpThread) {
         mainThreads[0] = { ...mainThreads[0], direction: "up", targetDirection: "up" };
@@ -405,7 +555,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
         if (mounted && threadsRef.current.length === 0) initThreadsFromMain();
       };
 
-      worker.postMessage({ type: "generateThreads", count: THREAD_COUNT });
+      worker.postMessage({ type: "generateThreads", count: totalThreads });
     } catch {
       initThreadsFromMain();
     }
@@ -415,7 +565,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
       if (fallbackTimeout) clearTimeout(fallbackTimeout);
       if (worker) worker.terminate();
     };
-  }, []);
+  }, [threadCount]);
 
   // Defer animation until page is fully loaded / idle
   useEffect(() => {
@@ -453,7 +603,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   }, []);
 
   const setStaticPathForThread = (thread: ThreadState) => {
-    const staticPath = buildCubicBezierPath(thread.profile[thread.direction]);
+    const staticPath = buildCubicBezierPath(thread.profile[thread.direction], thread.pathBuffer);
     thread.path = staticPath;
     thread.targetDirection = thread.direction;
     thread.transitionStartTime = 0;
@@ -466,7 +616,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
 
   /**
    * Single rAF loop:
-   *  - throttled by FRAME_INTERVAL
+   *  - throttled by the selected frameInterval
    *  - drives both path animation and direction flipping (no setInterval)
    *  - avoids per-frame allocations by reusing per-thread buffers
    */
@@ -485,8 +635,8 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     const animate = (now: number) => {
       const elapsed = now - lastFrameTime;
 
-      if (elapsed >= FRAME_INTERVAL) {
-        lastFrameTime = now - (elapsed % FRAME_INTERVAL);
+      if (elapsed >= frameInterval) {
+        lastFrameTime = now - (elapsed % frameInterval);
 
         const runtimeThreads = threadsRef.current;
 
@@ -526,7 +676,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
             thread.driftAmp,
           );
 
-          const newPath = buildCubicBezierPath(thread.floatingPoints);
+          const newPath = buildCubicBezierPath(thread.floatingPoints, thread.pathBuffer);
           thread.path = newPath;
 
           const el = pathRefs.current.get(thread.id);
@@ -551,7 +701,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
 
     rafId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafId);
-  }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId]);
+  }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId, frameInterval]);
 
   if (threads.length === 0) {
     return (
@@ -572,7 +722,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
       <svg viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`} preserveAspectRatio="none" className="h-full w-full">
         <defs>
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation={blurStdDeviation} result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"

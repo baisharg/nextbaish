@@ -34,7 +34,6 @@ export const COLOR_PALETTE: HSL[] = [
 // CONSTANTS - Animation Timing
 // ============================================================================
 
-export const UP_FRACTION = 1 / THREAD_COUNT;
 export const FLIP_INTERVAL_MS = 8000;
 export const SETTLE_BUFFER_MS = 900;
 export const TARGET_FPS = 30;
@@ -118,9 +117,18 @@ export const hslToString = (hsl: HSL) =>
 // PATH GENERATION
 // ============================================================================
 
-export const createPathProfile = (index: number, rng: () => number): PathProfile => {
+export const getUpFraction = (threadCount: number) =>
+  threadCount <= 1 ? 1 : 1 / threadCount;
+
+export const createPathProfile = (
+  index: number,
+  rng: () => number,
+  threadCount: number = THREAD_COUNT,
+): PathProfile => {
+  const total = Math.max(threadCount, 1);
+  const denominator = Math.max(total - 1, 1);
   const baseY = clamp(
-    0.22 + (index / (THREAD_COUNT - 1)) * 0.56 + randomInRangeWith(rng, -0.05, 0.05),
+    0.22 + (index / denominator) * 0.56 + randomInRangeWith(rng, -0.05, 0.05),
     0.08,
     0.92,
   );

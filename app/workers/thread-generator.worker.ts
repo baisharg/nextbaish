@@ -4,13 +4,13 @@ import {
   type PathProfile,
   GOLDEN_RATIO_SEED,
   THREAD_COUNT,
-  UP_FRACTION,
   chooseColor,
   createPathProfile,
   createSeededRandom,
   directionDurationSeeded,
   randomInRangeWith,
   clamp,
+  getUpFraction,
 } from "../utils/thread-utils";
 
 // ============================================================================
@@ -49,16 +49,17 @@ export type ThreadsGeneratedMessage = {
 // THREAD GENERATION
 // ============================================================================
 
-const generateThread = (id: number): WorkerThreadData => {
+const generateThread = (id: number, totalThreads: number, upFraction: number): WorkerThreadData => {
   const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
-  const profile = createPathProfile(id, rng);
-  const direction: Direction = rng() < UP_FRACTION ? "up" : "down";
+  const safeTotal = Math.max(totalThreads, 1);
+  const profile = createPathProfile(id, rng, safeTotal);
+  const direction: Direction = rng() < upFraction ? "up" : "down";
 
   return {
     id,
     color: chooseColor(rng),
     weight: randomInRangeWith(rng, 0.8, 1.4),
-    opacity: clamp(0.52 + id / (THREAD_COUNT * 3.5), 0.56, 0.82),
+    opacity: clamp(0.52 + id / (safeTotal * 3.5), 0.56, 0.82),
     direction,
     profileNeutral: profile.neutral,
     profileUp: profile.up,
@@ -79,12 +80,14 @@ const generateThread = (id: number): WorkerThreadData => {
 
 self.onmessage = (event: MessageEvent<GenerateThreadsMessage>) => {
   if (event.data.type === "generateThreads") {
-    const count = event.data.count;
+    const requested = event.data.count ?? THREAD_COUNT;
+    const count = Math.max(requested, 1);
+    const upFraction = getUpFraction(count);
     const threads: WorkerThreadData[] = [];
 
     // Generate all threads
     for (let i = 0; i < count; i++) {
-      threads.push(generateThread(i));
+      threads.push(generateThread(i, count, upFraction));
     }
 
     // Ensure at least one thread starts pointing up
