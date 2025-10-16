@@ -38,6 +38,169 @@ This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScri
 - Static assets in `public/` served from root path
 - Geist font family loaded from `next/font/google`
 
+### Internationalization (i18n)
+
+**System Overview:**
+This project uses a dictionary-based i18n system with server-side translation loading for English and Spanish.
+
+**Dictionary Files:**
+- `app/[locale]/dictionaries/en.json` - English translations
+- `app/[locale]/dictionaries/es.json` - Spanish translations
+- `app/[locale]/dictionaries.ts` - Dictionary loader function
+
+**File Structure:**
+```
+app/[locale]/
+├── dictionaries/
+│   ├── en.json          # English dictionary
+│   ├── es.json          # Spanish dictionary
+│   └── dictionaries.ts  # Loader
+├── page.tsx             # Home page
+├── about/page.tsx       # About page
+├── activities/page.tsx  # Activities page
+└── ...
+```
+
+**How to Add New Translations:**
+
+1. **Add to both dictionary files** (en.json and es.json):
+```json
+// en.json
+{
+  "pageName": {
+    "sectionName": {
+      "key": "English text here"
+    }
+  }
+}
+
+// es.json
+{
+  "pageName": {
+    "sectionName": {
+      "key": "Texto en español aquí"
+    }
+  }
+}
+```
+
+2. **Use in Server Components** (pages):
+```tsx
+import { getDictionary } from "./dictionaries";
+import type { AppLocale } from "@/i18n.config";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
+  const t = dict.pageName; // Access your page's translations
+
+  return (
+    <div>
+      <h1>{t.sectionName.key}</h1>
+    </div>
+  );
+}
+```
+
+3. **Use in Client Components** (with context):
+```tsx
+"use client";
+import { useLocale, useDict } from "@/app/contexts/language-context";
+
+export default function Component() {
+  const locale = useLocale();
+  const dict = useDict();
+  const isEnglish = locale === "en";
+
+  return <h1>{dict.pageName.sectionName.key}</h1>;
+}
+```
+
+**CRITICAL RULES:**
+
+❌ **NEVER use inline ternary translations:**
+```tsx
+// WRONG - Do not do this!
+{isEnglish ? "Click here" : "Haz clic aquí"}
+{locale === "en" ? "Welcome" : "Bienvenido"}
+```
+
+✅ **ALWAYS use dictionary references:**
+```tsx
+// CORRECT - Always do this!
+{dict.pageName.clickHere}
+{t.welcome}
+```
+
+**Template Variables:**
+
+For dynamic content, use placeholders in dictionaries:
+```json
+// en.json
+{
+  "showing": "Showing {count} of {total} resources"
+}
+
+// es.json
+{
+  "showing": "Mostrando {count} de {total} recursos"
+}
+```
+
+Then replace in code:
+```tsx
+const text = dict.showing
+  .replace("{count}", filteredResources.length.toString())
+  .replace("{total}", allResources.length.toString());
+```
+
+**Shared Labels:**
+
+For repeated labels (Duration:, Date:, Location:, etc.), use a `common` section:
+```json
+{
+  "pageName": {
+    "common": {
+      "duration": "Duration:",
+      "location": "Location:",
+      "date": "Date:"
+    }
+  }
+}
+```
+
+**Array Translations:**
+
+For lists of items:
+```json
+{
+  "items": [
+    "First item",
+    "Second item",
+    "Third item"
+  ]
+}
+```
+
+Use with `.map()`:
+```tsx
+{dict.items.map((item, idx) => (
+  <li key={idx}>{item}</li>
+))}
+```
+
+**Before Committing:**
+
+1. Verify all pages still build: `npm run build`
+2. Check both dictionary files have matching structure
+3. Test both English (`/en/page`) and Spanish (`/es/page`) routes
+4. No inline ternary translations should exist in any page component
+
 ### Performance Optimizations
 - **30fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
 - **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
