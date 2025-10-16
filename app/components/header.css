@@ -1,0 +1,111 @@
+/* Header Performance Optimizations */
+
+/* CSS Containment - isolates header from rest of page */
+.header-container {
+  contain: layout style paint;
+  will-change: transform;
+  transform: translateZ(0);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header inner container */
+.header-inner {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 1280px;
+  margin-top: 0;
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  background-color: transparent;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.header-inner[data-scrolled="true"] {
+  max-width: 1100px;
+  margin-top: 1rem;
+  border-radius: 9999px;
+  border-width: 1px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Logo container - GPU accelerated */
+.logo-container {
+  transform: scale(1);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.logo-container[data-collapsed="true"] {
+  transform: scale(0.85);
+}
+
+/* Title words container */
+.title-words {
+  gap: 0.4rem;
+  letter-spacing: 0.01em;
+  transition: gap 0.6s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.title-words[data-collapsed="true"] {
+  gap: 0.18rem;
+  letter-spacing: 0.05em;
+}
+
+/* Title word first letter - GPU accelerated with scaleX */
+.title-word-first {
+  opacity: 1;
+  transition: max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.title-word-first[data-hide-on-collapse="true"][data-collapsed="true"] {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+/* Title word rest - GPU accelerated with scaleX for smooth animation */
+.title-word-rest {
+  opacity: 1;
+  transform: scaleX(1);
+  transition: max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.title-word-rest[data-collapsed="true"] {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+/* Navigation */
+.header-nav {
+  gap: 1.5rem;
+  transition: gap 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-nav[data-scrolled="true"] {
+  gap: 0.75rem;
+}
+
+/* CTA Button */
+.header-cta {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-cta[data-scrolled="true"] {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+}

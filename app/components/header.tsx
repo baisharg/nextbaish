@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { usePathname } from "next/navigation";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
+import "./header.css";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -22,7 +23,19 @@ interface HeaderProps {
 const TITLE_WORDS = ["Buenos", "Aires", "AI", "Safety", "Hub"] as const;
 const COLLAPSE_BUFFER = 80;
 
-export default function Header({ locale, t, scrolled }: HeaderProps) {
+// RAF throttle utility for performance
+const rafThrottle = <T extends (...args: any[]) => void>(fn: T): ((...args: Parameters<T>) => void) => {
+  let rafId: number | null = null;
+  return (...args: Parameters<T>) => {
+    if (rafId !== null) return;
+    rafId = requestAnimationFrame(() => {
+      fn(...args);
+      rafId = null;
+    });
+  };
+};
+
+const HeaderComponent = ({ locale, t, scrolled }: HeaderProps) => {
   const pathname = usePathname() ?? "/";
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -33,6 +46,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
   const [isCramped, setIsCramped] = useState(false);
   const titleContainerRef = useRef<HTMLDivElement>(null);
 
+  // Measure widths once on locale change only
   useEffect(() => {
     const widths = restRefs.current.map((element) => element?.offsetWidth ?? 0);
     setRestWidths(widths);
@@ -40,16 +54,20 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
     setFirstWidths(leading);
   }, [locale]);
 
+  // RAF-throttled resize handler for isNarrow
   useEffect(() => {
     const checkWidth = () => {
       setIsNarrow(window.innerWidth < 480);
     };
 
+    const throttledCheck = rafThrottle(checkWidth);
+
     checkWidth();
-    window.addEventListener('resize', checkWidth);
-    return () => window.removeEventListener('resize', checkWidth);
+    window.addEventListener('resize', throttledCheck, { passive: true });
+    return () => window.removeEventListener('resize', throttledCheck);
   }, []);
 
+  // RAF-throttled ResizeObserver for overflow detection
   useEffect(() => {
     const container = titleContainerRef.current;
     if (!container) return;
@@ -67,12 +85,11 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
       });
     };
 
+    const throttledCheck = rafThrottle(checkOverflow);
+
     checkOverflow();
 
-    const resizeObserver = new ResizeObserver(() => {
-      checkOverflow();
-    });
-
+    const resizeObserver = new ResizeObserver(throttledCheck);
     resizeObserver.observe(container);
 
     return () => {
@@ -80,6 +97,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
     };
   }, [locale, restWidths, firstWidths]);
 
+  // Body scroll lock for mobile menu
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -91,6 +109,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
     };
   }, [mobileMenuOpen]);
 
+  // Escape key handler for mobile menu
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -101,20 +120,29 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [mobileMenuOpen]);
 
-  const withLocale = (path: string) => {
+  // Memoized navigation helpers
+  const withLocale = useCallback((path: string) => {
     if (!path.startsWith("/")) return path;
     if (path === "/") {
       return `/${locale}`;
     }
     return `/${locale}${path}`;
-  };
+  }, [locale]);
 
-  const buildLangSwitchHref = (newLocale: AppLocale) => {
+  const buildLangSwitchHref = useCallback((newLocale: AppLocale) => {
     const withoutLocale = pathname.replace(LOCALE_PREFIX_REGEX, "") || "/";
     const normalisedPath = withoutLocale.startsWith("/") ? withoutLocale : `/${withoutLocale}`;
     const pathSegment = normalisedPath === "/" ? "" : normalisedPath;
     return `/${newLocale}${pathSegment}`;
-  };
+  }, [pathname]);
+
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   const navLinks = [
     { href: withLocale("/about"), label: t.nav.about },
@@ -126,36 +154,18 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
 
   return (
     <header
-      className="sticky top-0 z-20 will-change-transform px-6 sm:px-10"
-      style={{
-        transform: 'translateZ(0)',
-        transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-      }}
+      className="header-container sticky top-0 z-20 px-6 sm:px-10"
+      data-scrolled={scrolled}
     >
       <div
-        className="mx-auto transition-all border-slate-200"
-        style={{
-          maxWidth: scrolled ? '1100px' : '1280px',
-          marginTop: scrolled ? '1rem' : '0',
-          borderRadius: scrolled ? '9999px' : '0',
-          borderWidth: scrolled ? '1px' : '0 0 1px 0',
-          backgroundColor: scrolled ? 'rgb(255, 255, 255)' : 'transparent',
-          boxShadow: scrolled ? '0 10px 15px -3px rgb(0 0 0 / 0.1)' : 'none',
-          paddingLeft: scrolled ? '2rem' : '0',
-          paddingRight: scrolled ? '2rem' : '0',
-          paddingTop: scrolled ? '0.75rem' : '1rem',
-          paddingBottom: scrolled ? '0.75rem' : '1rem',
-          transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-        }}
+        className="header-inner mx-auto border-slate-200"
+        data-scrolled={scrolled}
       >
         <div className="flex items-center justify-between gap-6">
           <Link href={withLocale("/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
             <div
-              className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
-              style={{
-                transform: (scrolled || isNarrow || isCramped) ? 'scale(0.85)' : 'scale(1)',
-                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
+              className="logo-container w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
+              data-collapsed={scrolled || isNarrow || isCramped}
             >
               <Image
                 src="/jacarandashield.png"
@@ -168,12 +178,8 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
             </div>
             <div ref={titleContainerRef} className="overflow-hidden min-w-0 flex items-center" aria-label="Buenos Aires AI Safety Hub">
               <div
-                className="flex items-center font-semibold text-slate-900 text-base sm:text-lg"
-                style={{
-                  gap: (scrolled || isNarrow || isCramped) ? '0.18rem' : '0.4rem',
-                  letterSpacing: (scrolled || isNarrow || isCramped) ? '0.05em' : '0.01em',
-                  transition: 'gap 0.6s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
+                className="title-words flex items-center font-semibold text-slate-900 text-base sm:text-lg"
+                data-collapsed={scrolled || isNarrow || isCramped}
               >
                 {TITLE_WORDS.map((word, index) => {
                   const rest = word.slice(1);
@@ -189,7 +195,9 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
                         ref={(node) => {
                           firstRefs.current[index] = node;
                         }}
-                        className={`inline-block${hideFirstOnCollapse ? " overflow-hidden" : ""}`}
+                        className={`title-word-first inline-block${hideFirstOnCollapse ? " overflow-hidden" : ""}`}
+                        data-hide-on-collapse={hideFirstOnCollapse}
+                        data-collapsed={hideFirstOnCollapse && shouldCollapse}
                         style={{
                           maxWidth:
                             hideFirstOnCollapse && shouldCollapse
@@ -197,10 +205,6 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
                               : hideFirstOnCollapse && firstWidth !== undefined
                                 ? `${firstWidth}px`
                                 : undefined,
-                          opacity: hideFirstOnCollapse && shouldCollapse ? 0 : 1,
-                          transition: hideFirstOnCollapse
-                            ? "max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
-                            : "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       >
                         {word[0]}
@@ -209,17 +213,16 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
                         ref={(node) => {
                           restRefs.current[index] = node;
                         }}
-                        className="inline-block overflow-hidden"
+                        className="title-word-rest inline-block overflow-hidden"
+                        data-collapsed={collapseRest}
                         style={{
-                          marginLeft: 0,
                           maxWidth:
                             collapseRest
                               ? '0px'
                               : measuredWidth !== undefined
                                 ? `${measuredWidth}px`
                                 : undefined,
-                          opacity: collapseRest ? 0 : 1,
-                          transition: 'max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                          transformOrigin: 'left',
                           whiteSpace: 'nowrap',
                         }}
                       >
@@ -232,11 +235,8 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
             </div>
           </Link>
           <nav
-            className="hidden md:flex items-center text-sm font-medium text-slate-600"
-            style={{
-              gap: scrolled ? '0.75rem' : '1.5rem',
-              transition: 'gap 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
+            className="header-nav hidden md:flex items-center text-sm font-medium text-slate-600"
+            data-scrolled={scrolled}
           >
             {navLinks.map(link => (
               <Link
@@ -270,12 +270,8 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
               })}
             </div>
             <a
-              className="hidden sm:inline-flex rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
-              style={{
-                padding: scrolled ? '0.5rem 0.75rem' : '0.5rem 1rem',
-                fontSize: scrolled ? '0.75rem' : '0.875rem',
-                transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
+              className="header-cta hidden sm:inline-flex rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
+              data-scrolled={scrolled}
               href="#get-involved"
             >
               {t.cta}
@@ -283,7 +279,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
 
             <button
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu}
               aria-expanded={mobileMenuOpen}
               type="button"
@@ -316,7 +312,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={closeMobileMenu}
           style={{
             animation: 'fadeIn 0.3s ease-out',
           }}
@@ -337,7 +333,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
             </span>
             <button
               className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/60 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               aria-label={t.closeMenu}
               type="button"
             >
@@ -351,7 +347,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
             <Link
               href={withLocale("/")}
               className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               <Image
                 src="/jacarandashield.png"
@@ -370,7 +366,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
                   <Link
                     href={link.href}
                     className="block px-4 py-4 text-lg font-medium text-slate-700 hover:text-slate-900 hover:bg-white/60 rounded-lg transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={closeMobileMenu}
                   >
                     {link.label}
                   </Link>
@@ -394,7 +390,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
                           ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
                           : "bg-white/60 text-slate-700 hover:bg-white"
                       }`}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={closeMobileMenu}
                     >
                       {t.languages[lang.code]}
                     </Link>
@@ -408,7 +404,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
             <a
               className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
               href="#get-involved"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               {t.cta}
             </a>
@@ -428,4 +424,7 @@ export default function Header({ locale, t, scrolled }: HeaderProps) {
       `}</style>
     </header>
   );
-}
+};
+
+// Memoized export for performance
+export default memo(HeaderComponent);
