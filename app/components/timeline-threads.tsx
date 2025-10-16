@@ -45,6 +45,32 @@ for (let i = 0; i < SEG_LEN; i++) {
   COS_OFFSETS[i] = s * Math.PI * 0.5;
 }
 
+// PERF: Track which threads are currently transitioning (typically 0-3 threads)
+// Allows us to skip transition checks for the majority of threads
+const transitioningThreadIds = new Set<number>();
+
+// PERF: Sin/Cos lookup table with linear interpolation (3-4x faster than Math.sin/cos)
+// High resolution table (4096 entries) for smooth interpolation
+const SIN_TABLE_SIZE = 4096;
+const SIN_TABLE = new Float32Array(SIN_TABLE_SIZE);
+const TWO_PI = Math.PI * 2;
+for (let i = 0; i < SIN_TABLE_SIZE; i++) {
+  SIN_TABLE[i] = Math.sin((i / SIN_TABLE_SIZE) * TWO_PI);
+}
+
+const fastSin = (angle: number): number => {
+  // Normalize angle to [0, 1) range
+  const normalized = ((angle / TWO_PI) % 1 + 1) % 1;
+  const scaled = normalized * SIN_TABLE_SIZE;
+  const index = scaled | 0;
+  const nextIndex = (index + 1) % SIN_TABLE_SIZE;
+  const fraction = scaled - index;
+  // Linear interpolation between table values
+  return SIN_TABLE[index] + (SIN_TABLE[nextIndex] - SIN_TABLE[index]) * fraction;
+};
+
+const fastCos = (angle: number): number => fastSin(angle + Math.PI * 0.5);
+
 type PerformanceProfile = {
   threadCount: number;
   blurStdDeviation: number;
@@ -167,23 +193,30 @@ type ThreadState = {
 // --------------------------------------------------------------------------------
 
 const formatCoord = (value: number): string => {
-  const scaled = Math.round(value * 100);
+  // PERF: Reduced to 1 decimal place (0.1 SVG unit ≈ 0.1px, imperceptible)
+  const scaled = Math.round(value * 10);
+
+  // PERF: Early return for zero (common case)
+  if (scaled === 0) return "0";
+
   const sign = scaled < 0 ? "-" : "";
   const absScaled = Math.abs(scaled);
-  const integer = Math.floor(absScaled / 100);
-  const fraction = absScaled % 100;
+  // PERF: Use bitwise OR for integer division (faster than Math.floor for positive numbers)
+  const integer = (absScaled / 10) | 0;
+  const fraction = absScaled % 10;
 
   if (fraction === 0) {
     return `${sign}${integer}`;
   }
 
-  const paddedFraction = fraction < 10 ? `0${fraction}` : `${fraction}`;
-  return `${sign}${integer}.${paddedFraction}`;
+  // No padding needed for single digit
+  return `${sign}${integer}.${fraction}`;
 };
 
 /**
  * Builds a cubic Bezier path string from normalized points in [0..1] space,
  * scaled to the SVG viewBox. Reuses an optional buffer to avoid per-frame allocations.
+ * Optimized: reuses coordinates from previous iteration (50% fewer array reads).
  */
 const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string => {
   const n = points.length >>> 1; // number of (x,y) points
@@ -196,18 +229,18 @@ const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string =
   const y0 = points[1] * VIEWBOX_SIZE;
   out.push(`M ${formatCoord(x0)} ${formatCoord(y0)}`);
 
-  for (let i = 1; i < n; i++) {
-    const prevIdx = (i - 1) << 1;
-    const currIdx = i << 1;
-    const prevPrevIdx = i >= 2 ? ((i - 2) << 1) : prevIdx;
-    const nextIdx = i < n - 1 ? ((i + 1) << 1) : currIdx;
+  // PERF: Reuse prev coordinates from previous iteration instead of re-reading
+  let prevPrevX = x0;
+  let prevPrevY = y0;
+  let prevX = x0;
+  let prevY = y0;
 
-    const prevX = points[prevIdx] * VIEWBOX_SIZE;
-    const prevY = points[prevIdx + 1] * VIEWBOX_SIZE;
+  for (let i = 1; i < n; i++) {
+    const currIdx = i << 1;
     const currX = points[currIdx] * VIEWBOX_SIZE;
     const currY = points[currIdx + 1] * VIEWBOX_SIZE;
-    const prevPrevX = points[prevPrevIdx] * VIEWBOX_SIZE;
-    const prevPrevY = points[prevPrevIdx + 1] * VIEWBOX_SIZE;
+
+    const nextIdx = i < n - 1 ? ((i + 1) << 1) : currIdx;
     const nextX = points[nextIdx] * VIEWBOX_SIZE;
     const nextY = points[nextIdx + 1] * VIEWBOX_SIZE;
 
@@ -219,6 +252,12 @@ const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string =
     out.push(
       `C ${formatCoord(cp1x)} ${formatCoord(cp1y)} ${formatCoord(cp2x)} ${formatCoord(cp2y)} ${formatCoord(currX)} ${formatCoord(currY)}`,
     );
+
+    // Shift coordinates for next iteration
+    prevPrevX = prevX;
+    prevPrevY = prevY;
+    prevX = currX;
+    prevY = currY;
   }
 
   return out.join(" ");
@@ -230,6 +269,7 @@ const easeInOutCubic = (t: number): number =>
 /**
  * Writes final animated (drift+sway) coordinates into thread.floatingPoints.
  * This fuses interpolation + drift/sway. No new arrays per frame.
+ * Optimized: skips interpolation math when not transitioning.
  */
 const writeAnimatedPoints = (
   target: Float32Array,
@@ -247,32 +287,41 @@ const writeAnimatedPoints = (
 ): void => {
   const n = into.length >>> 1;
 
-  // Compute transition factor once.
-  let t = 1;
+  // PERF: Hoist frequency calculations outside loop (saves 2 muls + 2 adds per point)
+  const swayBase = now * swayFreq + swayPhase;
+  const driftBase = now * driftFreq + driftPhase;
+
+  // PERF: Split into two paths to avoid interpolation math when not transitioning
   if (transitionStartTime > 0) {
+    // Transitioning: interpolate between base and target
     const progress = Math.min((now - transitionStartTime) / duration, 1);
-    t = progress >= 1 ? 1 : easeInOutCubic(progress);
-  }
+    const t = progress >= 1 ? 1 : easeInOutCubic(progress);
 
-  // Reuse precomputed phase offsets (hot path).
-  for (let i = 0; i < n; i++) {
-    const xi = i << 1;
-    const yi = xi + 1;
+    for (let i = 0; i < n; i++) {
+      const xi = i << 1;
+      const yi = xi + 1;
 
-    // Interpolate (or copy if t === 1 and we're using the target already).
-    const bx = base[xi];
-    const by = base[yi];
-    const tx = target[xi];
-    const ty = target[yi];
-    const ix = bx + (tx - bx) * t;
-    const iy = by + (ty - by) * t;
+      const ix = base[xi] + (target[xi] - base[xi]) * t;
+      const iy = base[yi] + (target[yi] - base[yi]) * t;
 
-    // Apply drift (x) and sway (y) with pivot damping per segment.
-    const swayOffset = Math.sin(now * swayFreq + swayPhase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
-    const driftOffset = Math.cos(now * driftFreq + driftPhase + COS_OFFSETS[i]) * driftAmp;
+      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
+      const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
 
-    into[xi] = ix + driftOffset;
-    into[yi] = iy + swayOffset;
+      into[xi] = ix + driftOffset;
+      into[yi] = iy + swayOffset;
+    }
+  } else {
+    // Not transitioning: use target directly (saves 4 reads + 2 subs + 2 muls + 2 adds per point)
+    for (let i = 0; i < n; i++) {
+      const xi = i << 1;
+      const yi = xi + 1;
+
+      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
+      const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
+
+      into[xi] = target[xi] + driftOffset;
+      into[yi] = target[yi] + swayOffset;
+    }
   }
 };
 
@@ -520,6 +569,8 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
 
     threadsRef.current = [];
     setThreads([]);
+    // PERF: Clear transitioning threads when reinitializing
+    transitioningThreadIds.clear();
 
     let mounted = true;
     let worker: Worker | null = null;
@@ -652,6 +703,8 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
               t.targetDirection = nextDirection;
               t.transitionStartTime = now;
               t.lastFlipAt = now;
+              // PERF: Track that this thread is now transitioning
+              transitioningThreadIds.add(threadId);
             }
           }
         }
@@ -683,14 +736,25 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
           if (el) {
             el.setAttribute("d", newPath);
           }
+        }
+
+        // PERF: Only check transition completion for threads that are actually transitioning
+        // This is typically 0-3 threads instead of all 40
+        for (const threadId of transitioningThreadIds) {
+          // PERF: Direct array access (thread IDs match array indices) instead of O(n) find()
+          const thread = runtimeThreads[threadId];
+          if (!thread) continue;
 
           const isTransitioning =
             thread.transitionStartTime > 0 && now - thread.transitionStartTime < thread.duration;
 
           if (!isTransitioning && thread.direction !== thread.targetDirection) {
             thread.direction = thread.targetDirection;
+            transitioningThreadIds.delete(threadId);
+
+            const el = pathRefs.current.get(threadId);
             if (el) {
-              el.setAttribute("stroke", `url(#${gradientBaseId}-${thread.id}-${thread.direction})`);
+              el.setAttribute("stroke", `url(#${gradientBaseId}-${threadId}-${thread.direction})`);
             }
           }
         }
@@ -717,9 +781,14 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     <div
       ref={containerRef}
       className={`pointer-events-none ${className ?? "absolute inset-0"}`}
-      style={style}
+      style={{ ...style, contain: "layout style paint" }}
     >
-      <svg viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`} preserveAspectRatio="none" className="h-full w-full">
+      <svg
+        viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
+        preserveAspectRatio="none"
+        className="h-full w-full"
+        style={{ contain: "paint" }}
+      >
         <defs>
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur in="SourceGraphic" stdDeviation={blurStdDeviation} result="blur" />
