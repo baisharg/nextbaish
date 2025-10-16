@@ -20,7 +20,6 @@ interface Project {
 
 export default function ResearchPage() {
   const locale = useLocale();
-  const isEnglish = locale === "en";
   const dict = useDict();
   const [scrolled, setScrolled] = useState(false);
   const [filter, setFilter] = useState<ProjectCategory>("all");
@@ -143,12 +142,12 @@ export default function ResearchPage() {
           {/* Page Header */}
           <section className="space-y-4">
             <div className="text-sm text-slate-600">
-              <Link href={withLocale("/")} className="hover:text-slate-900">Home</Link>
+              <Link href={withLocale("/")} className="hover:text-slate-900">{dict.research.breadcrumb.home}</Link>
               {" / "}
-              <span>{isEnglish ? "Research" : "Investigación"}</span>
+              <span>{dict.research.breadcrumb.current}</span>
             </div>
             <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-              {isEnglish ? "Our Research" : "Nuestra Investigación"}
+              {dict.research.title}
             </h1>
             <p className="text-lg text-slate-600">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -160,7 +159,7 @@ export default function ResearchPage() {
             <div className="grid gap-12 md:grid-cols-2">
               <div className="space-y-6">
                 <h2 className="text-3xl font-semibold text-slate-900">
-                  {isEnglish ? "Research Approach" : "Enfoque de Investigación"}
+                  {dict.research.approachTitle}
                 </h2>
                 <div className="space-y-4 text-base text-slate-700">
                   <p>
@@ -173,39 +172,31 @@ export default function ResearchPage() {
               </div>
               <div className="space-y-6">
                 <h2 className="text-3xl font-semibold text-slate-900">
-                  {isEnglish ? "Focus Areas" : "Áreas de Enfoque"}
+                  {dict.research.focusAreasTitle}
                 </h2>
                 <ul className="space-y-3 text-base text-slate-700">
                   <li className="flex gap-3">
                     <span className="text-[var(--color-accent-primary)]">•</span>
                     <span>
-                      {isEnglish
-                        ? "Mechanistic Interpretability - Understanding how neural networks process information internally"
-                        : "Interpretabilidad Mecánica - Entender cómo las redes neuronales procesan información internamente"}
+                      {dict.research.focusAreas.mechInterp}
                     </span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[var(--color-accent-primary)]">•</span>
                     <span>
-                      {isEnglish
-                        ? "AI Alignment - Ensuring AI systems act according to human values and intentions"
-                        : "Alineamiento de IA - Asegurar que los sistemas de IA actúen de acuerdo a valores e intenciones humanas"}
+                      {dict.research.focusAreas.alignment}
                     </span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[var(--color-accent-primary)]">•</span>
                     <span>
-                      {isEnglish
-                        ? "Robustness & Adversarial Testing - Building resilient systems resistant to attacks"
-                        : "Robustez y Pruebas Adversarias - Construir sistemas resilientes resistentes a ataques"}
+                      {dict.research.focusAreas.robustness}
                     </span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[var(--color-accent-primary)]">•</span>
                     <span>
-                      {isEnglish
-                        ? "Value Learning - Teaching AI systems to learn and respect human preferences"
-                        : "Aprendizaje de Valores - Enseñar a los sistemas de IA a aprender y respetar preferencias humanas"}
+                      {dict.research.focusAreas.valueLearning}
                     </span>
                   </li>
                 </ul>
@@ -217,33 +208,33 @@ export default function ResearchPage() {
           <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
             <div className="space-y-6">
               <h2 className="text-3xl font-semibold text-slate-900">
-                {isEnglish ? "Research Projects" : "Proyectos de Investigación"}
+                {dict.research.projectsTitle}
               </h2>
 
               {/* Filter Controls */}
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-sm font-medium text-slate-600">
-                  {isEnglish ? "Filter by:" : "Filtrar por:"}
+                  {dict.research.filterBy}
                 </span>
                 <FilterButton
                   category="all"
-                  label={isEnglish ? "All" : "Todos"}
+                  label={dict.research.filters.all}
                 />
                 <FilterButton
                   category="interpretability"
-                  label={isEnglish ? "Interpretability" : "Interpretabilidad"}
+                  label={dict.research.filters.interpretability}
                 />
                 <FilterButton
                   category="alignment"
-                  label={isEnglish ? "Alignment" : "Alineamiento"}
+                  label={dict.research.filters.alignment}
                 />
                 <FilterButton
                   category="robustness"
-                  label={isEnglish ? "Robustness" : "Robustez"}
+                  label={dict.research.filters.robustness}
                 />
                 <FilterButton
                   category="value-learning"
-                  label={isEnglish ? "Value Learning" : "Aprendizaje de Valores"}
+                  label={dict.research.filters.valueLearning}
                 />
               </div>
             </div>
@@ -279,7 +270,7 @@ export default function ResearchPage() {
                       href="#"
                       className="text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
                     >
-                      {isEnglish ? "Link Placeholder" : "Enlace"}
+                      {dict.research.linkPlaceholder}
                     </a>
                   </div>
                 </article>
@@ -291,7 +282,7 @@ export default function ResearchPage() {
           <section className="space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
             <div className="space-y-4">
               <h2 className="text-3xl font-semibold text-slate-900">
-                {isEnglish ? "Publications" : "Publicaciones"}
+                {dict.research.publicationsTitle}
               </h2>
               <p className="text-base text-slate-600">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -398,7 +389,7 @@ export default function ResearchPage() {
           <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
             <div className="space-y-4">
               <h2 className="text-3xl font-semibold text-slate-900">
-                {isEnglish ? "Ongoing Research" : "Investigación en Curso"}
+                {dict.research.ongoingTitle}
               </h2>
               <p className="text-base text-slate-600">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
@@ -427,7 +418,7 @@ export default function ResearchPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Started" : "Iniciado"}
+                      {dict.research.started}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year
@@ -435,7 +426,7 @@ export default function ResearchPage() {
                   </div>
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Expected Completion" : "Finalización Esperada"}
+                      {dict.research.expectedCompletion}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year
@@ -465,7 +456,7 @@ export default function ResearchPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Started" : "Iniciado"}
+                      {dict.research.started}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year
@@ -473,7 +464,7 @@ export default function ResearchPage() {
                   </div>
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Expected Completion" : "Finalización Esperada"}
+                      {dict.research.expectedCompletion}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year
@@ -503,7 +494,7 @@ export default function ResearchPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Started" : "Iniciado"}
+                      {dict.research.started}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year
@@ -511,7 +502,7 @@ export default function ResearchPage() {
                   </div>
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                      {isEnglish ? "Expected Completion" : "Finalización Esperada"}
+                      {dict.research.expectedCompletion}
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">
                       Month Year

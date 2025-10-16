@@ -44,90 +44,53 @@ export default function ContactPage() {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
-  const faqItems = [
-    {
-      question: isEnglish
-        ? "Do I need to be a UBA student to participate?"
-        : "¿Necesito ser estudiante de la UBA para participar?",
-      answer: isEnglish
-        ? "Most of our activities are primarily designed for UBA students, but we welcome participants from other universities for our discussion groups and paper reading sessions. Research fellowships are currently limited to UBA students."
-        : "La mayoría de nuestras actividades están principalmente diseñadas para estudiantes de la UBA, pero estamos abiertos a participantes de otras universidades para nuestras reuniones de grupo y sesiones de lectura de papeles. Los becarios de investigación actualmente están limitados a estudiantes de la UBA.",
-    },
-    {
-      question: isEnglish
-        ? "What background do I need to participate?"
-        : "¿Qué antecedentes necesito para participar?",
-      answer: isEnglish
-        ? "This varies by activity. Our discussion groups are open to anyone with an interest in AI safety, regardless of technical background. For more technical activities like the Mechanistic Interpretability course or the Research Fellowship, some background in computer science, mathematics, or AI/ML is expected."
-        : "Esto varía por actividad. Nuestras reuniones de grupo están abiertas a cualquier persona con interés en la seguridad en IA, independientemente del fondo técnico. Para actividades más técnicas como el curso de Interpretabilidad Mecanística o el becario de investigación, se espera algún conocimiento en ciencias de la computación, matemáticas o IA/ML.",
-    },
-    {
-      question: isEnglish
-        ? "Are your activities conducted in English or Spanish?"
-        : "¿Se realizan tus actividades en inglés o español?",
-      answer: isEnglish
-        ? "We conduct most of our activities in both languages. Discussion groups are typically in Spanish, while some technical sessions may be in English, especially when using materials from international sources. Our written materials are available in both languages whenever possible."
-        : "Realizamos la mayoría de nuestras actividades en ambos idiomas. Las reuniones de grupo son típicamente en español, mientras que algunas sesiones técnicas pueden ser en inglés, especialmente cuando se utilizan materiales de fuentes internacionales. Nuestros materiales escritos están disponibles en ambos idiomas siempre que sea posible.",
-    },
-    {
-      question: isEnglish
-        ? "How can I start learning about AI safety if I'm a complete beginner?"
-        : "¿Cómo puedo empezar a aprender sobre seguridad en IA si soy un principiante completo?",
-      answer: isEnglish ? (
-        <>
-          We recommend starting with our beginner resources on the{" "}
-          <Link
-            href={withLocale("/resources")}
-            className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-          >
-            Resources page
-          </Link>{" "}
-          and joining our weekly discussion group. The discussion group is a great place to ask
-          questions and learn from others in an informal setting.
-        </>
-      ) : (
-        <>
-          Te recomendamos empezar con nuestros recursos principiantes en la{" "}
-          <Link
-            href={withLocale("/resources")}
-            className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-          >
-            página de Recursos
-          </Link>{" "}
-          y unirte a nuestro grupo de reuniones de grupo. El grupo de reuniones de grupo es un gran
-          lugar para hacer preguntas y aprender de otros en un entorno informal.
-        </>
-      ),
-    },
-    {
-      question: isEnglish
-        ? "Can I propose a new activity or research direction?"
-        : "¿Puedo proponer una nueva actividad o dirección de investigación?",
-      answer: isEnglish ? (
-        <>
-          Absolutely! We're always open to new ideas. Contact us at{" "}
-          <a
-            href="mailto:aisafetyarg@gmail.com"
-            className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-          >
-            aisafetyarg@gmail.com
-          </a>{" "}
-          with your proposal, and one of our coordinators will discuss it with you.
-        </>
-      ) : (
-        <>
-          ¡Por supuesto! Estamos siempre abiertos a nuevas ideas. Contáctanos en{" "}
-          <a
-            href="mailto:aisafetyarg@gmail.com"
-            className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-          >
-            aisafetyarg@gmail.com
-          </a>{" "}
-          con tu propuesta y uno de nuestros coordinadores te lo discutirá con vos.
-        </>
-      ),
-    },
-  ];
+  // Process FAQ items from dictionary with template replacements
+  const faqItems = useMemo(() => {
+    if (!dict.contact.faq.items) return [];
+
+    return dict.contact.faq.items.map((item: { question: string; answer: string }) => {
+      let answer: string | React.ReactNode = item.answer;
+
+      // Replace {resourcesLink} with actual Link component
+      if (typeof answer === 'string' && answer.includes('{resourcesLink}')) {
+        const parts = answer.split('{resourcesLink}');
+        answer = (
+          <>
+            {parts[0]}
+            <Link
+              href={withLocale("/resources")}
+              className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
+            >
+              {isEnglish ? "Resources page" : "página de Recursos"}
+            </Link>
+            {parts[1]}
+          </>
+        );
+      }
+
+      // Replace {email} with actual email link
+      if (typeof answer === 'string' && answer.includes('{email}')) {
+        const parts = answer.split('{email}');
+        answer = (
+          <>
+            {parts[0]}
+            <a
+              href="mailto:baish@dc.uba.ar"
+              className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
+            >
+              baish@dc.uba.ar
+            </a>
+            {parts[1]}
+          </>
+        );
+      }
+
+      return {
+        question: item.question,
+        answer,
+      };
+    });
+  }, [dict.contact.faq.items, withLocale, isEnglish]);
 
   return (
     <>
@@ -431,7 +394,7 @@ export default function ContactPage() {
           {/* FAQ Section */}
           <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
             <h2 className="text-3xl font-semibold text-slate-900">
-              {isEnglish ? "Frequently Asked Questions" : "Preguntas Frecuentes"}
+              {dict.contact.faq.title}
             </h2>
 
             <div className="space-y-4">

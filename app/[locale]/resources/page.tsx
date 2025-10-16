@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
+import AirtableEmbed from "@/app/components/airtable-embed";
 import { useLocale, useDict } from "@/app/contexts/language-context";
 
 type ResourceType = "video" | "paper" | "course" | "article" | "wiki" | "book";
@@ -358,12 +359,10 @@ export default function Resources() {
           <div className="relative space-y-4">
             <div className="space-y-2">
               <h2 className="text-2xl font-semibold text-slate-900">
-                🎥 {isEnglish ? "Introduction to AI Safety" : "Introducción a la Seguridad en IA"}
+                🎥 {dict.resources.sections.featuredVideo.title}
               </h2>
               <p className="text-base text-slate-600">
-                {isEnglish
-                  ? "Start here: Why experts fear superintelligent AI – and what we can do about it"
-                  : "Empieza aquí: Por qué los expertos temen la IA superinteligente – y qué podemos hacer al respecto"}
+                {dict.resources.sections.featuredVideo.description}
               </p>
             </div>
             <div className="relative w-full overflow-hidden rounded-xl" style={{ paddingBottom: "56.25%" }}>
@@ -606,7 +605,7 @@ export default function Resources() {
                   <div className="mb-4 flex items-start justify-between">
                     <span className="text-3xl">{RESOURCE_TYPE_ICONS[resource.type]}</span>
                     <span className={`rounded-full px-2 py-1 text-xs font-semibold ${DIFFICULTY_COLORS[resource.difficulty]}`}>
-                      {isEnglish ? resource.difficulty : resource.difficulty === "beginner" ? "principiante" : resource.difficulty === "intermediate" ? "intermedio" : "avanzado"}
+                      {dict.resources.difficulties[resource.difficulty]}
                     </span>
                   </div>
                   <h3 className="mb-2 text-lg font-semibold text-slate-900">
@@ -712,6 +711,37 @@ export default function Resources() {
             </div>
           </section>
         )}
+
+        {/* External Training Opportunities Timeline */}
+        <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+          <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+          <div className="relative space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  🎓 {dict.resources.sections.externalOpportunities.title}
+                </h2>
+                <p className="text-base text-slate-600">
+                  {dict.resources.sections.externalOpportunities.subtitle}
+                </p>
+              </div>
+              <p className="text-lg text-slate-700 leading-relaxed">
+                {dict.resources.sections.externalOpportunities.description}
+              </p>
+            </div>
+            <div className="overflow-hidden rounded-xl border-2 border-slate-200 bg-white shadow-lg">
+              <AirtableEmbed
+                appId="appdsx5KxeooxGPFO"
+                shareId="shrgXV0z193dC7uyI"
+                tableId="tblD1rFhCfD8p5lfU"
+                viewId="viwFUfEv4CfXQemqD"
+                showViewControls={false}
+                height="800px"
+                title="Open Applications Timeline"
+              />
+            </div>
+          </div>
+        </section>
 
         {/* All Resources with Filters */}
         <section className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
@@ -847,7 +877,7 @@ export default function Resources() {
                         </div>
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
                           <span className={`rounded-full px-2 py-0.5 font-semibold ${DIFFICULTY_COLORS[resource.difficulty]}`}>
-                            {isEnglish ? resource.difficulty : resource.difficulty === "beginner" ? "principiante" : resource.difficulty === "intermediate" ? "intermedio" : "avanzado"}
+                            {dict.resources.difficulties[resource.difficulty]}
                           </span>
                           <span>⏱️ {isEnglish ? resource.timeToComplete : resource.timeToCompleteEs}</span>
                           <span>📚 {resource.topic}</span>
