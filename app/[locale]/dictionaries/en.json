@@ -353,6 +353,11 @@
       "facilitator": "Facilitator:",
       "paper": "Paper:",
       "discussionLead": "Discussion Lead:"
+    },
+    "gallery": {
+      "eyebrow": "Community",
+      "title": "Past Events",
+      "description": "Moments from our recent gatherings and activities"
     }
   },
   "contact": {

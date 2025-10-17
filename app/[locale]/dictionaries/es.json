@@ -353,6 +353,11 @@
       "facilitator": "Facilitador:",
       "paper": "Paper:",
       "discussionLead": "Líder de Discusión:"
+    },
+    "gallery": {
+      "eyebrow": "Comunidad",
+      "title": "Eventos Pasados",
+      "description": "Momentos de nuestros encuentros y actividades recientes"
     }
   },
   "contact": {
