@@ -47,6 +47,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const [restWidths, setRestWidths] = useState<number[]>([]);
   const [firstWidths, setFirstWidths] = useState<number[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hasMenuBeenOpened, setHasMenuBeenOpened] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const [isCramped, setIsCramped] = useState(false);
@@ -139,7 +140,13 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   }, [pathname]);
 
   const toggleMobileMenu = useCallback(() => {
-    setMobileMenuOpen(prev => !prev);
+    setMobileMenuOpen(prev => {
+      const newValue = !prev;
+      if (newValue) {
+        setHasMenuBeenOpened(true);
+      }
+      return newValue;
+    });
   }, []);
 
   const closeMobileMenu = useCallback(() => {
@@ -312,8 +319,8 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
         </div>
       </div>
 
-      {/* Lazy-loaded mobile menu - only loads when opened */}
-      {mobileMenuOpen && (
+      {/* Lazy-loaded mobile menu - only loads on first open, then stays mounted for animations */}
+      {hasMenuBeenOpened && (
         <MobileMenu
           locale={locale}
           t={t}

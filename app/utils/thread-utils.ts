@@ -36,7 +36,7 @@ export const COLOR_PALETTE: HSL[] = [
 
 export const FLIP_INTERVAL_MS = 8000;
 export const SETTLE_BUFFER_MS = 900;
-export const TARGET_FPS = 30;
+export const TARGET_FPS = 60;
 export const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 export const UP_DURATION_MIN = 10400;

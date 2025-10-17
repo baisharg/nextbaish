@@ -83,7 +83,7 @@ const DEFAULT_PERFORMANCE_PROFILE: PerformanceProfile = {
   frameInterval: FRAME_INTERVAL,
 };
 
-const LOW_POWER_FRAME_INTERVAL = 1000 / 26;
+const LOW_POWER_FRAME_INTERVAL = 1000 / 45;
 
 type NavigatorConnection = {
   saveData?: boolean;

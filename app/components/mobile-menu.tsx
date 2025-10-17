@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
+import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
@@ -21,6 +22,15 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: MobileMenuProps) {
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Track mount state for portal
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   const withLocale = useCallback((path: string) => {
     if (!path.startsWith("/")) return path;
     if (path === "/") {
@@ -35,6 +45,18 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
     const pathSegment = normalisedPath === "/" ? "" : normalisedPath;
     return `/${newLocale}${pathSegment}`;
   }, [pathname]);
+
+  // Trigger animation after mount for smooth slide-in
+  useEffect(() => {
+    if (isOpen) {
+      // Request animation frame to ensure the initial state is rendered before animating
+      requestAnimationFrame(() => {
+        setShouldAnimate(true);
+      });
+    } else {
+      setShouldAnimate(false);
+    }
+  }, [isOpen]);
 
   // Body scroll lock
   useEffect(() => {
@@ -67,25 +89,28 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
     { href: withLocale("/contact"), label: t.nav.contact },
   ];
 
-  if (!isOpen) return null;
+  if (!mounted) return null;
 
-  return (
+  const menuContent = (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
-        onClick={onClose}
-        style={{
-          animation: 'fadeIn 0.3s ease-out',
-        }}
-      />
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
+          onClick={onClose}
+          style={{
+            animation: 'fadeIn 0.3s ease-out',
+          }}
+        />
+      )}
 
       {/* Menu Panel */}
       <div
-        className="fixed top-0 right-0 w-full z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] shadow-xl overflow-hidden"
+        className="fixed top-0 right-0 w-full h-screen z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FFE6] shadow-xl overflow-y-auto"
         style={{
-          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+          transform: shouldAnimate ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          pointerEvents: isOpen ? 'auto' : 'none',
         }}
       >
         <div className="flex flex-col">
@@ -185,4 +210,6 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
       `}</style>
     </>
   );
+
+  return createPortal(menuContent, document.body);
 }

@@ -202,7 +202,7 @@ Use with `.map()`:
 4. No inline ternary translations should exist in any page component
 
 ### Performance Optimizations
-- **30fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
+- **60fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
 - **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
 - **Optimized parameters**: 30 threads × 15 segments, skip transition calculations when complete
 - **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
