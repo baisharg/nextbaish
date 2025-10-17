@@ -16,8 +16,8 @@ export type HSL = { h: number; s: number; l: number };
 // CONSTANTS - Visual Layout
 // ============================================================================
 
-export const THREAD_COUNT = 30;
-export const SEGMENTS = 15;
+export const THREAD_COUNT = 25;
+export const SEGMENTS = 10;
 export const PIVOT_X = 0.42;
 export const PIVOT_Y = 0.54;
 export const X_START = -0.18;

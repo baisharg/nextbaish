@@ -176,6 +176,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 height={40}
                 className="w-full h-full object-contain"
                 priority
+                fetchPriority="high"
               />
             </div>
             <div ref={titleContainerRef} className="overflow-hidden min-w-0 flex items-center" aria-label="Buenos Aires AI Safety Hub">
