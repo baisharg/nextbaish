@@ -495,6 +495,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
   const { threadCount, frameInterval, blurStdDeviation } = performanceProfile;
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
@@ -653,6 +654,38 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     return () => observer.disconnect();
   }, []);
 
+  // Parallax scroll effect
+  useEffect(() => {
+    if (typeof window === "undefined" || prefersReducedMotion) return;
+
+    const PARALLAX_FACTOR = 0.05; // Subtle parallax effect (15% of scroll speed)
+    let rafId = 0;
+    let currentScroll = window.scrollY;
+
+    const updateParallax = () => {
+      const offset = -currentScroll * PARALLAX_FACTOR; // Negative for upward movement
+      setParallaxOffset(offset);
+      rafId = 0;
+    };
+
+    const handleScroll = () => {
+      currentScroll = window.scrollY;
+      // Throttle updates with RAF for smooth performance
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateParallax);
+      }
+    };
+
+    // Initial position
+    updateParallax();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [prefersReducedMotion]);
+
   const setStaticPathForThread = (thread: ThreadState) => {
     const staticPath = buildCubicBezierPath(thread.profile[thread.direction], thread.pathBuffer);
     thread.path = staticPath;
@@ -787,7 +820,11 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
         viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
         preserveAspectRatio="none"
         className="h-full w-full"
-        style={{ contain: "paint" }}
+        style={{
+          contain: "paint",
+          transform: `translateY(${parallaxOffset}px)`,
+          willChange: "transform",
+        }}
       >
         <defs>
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
