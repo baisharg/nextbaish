@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
+import { FadeInSection } from "@/app/components/fade-in-section";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -21,7 +22,8 @@ export default async function AboutPage({
       <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
-        <section className="space-y-4">
+        <FadeInSection variant="fade" as="section">
+          <section className="space-y-4">
           <div className="text-sm text-slate-600">
             <Link href={`/${currentLocale}`} className="hover:text-[var(--color-accent-primary)] transition">
               {t.breadcrumb.home}
@@ -32,13 +34,15 @@ export default async function AboutPage({
           <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
             {t.title}
           </h1>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Core Concepts Section */}
-        <section
-          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-          id="core-concepts"
-        >
+        <FadeInSection variant="slide-up" delay={100} as="section">
+          <section
+            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="core-concepts"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative grid gap-12 lg:grid-cols-2">
             <div className="space-y-8">
@@ -109,13 +113,15 @@ export default async function AboutPage({
               </ul>
             </div>
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* External Resources Section */}
-        <section
-          className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-          id="external-resources"
-        >
+        <FadeInSection variant="slide-up" delay={200} as="section">
+          <section
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="external-resources"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-4">
             <h2 className="text-3xl font-semibold text-slate-900">
@@ -223,13 +229,15 @@ export default async function AboutPage({
               </a>
             </article>
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Our Approach Section */}
-        <section
-          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-          id="our-approach"
-        >
+        <FadeInSection variant="slide-up" delay={300} as="section">
+          <section
+            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="our-approach"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-8">
             <h2 className="text-3xl font-semibold text-slate-900">
@@ -264,13 +272,15 @@ export default async function AboutPage({
               </div>
             </div>
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Team Section */}
-        <section
-          className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-          id="team"
-        >
+        <FadeInSection variant="slide-up" delay={400} as="section">
+          <section
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="team"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-4">
             <h2 className="text-3xl font-semibold text-slate-900">
@@ -482,7 +492,8 @@ export default async function AboutPage({
               </div>
             </article>
           </div>
-        </section>
+          </section>
+        </FadeInSection>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>

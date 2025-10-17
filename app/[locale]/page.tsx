@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
+import { FadeInSection } from "@/app/components/fade-in-section";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -58,10 +59,11 @@ export default async function Home({
       <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Mission Section */}
-        <section
-          className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 sm:px-16"
-          id="about"
-        >
+        <FadeInSection variant="slide-up" as="section">
+          <section
+            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 sm:px-16"
+            id="about"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-6 max-w-3xl">
             <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
@@ -105,13 +107,15 @@ export default async function Home({
               </a>
             </div>
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Events Section */}
-        <section
-          className="relative overflow-hidden space-y-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-          id="events"
-        >
+        <FadeInSection variant="slide-up" delay={100} as="section">
+          <section
+            className="relative overflow-hidden space-y-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="events"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-4 text-center">
             <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
@@ -128,10 +132,12 @@ export default async function Home({
             calendarPlaceholder={t.events.calendarPlaceholder}
             subscribeText={t.events.subscribe}
           />
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Activities Section */}
-        <section className="space-y-8" id="activities">
+        <FadeInSection variant="slide-up" delay={200} as="section">
+          <section className="space-y-8" id="activities">
           <div className="space-y-2">
             <h2 className="text-3xl font-semibold text-slate-900">
               {t.activities.title}
@@ -226,13 +232,15 @@ export default async function Home({
               </article>
             ))}
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Resources Section */}
-        <section
-          className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm"
-          id="resources"
-        >
+        <FadeInSection variant="slide-up" delay={300} as="section">
+          <section
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm"
+            id="resources"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-2">
             <h2 className="text-3xl font-semibold text-slate-900">
@@ -307,13 +315,15 @@ export default async function Home({
               </article>
             ))}
           </div>
-        </section>
+          </section>
+        </FadeInSection>
 
         {/* Get Involved Section */}
-        <section
-          className="relative overflow-hidden grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm md:grid-cols-2"
-          id="get-involved"
-        >
+        <FadeInSection variant="slide-up" delay={400} as="section">
+          <section
+            className="relative overflow-hidden grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm md:grid-cols-2"
+            id="get-involved"
+          >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <SubstackSignup t={dict.substack} />
 
@@ -334,7 +344,8 @@ export default async function Home({
               {t.getInvolved.telegramCta}
             </a>
           </article>
-        </section>
+          </section>
+        </FadeInSection>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>
