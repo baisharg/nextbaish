@@ -4,6 +4,7 @@ import Footer from "@/app/components/footer";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+import { FadeInSection } from "@/app/components/fade-in-section";
 
 export default async function PrivacyPolicy({
   params,
@@ -20,108 +21,112 @@ export default async function PrivacyPolicy({
       <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
-        <section className="space-y-4">
-          <div className="text-sm text-slate-600">
-            <Link href={`/${currentLocale}`} className="hover:text-[var(--color-accent-primary)] transition">
-              {t.breadcrumb.home}
-            </Link>
-            {" / "}
-            <span>{t.breadcrumb.current}</span>
-          </div>
-          <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-            {t.title}
-          </h1>
-        </section>
+        <FadeInSection variant="fade" as="section">
+          <section className="space-y-4">
+            <div className="text-sm text-slate-600">
+              <Link href={`/${currentLocale}`} className="hover:text-[var(--color-accent-primary)] transition">
+                {t.breadcrumb.home}
+              </Link>
+              {" / "}
+              <span>{t.breadcrumb.current}</span>
+            </div>
+            <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
+              {t.title}
+            </h1>
+          </section>
+        </FadeInSection>
 
         {/* Privacy Content */}
-        <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-          <div className="mx-auto max-w-3xl space-y-8">
-            {/* Our Approach to Privacy */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.approach.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.approach.content}
-              </p>
-            </div>
+        <FadeInSection variant="slide-up" delay={100} as="section">
+          <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
+            <div className="mx-auto max-w-3xl space-y-8">
+              {/* Our Approach to Privacy */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.approach.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.approach.content}
+                </p>
+              </div>
 
-            {/* Data Collection */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.dataCollection.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.dataCollection.content}
-              </p>
-            </div>
+              {/* Data Collection */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.dataCollection.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.dataCollection.content}
+                </p>
+              </div>
 
-            {/* No Tracking or Cookies */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.noTracking.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.noTracking.content}
-              </p>
-            </div>
+              {/* No Tracking or Cookies */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.noTracking.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.noTracking.content}
+                </p>
+              </div>
 
-            {/* Third-Party Services */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.thirdParty.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.thirdParty.content}{" "}
-                <a
-                  href="https://substack.com/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition underline"
-                >
-                  {t.sections.thirdParty.substackLink}
-                </a>{" "}
-                {t.sections.thirdParty.content2}
-              </p>
-            </div>
+              {/* Third-Party Services */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.thirdParty.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.thirdParty.content}{" "}
+                  <a
+                    href="https://substack.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition underline"
+                  >
+                    {t.sections.thirdParty.substackLink}
+                  </a>{" "}
+                  {t.sections.thirdParty.content2}
+                </p>
+              </div>
 
-            {/* Your Rights */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.rights.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.rights.content}
-              </p>
-            </div>
+              {/* Your Rights */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.rights.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.rights.content}
+                </p>
+              </div>
 
-            {/* Changes to This Policy */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.changes.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.changes.content}
-              </p>
-            </div>
+              {/* Changes to This Policy */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.changes.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.changes.content}
+                </p>
+              </div>
 
-            {/* Contact Us */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {t.sections.contact.title}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {t.sections.contact.content}{" "}
-                <Link
-                  href={`/${currentLocale}/contact`}
-                  className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition underline"
-                >
-                  {t.sections.contact.contactLink}
-                </Link>.
-              </p>
+              {/* Contact Us */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {t.sections.contact.title}
+                </h2>
+                <p className="text-base text-slate-700 leading-relaxed">
+                  {t.sections.contact.content}{" "}
+                  <Link
+                    href={`/${currentLocale}/contact`}
+                    className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition underline"
+                  >
+                    {t.sections.contact.contactLink}
+                  </Link>.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeInSection>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>

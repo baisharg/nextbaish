@@ -6,6 +6,7 @@ import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import AirtableEmbed from "@/app/components/airtable-embed";
 import { useLocale, useDict } from "@/app/contexts/language-context";
+import { FadeInSection } from "@/app/components/fade-in-section";
 
 type ResourceType = "video" | "paper" | "course" | "article" | "wiki" | "book";
 type ResourceTopic = "alignment" | "interpretability" | "robustness" | "governance" | "general";
@@ -331,6 +332,7 @@ export default function Resources() {
 
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
+        <FadeInSection variant="fade" as="section">
         <section className="space-y-6">
           <div className="text-sm text-slate-600">
             <Link href={withLocale("/")} className="hover:text-[var(--color-accent-primary)] transition">
@@ -352,8 +354,10 @@ export default function Resources() {
             </p>
           </div>
         </section>
+        </FadeInSection>
 
         {/* Featured Video */}
+        <FadeInSection variant="slide-up" delay={100} as="section">
         <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-8 shadow-sm sm:px-12">
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-4">
@@ -378,8 +382,10 @@ export default function Resources() {
             </div>
           </div>
         </section>
+        </FadeInSection>
 
         {/* Learning Path Visualization */}
+        <FadeInSection variant="slide-up" delay={200} as="section">
         <section className="rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
           <div className="space-y-6">
             <div className="space-y-2">
@@ -515,9 +521,11 @@ export default function Resources() {
             )}
           </div>
         </section>
+        </FadeInSection>
 
         {/* Quick Wins Section */}
         {quickWins.length > 0 && (
+          <FadeInSection variant="slide-up" delay={300} as="section">
           <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
             <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
             <div className="relative flex items-start justify-between">
@@ -579,10 +587,12 @@ export default function Resources() {
               ))}
             </div>
           </section>
+          </FadeInSection>
         )}
 
         {/* Community Picks */}
         {communityPicks.length > 0 && (
+          <FadeInSection variant="slide-up" delay={400} as="section">
           <section className="space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
@@ -640,10 +650,12 @@ export default function Resources() {
               ))}
             </div>
           </section>
+          </FadeInSection>
         )}
 
         {/* Latest Additions */}
         {latestResources.length > 0 && (
+          <FadeInSection variant="slide-up" delay={500} as="section">
           <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
             <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
             <div className="relative flex items-start justify-between">
@@ -710,9 +722,11 @@ export default function Resources() {
               ))}
             </div>
           </section>
+          </FadeInSection>
         )}
 
         {/* External Training Opportunities Timeline */}
+        <FadeInSection variant="slide-up" delay={600} as="section">
         <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-6">
@@ -742,8 +756,10 @@ export default function Resources() {
             </div>
           </div>
         </section>
+        </FadeInSection>
 
         {/* All Resources with Filters */}
+        <FadeInSection variant="slide-up" delay={700} as="section">
         <section className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-6">
@@ -890,8 +906,10 @@ export default function Resources() {
             </div>
           </div>
         </section>
+        </FadeInSection>
 
         {/* Next Steps CTA */}
+        <FadeInSection variant="slide-up" delay={800} as="section">
         <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 text-center shadow-sm sm:px-12">
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative mx-auto max-w-2xl space-y-6">
@@ -919,6 +937,7 @@ export default function Resources() {
             </div>
           </div>
         </section>
+        </FadeInSection>
       </main>
 
       <Footer locale={locale} t={dict.footer} />
