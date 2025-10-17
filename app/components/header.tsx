@@ -4,10 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
 import "./header.css";
+
+// Lazy load mobile menu to reduce initial bundle size
+const MobileMenu = dynamic(() => import("./mobile-menu"), {
+  ssr: false,
+});
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -17,7 +23,6 @@ const LANGUAGES = [
 interface HeaderProps {
   locale: AppLocale;
   t: Dictionary["header"];
-  scrolled: boolean;
 }
 
 const TITLE_WORDS = ["Buenos", "Aires", "AI", "Safety", "Hub"] as const;
@@ -35,16 +40,35 @@ const rafThrottle = <T extends (...args: any[]) => void>(fn: T): ((...args: Para
   };
 };
 
-const HeaderComponent = ({ locale, t, scrolled }: HeaderProps) => {
+const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const pathname = usePathname() ?? "/";
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
   const [firstWidths, setFirstWidths] = useState<number[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const [isCramped, setIsCramped] = useState(false);
   const titleContainerRef = useRef<HTMLDivElement>(null);
+
+  // Handle scroll state internally instead of via PageWrapper
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 100);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Measure widths once on locale change only
   useEffect(() => {
@@ -97,28 +121,6 @@ const HeaderComponent = ({ locale, t, scrolled }: HeaderProps) => {
     };
   }, [locale, restWidths, firstWidths]);
 
-  // Body scroll lock for mobile menu
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
-
-  // Escape key handler for mobile menu
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [mobileMenuOpen]);
 
   // Memoized navigation helpers
   const withLocale = useCallback((path: string) => {
@@ -309,119 +311,16 @@ const HeaderComponent = ({ locale, t, scrolled }: HeaderProps) => {
         </div>
       </div>
 
+      {/* Lazy-loaded mobile menu - only loads when opened */}
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
-          onClick={closeMobileMenu}
-          style={{
-            animation: 'fadeIn 0.3s ease-out',
-          }}
+        <MobileMenu
+          locale={locale}
+          t={t}
+          pathname={pathname}
+          isOpen={mobileMenuOpen}
+          onClose={closeMobileMenu}
         />
       )}
-
-      <div
-        className="fixed top-0 right-0 w-full z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] shadow-xl overflow-hidden"
-        style={{
-          transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}
-      >
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200">
-            <span className="text-lg font-semibold text-slate-900">
-              {t.menu}
-            </span>
-            <button
-              className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/60 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
-              onClick={closeMobileMenu}
-              aria-label={t.closeMenu}
-              type="button"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
-
-          <nav className="px-4 py-6 sm:px-6">
-            <Link
-              href={withLocale("/")}
-              className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
-              onClick={closeMobileMenu}
-            >
-              <Image
-                src="/jacarandashield.png"
-                alt="BAISH Logo"
-                width={32}
-                height={32}
-                className="object-contain flex-shrink-0"
-                priority
-              />
-              <span className="text-lg font-semibold text-slate-900">BAISH</span>
-            </Link>
-
-            <ul className="space-y-2">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="block px-4 py-4 text-lg font-medium text-slate-700 hover:text-slate-900 hover:bg-white/60 rounded-lg transition-colors"
-                    onClick={closeMobileMenu}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 pt-8 border-t border-slate-200">
-              <p className="px-4 mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
-                {t.language}
-              </p>
-              <div className="flex gap-3">
-                {LANGUAGES.map((lang) => {
-                  const active = lang.code === locale;
-                  return (
-                    <Link
-                      key={lang.code}
-                      href={buildLangSwitchHref(lang.code)}
-                      className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
-                        active
-                          ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
-                          : "bg-white/60 text-slate-700 hover:bg-white"
-                      }`}
-                      onClick={closeMobileMenu}
-                    >
-                      {t.languages[lang.code]}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </nav>
-
-          <div className="p-4 sm:p-6 border-t border-slate-200">
-            <a
-              className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
-              href="#get-involved"
-              onClick={closeMobileMenu}
-            >
-              {t.cta}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
     </header>
   );
 };

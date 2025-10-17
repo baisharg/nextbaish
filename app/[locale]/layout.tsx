@@ -72,14 +72,6 @@ export async function generateMetadata({
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     },
     manifest: "/site.webmanifest",
-    // Performance: preconnect to critical domains
-    other: {
-      "link": [
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        { rel: "dns-prefetch", href: "https://lu.ma" },
-        { rel: "dns-prefetch", href: "https://substackapi.com" },
-      ],
-    },
   };
 }
 

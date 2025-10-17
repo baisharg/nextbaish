@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
-import PageWrapper from "@/app/components/page-wrapper";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -53,11 +54,8 @@ export default async function Home({
   const t = dict.home;
 
   return (
-    <PageWrapper
-      locale={currentLocale}
-      headerTranslations={dict.header}
-      footerTranslations={dict.footer}
-    >
+    <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Mission Section */}
         <section
@@ -338,6 +336,7 @@ export default async function Home({
           </article>
         </section>
       </main>
-    </PageWrapper>
+      <Footer locale={currentLocale} t={dict.footer} />
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import PageWrapper from "@/app/components/page-wrapper";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
 import CalendarSection from "@/app/components/calendar-section";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
@@ -21,11 +22,8 @@ export default async function Activities({
   const common = t.common;
 
   return (
-    <PageWrapper
-      locale={currentLocale}
-      headerTranslations={dict.header}
-      footerTranslations={dict.footer}
-    >
+    <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
         <section className="space-y-6">
@@ -502,6 +500,7 @@ export default async function Activities({
           </div>
         </section>
       </main>
-    </PageWrapper>
+      <Footer locale={currentLocale} t={dict.footer} />
+    </div>
   );
 }

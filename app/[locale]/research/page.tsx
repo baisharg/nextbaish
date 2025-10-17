@@ -136,7 +136,7 @@ export default function ResearchPage() {
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <Header locale={locale} t={dict.header} scrolled={scrolled} />
+        <Header locale={locale} t={dict.header} />
 
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
