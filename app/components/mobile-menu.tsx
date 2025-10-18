@@ -6,7 +6,7 @@ import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
-import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
+import { buildLangSwitchHref, withLocale } from "@/app/utils/locale";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -30,21 +30,6 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
     setMounted(true);
     return () => setMounted(false);
   }, []);
-
-  const withLocale = useCallback((path: string) => {
-    if (!path.startsWith("/")) return path;
-    if (path === "/") {
-      return `/${locale}`;
-    }
-    return `/${locale}${path}`;
-  }, [locale]);
-
-  const buildLangSwitchHref = useCallback((newLocale: AppLocale) => {
-    const withoutLocale = pathname.replace(LOCALE_PREFIX_REGEX, "") || "/";
-    const normalisedPath = withoutLocale.startsWith("/") ? withoutLocale : `/${withoutLocale}`;
-    const pathSegment = normalisedPath === "/" ? "" : normalisedPath;
-    return `/${newLocale}${pathSegment}`;
-  }, [pathname]);
 
   // Trigger animation after mount for smooth slide-in
   useEffect(() => {
@@ -82,11 +67,11 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
   }, [isOpen, onClose]);
 
   const navLinks = [
-    { href: withLocale("/about"), label: t.nav.about },
-    { href: withLocale("/activities"), label: t.nav.activities },
-    { href: withLocale("/research"), label: t.nav.research },
-    { href: withLocale("/resources"), label: t.nav.resources },
-    { href: withLocale("/contact"), label: t.nav.contact },
+    { href: withLocale(locale, "/about"), label: t.nav.about },
+    { href: withLocale(locale, "/activities"), label: t.nav.activities },
+    { href: withLocale(locale, "/research"), label: t.nav.research },
+    { href: withLocale(locale, "/resources"), label: t.nav.resources },
+    { href: withLocale(locale, "/contact"), label: t.nav.contact },
   ];
 
   if (!mounted) return null;
@@ -132,7 +117,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
 
           <nav className="px-4 py-6 sm:px-6">
             <Link
-              href={withLocale("/")}
+              href={withLocale(locale, "/")}
               className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
               onClick={onClose}
             >
@@ -170,7 +155,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                   return (
                     <Link
                       key={lang.code}
-                      href={buildLangSwitchHref(lang.code)}
+                      href={buildLangSwitchHref(pathname, lang.code)}
                       className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
                         active
                           ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"

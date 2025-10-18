@@ -5,6 +5,7 @@ import { FadeInSection } from "@/app/components/fade-in-section";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+import { renderWithFootnotes } from "@/app/utils/footnotes";
 
 // Lazy load below-the-fold components for better initial load
 const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
@@ -16,33 +17,6 @@ const CalendarSection = dynamic(() => import("@/app/components/calendar-section"
 const SubstackSignup = dynamic(() => import("@/app/components/substack-signup"), {
   loading: () => <div className="card-glass h-64 animate-pulse" />,
 });
-
-const FOOTNOTES = [
-  { id: 1, href: "https://epochai.org/trends", label: "1" },
-  { id: 2, href: "https://ourworldindata.org/brief-history-of-AI", label: "2" },
-  { id: 3, href: "https://arxiv.org/abs/2109.13916", label: "3" },
-  { id: 4, href: "https://www.safe.ai/statement-on-ai-risk", label: "4" },
-  { id: 5, href: "https://distill.pub/2020/circuits/zoom-in/", label: "5" },
-  { id: 6, href: "https://aisafety.training/", label: "6" },
-];
-
-function Footnote({ id }: { id: number }) {
-  const note = FOOTNOTES.find((fn) => fn.id === id);
-  if (!note) return null;
-
-  return (
-    <sup className="align-super text-xs">
-      <a
-        className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-        href={note.href}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        {note.label}
-      </a>
-    </sup>
-  );
-}
 
 export default async function Home({
   params,
@@ -74,24 +48,8 @@ export default async function Home({
             </h1>
 
             <article className="space-y-6 text-lg text-slate-700">
-              <p>
-                {t.mission.paragraph1.split("{footnote1}")[0]}
-                <Footnote id={1} />
-                {t.mission.paragraph1.split("{footnote1}")[1]?.split("{footnote2}")[0]}
-                <Footnote id={2} />
-                {t.mission.paragraph1.split("{footnote2}")[1]?.split("{footnote3}")[0]}
-                <Footnote id={3} />
-                {t.mission.paragraph1.split("{footnote3}")[1]}
-              </p>
-              <p>
-                {t.mission.paragraph2.split("{footnote4}")[0]}
-                <Footnote id={4} />
-                {t.mission.paragraph2.split("{footnote4}")[1]?.split("{footnote5}")[0]}
-                <Footnote id={5} />
-                {t.mission.paragraph2.split("{footnote5}")[1]?.split("{footnote6}")[0]}
-                <Footnote id={6} />
-                {t.mission.paragraph2.split("{footnote6}")[1]}
-              </p>
+              <p>{renderWithFootnotes(t.mission.paragraph1)}</p>
+              <p>{renderWithFootnotes(t.mission.paragraph2)}</p>
               <p>{t.mission.paragraph3}</p>
             </article>
 

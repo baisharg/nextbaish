@@ -12,11 +12,18 @@ export function useFadeIn(options?: UseFadeInOptions) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let timeoutId: number | null = null;
+    let cancelled = false;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           if (options?.delay) {
-            setTimeout(() => setIsVisible(true), options.delay);
+            timeoutId = window.setTimeout(() => {
+              if (!cancelled) {
+                setIsVisible(true);
+              }
+            }, options.delay);
           } else {
             setIsVisible(true);
           }
@@ -30,7 +37,13 @@ export function useFadeIn(options?: UseFadeInOptions) {
       observer.observe(ref.current);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
   }, [options?.threshold, options?.delay]);
 
   return { ref, isVisible };

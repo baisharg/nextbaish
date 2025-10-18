@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 /**
  * A client-side hook for managing state synchronized with localStorage
@@ -20,11 +20,12 @@ import { useState, useEffect } from "react";
  * - Automatically serializes/deserializes JSON
  * - Includes error handling with console warnings
  * - Updates localStorage whenever the value changes
+ * - Setter accepts either a raw value or a functional updater, matching React's useState API
  */
 export function useLocalStorage<T>(
   key: string,
   initialValue: T
-): [T, (value: T) => void] {
+): [T, (value: T | ((prev: T) => T)) => void] {
   // State to store the value
   const [storedValue, setStoredValue] = useState<T>(() => {
     // SSR guard: return initialValue on server
@@ -49,25 +50,28 @@ export function useLocalStorage<T>(
 
   // Return a wrapped version of useState's setter function that
   // persists the new value to localStorage
-  const setValue = (value: T) => {
-    try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore = value;
+  const setValue = (valueOrUpdater: T | ((prev: T) => T)) => {
+    setStoredValue((prev) => {
+      try {
+        const nextValue =
+          typeof valueOrUpdater === "function"
+            ? (valueOrUpdater as (prevState: T) => T)(prev)
+            : valueOrUpdater;
 
-      // Save state
-      setStoredValue(valueToStore);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(key, JSON.stringify(nextValue));
+        }
 
-      // Save to localStorage (client-side only)
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        return nextValue;
+      } catch (error) {
+        // If writing to localStorage fails, log warning and return previous value to avoid state drift
+        console.warn(
+          `Error setting localStorage key "${key}":`,
+          error
+        );
+        return prev;
       }
-    } catch (error) {
-      // If error writing to localStorage, log warning
-      console.warn(
-        `Error setting localStorage key "${key}":`,
-        error
-      );
-    }
+    });
   };
 
   return [storedValue, setValue];

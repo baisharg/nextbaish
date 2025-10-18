@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 interface EventImage {
@@ -15,9 +15,24 @@ interface EventsCarouselProps {
 export default function EventsCarousel({ images }: EventsCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Triple the images for seamless infinite scroll
-  const tripleImages = [...images, ...images, ...images];
+  const tripleImages = useMemo(() => [...images, ...images, ...images], [images]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+    mediaQuery.addEventListener("change", updatePreference);
+
+    return () => mediaQuery.removeEventListener("change", updatePreference);
+  }, []);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -27,7 +42,9 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
     const cardWidth = container.scrollWidth / tripleImages.length;
     container.scrollLeft = cardWidth * images.length;
 
-    let intervalId: NodeJS.Timeout;
+    if (prefersReducedMotion) {
+      return;
+    }
 
     const autoScroll = () => {
       if (!isPaused && container) {
@@ -38,11 +55,12 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
       }
     };
 
-    // Auto-scroll every 3 seconds
-    intervalId = setInterval(autoScroll, 3000);
+    const intervalId = window.setInterval(autoScroll, 3000);
 
-    return () => clearInterval(intervalId);
-  }, [isPaused, images.length, tripleImages.length]);
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [images, isPaused, prefersReducedMotion, tripleImages]);
 
   // Handle infinite scroll wraparound
   useEffect(() => {
@@ -66,7 +84,7 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
-  }, [images.length, tripleImages.length]);
+  }, [images, tripleImages]);
 
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
