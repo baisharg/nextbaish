@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
-import { LOCALE_PREFIX_REGEX } from "@/i18n.config";
+import { withLocale, buildLangSwitchHref } from "@/app/utils/locale";
 import "./header.css";
 
 // Lazy load mobile menu to reduce initial bundle size
@@ -122,23 +122,6 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     };
   }, [locale, restWidths, firstWidths]);
 
-
-  // Memoized navigation helpers
-  const withLocale = useCallback((path: string) => {
-    if (!path.startsWith("/")) return path;
-    if (path === "/") {
-      return `/${locale}`;
-    }
-    return `/${locale}${path}`;
-  }, [locale]);
-
-  const buildLangSwitchHref = useCallback((newLocale: AppLocale) => {
-    const withoutLocale = pathname.replace(LOCALE_PREFIX_REGEX, "") || "/";
-    const normalisedPath = withoutLocale.startsWith("/") ? withoutLocale : `/${withoutLocale}`;
-    const pathSegment = normalisedPath === "/" ? "" : normalisedPath;
-    return `/${newLocale}${pathSegment}`;
-  }, [pathname]);
-
   const toggleMobileMenu = useCallback(() => {
     setMobileMenuOpen(prev => {
       const newValue = !prev;
@@ -154,11 +137,11 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   }, []);
 
   const navLinks = [
-    { href: withLocale("/about"), label: t.nav.about },
-    { href: withLocale("/activities"), label: t.nav.activities },
-    { href: withLocale("/research"), label: t.nav.research },
-    { href: withLocale("/resources"), label: t.nav.resources },
-    { href: withLocale("/contact"), label: t.nav.contact },
+    { href: withLocale(locale, "/about"), label: t.nav.about },
+    { href: withLocale(locale, "/activities"), label: t.nav.activities },
+    { href: withLocale(locale, "/research"), label: t.nav.research },
+    { href: withLocale(locale, "/resources"), label: t.nav.resources },
+    { href: withLocale(locale, "/contact"), label: t.nav.contact },
   ];
 
   return (
@@ -171,7 +154,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
         data-scrolled={scrolled}
       >
         <div className="flex items-center justify-between gap-6">
-          <Link href={withLocale("/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
+          <Link href={withLocale(locale, "/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
             <div
               className="logo-container w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
               data-collapsed={scrolled || isNarrow || isCramped}
@@ -267,7 +250,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 return (
                   <Link
                     key={lang.code}
-                    href={buildLangSwitchHref(lang.code)}
+                    href={buildLangSwitchHref(pathname, lang.code)}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
                         ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"

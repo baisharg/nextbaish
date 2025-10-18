@@ -519,7 +519,7 @@ export default async function Activities({
                         <dt className="font-semibold text-slate-900">
                           {common.time}
                         </dt>
-                        <dd className="text-slate-700">17:00 - 18:30</dd>
+                        <dd className="text-slate-700">{paperReading.time}</dd>
                       </div>
                       <div>
                         <dt className="font-semibold text-slate-900">

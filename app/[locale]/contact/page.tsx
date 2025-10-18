@@ -1,121 +1,44 @@
-"use client";
-
-import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
-import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { withLocale } from "@/app/utils/locale";
+import { getDictionary } from "../dictionaries";
+import type { AppLocale } from "@/i18n.config";
+import { isAppLocale } from "@/i18n.config";
+import FAQAccordion from "@/app/components/faq-accordion";
 
-export default function ContactPage() {
-  const locale = useLocale();
-  const isEnglish = locale === "en";
-  const dict = useDict();
-  const [scrolled, setScrolled] = useState(false);
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const withLocale = useMemo(() => {
-    return (path: string) => {
-      if (!path.startsWith("/")) return path;
-      if (path === "/") {
-        return `/${locale}`;
-      }
-      return `/${locale}${path}`;
-    };
-  }, [locale]);
-
-  // Scroll effect for header
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 100);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-
-  const toggleFaq = (index: number) => {
-    setOpenFaqIndex(openFaqIndex === index ? null : index);
-  };
-
-  // Process FAQ items from dictionary with template replacements
-  const faqItems = useMemo(() => {
-    if (!dict.contact.faq.items) return [];
-
-    return dict.contact.faq.items.map((item: { question: string; answer: string }) => {
-      let answer: string | React.ReactNode = item.answer;
-
-      // Replace {resourcesLink} with actual Link component
-      if (typeof answer === 'string' && answer.includes('{resourcesLink}')) {
-        const parts = answer.split('{resourcesLink}');
-        answer = (
-          <>
-            {parts[0]}
-            <Link
-              href={withLocale("/resources")}
-              className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-            >
-              {isEnglish ? "Resources page" : "página de Recursos"}
-            </Link>
-            {parts[1]}
-          </>
-        );
-      }
-
-      // Replace {email} with actual email link
-      if (typeof answer === 'string' && answer.includes('{email}')) {
-        const parts = answer.split('{email}');
-        answer = (
-          <>
-            {parts[0]}
-            <a
-              href="mailto:baish@dc.uba.ar"
-              className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-            >
-              baish@dc.uba.ar
-            </a>
-            {parts[1]}
-          </>
-        );
-      }
-
-      return {
-        question: item.question,
-        answer,
-      };
-    });
-  }, [dict.contact.faq.items, withLocale, isEnglish]);
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
 
   return (
     <>
       <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <Header locale={locale} t={dict.header} />
+        <Header locale={currentLocale} t={dict.header} />
 
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
           <FadeInSection variant="fade" as="section">
             <section className="space-y-4">
               <div className="text-sm text-slate-600">
-                <Link href={withLocale("/")} className="hover:text-[var(--color-accent-primary)] transition">
-                  {isEnglish ? "Home" : "Inicio"}
+                <Link href={withLocale(currentLocale, "/")} className="hover:text-[var(--color-accent-primary)] transition">
+                  {dict.contact.breadcrumb.home}
                 </Link>
                 {" / "}
-                <span>{isEnglish ? "Contact" : "Contacto"}</span>
+                <span>{dict.contact.breadcrumb.current}</span>
               </div>
               <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-                {isEnglish ? "Contact Us" : "Contactanos"}
+                {dict.contact.title}
               </h1>
               <p className="text-lg text-slate-700">
-                {isEnglish
-                  ? "Get in touch with our team and join our community"
-                  : "Comunicate con la comunidad de BAISH"}
+                {dict.contact.description}
               </p>
             </section>
           </FadeInSection>
@@ -145,9 +68,7 @@ export default function ContactPage() {
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900">Telegram</h3>
                   <p className="text-sm text-slate-600">
-                    {isEnglish
-                      ? "Join our community channel for discussions and updates:"
-                      : "Sumate a nuestro canal de comunidad para discusiones y actualizaciones:"}
+                    {dict.contact.cards.telegram.description}
                   </p>
                 </div>
                 <a
@@ -165,12 +86,10 @@ export default function ContactPage() {
                 <div className="space-y-4">
                   <div className="text-3xl">📍</div>
                   <h3 className="text-xl font-semibold text-slate-900">
-                    {isEnglish ? "Location" : "Ubicación"}
+                    {dict.contact.cards.location.title}
                   </h3>
                   <p className="text-sm text-slate-600">
-                    {isEnglish
-                      ? "We're based at the Department of Computer Science:"
-                      : "Estamos ubicados en el Departamento de Ciencias de la Computación:"}
+                    {dict.contact.cards.location.description}
                   </p>
                 </div>
                 <address className="mt-6 text-sm text-slate-700 not-italic">
@@ -187,12 +106,10 @@ export default function ContactPage() {
                 <div className="space-y-4">
                   <div className="text-3xl">📱</div>
                   <h3 className="text-xl font-semibold text-slate-900">
-                    {isEnglish ? "Social Media" : "Redes Sociales"}
+                    {dict.contact.cards.social.title}
                   </h3>
                   <p className="text-sm text-slate-600">
-                    {isEnglish
-                      ? "Follow us for updates and announcements:"
-                      : "Seguinos para actualizaciones y anuncios:"}
+                    {dict.contact.cards.social.description}
                   </p>
                 </div>
                 <div className="mt-6 flex flex-col gap-3">
@@ -301,12 +218,10 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-3xl font-semibold text-white">
-                    {isEnglish ? "Contact Us" : "Contactanos"}
+                    {dict.contact.form.title}
                   </h2>
                   <p className="text-base text-slate-300">
-                    {isEnglish
-                      ? "Get in touch with our team and join our community"
-                      : "Comunicate con la comunidad de BAISH"}
+                    {dict.contact.form.description}
                   </p>
                 </div>
 
@@ -315,7 +230,7 @@ export default function ContactPage() {
                 <form action="https://formspree.io/f/xjkyoknb" method="POST" className="space-y-5">
                   <div className="space-y-2">
                     <label htmlFor="name" className="block text-sm font-medium text-white">
-                      {isEnglish ? "What is your name?" : "¿Cuál es tu nombre?"}
+                      {dict.contact.form.nameLabel}
                     </label>
                     <input
                       type="text"
@@ -328,7 +243,7 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <label htmlFor="email" className="block text-sm font-medium text-white">
-                      {isEnglish ? "What is your email?" : "¿Cuál es tu correo electrónico?"}
+                      {dict.contact.form.emailLabel}
                     </label>
                     <input
                       type="email"
@@ -341,7 +256,7 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <label htmlFor="message" className="block text-sm font-medium text-white">
-                      {isEnglish ? "Message" : "Mensaje"}
+                      {dict.contact.form.messageLabel}
                     </label>
                     <textarea
                       name="message"
@@ -358,13 +273,13 @@ export default function ContactPage() {
                       className="inline-flex items-center gap-2 text-sm text-[#4a93fb] transition hover:text-[var(--color-accent-tertiary)]"
                     >
                       <span className="text-lg">↺</span>
-                      {isEnglish ? "Clear form" : "Limpiar formulario"}
+                      {dict.contact.form.clearForm}
                     </button>
                     <button
                       type="submit"
                       className="rounded-md bg-[var(--color-accent-primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-tertiary)]"
                     >
-                      {isEnglish ? "Submit" : "Enviar"}
+                      {dict.contact.form.submit}
                     </button>
                   </div>
                 </form>
@@ -374,23 +289,19 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-3xl font-semibold text-white">
-                    {isEnglish ? "Get Involved" : "Sumate"}
+                    {dict.contact.getInvolved.title}
                   </h2>
                   <p className="text-base text-slate-300">
-                    {isEnglish
-                      ? "There are multiple ways to participate in our community and activities."
-                      : "Hay múltiples formas de participar en nuestra comunidad y actividades."}
+                    {dict.contact.getInvolved.description}
                   </p>
                 </div>
 
                 <div className="space-y-4 rounded-lg border border-[#2a2a40] bg-[#232336] p-5">
                   <h3 className="text-xl font-semibold text-white">
-                    {isEnglish ? "Join our Mailing List" : "Suscribite a Nuestra Lista de Correo"}
+                    {dict.contact.getInvolved.newsletter.title}
                   </h3>
                   <p className="text-sm text-slate-300">
-                    {isEnglish
-                      ? "Stay updated with our events, activities, and opportunities by subscribing to our mailing list. We send monthly newsletters and important announcements."
-                      : "Mantenete al día con nuestros eventos, actividades y oportunidades suscribiéndote a nuestra lista de correo. Te enviamos newsletters mensuales y anuncios importantes."}
+                    {dict.contact.getInvolved.newsletter.description}
                   </p>
                   <div id="custom-substack-embed"></div>
                 </div>
@@ -400,53 +311,16 @@ export default function ContactPage() {
 
           {/* FAQ Section */}
           <FadeInSection variant="slide-up" delay={300} as="section">
-            <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {dict.contact.faq.title}
-              </h2>
-
-              <div className="space-y-4">
-                {faqItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-slate-200 bg-white transition hover:border-[var(--color-accent-primary)]"
-                  >
-                    <button
-                      onClick={() => toggleFaq(index)}
-                      className="flex w-full items-center justify-between px-6 py-4 text-left"
-                      aria-expanded={openFaqIndex === index}
-                    >
-                      <h3 className="text-lg font-semibold text-slate-900">{item.question}</h3>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={`flex-shrink-0 text-[var(--color-accent-primary)] transition-transform ${
-                          openFaqIndex === index ? "rotate-180" : ""
-                        }`}
-                      >
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </button>
-                    {openFaqIndex === index && (
-                      <div className="border-t border-slate-200 px-6 py-4">
-                        <p className="text-base text-slate-600">{item.answer}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
+            <FAQAccordion
+              items={dict.contact.faq.items}
+              title={dict.contact.faq.title}
+              locale={currentLocale}
+              resourcesPageLabel={dict.contact.linkText.resourcesPage}
+            />
           </FadeInSection>
         </main>
 
-        <Footer locale={locale} t={dict.footer} />
+        <Footer locale={currentLocale} t={dict.footer} />
       </div>
 
       {/* Substack Widget Script */}

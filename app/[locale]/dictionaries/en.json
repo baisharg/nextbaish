@@ -337,6 +337,7 @@
       "discussionLead": "Eitan Sprejer",
       "accessList": "Access Reading List",
       "date": "March 21, 2025",
+      "time": "17:00 - 18:30",
       "location": "Pabellon 0+inf, Room 1604, Ciudad Universitaria"
     },
     "common": {
@@ -367,6 +368,9 @@
     },
     "title": "Contact Us",
     "description": "Get in touch with our team and join our community",
+    "linkText": {
+      "resourcesPage": "Resources page"
+    },
     "cards": {
       "telegram": {
         "title": "Telegram",

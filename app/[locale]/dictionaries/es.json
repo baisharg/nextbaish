@@ -337,6 +337,7 @@
       "discussionLead": "Eitan Sprejer",
       "accessList": "Acceder a lista de lectura",
       "date": "21 de marzo de 2025",
+      "time": "17:00 - 18:30",
       "location": "Pabellón 0+inf, Sala 1604, Ciudad Universitaria"
     },
     "common": {
@@ -367,6 +368,9 @@
     },
     "title": "Contactanos",
     "description": "Comunicate con la comunidad de BAISH",
+    "linkText": {
+      "resourcesPage": "página de Recursos"
+    },
     "cards": {
       "telegram": {
         "title": "Telegram",

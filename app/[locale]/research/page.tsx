@@ -1,11 +1,12 @@
-"use client";
-
-import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
-import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { withLocale } from "@/app/utils/locale";
+import { getDictionary } from "../dictionaries";
+import type { AppLocale } from "@/i18n.config";
+import { isAppLocale } from "@/i18n.config";
+import ResearchFilters from "@/app/components/research-filters";
 
 type ProjectCategory = "all" | "interpretability" | "alignment" | "robustness" | "value-learning";
 
@@ -19,37 +20,14 @@ interface Project {
   tag: string;
 }
 
-export default function ResearchPage() {
-  const locale = useLocale();
-  const dict = useDict();
-  const [scrolled, setScrolled] = useState(false);
-  const [filter, setFilter] = useState<ProjectCategory>("all");
-  const withLocale = useMemo(() => {
-    return (path: string) => {
-      if (!path.startsWith("/")) return path;
-      if (path === "/") {
-        return `/${locale}`;
-      }
-      return `/${locale}${path}`;
-    };
-  }, [locale]);
-
-  // Scroll effect for header
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 100);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+export default async function ResearchPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
 
   // Research projects data
   const projects: Project[] = [
@@ -109,42 +87,16 @@ export default function ResearchPage() {
     },
   ];
 
-  // Filter projects based on selected category
-  const filteredProjects = filter === "all"
-    ? projects
-    : projects.filter(project => project.category === filter);
-
-  // Filter button component
-  const FilterButton = ({
-    category,
-    label
-  }: {
-    category: ProjectCategory;
-    label: string
-  }) => (
-    <button
-      onClick={() => setFilter(category)}
-      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-        filter === category
-          ? "bg-[var(--color-accent-primary)] text-white shadow-md"
-          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-      }`}
-      type="button"
-    >
-      {label}
-    </button>
-  );
-
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <Header locale={locale} t={dict.header} />
+        <Header locale={currentLocale} t={dict.header} />
 
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
           <FadeInSection variant="fade" as="section">
             <section className="space-y-4">
               <div className="text-sm text-slate-600">
-                <Link href={withLocale("/")} className="hover:text-slate-900">{dict.research.breadcrumb.home}</Link>
+                <Link href={withLocale(currentLocale, "/")} className="hover:text-slate-900">{dict.research.breadcrumb.home}</Link>
                 {" / "}
                 <span>{dict.research.breadcrumb.current}</span>
               </div>
@@ -211,78 +163,13 @@ export default function ResearchPage() {
 
           {/* Research Projects */}
           <FadeInSection variant="slide-up" delay={200} as="section">
-            <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-              <div className="space-y-6">
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {dict.research.projectsTitle}
-                </h2>
-
-                {/* Filter Controls */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm font-medium text-slate-600">
-                    {dict.research.filterBy}
-                  </span>
-                  <FilterButton
-                    category="all"
-                    label={dict.research.filters.all}
-                  />
-                  <FilterButton
-                    category="interpretability"
-                    label={dict.research.filters.interpretability}
-                  />
-                  <FilterButton
-                    category="alignment"
-                    label={dict.research.filters.alignment}
-                  />
-                  <FilterButton
-                    category="robustness"
-                    label={dict.research.filters.robustness}
-                  />
-                  <FilterButton
-                    category="value-learning"
-                    label={dict.research.filters.valueLearning}
-                  />
-                </div>
-              </div>
-
-              {/* Projects Grid */}
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project) => (
-                  <article
-                    key={project.id}
-                    className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-                  >
-                    <div className="space-y-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-xl font-semibold text-slate-900">
-                          {project.title}
-                        </h3>
-                        <span className="flex-shrink-0 rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                          {project.year}
-                        </span>
-                      </div>
-                      <p className="text-sm font-medium text-slate-600">
-                        {project.researchers}
-                      </p>
-                      <p className="text-sm text-slate-600">
-                        {project.abstract}
-                      </p>
-                    </div>
-                    <div className="mt-6 flex items-center justify-between gap-4">
-                      <span className="inline-flex rounded-full bg-[#9275E51a] px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-accent-primary)]">
-                        {project.tag}
-                      </span>
-                      <a
-                        href="#"
-                        className="text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-                      >
-                        {dict.research.linkPlaceholder}
-                      </a>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
+            <ResearchFilters
+              projects={projects}
+              filterLabels={dict.research.filters}
+              filterByLabel={dict.research.filterBy}
+              linkPlaceholder={dict.research.linkPlaceholder}
+              projectsTitle={dict.research.projectsTitle}
+            />
           </FadeInSection>
 
           {/* Publications */}
@@ -525,7 +412,7 @@ export default function ResearchPage() {
           </FadeInSection>
         </main>
 
-        <Footer locale={locale} t={dict.footer} />
+        <Footer locale={currentLocale} t={dict.footer} />
       </div>
   );
 }

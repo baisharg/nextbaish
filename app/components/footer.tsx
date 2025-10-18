@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
+import { withLocale } from "@/app/utils/locale";
 
 interface FooterProps {
   locale: AppLocale;
@@ -9,13 +10,6 @@ interface FooterProps {
 }
 
 export default function Footer({ locale, t }: FooterProps) {
-  const withLocale = (path: string) => {
-    if (!path.startsWith("/")) return path;
-    if (path === "/") {
-      return `/${locale}`;
-    }
-    return `/${locale}${path}`;
-  };
 
   return (
     <footer
@@ -40,22 +34,22 @@ export default function Footer({ locale, t }: FooterProps) {
             <p>© {new Date().getFullYear()} BAISH. {t.copyright}</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link className="hover:text-slate-900" href={withLocale("/about")}>
+            <Link className="hover:text-slate-900" href={withLocale(locale, "/about")}>
               {t.nav.about}
             </Link>
-            <Link className="hover:text-slate-900" href={withLocale("/activities")}>
+            <Link className="hover:text-slate-900" href={withLocale(locale, "/activities")}>
               {t.nav.activities}
             </Link>
-            <Link className="hover:text-slate-900" href={withLocale("/research")}>
+            <Link className="hover:text-slate-900" href={withLocale(locale, "/research")}>
               {t.nav.research}
             </Link>
-            <Link className="hover:text-slate-900" href={withLocale("/resources")}>
+            <Link className="hover:text-slate-900" href={withLocale(locale, "/resources")}>
               {t.nav.resources}
             </Link>
             <a className="hover:text-slate-900" href="#get-involved">
               {t.nav.getInvolved}
             </a>
-            <Link className="hover:text-slate-900" href={withLocale("/contact")}>
+            <Link className="hover:text-slate-900" href={withLocale(locale, "/contact")}>
               {t.nav.contact}
             </Link>
           </div>
@@ -152,7 +146,7 @@ export default function Footer({ locale, t }: FooterProps) {
               </svg>
             </a>
           </div>
-          <Link className="hover:text-slate-900" href={withLocale("/privacy-policy")}>
+          <Link className="hover:text-slate-900" href={withLocale(locale, "/privacy-policy")}>
             {t.nav.privacyPolicy}
           </Link>
         </div>
