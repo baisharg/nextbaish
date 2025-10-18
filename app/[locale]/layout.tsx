@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { LanguageProvider } from "../contexts/language-context";
 import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
+import { ResourceHints } from "../components/resource-hints";
 import "../globals.css";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -97,6 +98,7 @@ export default async function LocaleLayout({
       <body
         className={`${ibmPlexSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
       >
+        <ResourceHints />
         <Suspense fallback={null}>
           <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
             <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
