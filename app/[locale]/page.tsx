@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -43,9 +44,12 @@ export default async function Home({
             <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
               {t.mission.eyebrow}
             </p>
-            <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-              {t.mission.title}
-            </h1>
+            <AnimatedTitle
+              text={t.mission.title}
+              slug="home"
+              className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+              as="h1"
+            />
 
             <article className="space-y-6 text-lg text-slate-700">
               <p>{renderWithFootnotes(t.mission.paragraph1)}</p>

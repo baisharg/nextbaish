@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { TransitionLink } from "./transition-link";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale } from "@/app/utils/locale";
@@ -34,24 +34,24 @@ export default function Footer({ locale, t }: FooterProps) {
             <p>© {new Date().getFullYear()} BAISH. {t.copyright}</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link className="hover:text-slate-900" href={withLocale(locale, "/about")}>
+            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/about")}>
               {t.nav.about}
-            </Link>
-            <Link className="hover:text-slate-900" href={withLocale(locale, "/activities")}>
+            </TransitionLink>
+            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/activities")}>
               {t.nav.activities}
-            </Link>
-            <Link className="hover:text-slate-900" href={withLocale(locale, "/research")}>
+            </TransitionLink>
+            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/research")}>
               {t.nav.research}
-            </Link>
-            <Link className="hover:text-slate-900" href={withLocale(locale, "/resources")}>
+            </TransitionLink>
+            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/resources")}>
               {t.nav.resources}
-            </Link>
+            </TransitionLink>
             <a className="hover:text-slate-900" href="#get-involved">
               {t.nav.getInvolved}
             </a>
-            <Link className="hover:text-slate-900" href={withLocale(locale, "/contact")}>
+            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/contact")}>
               {t.nav.contact}
-            </Link>
+            </TransitionLink>
           </div>
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-6">
@@ -146,9 +146,9 @@ export default function Footer({ locale, t }: FooterProps) {
               </svg>
             </a>
           </div>
-          <Link className="hover:text-slate-900" href={withLocale(locale, "/privacy-policy")}>
+          <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/privacy-policy")}>
             {t.nav.privacyPolicy}
-          </Link>
+          </TransitionLink>
         </div>
       </div>
     </footer>

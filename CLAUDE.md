@@ -208,6 +208,27 @@ Use with `.map()`:
 - **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
 - **Battery optimization**: IntersectionObserver pauses animation when component is off-screen
 
+## Advanced Features
+
+### View Transitions API
+
+For implementing smooth, native-app-like page transitions using the View Transitions API, see the comprehensive guide:
+
+**[View Transitions Implementation Guide](docs/view-transitions-guide.md)**
+
+Key features:
+- Smooth morphing animations between pages
+- Per-word title transitions (à la nmn.sh)
+- Shared element animations (logos, images, etc.)
+- Progressive enhancement (graceful fallback for unsupported browsers)
+- TypeScript integration
+
+The guide includes:
+- Step-by-step implementation for Next.js App Router
+- `TransitionLink` component pattern
+- Advanced per-word animation techniques
+- Performance considerations and debugging tips
+
 ## Coding Conventions
 
 - TypeScript strict mode must stay green - fix type errors, don't suppress

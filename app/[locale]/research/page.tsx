@@ -2,6 +2,7 @@ import Link from "next/link";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
@@ -100,9 +101,12 @@ export default async function ResearchPage({
                 {" / "}
                 <span>{dict.research.breadcrumb.current}</span>
               </div>
-              <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-                {dict.research.title}
-              </h1>
+              <AnimatedTitle
+                text={dict.research.title}
+                slug="research"
+                className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+                as="h1"
+              />
               <p className="text-lg text-slate-600">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </p>

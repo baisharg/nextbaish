@@ -4,6 +4,7 @@ import Footer from "@/app/components/footer";
 import CalendarSection from "@/app/components/calendar-section";
 import EventsCarousel from "@/app/components/events-carousel";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -52,9 +53,12 @@ export default async function Activities({
                 <span className="text-slate-900">{t.breadcrumb.current}</span>
               </div>
               <div className="space-y-4">
-                <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-                  {t.title}
-                </h1>
+                <AnimatedTitle
+                  text={t.title}
+                  slug="activities"
+                  className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+                  as="h1"
+                />
                 <p className="text-lg text-slate-700 max-w-3xl">
                   {t.description}
                 </p>

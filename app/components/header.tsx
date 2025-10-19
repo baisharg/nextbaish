@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { TransitionLink } from "./transition-link";
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -154,7 +154,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
         data-scrolled={scrolled}
       >
         <div className="flex items-center justify-between gap-6">
-          <Link href={withLocale(locale, "/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
+          <TransitionLink href={withLocale(locale, "/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
             <div
               className="logo-container w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
               data-collapsed={scrolled || isNarrow || isCramped}
@@ -164,7 +164,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 alt="BAISH Logo"
                 width={40}
                 height={40}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain site-logo"
                 priority
                 fetchPriority="high"
               />
@@ -226,19 +226,19 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 })}
               </div>
             </div>
-          </Link>
+          </TransitionLink>
           <nav
             className="header-nav hidden md:flex items-center text-sm font-medium text-slate-600"
             data-scrolled={scrolled}
           >
             {navLinks.map(link => (
-              <Link
+              <TransitionLink
                 key={link.href}
                 className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full"
                 href={link.href}
               >
                 {link.label}
-              </Link>
+              </TransitionLink>
             ))}
           </nav>
           <div className="flex items-center gap-3 flex-shrink-0">
@@ -248,7 +248,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               {LANGUAGES.map((lang) => {
                 const active = lang.code === locale;
                 return (
-                  <Link
+                  <TransitionLink
                     key={lang.code}
                     href={buildLangSwitchHref(pathname, lang.code)}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
@@ -258,7 +258,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                     }`}
                   >
                     {t.languages[lang.code]}
-                  </Link>
+                  </TransitionLink>
                 );
               })}
             </div>

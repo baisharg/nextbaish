@@ -7,6 +7,7 @@ import Footer from "@/app/components/footer";
 import AirtableEmbed from "@/app/components/airtable-embed";
 import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
 import type { Resource, ResourceType, ResourceTopic, DifficultyLevel } from "@/app/types/resources";
 import { resources, RESOURCE_TYPE_ICONS, DIFFICULTY_COLORS } from "@/app/data/resources";
@@ -107,9 +108,12 @@ export default function Resources() {
             </span>
           </div>
           <div className="space-y-4">
-            <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-              {t.title}
-            </h1>
+            <AnimatedTitle
+              text={t.title}
+              slug="resources"
+              className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+              as="h1"
+            />
             <p className="text-lg text-slate-700">
               {t.description}
             </p>

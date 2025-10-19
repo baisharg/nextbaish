@@ -370,3 +370,50 @@ canvas {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ==========================================================================
+   View Transitions API Styles
+   ========================================================================== */
+
+/* Base transition timing for all elements */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+
+/* Faster transition for logo (snappier feel) */
+::view-transition-old(site-logo),
+::view-transition-new(site-logo) {
+  animation-duration: 0.2s;
+}
+
+/* Smooth transitions for text elements */
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-timing-function: ease-out;
+}
+
+/* Active transition states - prevent interaction during transition */
+:root:active-view-transition {
+  cursor: wait;
+  user-select: none;
+}
+
+/* Prevent layout shifts during transitions */
+body:active-view-transition {
+  overflow: hidden;
+}
+
+/* Logo transition name (applied to header logo) */
+.site-logo {
+  view-transition-name: site-logo;
+}
+
+/* Respect user preferences - disable transitions for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+  }
+}

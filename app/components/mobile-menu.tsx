@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { TransitionLink } from "./transition-link";
 import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
@@ -116,7 +116,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
           </div>
 
           <nav className="px-4 py-6 sm:px-6">
-            <Link
+            <TransitionLink
               href={withLocale(locale, "/")}
               className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
               onClick={onClose}
@@ -129,18 +129,18 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                 className="object-contain flex-shrink-0"
               />
               <span className="text-lg font-semibold text-slate-900">BAISH</span>
-            </Link>
+            </TransitionLink>
 
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <TransitionLink
                     href={link.href}
                     className="block px-4 py-4 text-lg font-medium text-slate-700 hover:text-slate-900 hover:bg-white/60 rounded-lg transition-colors"
                     onClick={onClose}
                   >
                     {link.label}
-                  </Link>
+                  </TransitionLink>
                 </li>
               ))}
             </ul>
@@ -153,7 +153,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                 {LANGUAGES.map((lang) => {
                   const active = lang.code === locale;
                   return (
-                    <Link
+                    <TransitionLink
                       key={lang.code}
                       href={buildLangSwitchHref(pathname, lang.code)}
                       className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
@@ -164,7 +164,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                       onClick={onClose}
                     >
                       {t.languages[lang.code]}
-                    </Link>
+                    </TransitionLink>
                   );
                 })}
               </div>

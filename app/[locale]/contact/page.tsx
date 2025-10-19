@@ -3,6 +3,7 @@ import Script from "next/script";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
@@ -34,9 +35,12 @@ export default async function ContactPage({
                 {" / "}
                 <span>{dict.contact.breadcrumb.current}</span>
               </div>
-              <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-                {dict.contact.title}
-              </h1>
+              <AnimatedTitle
+                text={dict.contact.title}
+                slug="contact"
+                className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+                as="h1"
+              />
               <p className="text-lg text-slate-700">
                 {dict.contact.description}
               </p>

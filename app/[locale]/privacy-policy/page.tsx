@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
+import { AnimatedTitle } from "@/app/components/animated-title";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -30,9 +31,12 @@ export default async function PrivacyPolicy({
               {" / "}
               <span>{t.breadcrumb.current}</span>
             </div>
-            <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-              {t.title}
-            </h1>
+            <AnimatedTitle
+              text={t.title}
+              slug="privacy-policy"
+              className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+              as="h1"
+            />
           </section>
         </FadeInSection>
 
