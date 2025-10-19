@@ -13,55 +13,377 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Note:** Dev server should remain running at port 3000 during active development.
 
+## Project Overview
+
+This is a **bilingual AI Safety content hub** (BAISH - Buenos Aires AI Safety Hub) built with Next.js 15, featuring 7 pages with AI safety resources, research, events, and educational content in English and Spanish.
+
+**Project Scale:**
+- 7 full pages with bilingual content
+- 50+ curated AI safety learning resources with progress tracking
+- Research project showcase with category filtering
+- Events calendar with lu.ma integration
+- Newsletter subscription via Substack
+- Contact page with FAQ accordion
+
 ## Project Architecture
 
-This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScript, and Tailwind CSS v4.
+Next.js 15 app using App Router with Turbopack, React 19, TypeScript, and Tailwind CSS v4.
 
-### Key Files
-- `app/layout.tsx` - Root layout with fonts (Geist Sans/Mono), metadata, and the TimelineThreads background component
-- `app/page.tsx` - Main landing page (client component) with bilingual content (English/Spanish) for BAISH AI Safety Hub
-- `app/globals.css` - Tailwind v4 imports and CSS custom properties for color tokens (`--color-accent-primary`, `--color-accent-secondary`, `--color-accent-tertiary`)
-- `app/components/timeline-threads.tsx` - SVG-based animated background with thread morphing animation using Float32Array for memory efficiency
+### Directory Structure
+
+```
+app/
+├── [locale]/                    # Internationalized routes (en/es)
+│   ├── page.tsx                 # Home page
+│   ├── about/page.tsx           # About page
+│   ├── activities/page.tsx      # Events & activities
+│   ├── research/page.tsx        # Research projects showcase
+│   ├── resources/page.tsx       # Learning resources library
+│   ├── contact/page.tsx         # Contact + FAQ
+│   ├── privacy-policy/page.tsx  # Privacy policy
+│   ├── layout.tsx               # Locale-specific layout
+│   └── dictionaries/            # Translation files
+│       ├── en.json              # English translations
+│       ├── es.json              # Spanish translations
+│       └── dictionaries.ts      # Dictionary loader
+├── components/                  # React components
+│   ├── timeline-threads.tsx     # Animated SVG background
+│   ├── timeline-threads-loader.tsx
+│   ├── animated-title.tsx       # View transitions title
+│   ├── transition-link.tsx      # View transitions link wrapper
+│   ├── fade-in-section.tsx      # Scroll-triggered fade-in
+│   ├── header.tsx               # Main navigation
+│   ├── header.css               # Header-specific styles
+│   ├── mobile-menu.tsx          # Mobile navigation
+│   ├── footer.tsx               # Site footer
+│   ├── substack-signup.tsx      # Newsletter subscription
+│   ├── calendar-section.tsx     # lu.ma calendar embed
+│   ├── airtable-embed.tsx       # Airtable integration
+│   ├── research-filters.tsx     # Category filter buttons
+│   ├── faq-accordion.tsx        # Reusable accordion
+│   └── events-carousel.tsx      # Auto-scrolling image gallery
+├── hooks/
+│   ├── use-fade-in.ts           # Intersection observer hook
+│   ├── use-isomorphic-layout-effect.ts  # SSR-safe useLayoutEffect
+│   ├── use-lcp-complete.ts      # LCP detection hook
+│   └── use-local-storage.ts     # SSR-safe localStorage hook
+├── contexts/
+│   └── language-context.tsx     # i18n context provider
+├── utils/
+│   ├── locale.ts                # Locale utilities
+│   ├── thread-utils.ts          # Timeline animation utilities
+│   └── footnotes.tsx            # Footnote rendering system
+├── types/
+│   └── resources.ts             # Resource type definitions
+├── data/
+│   └── resources.ts             # 50+ AI safety learning resources
+├── workers/
+│   └── thread-generator.worker.ts  # Background thread generation
+├── head.tsx                     # Resource hints component
+├── globals.css                  # Tailwind + CSS custom properties
+└── layout.tsx                   # Root layout (redirects to locale)
+
+public/
+├── images/
+│   ├── logos/                   # Optimized logo variants (40-192px)
+│   ├── optimized/               # Batch-optimized images
+│   └── events/                  # Event gallery images
+└── icons/                       # Favicon variants
+
+scripts/
+├── optimize-logo.js             # Logo optimization script
+└── optimize-images.js           # Batch image optimization
+
+docs/
+├── view-transitions-guide.md
+└── view-transitions-implementation-plan.md
+```
+
+### Pages Overview
+
+1. **`/[locale]/page.tsx`** - Homepage
+   - Hero section with animated title
+   - Mission statement and value proposition
+   - Timeline threads animated background
+   - Newsletter signup (Substack)
+
+2. **`/[locale]/about/page.tsx`** - About page
+   - Team information
+   - Organization mission and values
+   - Background and context
+
+3. **`/[locale]/activities/page.tsx`** - Events & activities
+   - Three activity sections: AGI Safety, AIS Workshop, Paper Reading Group
+   - lu.ma calendar embed for upcoming events
+   - Events carousel (6 gallery images with auto-scroll)
+   - Google Calendar subscription link
+
+4. **`/[locale]/research/page.tsx`** - Research projects
+   - Category filtering: interpretability, alignment, robustness, value-learning
+   - Research project cards with title, year, researchers, abstract
+   - Structured data for future expansion
+
+5. **`/[locale]/resources/page.tsx`** (CLIENT COMPONENT)
+   - 50+ AI safety learning resources from `app/data/resources.ts`
+   - Multi-dimensional filtering:
+     - Difficulty: beginner, intermediate, advanced
+     - Type: video, paper, course, article, wiki, book
+     - Topic: alignment, interpretability, robustness, governance, general
+   - Progress tracking via localStorage (completed resources)
+   - Special sections:
+     - "Quick wins" (<30min resources)
+     - "Community picks" (featured resources)
+     - "Latest additions" (new resources)
+   - Airtable embed for timeline view
+   - Fully bilingual with Spanish translations
+
+6. **`/[locale]/contact/page.tsx`** - Contact information
+   - Contact methods: Telegram, Email, LinkedIn
+   - FAQ accordion with template variables
+   - Structured contact cards with CTAs
+
+7. **`/[locale]/privacy-policy/page.tsx`** - Privacy policy
+   - Simple informational page
+
+### Component Architecture
+
+**Core UI Components:**
+
+- **`TimelineThreads.tsx`** - Animated SVG background
+  - 60fps morphing thread animation
+  - Float32Array for memory efficiency
+  - Web worker offloading via `thread-generator.worker.ts`
+  - IntersectionObserver for battery optimization
+  - Deferred until after LCP
+
+- **`AnimatedTitle.tsx`** - View transitions title animation
+  - Per-word transition effects (first 5 words only)
+  - Uses `next-view-transitions` library
+  - Memoized for performance
+
+- **`TransitionLink.tsx`** - View transitions wrapper for Next.js Link
+  - Enables smooth page transitions
+  - Progressive enhancement (fallback for unsupported browsers)
+
+- **`FadeInSection.tsx`** - Scroll-triggered fade-in animations
+  - IntersectionObserver-based
+  - Optional `startVisible` prop for above-fold content (LCP optimization)
+
+- **`Header.tsx`** - Main navigation with logo and language switcher
+  - Responsive design with mobile menu
+  - Scroll-based logo size animation
+  - Uses `useIsomorphicLayoutEffect` to prevent CLS
+  - View transitions integration
+
+- **`MobileMenu.tsx`** - Mobile navigation drawer
+  - Hamburger menu with slide-in animation
+  - Locale-aware navigation links
+
+- **`Footer.tsx`** - Site footer with links and branding
+
+**Feature Components:**
+
+- **`SubstackSignup.tsx`** - Newsletter subscription form
+  - Submits to Substack API
+  - Form validation and error handling
+  - States: idle, loading, success, error
+  - 10-second timeout with AbortController
+
+- **`CalendarSection.tsx`** - lu.ma calendar embed
+  - Lazy loading with IntersectionObserver (200px rootMargin)
+  - Calendar ID: `cal-0oFAsTn5vpwcAwb`
+  - Only loads when visible (performance optimization)
+
+- **`AirtableEmbed.tsx`** - Airtable embed wrapper
+  - Configurable: shareId, appId, tableId, viewId
+  - Loading state indicator
+  - Responsive dimensions
+
+- **`ResearchFilters.tsx`** - Category filter buttons
+  - Filter categories: all, interpretability, alignment, robustness, value-learning
+  - Active state styling with primary brand color
+  - Responsive button grid
+
+- **`FAQAccordion.tsx`** - Reusable accordion component
+  - Template variable replacement: `{resourcesLink}`, `{email}`
+  - Single open state (only one item expanded at a time)
+  - Locale-aware with `withLocale` utility
+
+- **`EventsCarousel.tsx`** - Infinite auto-scrolling carousel
+  - Image gallery with smooth scroll
+  - Triple-image pattern for seamless infinite loop
+  - Manual scroll controls (left/right buttons)
+  - Respects `prefers-reduced-motion`
+  - Auto-pause on hover
+
+### Hooks
+
+- **`use-fade-in.ts`** - IntersectionObserver hook for fade-in animations
+  - Optional `startVisible` prop for above-fold content
+  - Returns `isVisible` and `ref` for attaching to elements
+
+- **`use-isomorphic-layout-effect.ts`** - SSR-safe useLayoutEffect
+  - Uses `useLayoutEffect` on client, `useEffect` on server
+  - Critical for preventing CLS when measuring DOM elements
+  - Used in Header component for logo sizing
+
+- **`use-lcp-complete.ts`** - Detects when LCP is complete
+  - Uses PerformanceObserver API
+  - Returns boolean indicating LCP completion
+  - Used to defer Timeline animation until after LCP
+
+- **`use-local-storage.ts`** - SSR-safe localStorage hook
+  - JSON serialization/deserialization
+  - Type-safe with TypeScript generics
+  - Used for resource completion tracking
+
+### Utilities
+
+- **`utils/locale.ts`** - Locale utilities
+  - `withLocale(locale, path)` - Prefix path with locale
+  - `buildLangSwitchHref(pathname, newLocale)` - Language switcher helper
+  - `isAppLocale(locale)` - Type guard for AppLocale
+
+- **`utils/thread-utils.ts`** - Timeline animation utilities
+  - Mathematical functions for thread morphing
+  - Shared between main thread and web worker
+
+- **`utils/footnotes.tsx`** - Footnote rendering system
+  - Pattern: `{footnote1}`, `{footnote2}`, etc. in strings
+  - 6 built-in footnotes linking to AI safety resources
+  - Renders as superscript links
+  - Supports custom footnotes via optional parameter
+
+### Data Management
+
+**`app/data/resources.ts`** - AI Safety Resources Database
+
+Structure:
+- 50+ learning resources with bilingual metadata
+- Each resource has:
+  - `id`: unique identifier
+  - `title`: English/Spanish titles
+  - `description`: English/Spanish descriptions
+  - `type`: video | paper | course | article | wiki | book
+  - `topic`: alignment | interpretability | robustness | governance | general
+  - `difficulty`: beginner | intermediate | advanced
+  - `timeToComplete`: estimated time (e.g., "30 min", "2 hours")
+  - `link`: external URL
+  - `isNew`: boolean flag for "Latest additions"
+
+Icon mappings:
+- Video: 🎥, Paper: 📄, Course: 🎓, Article: 📰, Wiki: 📚, Book: 📖
+
+Difficulty colors:
+- Beginner: green, Intermediate: orange, Advanced: red
+
+**Type Definitions** (`app/types/resources.ts`):
+```typescript
+export type ResourceType = "video" | "paper" | "course" | "article" | "wiki" | "book";
+export type ResourceTopic = "alignment" | "interpretability" | "robustness" | "governance" | "general";
+export type DifficultyLevel = "beginner" | "intermediate" | "advanced";
+
+export interface Resource {
+  id: string;
+  title: { en: string; es: string };
+  description: { en: string; es: string };
+  type: ResourceType;
+  topic: ResourceTopic;
+  difficulty: DifficultyLevel;
+  timeToComplete: string;
+  link: string;
+  isNew?: boolean;
+}
+```
+
+### Web Workers
+
+**`workers/thread-generator.worker.ts`** - Timeline Animation Worker
+
+- Generates thread data in background thread
+- Prevents blocking main thread during animation calculations
+- Contains `WorkerThreadData` type with animation parameters
+- Uses seeded random number generation for deterministic results
 
 ### TypeScript Configuration
+
 - Path alias: `@/*` maps to project root
 - Strict mode enabled
 - Target: ES2017
+- Incremental compilation enabled
+- Module resolution: bundler
 
 ### Styling
-- Tailwind CSS v4 via PostCSS (`@tailwindcss/postcss`)
-- Design tokens in `app/globals.css` under `:root`
-- Component styles colocated with components
-- Light theme enforced (overrides dark mode preference)
 
-### Component Architecture
-- Functional React components in PascalCase files
-- Client components marked with `"use client"`
-- Static assets in `public/` served from root path
-- Geist font family loaded from `next/font/google`
+**Tailwind CSS v4 via PostCSS**
+- No separate `tailwind.config.ts` file
+- Theming via CSS custom properties in `app/globals.css`
+- Plugin: `@tailwindcss/postcss`
+
+**Color Palette** (defined in `globals.css`):
+- Primary: `#9275E5` (purple) - `--color-accent-primary`
+- Secondary: `#A8C5FF` (purple-blue) - `--color-accent-secondary`
+- Tertiary: `#C77DDA` (purple-pink) - `--color-accent-tertiary`
+- Brand scale: `--brand-50` through `--brand-600`
+- Semantic colors: success, error, warning
+
+**Component Classes:**
+- `.card-glass` - Frosted glass effect with backdrop blur
+- `.card-eyebrow` - Small uppercase label text
+- `.card-title` - Card heading text
+- `.card-body` - Card body text
+- `.button-primary` - Primary CTA button
+- `.button-secondary` - Secondary button
+- `.button-outline` - Outline button
+- `.pill` - Badge/tag styling
+
+**Global Animations:**
+- `@keyframes fade-in` - 480ms cubic-bezier easing
+- Used throughout for entrance animations
+
+**Performance CSS:**
+- `content-visibility: auto` on `.card-glass`, `.resource-card`
+- `contain: layout style` on sections and main
+- `will-change: transform` for animated elements
+- GPU acceleration via `transform: translateZ(0)`
+- Backdrop filter blur for frosted glass
+
+**Component Styles:**
+- Colocated with components (e.g., `header.css`)
+- Light theme enforced (overrides dark mode preference)
 
 ### Internationalization (i18n)
 
 **System Overview:**
-This project uses a dictionary-based i18n system with server-side translation loading for English and Spanish.
+Dictionary-based i18n with server-side translation loading for English and Spanish.
 
-**Dictionary Files:**
-- `app/[locale]/dictionaries/en.json` - English translations
-- `app/[locale]/dictionaries/es.json` - Spanish translations
-- `app/[locale]/dictionaries.ts` - Dictionary loader function
+**Routes:**
+- `/en/*` - English
+- `/es/*` - Spanish
 
-**File Structure:**
-```
-app/[locale]/
-├── dictionaries/
-│   ├── en.json          # English dictionary
-│   ├── es.json          # Spanish dictionary
-│   └── dictionaries.ts  # Loader
-├── page.tsx             # Home page
-├── about/page.tsx       # About page
-├── activities/page.tsx  # Activities page
-└── ...
-```
+**Language Context:**
+- Provider: `LanguageProvider` in `app/contexts/language-context.tsx`
+- Hooks: `useLocale()` returns current locale, `useDict()` returns dictionary
+- Server-side: `getDictionary(locale)` loads translations
+- Client-side: Context provides dict to `"use client"` components
+
+**Dictionary Structure:**
+Both `en.json` and `es.json` contain:
+- `home` - Homepage content
+- `about` - About page
+- `activities` - Activities/events page
+  - `agiSafety`, `aisWorkshop`, `paperReading` sections
+  - `gallery`, `common` (Duration, Date, Location), `breadcrumb`
+- `research` - Research page
+  - `filterLabels`, `projectsTitle`, `linkPlaceholder`
+- `resources` - Resources page
+  - `filterLabels`, `filterByLabel`, `pathwayLabels`, `quickWins`, `communityPicks`
+- `contact` - Contact page
+  - `breadcrumb`, `title`, `description`, `contactMethods`, `faqs`
+- `privacyPolicy` - Privacy policy
+- `substack` - Newsletter signup translations
+- `header` - Navigation menu
+- `footer` - Footer links and text
 
 **How to Add New Translations:**
 
@@ -117,7 +439,6 @@ import { useLocale, useDict } from "@/app/contexts/language-context";
 export default function Component() {
   const locale = useLocale();
   const dict = useDict();
-  const isEnglish = locale === "en";
 
   return <h1>{dict.pageName.sectionName.key}</h1>;
 }
@@ -159,6 +480,23 @@ Then replace in code:
 const text = dict.showing
   .replace("{count}", filteredResources.length.toString())
   .replace("{total}", allResources.length.toString());
+```
+
+**FAQ Template Variables:**
+The FAQ accordion supports special template variables that are automatically converted to clickable links:
+- `{resourcesLink}` - Replaced with link to resources page
+- `{email}` - Replaced with mailto link
+
+Example in dictionary:
+```json
+{
+  "faqs": [
+    {
+      "question": "How do I get started?",
+      "answer": "Check out our {resourcesLink} or email us at {email}."
+    }
+  ]
+}
 ```
 
 **Shared Labels:**
@@ -203,15 +541,40 @@ Use with `.map()`:
 3. Test both English (`/en/page`) and Spanish (`/es/page`) routes
 4. No inline ternary translations should exist in any page component
 
+### Third-Party Integrations
+
+**Substack API** - Newsletter subscription
+- Endpoint: `https://substackapi.com/api/subscribe`
+- Integration: `SubstackSignup.tsx` component
+- Form validation and error handling
+- 10-second timeout with AbortController
+
+**lu.ma Calendar** - Event calendar embed
+- Calendar ID: `cal-0oFAsTn5vpwcAwb`
+- Integration: `CalendarSection.tsx` component
+- Lazy loading with IntersectionObserver
+- Only loads when component is visible
+
+**Airtable** - Database/timeline embeds
+- Integration: `AirtableEmbed.tsx` component
+- Used in resources page for timeline view
+- Configurable: shareId, appId, tableId, viewId
+
+**Vercel Analytics & Speed Insights**
+- Built-in monitoring for production
+- Dependencies: `@vercel/analytics`, `@vercel/speed-insights`
+- Automatically enabled in production
+
 ### Performance Optimizations
 
 #### Timeline Animation (60fps)
 - **SVG-based rendering**: RAF throttling and precomputed invariants (pivot damping, segment factors)
 - **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
+- **Web worker offloading**: Thread generation in `thread-generator.worker.ts`
 - **Optimized parameters**: 30 threads × 15 segments, skip transition calculations when complete
 - **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
 - **Battery optimization**: IntersectionObserver pauses animation when component is off-screen
-- **LCP deferral**: Timeline deferred until after LCP using PerformanceObserver API
+- **LCP deferral**: Timeline deferred until after LCP using `useLcpComplete` hook with PerformanceObserver API
 
 #### Core Web Vitals Optimizations (Desktop: 59→81, Mobile: 96→97)
 
@@ -249,11 +612,13 @@ Use with `.map()`:
 - **Logo optimization**: `npm run optimize-logo`
   - Reduces 1.9MB PNG to 2KB WebP (99.9% reduction)
   - Generates 4 sizes (40px, 80px, 120px, 192px) in WebP, AVIF, and PNG
+  - Output: `public/images/logos/`
   - Script: `scripts/optimize-logo.js`
 - **Batch image optimization**: `npm run optimize-images`
   - Optimizes all photos and assets to WebP/AVIF
   - 80.6% average bandwidth reduction (1,343KB → 260KB)
   - Generates responsive sizes for different viewports
+  - Output: `public/images/optimized/`
   - Script: `scripts/optimize-images.js`
 - **Image component best practices**:
   - Use explicit `width` and `height` instead of `fill` for better CLS
@@ -280,7 +645,20 @@ Use with `.map()`:
   - Constant: `MAX_ANIMATED_WORDS = 5` in `app/components/animated-title.tsx`
 - **Browser support**: Chrome 85+, Edge 85+, Safari 17.4+
   - Progressive enhancement with graceful fallback
+- **Package**: `next-view-transitions` (^0.3.4)
 - **Key Learning**: View transitions are expensive - limit them to essential elements only
+
+**Lazy Loading Patterns**
+- **CalendarSection**: IntersectionObserver with 200px rootMargin
+  - Only loads lu.ma embed when component is near viewport
+- **EventsCarousel**: Respects `prefers-reduced-motion`
+  - Pauses auto-scroll on hover
+- **AirtableEmbed**: Shows loading state while iframe loads
+
+**localStorage Optimization**
+- Resources page tracks completion state in localStorage
+- SSR-safe implementation via `use-local-storage.ts` hook
+- JSON serialization for complex data structures
 
 #### Performance Testing
 
@@ -307,14 +685,18 @@ Use with `.map()`:
 6. **Content Visibility**: Apply to any content that might be off-screen
 7. **Font Loading**: Use `display: swap` + `adjustFontFallback` to prevent FOIT/FOUT
 8. **Component Memoization**: Memoize expensive components to prevent re-renders during initial load
+9. **Lazy Loading**: Use IntersectionObserver for embeds and heavy components
+10. **Web Workers**: Offload heavy calculations to background threads
 
-## Advanced Features
+### Advanced Features
 
-### View Transitions API
+#### View Transitions API
 
 For implementing smooth, native-app-like page transitions using the View Transitions API, see the comprehensive guide:
 
 **[View Transitions Implementation Guide](docs/view-transitions-guide.md)**
+
+**Package**: `next-view-transitions` (^0.3.4)
 
 Key features:
 - Smooth morphing animations between pages
@@ -323,31 +705,100 @@ Key features:
 - Progressive enhancement (graceful fallback for unsupported browsers)
 - TypeScript integration
 
+Components:
+- `TransitionLink` - Wrapper around Next.js Link for page transitions
+- `AnimatedTitle` - Per-word title animation (first 5 words only for performance)
+
 The guide includes:
 - Step-by-step implementation for Next.js App Router
 - `TransitionLink` component pattern
 - Advanced per-word animation techniques
 - Performance considerations and debugging tips
 
+#### localStorage Persistence
+
+**Resources Completion Tracking:**
+- Resources page (`/[locale]/resources/page.tsx`) tracks which resources users have completed
+- Uses `use-local-storage.ts` hook for SSR-safe localStorage access
+- Persists array of completed resource IDs
+- Checkbox toggle to mark resources as complete
+
+Pattern:
+```tsx
+const [completedResources, setCompletedResources] = useLocalStorage<string[]>(
+  'completedResources',
+  []
+);
+
+const toggleCompletion = (id: string) => {
+  setCompletedResources(prev =>
+    prev.includes(id)
+      ? prev.filter(rid => rid !== id)
+      : [...prev, id]
+  );
+};
+```
+
+#### Footnotes System
+
+**`utils/footnotes.tsx`** - Inline citation rendering
+
+Pattern in strings: `{footnote1}`, `{footnote2}`, etc.
+
+Built-in footnotes:
+1. AI Alignment Forum
+2. LessWrong AI Safety tag
+3. Rob Miles YouTube
+4. Distill.pub Interpretability
+5. Paul Christiano's blog
+6. AI Safety Fundamentals course
+
+Usage:
+```tsx
+import { renderWithFootnotes } from "@/app/utils/footnotes";
+
+const text = "Learn about AI safety{footnote1} and interpretability{footnote4}.";
+<p>{renderWithFootnotes(text)}</p>
+```
+
+Renders as: "Learn about AI safety^1 and interpretability^4." with superscript links.
+
 ## Coding Conventions
 
 - TypeScript strict mode must stay green - fix type errors, don't suppress
 - Two-space indentation for TSX/JSON
 - Prefer Tailwind utilities; extend tokens in `globals.css` only for reusable semantics
-- Keep component-specific styles colocated with components
+- Keep component-specific styles colocated with components (e.g., `header.css`)
 - Use functional components with hooks
+- Client components must be marked with `"use client"`
+- Server components are default in App Router
+
+**Component Patterns:**
+- Memoize expensive components with `React.memo()`
+- Use `useIsomorphicLayoutEffect` for DOM measurements
+- Use `useLocalStorage` for client-side persistence
+- Use `FadeInSection` for scroll-triggered animations
+- Use `AnimatedTitle` for page title animations (max 5 words)
+
+**i18n Patterns:**
+- NEVER use inline ternary translations
+- ALWAYS use dictionary references
+- Template variables for dynamic content: `{variable}`
+- FAQ accordion supports `{resourcesLink}` and `{email}` templates
 
 ## Testing
 
-No test script exists yet. When adding coverage:
+No test infrastructure exists yet. When adding coverage:
 - Use Vitest + Testing Library
-- Colocate specs beside features (e.g., `app/(marketing)/Hero.test.tsx`)
+- Colocate specs beside features (e.g., `app/components/Header.test.tsx`)
 - Ensure tests are fast enough for CI
+- Test both English and Spanish dictionaries
+- Mock localStorage for SSR safety
 - Document manual verification steps in PRs until automated checks exist
 
 ## Git Workflow
 
-- Present-tense commit subjects (e.g., "Add hero carousel animation")
+- Present-tense commit subjects (e.g., "Add events carousel component")
 - One concern per commit
 - Reference issue IDs in commit body when relevant
 - PRs should explain motivation, implementation, test evidence, and deployment considerations
@@ -358,3 +809,53 @@ No test script exists yet. When adding coverage:
 - Environment secrets go in `.env.local` (not checked in)
 - Document rationale in PR when altering `next.config.ts` or Turbopack behavior
 - Validate third-party packages before adding (bundle size impact)
+
+**next.config.ts optimizations:**
+- Production console.log removal (keeps error/warn)
+- Image formats: AVIF, WebP
+- Reactive strict mode enabled
+- Powered-by header disabled
+- optimizePackageImports for `@vercel/*` packages
+
+**.npmrc:**
+```
+legacy-peer-deps=true
+```
+
+## Dependencies
+
+**Production:**
+- `next` (^15.5.5) - React framework
+- `react` (19.1.0) - UI library
+- `react-dom` (19.1.0) - React DOM renderer
+- `next-view-transitions` (^0.3.4) - View Transitions API support
+- `@vercel/analytics` (^1.5.0) - Analytics
+- `@vercel/speed-insights` (^1.2.0) - Performance monitoring
+
+**Development:**
+- `@tailwindcss/postcss` (^4) - Tailwind CSS v4 plugin
+- `tailwindcss` (^4) - Utility-first CSS framework
+- `typescript` (^5) - TypeScript compiler
+- `@types/node`, `@types/react`, `@types/react-dom` - Type definitions
+- `glob` (^11.0.3) - File pattern matching (for optimization scripts)
+
+## Backup Files
+
+The repo contains `.bak` and `.backup` files from recent refactoring:
+- Dictionary files: `en.json.bak`, `es.json.bak`
+- Page files: `page.tsx.bak` for activities, research, resources, contact, privacy-policy
+
+**Note**: These backup files can be safely deleted after verifying the refactored versions work correctly.
+
+## Documentation
+
+Additional documentation in `docs/`:
+- `view-transitions-guide.md` - Comprehensive View Transitions API guide
+- `view-transitions-implementation-plan.md` - Implementation plan
+
+Performance documentation (root level):
+- `PERFORMANCE_OPTIMIZATIONS.md`
+- `PERFORMANCE-TESTING.md`
+- `PERFORMANCE-IMPROVEMENTS.md`
+- `PERFORMANCE_FIX_PLAN.md`
+- `LCP_OPTIMIZATION_SUMMARY.md`
