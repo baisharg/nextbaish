@@ -64,33 +64,26 @@
       "title": "Our Activities",
       "description": "Explore recurring programs designed to grow the AI safety community.",
       "items": {
-        "mechInterp": {
-          "eyebrow": "Course",
-          "title": "Mech Interp Course",
-          "description": "Intensive 1-month course on mechanistic interpretability methods.",
-          "schedule": "April 2025",
-          "duration": "1 month"
-        },
-        "discussion": {
-          "eyebrow": "Activities",
-          "title": "Weekly Discussion Group",
-          "description": "Weekly meetings to discuss recent papers, concepts, and developments in AI safety.",
-          "schedule": "Tuesdays · 2pm",
-          "duration": "1 hr"
-        },
-        "reading": {
-          "eyebrow": "Activities",
-          "title": "Paper Reading Club",
-          "description": "Student-led presentations of AI safety papers.",
-          "schedule": "Thursdays · 2pm",
-          "duration": "1 hr"
-        },
         "fundamentals": {
           "eyebrow": "Course",
-          "title": "AGI Safety Fundamentals",
-          "description": "An 8-week guided course covering essential concepts in AI alignment and safety.",
-          "schedule": "Semester 2",
-          "duration": "8 weeks"
+          "title": "AI Safety Fundamentals",
+          "description": "Inverted classroom course with weekly discussions on AI alignment and final mini-project.",
+          "schedule": "Fridays · 2:30pm",
+          "duration": "13 weeks"
+        },
+        "workshop": {
+          "eyebrow": "Workshop",
+          "title": "AIS Research Workshop",
+          "description": "Technical workshop to replicate recent AI Safety research through programming.",
+          "schedule": "Tuesdays · 2:30pm",
+          "duration": "2.5 hrs"
+        },
+        "reading": {
+          "eyebrow": "Presentations",
+          "title": "Paper Reading Club",
+          "description": "Full paper presentations by community members with YouTube recordings.",
+          "schedule": "Alternate Thursdays · 3pm",
+          "duration": "2 hrs"
         }
       },
       "joinNow": "Join now",
@@ -236,109 +229,92 @@
     "title": "Our Activities",
     "description": "Join our community and participate in AI safety research and learning",
     "subscribeCalendar": "Subscribe to Events Calendar",
-    "mechInterp": {
-      "title": "Mech Interp Course",
-      "dates": "Starts end of April 2025",
-      "description": "The Mechanistic Interpretability Course is an intensive 1-month program focused on techniques for understanding the internal mechanisms of neural networks. This course combines theoretical learning with hands-on projects.",
-      "overview": "Mechanistic interpretability is a key area of AI safety research, aiming to make AI systems more transparent and understandable.",
-      "curriculumTitle": "Curriculum Overview",
-      "curriculum": [
-        "Foundations of neural network architectures",
-        "Feature visualization techniques",
-        "Attribution methods for understanding network decisions",
-        "Advanced case studies from recent literature"
-      ],
-      "timeCommitmentTitle": "Time Commitment",
-      "timeCommitment": [
-        "2 lectures per week (2 hours each)",
-        "1 practical session per week (3 hours)",
-        "Individual project work (5-10 hours per week)",
-        "Final project presentation"
-      ],
-      "prerequisitesTitle": "Prerequisites",
-      "prerequisites": [
-        "Strong programming skills (Python)",
-        "Experience with deep learning frameworks (PyTorch preferred)",
-        "Familiarity with basic neural network architectures",
-        "Linear algebra and calculus"
-      ],
-      "viewDetails": "View Detailed Course Information",
-      "courseDetails": "Course Details",
-      "duration": "4 weeks",
-      "startDate": "June 2, 2025",
-      "endDate": "June 27, 2025",
-      "applicationDeadline": "May 15, 2025",
-      "location": "Hybrid (In-person & Zoom)",
-      "instructors": "Dr. Laura Fernandez, Carlos Mendez",
-      "expressInterest": "Express Interest"
-    },
     "agiSafety": {
-      "title": "AGI Safety Fundamentals Cohort",
+      "title": "AI Safety Fundamentals",
       "status": "Currently Active",
-      "description": "The AGI Safety Fundamentals cohort is an 8-week guided course covering the essential concepts in AI alignment and safety. Participants read selected materials and meet weekly to discuss the readings with a facilitator.",
-      "overview": "This program is based on the AGI Safety Fundamentals curriculum by BlueDot and provides a structured introduction to the field of AI safety.",
-      "whatToExpect": "What to Expect",
+      "description": "The activity consists of discussing and following up in person on the contents of BlueDot's AI Alignment course, which must be completed asynchronously.",
+      "overview": "The (unofficial) course uses a flipped classroom format. Each week, participants must come with the content read/watched (2-3 hours), and on Fridays from 2:30 PM to 5:00 PM we meet in person.",
+      "whatToExpect": "Course Format",
       "expectations": [
-        "Weekly 2-hour discussion sessions",
-        "1-3 hours of reading per week",
-        "Small groups of 6-12 participants",
-        "Experienced facilitators to guide discussions",
-        "Certificate of completion"
+        "13 total sessions: 9 conceptual + 4 project-based",
+        "Conceptual sessions: Discussions on content with pre-designed dynamics",
+        "Project sessions: Personal mini-project with mentorship",
+        "2-3 hours weekly of asynchronous content",
+        "2.5 hours weekly in-person (Fridays 2:30-5:00 PM)",
+        "Completion certificate (requires 7/9 sessions + final project)"
+      ],
+      "whoWeSeek": "Who We're Looking For",
+      "seekCriteria": [
+        "You're interested in addressing concepts like vulnerabilities in AI systems or existential risks",
+        "You want to explore what opportunities exist in the field and your next steps",
+        "You're willing to participate in open discussions",
+        "You have a good level of English",
+        "You can dedicate yourself to the in-person course (approximately 2.5 hours per week)",
+        "You can dedicate yourself to asynchronous activities and review material (approximately 3 hours per week)"
       ],
       "programDetails": "Program Details",
-      "duration": "10-12 weeks",
-      "fellowshipPeriod": "August - December 2025",
-      "viewCurriculum": "View Curriculum"
+      "duration": "13 weeks",
+      "fellowshipPeriod": "Fridays 2:30-5:00 PM",
+      "viewCurriculum": "View Curriculum",
+      "applyNow": "Apply Now"
     },
-    "weeklyDiscussion": {
-      "title": "Weekly Discussion Group",
-      "schedule": "Every Tuesday @ 18:00",
-      "description": "Our Weekly Discussion Group provides a casual forum for discussing recent papers, concepts, and developments in AI safety. These sessions are open to anyone interested in the field, regardless of prior knowledge.",
-      "overview": "Each week features a different topic, announced in advance through our mailing list and Telegram group.",
-      "formatTitle": "Format",
-      "format": [
-        "90-minute discussions led by a rotating facilitator",
-        "Short presentation of the week's topic (15-20 minutes)",
-        "Open discussion and Q&A",
-        "Optional pre-reading materials shared in advance"
+    "aisWorkshop": {
+      "title": "AIS Research Workshop",
+      "schedule": "Every Tuesday @ 2:30 PM",
+      "description": "The activity consists of discussing and replicating (through programming) recent AI Safety research in person to acquire the technical skills necessary to conduct independent research.",
+      "overview": "This workshop takes place on Tuesdays from 2:30 PM to 5:00 PM and is designed for students who want to develop practical technical skills in AI safety.",
+      "whoWeSeek": "Who We're Looking For",
+      "seekCriteria": [
+        "You can dedicate at least 5 hours per week (2 hrs in-person + 3 hrs asynchronous)",
+        "You have a good level of English",
+        "You're willing to participate in open discussions",
+        "You're interested in acquiring technical skills in ML and Safety",
+        "You want to enter the field and take your first steps as a researcher"
       ],
-      "participationTitle": "Participation",
-      "participationText": "No registration is required. Simply show up! If you're attending for the first time, we recommend arriving 10 minutes early to meet the organizers.",
-      "nextDiscussion": "Next Discussion",
-      "date": "March 25, 2025",
-      "time": "18:00 - 19:30",
-      "location": "Pabellon 0+inf, Room 1604, Ciudad Universitaria",
-      "topic": "Interpretability Methods",
-      "facilitator": "Eitan Sprejer",
-      "joinTelegram": "Join Telegram for Updates"
+      "formatTitle": "Workshop Format",
+      "format": [
+        "2.5-hour in-person sessions on Tuesdays",
+        "Discussion of recent AI Safety papers",
+        "Practical implementation by programming the discussed methods",
+        "Asynchronous work to familiarize yourself with materials (3 hrs/week)",
+        "Mentorship to develop independent research skills"
+      ],
+      "nextSession": "Next Session",
+      "date": "Check calendar",
+      "time": "2:30 PM - 5:00 PM",
+      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "topic": "To be defined weekly",
+      "joinTelegram": "Join Telegram for Updates",
+      "applyNow": "Apply Now"
     },
     "paperReading": {
       "title": "Paper Reading Club",
-      "schedule": "Every Friday @ 17:00",
-      "description": "The Paper Reading Club conducts deep dives into foundational and recent papers in AI safety research. Unlike the more casual discussion group, this activity involves a thorough examination of specific research papers.",
-      "overview": "Participants are expected to read the selected paper in advance and come prepared to discuss its methods, results, and implications.",
-      "selectionCriteriaTitle": "Paper Selection Criteria",
+      "schedule": "Alternate Thursdays @ 3:00 PM",
+      "description": "The Paper Reading Club presents full AI safety papers presented by community members. Each session includes an in-depth presentation followed by discussion.",
+      "overview": "Presentations are recorded and uploaded to our YouTube channel so the community can review them later.",
+      "selectionCriteriaTitle": "What to Expect",
       "criteria": [
-        "Importance to the field of AI safety",
-        "Technical relevance to current research directions",
-        "Mix of foundational papers and recent publications",
-        "Accessibility to graduate and advanced undergraduate students"
+        "Full paper presentations by community members",
+        "In-depth analysis of methods and results",
+        "Open discussion about implications",
+        "Recordings available on YouTube"
       ],
       "sessionFormatTitle": "Session Format",
       "format": [
-        "Brief overview of the paper (5-10 minutes)",
-        "Section-by-section discussion",
-        "Examination of methods and results",
-        "Critical evaluation of claims and limitations",
-        "Discussion of potential follow-up research"
+        "Full paper presentation (30-40 minutes)",
+        "Open discussion and Q&A (30-40 minutes)",
+        "Recorded session uploaded to YouTube",
+        "Telegram chat for coordination and ongoing discussion"
       ],
       "nextSession": "Next Paper Session",
-      "paper": "\"Mechanistic Interpretability for Language Models\"",
-      "discussionLead": "Eitan Sprejer",
-      "accessList": "Access Reading List",
-      "date": "March 21, 2025",
-      "time": "17:00 - 18:30",
-      "location": "Pabellon 0+inf, Room 1604, Ciudad Universitaria"
+      "paper": "Check Telegram or calendar",
+      "discussionLead": "Community member",
+      "accessList": "Watch recordings on YouTube",
+      "date": "Check calendar",
+      "time": "3:00 PM - 5:00 PM",
+      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "youtubeChannel": "YouTube Channel",
+      "telegramGroup": "Telegram Group"
     },
     "common": {
       "duration": "Duration:",

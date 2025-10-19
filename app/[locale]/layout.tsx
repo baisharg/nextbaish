@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode, CSSProperties } from "react";
 import { Suspense } from "react";
 import { Geist, Geist_Mono, IBM_Plex_Serif } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -94,20 +95,22 @@ export default async function LocaleLayout({
   const dict = await getDictionary(currentLocale);
 
   return (
-    <html lang={currentLocale}>
-      <Head />
-      <body
-        className={`${ibmPlexSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
-      >
-        <Suspense fallback={null}>
-          <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
-            <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
-            {children}
-            <SpeedInsights />
-            <Analytics />
-          </LanguageProvider>
-        </Suspense>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang={currentLocale}>
+        <Head />
+        <body
+          className={`${ibmPlexSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
+        >
+          <Suspense fallback={null}>
+            <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
+              <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
+              {children}
+              <SpeedInsights />
+              <Analytics />
+            </LanguageProvider>
+          </Suspense>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

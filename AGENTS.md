@@ -1,19 +1,257 @@
-# Repository Guidelines
 
-## Project Structure & Module Organization
-Source lives in `app/`, using the App Router with feature folders (e.g., `app/(marketing)/`). `app/page.tsx` renders the landing view and `app/layout.tsx` wires fonts, metadata, and global providers. Tailwind tokens and resets sit in `app/globals.css`; keep component-specific styles colocated with the component. Static assets belong in `public/` and serve from the root path. Adjust framework-wide settings in `next.config.ts`, `postcss.config.mjs`, or `tsconfig.json` before shipping cross-cutting changes so configuration stays the single source of truth.
+## Development Commands
 
-## Build, Test, and Development Commands
-Run `npm install` to sync dependencies. `npm run dev` starts the Turbopack dev server at http://localhost:3000 with hot reload. `npm run build` compiles a production bundle; execute it locally before opening a PR that touches build paths. `npm run start` boots the optimized server from the last build. If you introduce tests, add a `npm run test` script that proxies to the chosen runner so CI can invoke it consistently.
+- `npm install` - Install dependencies
+- `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
+- `npm run build` - Compile production bundle (run before opening PRs that touch build paths)
+- `npm run start` - Run optimized production server from last build
 
-## Coding Style & Naming Conventions
-TypeScript strict mode must stay green—fix type errors instead of suppressing them. Prefer functional React components in PascalCase files (`HeroSection.tsx`) and colocate related utilities in the same folder. Compose Tailwind CSS v4 utilities first; extend design tokens in `app/globals.css` only when a reusable semantic token emerges. Keep indentation at two spaces for TSX/JSON and run `npx prettier --write .` plus `npx tailwindcss --minify` when formatting or validating styles.
+**Note:** Dev server should remain running at port 3000 during active development.
 
-## Testing Guidelines
-No test script ships yet. When adding coverage, adopt Vitest + Testing Library for alignment with Next.js conventions, colocate specs beside the feature (`app/(marketing)/Hero.test.tsx`), and ensure they are fast enough for CI. Document manual verification steps in the PR description until automated checks exist. Failing tests or manual steps should block merges until resolved.
+## Project Architecture
 
-## Commit & Pull Request Guidelines
-Write concise, present-tense commit subjects (`Add hero carousel animation`) and keep each commit focused on one concern. Reference issue IDs in the body when relevant. Pull requests should explain motivation, summarize implementation, list test evidence (commands, screenshots, or manual steps), and note deployment considerations if configuration or environment variables changed.
+This is a Next.js 15 app using the App Router with Turbopack, React 19, TypeScript, and Tailwind CSS v4.
 
-## Configuration & Security Tips
-Store environment secrets outside the repo; prefer `.env.local` for developer-only values and avoid checking it in. When altering `next.config.ts` or Turbopack behavior, document the rationale in the PR to help reviewers gauge production impact. Validate third-party packages before adding them—dependency drift directly affects performance budgets and bundle size.
+### Key Files
+- `app/layout.tsx` - Root layout with fonts (Geist Sans/Mono), metadata, and the TimelineThreads background component
+- `app/page.tsx` - Main landing page (client component) with bilingual content (English/Spanish) for BAISH AI Safety Hub
+- `app/globals.css` - Tailwind v4 imports and CSS custom properties for color tokens (`--color-accent-primary`, `--color-accent-secondary`, `--color-accent-tertiary`)
+- `app/components/timeline-threads.tsx` - SVG-based animated background with thread morphing animation using Float32Array for memory efficiency
+
+### TypeScript Configuration
+- Path alias: `@/*` maps to project root
+- Strict mode enabled
+- Target: ES2017
+
+### Styling
+- Tailwind CSS v4 via PostCSS (`@tailwindcss/postcss`)
+- Design tokens in `app/globals.css` under `:root`
+- Component styles colocated with components
+- Light theme enforced (overrides dark mode preference)
+
+### Component Architecture
+- Functional React components in PascalCase files
+- Client components marked with `"use client"`
+- Static assets in `public/` served from root path
+- Geist font family loaded from `next/font/google`
+
+### Internationalization (i18n)
+
+**System Overview:**
+This project uses a dictionary-based i18n system with server-side translation loading for English and Spanish.
+
+**Dictionary Files:**
+- `app/[locale]/dictionaries/en.json` - English translations
+- `app/[locale]/dictionaries/es.json` - Spanish translations
+- `app/[locale]/dictionaries.ts` - Dictionary loader function
+
+**File Structure:**
+```
+app/[locale]/
+├── dictionaries/
+│   ├── en.json          # English dictionary
+│   ├── es.json          # Spanish dictionary
+│   └── dictionaries.ts  # Loader
+├── page.tsx             # Home page
+├── about/page.tsx       # About page
+├── activities/page.tsx  # Activities page
+└── ...
+```
+
+**How to Add New Translations:**
+
+1. **Add to both dictionary files** (en.json and es.json):
+```json
+// en.json
+{
+  "pageName": {
+    "sectionName": {
+      "key": "English text here"
+    }
+  }
+}
+
+// es.json
+{
+  "pageName": {
+    "sectionName": {
+      "key": "Texto en español aquí"
+    }
+  }
+}
+```
+
+2. **Use in Server Components** (pages):
+```tsx
+import { getDictionary } from "./dictionaries";
+import type { AppLocale } from "@/i18n.config";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
+  const t = dict.pageName; // Access your page's translations
+
+  return (
+    <div>
+      <h1>{t.sectionName.key}</h1>
+    </div>
+  );
+}
+```
+
+3. **Use in Client Components** (with context):
+```tsx
+"use client";
+import { useLocale, useDict } from "@/app/contexts/language-context";
+
+export default function Component() {
+  const locale = useLocale();
+  const dict = useDict();
+  const isEnglish = locale === "en";
+
+  return <h1>{dict.pageName.sectionName.key}</h1>;
+}
+```
+
+**CRITICAL RULES:**
+
+❌ **NEVER use inline ternary translations:**
+```tsx
+// WRONG - Do not do this!
+{isEnglish ? "Click here" : "Haz clic aquí"}
+{locale === "en" ? "Welcome" : "Bienvenido"}
+```
+
+✅ **ALWAYS use dictionary references:**
+```tsx
+// CORRECT - Always do this!
+{dict.pageName.clickHere}
+{t.welcome}
+```
+
+**Template Variables:**
+
+For dynamic content, use placeholders in dictionaries:
+```json
+// en.json
+{
+  "showing": "Showing {count} of {total} resources"
+}
+
+// es.json
+{
+  "showing": "Mostrando {count} de {total} recursos"
+}
+```
+
+Then replace in code:
+```tsx
+const text = dict.showing
+  .replace("{count}", filteredResources.length.toString())
+  .replace("{total}", allResources.length.toString());
+```
+
+**Shared Labels:**
+
+For repeated labels (Duration:, Date:, Location:, etc.), use a `common` section:
+```json
+{
+  "pageName": {
+    "common": {
+      "duration": "Duration:",
+      "location": "Location:",
+      "date": "Date:"
+    }
+  }
+}
+```
+
+**Array Translations:**
+
+For lists of items:
+```json
+{
+  "items": [
+    "First item",
+    "Second item",
+    "Third item"
+  ]
+}
+```
+
+Use with `.map()`:
+```tsx
+{dict.items.map((item, idx) => (
+  <li key={idx}>{item}</li>
+))}
+```
+
+**Before Committing:**
+
+1. Verify all pages still build: `npm run build`
+2. Check both dictionary files have matching structure
+3. Test both English (`/en/page`) and Spanish (`/es/page`) routes
+4. No inline ternary translations should exist in any page component
+
+### Performance Optimizations
+- **60fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
+- **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
+- **Optimized parameters**: 30 threads × 15 segments, skip transition calculations when complete
+- **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
+- **Battery optimization**: IntersectionObserver pauses animation when component is off-screen
+
+## Advanced Features
+
+### View Transitions API
+
+For implementing smooth, native-app-like page transitions using the View Transitions API, see the comprehensive guide:
+
+**[View Transitions Implementation Guide](docs/view-transitions-guide.md)**
+
+Key features:
+- Smooth morphing animations between pages
+- Per-word title transitions (à la nmn.sh)
+- Shared element animations (logos, images, etc.)
+- Progressive enhancement (graceful fallback for unsupported browsers)
+- TypeScript integration
+
+The guide includes:
+- Step-by-step implementation for Next.js App Router
+- `TransitionLink` component pattern
+- Advanced per-word animation techniques
+- Performance considerations and debugging tips
+
+## Coding Conventions
+
+- TypeScript strict mode must stay green - fix type errors, don't suppress
+- Two-space indentation for TSX/JSON
+- Prefer Tailwind utilities; extend tokens in `globals.css` only for reusable semantics
+- Keep component-specific styles colocated with components
+- Use functional components with hooks
+
+## Testing
+
+No test script exists yet. When adding coverage:
+- Use Vitest + Testing Library
+- Colocate specs beside features (e.g., `app/(marketing)/Hero.test.tsx`)
+- Ensure tests are fast enough for CI
+- Document manual verification steps in PRs until automated checks exist
+
+## Git Workflow
+
+- Present-tense commit subjects (e.g., "Add hero carousel animation")
+- One concern per commit
+- Reference issue IDs in commit body when relevant
+- PRs should explain motivation, implementation, test evidence, and deployment considerations
+- Execute `npm run build` before opening PRs that touch build paths
+
+## Configuration
+
+- Environment secrets go in `.env.local` (not checked in)
+- Document rationale in PR when altering `next.config.ts` or Turbopack behavior
+- Validate third-party packages before adding (bundle size impact)

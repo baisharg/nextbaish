@@ -18,9 +18,8 @@ export default async function Activities({
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
   const t = dict.activities;
-  const mechInterp = t.mechInterp;
   const agiSafety = t.agiSafety;
-  const weeklyDiscussion = t.weeklyDiscussion;
+  const aisWorkshop = t.aisWorkshop;
   const paperReading = t.paperReading;
   const common = t.common;
   const gallery = t.gallery;
@@ -138,153 +137,20 @@ export default async function Activities({
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
         <div className="flex flex-col gap-20">
 
-        {/* Mech Interp Course */}
+        {/* AI Safety Fundamentals */}
         <FadeInSection variant="slide-up" delay={200} as="section">
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-8">
-              <div className="space-y-4">
-                <div className="text-5xl">🧠</div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {mechInterp.title}
-                  </h2>
-                  <span className="inline-flex rounded-full bg-[#9275E51a] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-primary)]">
-                    {mechInterp.dates}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid gap-8 lg:grid-cols-3">
-                <div className="space-y-6 lg:col-span-2">
-                  <div className="space-y-4 text-base text-slate-700">
-                    <p>{mechInterp.description}</p>
-                    <p>{mechInterp.overview}</p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold text-slate-900">
-                      {mechInterp.curriculumTitle}
-                    </h3>
-                    <ul className="space-y-2 text-base text-slate-700">
-                      {mechInterp.curriculum.map((item, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="text-[var(--color-accent-primary)]">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold text-slate-900">
-                      {mechInterp.timeCommitmentTitle}
-                    </h3>
-                    <ul className="space-y-2 text-base text-slate-700">
-                      {mechInterp.timeCommitment.map((item, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="text-[var(--color-accent-primary)]">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-semibold text-slate-900">
-                      {mechInterp.prerequisitesTitle}
-                    </h3>
-                    <ul className="space-y-2 text-base text-slate-700">
-                      {mechInterp.prerequisites.map((item, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="text-[var(--color-accent-primary)]">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="pt-2">
-                    <Link
-                      href={`/${currentLocale}/mech-interp-course`}
-                      className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
-                    >
-                      {mechInterp.viewDetails}
-                      <span aria-hidden>→</span>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-1">
-                  <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-                    <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
-                      {mechInterp.courseDetails}
-                    </h3>
-                    <dl className="relative space-y-3 text-sm">
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.duration}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.duration}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.startDate}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.startDate}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.endDate}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.endDate}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.applicationDeadline}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.applicationDeadline}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.location}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.location}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.instructors}
-                        </dt>
-                        <dd className="text-slate-700">{mechInterp.instructors}</dd>
-                      </div>
-                    </dl>
-                    <div className="relative mt-6">
-                      <Link
-                        href={`/${currentLocale}/contact#mech-interp`}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
-                      >
-                        {mechInterp.expressInterest}
-                      </Link>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeInSection>
-
-        {/* AGI Safety Fundamentals */}
-        <FadeInSection variant="slide-up" delay={300} as="section">
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 sm:px-12">
+          <section id="fundamentals" className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 sm:px-12">
             <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
             <div className="relative space-y-8">
               <div className="space-y-4">
                 <div className="text-5xl">📚</div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {agiSafety.title}
-                  </h2>
+                  <AnimatedTitle
+                    text={agiSafety.title}
+                    slug="activity-fundamentals"
+                    className="text-3xl font-semibold text-slate-900"
+                    as="h2"
+                  />
                   <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-green-700">
                     {agiSafety.status}
                   </span>
@@ -311,6 +177,20 @@ export default async function Activities({
                       ))}
                     </ul>
                   </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-semibold text-slate-900">
+                      {agiSafety.whoWeSeek}
+                    </h3>
+                    <ul className="space-y-2 text-base text-slate-700">
+                      {agiSafety.seekCriteria.map((item, index) => (
+                        <li key={index} className="flex gap-3">
+                          <span className="text-[var(--color-accent-primary)]">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
                 <div className="lg:col-span-1">
@@ -328,12 +208,12 @@ export default async function Activities({
                       </div>
                       <div>
                         <dt className="font-semibold text-slate-900">
-                          {common.fellowshipPeriod}
+                          {common.time}
                         </dt>
                         <dd className="text-slate-700">{agiSafety.fellowshipPeriod}</dd>
                       </div>
                     </dl>
-                    <div className="relative mt-6">
+                    <div className="relative mt-6 space-y-3">
                       <a
                         href="https://course.aisafetyfundamentals.com/alignment"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
@@ -342,6 +222,12 @@ export default async function Activities({
                       >
                         {agiSafety.viewCurriculum}
                       </a>
+                      <Link
+                        href={`/${currentLocale}/contact`}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                      >
+                        {agiSafety.applyNow}
+                      </Link>
                     </div>
                   </article>
                 </div>
@@ -350,19 +236,22 @@ export default async function Activities({
           </section>
         </FadeInSection>
 
-        {/* Weekly Discussion Group */}
-        <FadeInSection variant="slide-up" delay={400} as="section">
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+        {/* AIS Research Workshop */}
+        <FadeInSection variant="slide-up" delay={300} as="section">
+          <section id="workshop" className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
             <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
             <div className="relative space-y-8">
               <div className="space-y-4">
-                <div className="text-5xl">💬</div>
+                <div className="text-5xl">🔬</div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {weeklyDiscussion.title}
-                  </h2>
+                  <AnimatedTitle
+                    text={aisWorkshop.title}
+                    slug="activity-workshop"
+                    className="text-3xl font-semibold text-slate-900"
+                    as="h2"
+                  />
                   <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700">
-                    {weeklyDiscussion.schedule}
+                    {aisWorkshop.schedule}
                   </span>
                 </div>
               </div>
@@ -370,16 +259,16 @@ export default async function Activities({
               <div className="grid gap-8 lg:grid-cols-3">
                 <div className="space-y-6 lg:col-span-2">
                   <div className="space-y-4 text-base text-slate-700">
-                    <p>{weeklyDiscussion.description}</p>
-                    <p>{weeklyDiscussion.overview}</p>
+                    <p>{aisWorkshop.description}</p>
+                    <p>{aisWorkshop.overview}</p>
                   </div>
 
                   <div className="space-y-3">
                     <h3 className="text-xl font-semibold text-slate-900">
-                      {weeklyDiscussion.formatTitle}
+                      {aisWorkshop.whoWeSeek}
                     </h3>
                     <ul className="space-y-2 text-base text-slate-700">
-                      {weeklyDiscussion.format.map((item, index) => (
+                      {aisWorkshop.seekCriteria.map((item, index) => (
                         <li key={index} className="flex gap-3">
                           <span className="text-[var(--color-accent-primary)]">•</span>
                           <span>{item}</span>
@@ -390,11 +279,16 @@ export default async function Activities({
 
                   <div className="space-y-3">
                     <h3 className="text-xl font-semibold text-slate-900">
-                      {weeklyDiscussion.participationTitle}
+                      {aisWorkshop.formatTitle}
                     </h3>
-                    <p className="text-base text-slate-700">
-                      {weeklyDiscussion.participationText}
-                    </p>
+                    <ul className="space-y-2 text-base text-slate-700">
+                      {aisWorkshop.format.map((item, index) => (
+                        <li key={index} className="flex gap-3">
+                          <span className="text-[var(--color-accent-primary)]">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
 
@@ -402,49 +296,49 @@ export default async function Activities({
                   <article className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
                     <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
-                      {weeklyDiscussion.nextDiscussion}
+                      {aisWorkshop.nextSession}
                     </h3>
                     <dl className="relative space-y-3 text-sm">
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {common.date}
                         </dt>
-                        <dd className="text-slate-700">{weeklyDiscussion.date}</dd>
+                        <dd className="text-slate-700">{aisWorkshop.date}</dd>
                       </div>
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {common.time}
                         </dt>
-                        <dd className="text-slate-700">{weeklyDiscussion.time}</dd>
+                        <dd className="text-slate-700">{aisWorkshop.time}</dd>
                       </div>
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {common.location}
                         </dt>
-                        <dd className="text-slate-700">{weeklyDiscussion.location}</dd>
+                        <dd className="text-slate-700">{aisWorkshop.location}</dd>
                       </div>
                       <div>
                         <dt className="font-semibold text-slate-900">
                           {common.topic}
                         </dt>
-                        <dd className="text-slate-700">{weeklyDiscussion.topic}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-semibold text-slate-900">
-                          {common.facilitator}
-                        </dt>
-                        <dd className="text-slate-700">{weeklyDiscussion.facilitator}</dd>
+                        <dd className="text-slate-700">{aisWorkshop.topic}</dd>
                       </div>
                     </dl>
-                    <div className="relative mt-6">
+                    <div className="relative mt-6 space-y-3">
                       <a
                         href="https://t.me/+zhSGhXrn56g1YjVh"
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {weeklyDiscussion.joinTelegram}
+                        {aisWorkshop.joinTelegram}
                       </a>
+                      <Link
+                        href={`/${currentLocale}/contact`}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                      >
+                        {aisWorkshop.applyNow}
+                      </Link>
                     </div>
                   </article>
                 </div>
@@ -454,16 +348,19 @@ export default async function Activities({
         </FadeInSection>
 
         {/* Paper Reading Club */}
-        <FadeInSection variant="slide-up" delay={500} as="section">
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 sm:px-12">
+        <FadeInSection variant="slide-up" delay={400} as="section">
+          <section id="reading" className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 sm:px-12">
             <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
             <div className="relative space-y-8">
               <div className="space-y-4">
                 <div className="text-5xl">📝</div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {paperReading.title}
-                  </h2>
+                  <AnimatedTitle
+                    text={paperReading.title}
+                    slug="activity-reading"
+                    className="text-3xl font-semibold text-slate-900"
+                    as="h2"
+                  />
                   <span className="inline-flex rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-700">
                     {paperReading.schedule}
                   </span>
@@ -544,13 +441,23 @@ export default async function Activities({
                         <dd className="text-slate-700">{paperReading.discussionLead}</dd>
                       </div>
                     </dl>
-                    <div className="relative mt-6">
-                      <Link
-                        href={`/${currentLocale}/resources#papers`}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                    <div className="relative mt-6 space-y-3">
+                      <a
+                        href="https://t.me/+zhSGhXrn56g1YjVh"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        {paperReading.accessList}
-                      </Link>
+                        {paperReading.telegramGroup}
+                      </a>
+                      <a
+                        href="https://youtube.com/@baish-ai"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent-primary)] px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {paperReading.youtubeChannel}
+                      </a>
                     </div>
                   </article>
                 </div>

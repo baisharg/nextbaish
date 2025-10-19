@@ -410,6 +410,12 @@ body:active-view-transition {
   view-transition-name: site-logo;
 }
 
+/* Ensure view transition elements are stable (not affected by parent animations) */
+span[style*="view-transition-name"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Respect user preferences - disable transitions for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),

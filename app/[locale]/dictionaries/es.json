@@ -64,33 +64,26 @@
       "title": "Nuestras Actividades",
       "description": "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA.",
       "items": {
-        "mechInterp": {
+        "fundamentals": {
           "eyebrow": "Curso",
-          "title": "Curso de Interp Mecánica",
-          "description": "Curso intensivo de 1 mes sobre métodos de interpretabilidad mecánica.",
-          "schedule": "Abril 2025",
-          "duration": "1 mes"
+          "title": "AI Safety Fundamentals",
+          "description": "Curso de aula invertida con discusiones semanales sobre alineamiento de IA y mini-proyecto final.",
+          "schedule": "Viernes · 14:30",
+          "duration": "13 semanas"
         },
-        "discussion": {
-          "eyebrow": "Actividades",
-          "title": "Grupo de Discusión Semanal",
-          "description": "Reuniones semanales para discutir papers, conceptos y novedades de seguridad en IA.",
-          "schedule": "Martes · 14h",
-          "duration": "1 hr"
+        "workshop": {
+          "eyebrow": "Taller",
+          "title": "AIS Research Workshop",
+          "description": "Taller técnico para replicar investigaciones recientes de AI Safety mediante programación.",
+          "schedule": "Martes · 14:30",
+          "duration": "2.5 hrs"
         },
         "reading": {
           "eyebrow": "Actividades",
           "title": "Club de Lectura",
-          "description": "Presentaciones lideradas por estudiantes sobre papers de seguridad en IA.",
-          "schedule": "Jueves · 14h",
-          "duration": "1 hr"
-        },
-        "fundamentals": {
-          "eyebrow": "Curso",
-          "title": "Fundamentos de Seguridad AGI",
-          "description": "Curso guiado de 8 semanas que cubre los conceptos esenciales de alineamiento y seguridad en IA.",
-          "schedule": "Semestre 2",
-          "duration": "8 semanas"
+          "description": "Presentaciones completas de papers por miembros de la comunidad con grabaciones en YouTube.",
+          "schedule": "Jueves alternos · 15h",
+          "duration": "2 hrs"
         }
       },
       "joinNow": "Inscríbete",
@@ -236,109 +229,92 @@
     "title": "Nuestras Actividades",
     "description": "Únete a nuestra comunidad y participa en investigación y aprendizaje de seguridad en IA",
     "subscribeCalendar": "Suscribirse al calendario de eventos",
-    "mechInterp": {
-      "title": "Curso de Interpretabilidad Mecánica",
-      "dates": "Comienza fin de abril 2025",
-      "description": "El Curso de Interpretabilidad Mecánica es un programa intensivo de 1 mes enfocado en técnicas para comprender los mecanismos internos de las redes neuronales. Este curso combina aprendizaje teórico con proyectos prácticos.",
-      "overview": "La interpretabilidad mecánica es un área clave de investigación en seguridad de IA, con el objetivo de hacer que los sistemas de IA sean más transparentes y comprensibles.",
-      "curriculumTitle": "Resumen del Currículo",
-      "curriculum": [
-        "Fundamentos de arquitecturas de redes neuronales",
-        "Técnicas de visualización de características",
-        "Métodos de atribución para entender decisiones de la red",
-        "Estudios de caso avanzados de literatura reciente"
-      ],
-      "timeCommitmentTitle": "Compromiso de Tiempo",
-      "timeCommitment": [
-        "2 clases por semana (2 horas cada una)",
-        "1 sesión práctica por semana (3 horas)",
-        "Trabajo de proyecto individual (5-10 horas por semana)",
-        "Presentación del proyecto final"
-      ],
-      "prerequisitesTitle": "Prerrequisitos",
-      "prerequisites": [
-        "Habilidades sólidas de programación (Python)",
-        "Experiencia con frameworks de aprendizaje profundo (PyTorch preferido)",
-        "Familiaridad con arquitecturas básicas de redes neuronales",
-        "Álgebra lineal y cálculo"
-      ],
-      "viewDetails": "Ver información detallada del curso",
-      "courseDetails": "Detalles del Curso",
-      "duration": "4 semanas",
-      "startDate": "2 de junio de 2025",
-      "endDate": "27 de junio de 2025",
-      "applicationDeadline": "15 de mayo de 2025",
-      "location": "Híbrido (Presencial & Zoom)",
-      "instructors": "Dr. Laura Fernandez, Carlos Mendez",
-      "expressInterest": "Expresar interés"
-    },
     "agiSafety": {
-      "title": "Cohorte de Fundamentos de Seguridad AGI",
+      "title": "AI Safety Fundamentals",
       "status": "Actualmente activo",
-      "description": "La cohorte de Fundamentos de Seguridad AGI es un curso guiado de 8 semanas que cubre los conceptos esenciales en alineamiento y seguridad de IA. Los participantes leen materiales seleccionados y se reúnen semanalmente para discutir las lecturas con un facilitador.",
-      "overview": "Este programa se basa en el currículo de Fundamentos de Seguridad AGI de BlueDot y proporciona una introducción estructurada al campo de la seguridad en IA.",
-      "whatToExpect": "Qué Esperar",
+      "description": "La actividad consiste en discutir y dar seguimiento de forma presencial a los contenidos del curso de BlueDot: AI Alignment, los cuales deben ser completados de forma asíncrona.",
+      "overview": "El curso (extra-oficial) tiene la modalidad de aula invertida. Cada semana, los participantes tendrán que venir con el contenido leído/visto (2-3hs), y los Viernes de 14:30 a 17:00 nos encontraremos presencialmente.",
+      "whatToExpect": "Modalidad del Curso",
       "expectations": [
-        "Sesiones de discusión semanales de 2 horas",
-        "1-3 horas de lectura por semana",
-        "Grupos pequeños de 6-12 participantes",
-        "Facilitadores experimentados para guiar las discusiones",
-        "Certificado de finalización"
+        "13 encuentros en total: 9 conceptuales + 4 de proyecto",
+        "Encuentros conceptuales: Discusiones sobre contenidos con dinámicas pre-armadas",
+        "Encuentros de proyecto: Mini-proyecto personal con mentoría",
+        "2-3 horas semanales de contenido asíncrono",
+        "2.5 horas semanales presenciales (Viernes 14:30-17:00)",
+        "Certificado de compleción (requiere 7/9 encuentros + proyecto final)"
+      ],
+      "whoWeSeek": "¿A quiénes buscamos?",
+      "seekCriteria": [
+        "Te interesa abordar conceptos como vulnerabilidades en sistemas de IA o riesgos existenciales",
+        "Querés explorar qué oportunidades hay en el campo y tus siguientes pasos a seguir",
+        "Estás dispuesto a participar en discusiones abiertas",
+        "Tenés buen nivel de inglés",
+        "Podes dedicarte a hacer el curso presencialmente (2.5 horas semanales aproximadamente)",
+        "Podes dedicarte a realizar las actividades asincrónicas y revisar el material (3 horas semanales aproximadamente)"
       ],
       "programDetails": "Detalles del Programa",
-      "duration": "10-12 semanas",
-      "fellowshipPeriod": "Agosto - Diciembre 2025",
-      "viewCurriculum": "Ver currículo"
+      "duration": "13 semanas",
+      "fellowshipPeriod": "Viernes 14:30-17:00",
+      "viewCurriculum": "Ver currículo",
+      "applyNow": "Aplicar ahora"
     },
-    "weeklyDiscussion": {
-      "title": "Grupo de Discusión Semanal",
-      "schedule": "Todos los martes @ 18:00",
-      "description": "Nuestro Grupo de Discusión Semanal proporciona un foro casual para discutir papers recientes, conceptos y desarrollos en seguridad de IA. Estas sesiones están abiertas a cualquier persona interesada en el campo, independientemente del conocimiento previo.",
-      "overview": "Cada semana presenta un tema diferente, anunciado con anticipación a través de nuestra lista de correo y grupo de Telegram.",
-      "formatTitle": "Formato",
-      "format": [
-        "Discusiones de 90 minutos dirigidas por un facilitador rotativo",
-        "Presentación corta del tema de la semana (15-20 minutos)",
-        "Discusión abierta y preguntas",
-        "Materiales de lectura previos opcionales compartidos con anticipación"
+    "aisWorkshop": {
+      "title": "AIS Research Workshop",
+      "schedule": "Todos los martes @ 14:30",
+      "description": "La actividad consiste en discutir y replicar (programando) investigaciones recientes sobre AI Safety de forma presencial para adquirir las habilidades técnicas necesarias para poder investigar de forma independiente.",
+      "overview": "Este taller se llevará a cabo los martes de 14:30 a 17:00 y está diseñado para estudiantes que quieren desarrollar habilidades técnicas prácticas en seguridad de IA.",
+      "whoWeSeek": "¿A quiénes buscamos?",
+      "seekCriteria": [
+        "Podes dedicarte al menos 5 horas semanales (2 hrs presenciales + 3 hrs asincrónicas)",
+        "Tenés buen nivel de inglés",
+        "Estás dispuesto a participar en discusiones abiertas",
+        "Te interesa adquirir habilidades técnicas sobre ML y Safety",
+        "Querés adentrarte en el campo y dar los primeros pasos como investigador"
       ],
-      "participationTitle": "Participación",
-      "participationText": "No se requiere inscripción. ¡Simplemente aparece! Si asistes por primera vez, recomendamos llegar 10 minutos antes para conocer a los organizadores.",
-      "nextDiscussion": "Próxima Discusión",
-      "date": "25 de marzo de 2025",
-      "time": "18:00 - 19:30",
-      "location": "Pabellón 0+inf, Sala 1604, Ciudad Universitaria",
-      "topic": "Métodos de Interpretabilidad",
-      "facilitator": "Eitan Sprejer",
-      "joinTelegram": "Únete a Telegram para actualizaciones"
+      "formatTitle": "Formato del Taller",
+      "format": [
+        "Sesiones presenciales de 2.5 horas los martes",
+        "Discusión de papers recientes de AI Safety",
+        "Implementación práctica programando los métodos discutidos",
+        "Trabajo asincrónico para familiarizarse con el material (3 hrs/semana)",
+        "Mentoría para desarrollar habilidades de investigación independiente"
+      ],
+      "nextSession": "Próxima Sesión",
+      "date": "Consultar calendario",
+      "time": "14:30 - 17:00",
+      "location": "Pabellón 0+inf, Ciudad Universitaria",
+      "topic": "A definir semanalmente",
+      "joinTelegram": "Únete a Telegram para actualizaciones",
+      "applyNow": "Aplicar ahora"
     },
     "paperReading": {
       "title": "Club de Lectura de Papers",
-      "schedule": "Todos los viernes @ 17:00",
-      "description": "El Club de Lectura de Papers realiza análisis profundos de papers fundamentales y recientes en investigación de seguridad de IA. A diferencia del grupo de discusión más casual, esta actividad implica un examen exhaustivo de papers de investigación específicos.",
-      "overview": "Se espera que los participantes lean el paper seleccionado con anticipación y vengan preparados para discutir sus métodos, resultados e implicaciones.",
-      "selectionCriteriaTitle": "Criterios de Selección de Papers",
+      "schedule": "Jueves alternos @ 15:00",
+      "description": "El Club de Lectura de Papers presenta papers completos de seguridad en IA expuestos por miembros de la comunidad. Cada sesión incluye una presentación profunda seguida de discusión.",
+      "overview": "Las presentaciones son grabadas y subidas a nuestro canal de YouTube para que la comunidad pueda revisarlas posteriormente.",
+      "selectionCriteriaTitle": "¿Qué Esperamos?",
       "criteria": [
-        "Importancia para el campo de la seguridad en IA",
-        "Relevancia técnica para las direcciones de investigación actuales",
-        "Mezcla de papers fundamentales y publicaciones recientes",
-        "Accesibilidad para estudiantes de posgrado y pregrado avanzado"
+        "Presentaciones completas de papers por miembros de la comunidad",
+        "Análisis profundo de métodos y resultados",
+        "Discusión abierta sobre implicaciones",
+        "Grabaciones disponibles en YouTube"
       ],
       "sessionFormatTitle": "Formato de Sesión",
       "format": [
-        "Breve resumen del paper (5-10 minutos)",
-        "Discusión sección por sección",
-        "Examen de métodos y resultados",
-        "Evaluación crítica de afirmaciones y limitaciones",
-        "Discusión de posible investigación de seguimiento"
+        "Presentación completa del paper (30-40 minutos)",
+        "Discusión abierta y preguntas (30-40 minutos)",
+        "Sesión grabada y subida a YouTube",
+        "Chat de Telegram para coordinación y discusión continua"
       ],
       "nextSession": "Próxima Sesión de Paper",
-      "paper": "\"Interpretabilidad Mecánica para Modelos de Lenguaje\"",
-      "discussionLead": "Eitan Sprejer",
-      "accessList": "Acceder a lista de lectura",
-      "date": "21 de marzo de 2025",
-      "time": "17:00 - 18:30",
-      "location": "Pabellón 0+inf, Sala 1604, Ciudad Universitaria"
+      "paper": "Consultar en Telegram o calendario",
+      "discussionLead": "Miembro de la comunidad",
+      "accessList": "Ver grabaciones en YouTube",
+      "date": "Consultar calendario",
+      "time": "15:00 - 17:00",
+      "location": "Pabellón 0+inf, Ciudad Universitaria",
+      "youtubeChannel": "Canal de YouTube",
+      "telegramGroup": "Grupo de Telegram"
     },
     "common": {
       "duration": "Duración:",
