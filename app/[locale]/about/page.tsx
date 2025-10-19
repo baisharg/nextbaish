@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
@@ -20,7 +19,6 @@ export default async function AboutPage({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
         <FadeInSection variant="fade" as="section">

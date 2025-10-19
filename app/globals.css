@@ -388,6 +388,47 @@ canvas {
   animation-duration: 0.2s;
 }
 
+/* Title letter parts (smooth morphing like scroll animation) */
+::view-transition-old(title-first-0),
+::view-transition-new(title-first-0),
+::view-transition-old(title-first-1),
+::view-transition-new(title-first-1),
+::view-transition-old(title-first-2),
+::view-transition-new(title-first-2),
+::view-transition-old(title-first-3),
+::view-transition-new(title-first-3),
+::view-transition-old(title-first-4),
+::view-transition-new(title-first-4),
+::view-transition-old(title-rest-0),
+::view-transition-new(title-rest-0),
+::view-transition-old(title-rest-1),
+::view-transition-new(title-rest-1),
+::view-transition-old(title-rest-2),
+::view-transition-new(title-rest-2),
+::view-transition-old(title-rest-3),
+::view-transition-new(title-rest-3),
+::view-transition-old(title-rest-4),
+::view-transition-new(title-rest-4) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Nav links and menu button (snappy) */
+::view-transition-old(header-nav-about),
+::view-transition-new(header-nav-about),
+::view-transition-old(header-nav-activities),
+::view-transition-new(header-nav-activities),
+::view-transition-old(header-nav-research),
+::view-transition-new(header-nav-research),
+::view-transition-old(header-nav-resources),
+::view-transition-new(header-nav-resources),
+::view-transition-old(header-nav-contact),
+::view-transition-new(header-nav-contact),
+::view-transition-old(header-menu-btn),
+::view-transition-new(header-menu-btn) {
+  animation-duration: 0.25s;
+}
+
 /* Smooth transitions for text elements */
 ::view-transition-old(*),
 ::view-transition-new(*) {
@@ -396,18 +437,85 @@ canvas {
 
 /* Active transition states - prevent interaction during transition */
 :root:active-view-transition {
-  cursor: wait;
   user-select: none;
 }
 
 /* Prevent layout shifts during transitions */
-body:active-view-transition {
+/* Commented out to prevent header disappearing during transitions */
+/* body:active-view-transition {
   overflow: hidden;
-}
+} */
 
 /* Logo transition name (applied to header logo) */
 .site-logo {
   view-transition-name: site-logo;
+}
+
+/* Header element transition names */
+/* Per-letter title transitions for smooth morphing */
+.title-word-first-0 {
+  view-transition-name: title-first-0;
+}
+
+.title-word-first-1 {
+  view-transition-name: title-first-1;
+}
+
+.title-word-first-2 {
+  view-transition-name: title-first-2;
+}
+
+.title-word-first-3 {
+  view-transition-name: title-first-3;
+}
+
+.title-word-first-4 {
+  view-transition-name: title-first-4;
+}
+
+.title-word-rest-0 {
+  view-transition-name: title-rest-0;
+}
+
+.title-word-rest-1 {
+  view-transition-name: title-rest-1;
+}
+
+.title-word-rest-2 {
+  view-transition-name: title-rest-2;
+}
+
+.title-word-rest-3 {
+  view-transition-name: title-rest-3;
+}
+
+.title-word-rest-4 {
+  view-transition-name: title-rest-4;
+}
+
+/* Nav link transitions */
+.header-nav-about {
+  view-transition-name: header-nav-about;
+}
+
+.header-nav-activities {
+  view-transition-name: header-nav-activities;
+}
+
+.header-nav-research {
+  view-transition-name: header-nav-research;
+}
+
+.header-nav-resources {
+  view-transition-name: header-nav-resources;
+}
+
+.header-nav-contact {
+  view-transition-name: header-nav-contact;
+}
+
+.header-menu-btn {
+  view-transition-name: header-menu-btn;
 }
 
 /* Ensure view transition elements are stable (not affected by parent animations) */

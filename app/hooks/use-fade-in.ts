@@ -13,9 +13,23 @@ export function useFadeIn(options?: UseFadeInOptions) {
   const mountTimeRef = useRef<number>(0);
 
   useEffect(() => {
-    // Track mount time to detect immediate intersections (View Transitions)
     mountTimeRef.current = performance.now();
+    const element = ref.current;
+    if (!element) return;
 
+    // Check if element is already visible in viewport on mount
+    // This handles: View Transitions, back button, and scroll-up cases
+    const rect = element.getBoundingClientRect();
+    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+    if (isInViewport) {
+      // Element already visible - show immediately without animation
+      // Prevents double-animation and re-animation on scroll up
+      setIsVisible(true);
+      return;
+    }
+
+    // Element not visible yet - set up observer for scroll-based animation
     let timeoutId: number | null = null;
     let cancelled = false;
 
@@ -24,23 +38,17 @@ export function useFadeIn(options?: UseFadeInOptions) {
         if (entry.isIntersecting) {
           const timeSinceMount = performance.now() - mountTimeRef.current;
 
-          // If intersection happens immediately (< 100ms), likely from View Transition
-          // Skip animation to prevent double-animation effect
-          if (timeSinceMount < 100) {
+          // If intersection happens very quickly (< 400ms), likely from View Transition
+          // or back navigation - skip animation delay
+          if (timeSinceMount < 400 || !options?.delay) {
             setIsVisible(true);
-            observer.disconnect();
-            return;
-          }
-
-          // Normal scroll-based animation with optional delay
-          if (options?.delay) {
+          } else {
+            // Normal scroll-based animation with delay
             timeoutId = window.setTimeout(() => {
               if (!cancelled) {
                 setIsVisible(true);
               }
             }, options.delay);
-          } else {
-            setIsVisible(true);
           }
           observer.disconnect(); // Only animate once, then cleanup
         }
@@ -48,9 +56,7 @@ export function useFadeIn(options?: UseFadeInOptions) {
       { threshold: options?.threshold ?? 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(element);
 
     return () => {
       cancelled = true;

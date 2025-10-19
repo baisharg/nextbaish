@@ -3,7 +3,9 @@
 import { Link } from "next-view-transitions";
 import { ComponentProps } from "react";
 
-type TransitionLinkProps = ComponentProps<typeof Link>;
+type TransitionLinkProps = ComponentProps<typeof Link> & {
+  scroll?: boolean;
+};
 
 /**
  * TransitionLink - Drop-in replacement for Next.js Link with View Transitions
@@ -18,10 +20,11 @@ type TransitionLinkProps = ComponentProps<typeof Link>;
 export function TransitionLink({
   href,
   children,
+  scroll = true,
   ...props
 }: TransitionLinkProps) {
   return (
-    <Link href={href} {...props}>
+    <Link href={href} scroll={scroll} {...props}>
       {children}
     </Link>
   );

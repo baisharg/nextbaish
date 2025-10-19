@@ -118,7 +118,11 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
           <nav className="px-4 py-6 sm:px-6">
             <TransitionLink
               href={withLocale(locale, "/")}
-              className="flex items-center gap-3 mb-6 px-4 py-3 hover:bg-white/60 rounded-lg transition-colors"
+              className={`flex items-center gap-3 mb-6 px-4 py-3 rounded-lg transition-colors ${
+                pathname === withLocale(locale, "/")
+                  ? "bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
+                  : "hover:bg-white/60"
+              }`}
               onClick={onClose}
             >
               <Image
@@ -128,21 +132,34 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                 height={32}
                 className="object-contain flex-shrink-0"
               />
-              <span className="text-lg font-semibold text-slate-900">BAISH</span>
+              <span className={`text-lg font-semibold ${
+                pathname === withLocale(locale, "/")
+                  ? "text-[var(--color-accent-primary)]"
+                  : "text-slate-900"
+              }`}>BAISH</span>
             </TransitionLink>
 
             <ul className="space-y-2">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <TransitionLink
-                    href={link.href}
-                    className="block px-4 py-4 text-lg font-medium text-slate-700 hover:text-slate-900 hover:bg-white/60 rounded-lg transition-colors"
-                    onClick={onClose}
-                  >
-                    {link.label}
-                  </TransitionLink>
-                </li>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                const pathSegment = link.href.split('/').filter(Boolean).pop() || '';
+                const transitionClass = `header-nav-${pathSegment}`;
+                return (
+                  <li key={link.href}>
+                    <TransitionLink
+                      href={link.href}
+                      className={`block px-4 py-4 text-lg font-medium rounded-lg transition-colors ${transitionClass} ${
+                        isActive
+                          ? "bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)] font-semibold"
+                          : "text-slate-700 hover:text-slate-900 hover:bg-white/60"
+                      }`}
+                      onClick={onClose}
+                    >
+                      {link.label}
+                    </TransitionLink>
+                  </li>
+                );
+              })}
             </ul>
 
             <div className="mt-8 pt-8 border-t border-slate-200">

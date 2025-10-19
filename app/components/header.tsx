@@ -188,7 +188,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                         ref={(node) => {
                           firstRefs.current[index] = node;
                         }}
-                        className={`title-word-first inline-block${hideFirstOnCollapse ? " overflow-hidden" : ""}`}
+                        className={`title-word-first title-word-first-${index} inline-block${hideFirstOnCollapse ? " overflow-hidden" : ""}`}
                         data-hide-on-collapse={hideFirstOnCollapse}
                         data-collapsed={hideFirstOnCollapse && shouldCollapse}
                         style={{
@@ -206,7 +206,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                         ref={(node) => {
                           restRefs.current[index] = node;
                         }}
-                        className="title-word-rest inline-block overflow-hidden"
+                        className={`title-word-rest title-word-rest-${index} inline-block overflow-hidden`}
                         data-collapsed={collapseRest}
                         style={{
                           maxWidth:
@@ -231,15 +231,24 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             className="header-nav hidden md:flex items-center text-sm font-medium text-slate-600"
             data-scrolled={scrolled}
           >
-            {navLinks.map(link => (
-              <TransitionLink
-                key={link.href}
-                className="relative hover:text-slate-900 transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 hover:after:w-full"
-                href={link.href}
-              >
-                {link.label}
-              </TransitionLink>
-            ))}
+            {navLinks.map(link => {
+              const isActive = pathname === link.href;
+              const pathSegment = link.href.split('/').filter(Boolean).pop() || '';
+              const transitionClass = `header-nav-${pathSegment}`;
+              return (
+                <TransitionLink
+                  key={link.href}
+                  className={`relative transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 ${transitionClass} ${
+                    isActive
+                      ? "text-[var(--color-accent-primary)] font-semibold after:w-full"
+                      : "hover:text-slate-900 after:w-0 hover:after:w-full"
+                  }`}
+                  href={link.href}
+                >
+                  {link.label}
+                </TransitionLink>
+              );
+            })}
           </nav>
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
@@ -271,7 +280,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             </a>
 
             <button
-              className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
+              className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 header-menu-btn"
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu}
               aria-expanded={mobileMenuOpen}

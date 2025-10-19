@@ -10,6 +10,7 @@ import { LanguageProvider } from "../contexts/language-context";
 import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
 import Head from "../head";
+import Header from "../components/header";
 import "../globals.css";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -104,6 +105,7 @@ export default async function LocaleLayout({
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
               <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
+              <Header locale={currentLocale} t={dict.header} />
               {children}
               <SpeedInsights />
               <Analytics />

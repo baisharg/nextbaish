@@ -35,6 +35,7 @@ export default async function Activities({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <Header locale={currentLocale} t={dict.header} />
 
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">

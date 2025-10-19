@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
@@ -32,7 +31,6 @@ export default async function Home({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <Header locale={currentLocale} t={dict.header} />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Mission Section */}
         <FadeInSection variant="slide-up" as="section">
