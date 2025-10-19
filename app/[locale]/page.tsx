@@ -33,7 +33,7 @@ export default async function Home({
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Mission Section */}
-        <FadeInSection variant="slide-up" as="section">
+        <FadeInSection variant="slide-up" as="section" startVisible={true}>
           <section
             className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 sm:px-16"
             id="about"

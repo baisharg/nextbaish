@@ -21,10 +21,11 @@ export default function Footer({ locale, t }: FooterProps) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Image
-                src="/jacarandashield.png"
+                src="/images/logos/logo-40.webp"
                 alt="BAISH Logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
+                sizes="32px"
                 className="object-contain"
               />
               <p className="text-base font-semibold text-slate-900">

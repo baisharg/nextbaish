@@ -20,6 +20,7 @@ const ibmPlexSerif = IBM_Plex_Serif({
   display: "swap",
   preload: true,
   fallback: ["Georgia", "serif"],
+  adjustFontFallback: true, // Reduce layout shift
 });
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ const geistSans = Geist({
   display: "swap",
   preload: true,
   fallback: ["system-ui", "-apple-system", "sans-serif"],
+  adjustFontFallback: true, // Reduce layout shift
 });
 
 const geistMono = Geist_Mono({

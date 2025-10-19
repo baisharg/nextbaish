@@ -5,11 +5,13 @@ import { useEffect, useRef, useState } from "react";
 interface UseFadeInOptions {
   threshold?: number;
   delay?: number;
+  startVisible?: boolean; // New option to start visible for above-the-fold content
 }
 
 export function useFadeIn(options?: UseFadeInOptions) {
   const ref = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  // Start visible for above-the-fold content to improve LCP
+  const [isVisible, setIsVisible] = useState(options?.startVisible ?? false);
   const mountTimeRef = useRef<number>(0);
 
   useEffect(() => {

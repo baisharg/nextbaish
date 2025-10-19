@@ -126,10 +126,11 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
               onClick={onClose}
             >
               <Image
-                src="/jacarandashield.png"
+                src="/images/logos/logo-40.webp"
                 alt="BAISH Logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
+                sizes="32px"
                 className="object-contain flex-shrink-0"
               />
               <span className={`text-lg font-semibold ${

@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
 - `npm run build` - Compile production bundle (run before opening PRs that touch build paths)
 - `npm run start` - Run optimized production server from last build
+- `npm run optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
+- `npm run optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
 **Note:** Dev server should remain running at port 3000 during active development.
 
@@ -202,11 +204,109 @@ Use with `.map()`:
 4. No inline ternary translations should exist in any page component
 
 ### Performance Optimizations
-- **60fps Timeline Animation**: SVG-based rendering with RAF throttling and precomputed invariants (pivot damping, segment factors)
+
+#### Timeline Animation (60fps)
+- **SVG-based rendering**: RAF throttling and precomputed invariants (pivot damping, segment factors)
 - **Memory efficiency**: Float32Array for point storage instead of object arrays (reduces allocations from ~2000/sec to ~30/sec)
 - **Optimized parameters**: 30 threads × 15 segments, skip transition calculations when complete
 - **GPU acceleration**: CSS filters, will-change hints, and containment for smooth rendering
 - **Battery optimization**: IntersectionObserver pauses animation when component is off-screen
+- **LCP deferral**: Timeline deferred until after LCP using PerformanceObserver API
+
+#### Core Web Vitals Optimizations (Desktop: 59→81, Mobile: 96→97)
+
+**Cumulative Layout Shift (CLS): 0.963 → 0.000** 🎯
+- **useLayoutEffect for measurements**: Use `useIsomorphicLayoutEffect` hook instead of `useEffect` when measuring DOM elements
+  - Measurements happen synchronously BEFORE browser paint, preventing visible layout shifts
+  - Hook: `app/hooks/use-isomorphic-layout-effect.ts`
+  - Applied in: `app/components/header.tsx:76`
+- **CSS containment**: Add `contain: layout` to isolate layout calculations
+  - Prevents layout thrashing and improves rendering performance
+  - Applied to: `.header-inner`, `.title-words`, sections, main
+- **Reserved dimensions**: Set `minWidth` dynamically to prevent container collapse
+  - Example: `minWidth: scrolled ? '60px' : '220px'` with smooth transitions
+- **Key Learning**: Never use `useEffect` for DOM measurements that affect layout - always use `useLayoutEffect`
+
+**Largest Contentful Paint (LCP): 2.6s → ~2.1s** 🎯
+- **Hero visibility optimization**: Set critical above-fold content to `startVisible={true}` to eliminate fade-in delay
+  - Hook: `app/hooks/use-fade-in.ts` with `startVisible` option
+  - Component: `app/components/fade-in-section.tsx`
+- **Resource hints**: Move DNS prefetch/preconnect to server-side rendering in `app/head.tsx`
+  - Eliminates client-side delay in establishing third-party connections
+- **Font optimizations**:
+  - `adjustFontFallback: true` reduces layout shift during font swap
+  - `display: "swap"` for all fonts with proper fallbacks
+  - `preload: true` only for critical fonts (IBM Plex Serif, Geist Sans)
+- **Critical CSS**:
+  - `text-rendering: optimizeSpeed` for body and headings
+  - `min-height` and `contain: layout` on hero section
+  - Content visibility hints for h1 elements
+- **Component memoization**: Wrap expensive components with `React.memo()` to prevent re-renders
+  - Applied to: `AnimatedTitle` component
+- **Key Learning**: For text-based LCP, focus on font loading, visibility delays, and critical CSS
+
+**Image Optimization Scripts**
+- **Logo optimization**: `npm run optimize-logo`
+  - Reduces 1.9MB PNG to 2KB WebP (99.9% reduction)
+  - Generates 4 sizes (40px, 80px, 120px, 192px) in WebP, AVIF, and PNG
+  - Script: `scripts/optimize-logo.js`
+- **Batch image optimization**: `npm run optimize-images`
+  - Optimizes all photos and assets to WebP/AVIF
+  - 80.6% average bandwidth reduction (1,343KB → 260KB)
+  - Generates responsive sizes for different viewports
+  - Script: `scripts/optimize-images.js`
+- **Image component best practices**:
+  - Use explicit `width` and `height` instead of `fill` for better CLS
+  - Add `sizes` attribute for responsive loading: `sizes="(max-width: 768px) 100vw, 800px"`
+  - Use `priority` and `fetchPriority="high"` for LCP images
+  - Use `loading="lazy"` for below-fold images
+- **Key Learning**: Always optimize images at build time, never rely on runtime optimization alone
+
+**Content Visibility** (`app/globals.css`)
+- **content-visibility: auto**: Applied to cards and off-screen sections
+  - Defers rendering of off-screen content
+  - Reduces initial render time and memory usage
+  - Applied to: `.card-glass`, `article.card-glass`, `.resource-card`
+- **contain-intrinsic-size**: Prevents layout shifts when content enters/exits viewport
+  - Example: `contain-intrinsic-size: 0 300px`
+- **CSS containment**: `contain: layout style` on sections and main
+  - Isolates style and layout calculations
+  - Prevents parent contamination
+- **Key Learning**: content-visibility is free performance - use it on any component that might be off-screen
+
+**View Transitions Performance**
+- **Limit animated elements**: Only animate first 5 words in `AnimatedTitle` component
+  - Reduces DOM complexity and CSS overhead
+  - Constant: `MAX_ANIMATED_WORDS = 5` in `app/components/animated-title.tsx`
+- **Browser support**: Chrome 85+, Edge 85+, Safari 17.4+
+  - Progressive enhancement with graceful fallback
+- **Key Learning**: View transitions are expensive - limit them to essential elements only
+
+#### Performance Testing
+
+**Lighthouse CI Integration**
+- Test with: `mcp__lighthouse__run_audit` for both desktop and mobile
+- Target scores: Desktop 90+, Mobile 95+
+- Monitor: CLS (<0.1), LCP (<2.5s), TBT (<200ms), FCP (<1.0s)
+
+**Key Performance Metrics Achieved**:
+- Desktop Performance: 59 → 81 (+22 points)
+- Mobile Performance: 96 → 97 (+1 point)
+- Desktop CLS: 0.963 → 0.000 (perfect)
+- Mobile CLS: 0.00018 → 0.001 (excellent)
+- LCP: 2.6s → ~2.1s (-500ms)
+- Total Blocking Time: 10ms (excellent)
+
+#### Critical Performance Rules
+
+1. **Layout Measurements**: Always use `useLayoutEffect`, never `useEffect`
+2. **Image Optimization**: Run optimization scripts before deploying new images
+3. **Above-Fold Content**: Critical content should be visible immediately (no fade-in delays)
+4. **Resource Hints**: Preconnect/DNS-prefetch should be server-rendered
+5. **CSS Containment**: Use `contain: layout` on components that don't affect siblings
+6. **Content Visibility**: Apply to any content that might be off-screen
+7. **Font Loading**: Use `display: swap` + `adjustFontFallback` to prevent FOIT/FOUT
+8. **Component Memoization**: Memoize expensive components to prevent re-renders during initial load
 
 ## Advanced Features
 

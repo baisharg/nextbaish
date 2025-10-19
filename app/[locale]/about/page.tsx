@@ -294,9 +294,11 @@ export default async function AboutPage({
             <article className="flex flex-col items-center space-y-4 text-center">
               <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full">
                 <Image
-                  src="/Eitan.jpeg"
+                  src="/images/optimized/Eitan-400w.webp"
                   alt="Eitan Sprejer"
-                  fill
+                  width={400}
+                  height={267}
+                  sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center 30%" }}
                 />
@@ -345,9 +347,11 @@ export default async function AboutPage({
             <article className="flex flex-col items-center space-y-4 text-center">
               <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full">
                 <Image
-                  src="/Luca.png"
+                  src="/images/optimized/Luca-400w.webp"
                   alt="Luca De Leo"
-                  fill
+                  width={400}
+                  height={400}
+                  sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center 40%" }}
                 />
@@ -396,9 +400,11 @@ export default async function AboutPage({
             <article className="flex flex-col items-center space-y-4 text-center">
               <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full">
                 <Image
-                  src="/Lucas.jpeg"
+                  src="/images/optimized/Lucas-400w.webp"
                   alt="Lucas Vitali"
-                  fill
+                  width={400}
+                  height={267}
+                  sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center" }}
                 />
@@ -447,9 +453,11 @@ export default async function AboutPage({
             <article className="flex flex-col items-center space-y-4 text-center">
               <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full">
                 <Image
-                  src="/Sergio.jpg"
+                  src="/images/optimized/Sergio-400w.webp"
                   alt="Sergio Abriola, PhD"
-                  fill
+                  width={400}
+                  height={400}
+                  sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center" }}
                 />

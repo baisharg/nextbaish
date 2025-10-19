@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+
 interface AnimatedTitleProps {
   text: string;
   slug: string; // Unique identifier for the page/post
@@ -14,6 +16,8 @@ interface AnimatedTitleProps {
  * to each word. This creates sophisticated word-by-word morphing animations
  * during page transitions (nmn.sh style).
  *
+ * Optimized with memo to prevent unnecessary re-renders and improve LCP.
+ *
  * @example
  * <AnimatedTitle
  *   text="Buenos Aires AI Safety Hub"
@@ -22,31 +26,37 @@ interface AnimatedTitleProps {
  *   as="h1"
  * />
  */
-export function AnimatedTitle({
+export const AnimatedTitle = memo(function AnimatedTitle({
   text,
   slug,
   className = "",
   as: Component = "h1",
 }: AnimatedTitleProps) {
   const words = text.split(" ");
+  const MAX_ANIMATED_WORDS = 5;
 
   return (
     <Component className={className}>
-      {words.map((word, index) => (
-        <span
-          key={`${slug}-word-${index}`}
-          style={{
-            // Each word gets a unique view-transition-name
-            // Pattern: slug___word___index
-            // @ts-ignore - CSS custom property
-            "--view-transition-name": `${slug}___${word.toLowerCase()}___${index}`,
-            viewTransitionName: `var(--view-transition-name)`,
-          }}
-        >
-          {word}
-          {index < words.length - 1 && " "}
-        </span>
-      ))}
+      {words.map((word, index) => {
+        // Only animate first 5 words individually for performance
+        const shouldAnimate = index < MAX_ANIMATED_WORDS;
+
+        return (
+          <span
+            key={`${slug}-word-${index}`}
+            style={shouldAnimate ? {
+              // Each word gets a unique view-transition-name
+              // Pattern: slug___word___index
+              // @ts-ignore - CSS custom property
+              "--view-transition-name": `${slug}___${word.toLowerCase()}___${index}`,
+              viewTransitionName: `var(--view-transition-name)`,
+            } : undefined}
+          >
+            {word}
+            {index < words.length - 1 && " "}
+          </span>
+        );
+      })}
     </Component>
   );
-}
+});

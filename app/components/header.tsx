@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale, buildLangSwitchHref } from "@/app/utils/locale";
+import { useIsomorphicLayoutEffect } from "@/app/hooks/use-isomorphic-layout-effect";
 import "./header.css";
 
 // Lazy load mobile menu to reduce initial bundle size
@@ -71,8 +72,8 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Measure widths once on locale change only
-  useEffect(() => {
+  // Measure widths once on locale change only - use layout effect to prevent CLS
+  useIsomorphicLayoutEffect(() => {
     const widths = restRefs.current.map((element) => element?.offsetWidth ?? 0);
     setRestWidths(widths);
     const leading = firstRefs.current.map((element) => element?.offsetWidth ?? 0);
@@ -160,16 +161,25 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               data-collapsed={scrolled || isNarrow || isCramped}
             >
               <Image
-                src="/jacarandashield.png"
+                src="/images/logos/logo-40.webp"
                 alt="BAISH Logo"
                 width={40}
                 height={40}
+                sizes="40px"
                 className="w-full h-full object-contain site-logo"
                 priority
                 fetchPriority="high"
               />
             </div>
-            <div ref={titleContainerRef} className="overflow-hidden min-w-0 flex items-center" aria-label="Buenos Aires AI Safety Hub">
+            <div
+              ref={titleContainerRef}
+              className="overflow-hidden min-w-0 flex items-center"
+              aria-label="Buenos Aires AI Safety Hub"
+              style={{
+                minWidth: scrolled || isCramped ? '60px' : '220px',
+                transition: 'min-width 0.3s ease'
+              }}
+            >
               <div
                 className="title-words flex items-center font-semibold text-slate-900 text-base sm:text-lg"
                 data-collapsed={scrolled || isNarrow || isCramped}

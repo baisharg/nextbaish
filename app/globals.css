@@ -73,6 +73,18 @@ body {
     serif;
 }
 
+/* Reduce cumulative layout shift from font loading */
+/* Use system fonts as fallback to prevent invisible text */
+body {
+  text-rendering: optimizeSpeed;
+}
+
+/* Ensure critical text is immediately visible */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeSpeed;
+  font-synthesis: none;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -90,6 +102,29 @@ body {
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Critical CSS for above-the-fold hero section - improves LCP */
+main {
+  min-height: 100vh;
+}
+
+/* Ensure hero section has defined dimensions to prevent layout shifts */
+section#about {
+  min-height: 400px;
+  contain: layout;
+}
+
+/* Prioritize rendering of above-the-fold hero content */
+section#about h1 {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
+}
+
+/* Optimize hero section background rendering */
+section#about .absolute {
+  content-visibility: auto;
+  will-change: auto;
 }
 
 /* GPU acceleration for sticky header */
@@ -530,4 +565,43 @@ span[style*="view-transition-name"] {
   ::view-transition-new(*) {
     animation-duration: 0.01ms !important;
   }
+}
+
+/* ==========================================================================
+   Content Visibility Performance Optimizations
+   ========================================================================== */
+
+/*
+ * content-visibility: auto improves rendering performance by skipping rendering
+ * of off-screen content. Browser support: Chrome 85+, Edge 85+, Safari 17.4+
+ * contain-intrinsic-size provides an estimated size for off-screen content
+ * to maintain scroll stability and prevent layout shifts.
+ */
+
+/* Apply content-visibility to glass card components */
+.card-glass {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 300px;
+}
+
+/* Activities cards on homepage (taller content) */
+article.card-glass {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
+}
+
+/* Research project cards */
+article[class*="flex h-full flex-col"] {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 350px;
+}
+
+/* Optimize section rendering - layout and style containment */
+section {
+  contain: layout style;
+}
+
+/* Main content area - layout containment for better performance */
+main {
+  contain: layout;
 }
