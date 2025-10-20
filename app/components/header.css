@@ -1,17 +1,23 @@
 /* Header Performance Optimizations */
 
-/* CSS Containment - isolates header from rest of page */
+/*
+ * Consistent easing across all elements for smooth, jiggle-free animations
+ * Using ease-out-cubic: quick start, smooth deceleration
+ */
+:root {
+  --header-easing: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --header-duration: 0.4s;
+}
+
 .header-container {
   contain: layout style paint;
   will-change: transform;
   transform: translateZ(0);
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--header-duration) var(--header-easing);
 }
 
-/* Header inner container - additional containment for CLS prevention */
 .header-inner {
   contain: layout;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   max-width: 1280px;
   margin-top: 0;
   border-radius: 0;
@@ -22,6 +28,14 @@
   padding-right: 0;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  transition:
+    max-width var(--header-duration) var(--header-easing),
+    margin-top var(--header-duration) var(--header-easing),
+    border-radius var(--header-duration) var(--header-easing),
+    border-width var(--header-duration) var(--header-easing),
+    background-color var(--header-duration) var(--header-easing),
+    box-shadow var(--header-duration) var(--header-easing),
+    padding var(--header-duration) var(--header-easing);
 }
 
 .header-inner[data-scrolled="true"] {
@@ -37,12 +51,11 @@
   padding-bottom: 0.625rem;
 }
 
-/* Logo container - GPU accelerated with minimum dimensions to prevent CLS */
 .logo-container {
   min-width: 40px;
   min-height: 40px;
   transform: scale(1);
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--header-duration) var(--header-easing);
   will-change: transform;
 }
 
@@ -50,67 +63,72 @@
   transform: scale(0.85);
 }
 
-/* Title words container - containment to prevent layout shifts */
 .title-words {
   contain: layout style;
   will-change: transform;
-  gap: 0.4rem;
+  gap: 0.25rem;
   letter-spacing: 0.01em;
-  transition: gap 0.6s cubic-bezier(0.4, 0, 0.2, 1), letter-spacing 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: letter-spacing var(--header-duration) var(--header-easing);
 }
 
 .title-words[data-collapsed="true"] {
-  gap: 0.18rem;
   letter-spacing: 0.05em;
 }
 
-/* Title word first letter - GPU accelerated with scaleX */
 .title-word-first {
   opacity: 1;
-  transition: max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
+  transition:
+    max-width var(--header-duration) var(--header-easing),
+    opacity var(--header-duration) var(--header-easing);
+  will-change: opacity;
 }
 
 .title-word-first[data-hide-on-collapse="true"][data-collapsed="true"] {
   opacity: 0;
-  transform: scaleX(0);
 }
 
-/* Title word rest - GPU accelerated with scaleX for smooth animation */
 .title-word-rest {
   opacity: 1;
-  transform: scaleX(1);
-  transition: max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
+  transition:
+    max-width var(--header-duration) var(--header-easing),
+    opacity var(--header-duration) var(--header-easing);
+  will-change: opacity;
 }
 
 .title-word-rest[data-collapsed="true"] {
   opacity: 0;
-  transform: scaleX(0);
 }
 
-/* Navigation */
 .header-nav {
   gap: 1.5rem;
-  transition: gap 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: gap var(--header-duration) var(--header-easing);
 }
 
 .header-nav[data-scrolled="true"] {
   gap: 0.75rem;
 }
 
-/* CTA Button */
 .header-cta {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    padding var(--header-duration) var(--header-easing),
+    font-size var(--header-duration) var(--header-easing);
 }
 
 .header-cta[data-scrolled="true"] {
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --header-duration: 0.01s;
+  }
+}
+
+.header-container[data-reduced-motion="true"] *,
+.header-container[data-reduced-motion="true"] {
+  transition-duration: 0.01s !important;
 }

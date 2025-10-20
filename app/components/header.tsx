@@ -9,6 +9,7 @@ import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale, buildLangSwitchHref } from "@/app/utils/locale";
 import { useIsomorphicLayoutEffect } from "@/app/hooks/use-isomorphic-layout-effect";
+import { usePrefersReducedMotion } from "@/app/hooks/use-prefers-reduced-motion";
 import "./header.css";
 
 // Lazy load mobile menu to reduce initial bundle size
@@ -28,6 +29,10 @@ interface HeaderProps {
 
 const TITLE_WORDS = ["Buenos", "Aires", "AI", "Safety", "Hub"] as const;
 const COLLAPSE_BUFFER = 80;
+
+// Scroll hysteresis thresholds to prevent jittering
+const SCROLL_DOWN_THRESHOLD = 100; // Pixels scrolled down before collapsing
+const SCROLL_UP_THRESHOLD = 50;    // Pixels scrolled up before expanding
 
 // RAF throttle utility for performance
 const rafThrottle = <T extends (...args: any[]) => void>(fn: T): ((...args: Parameters<T>) => void) => {
@@ -53,15 +58,30 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const [isNarrow, setIsNarrow] = useState(false);
   const [isCramped, setIsCramped] = useState(false);
   const titleContainerRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
-  // Handle scroll state internally instead of via PageWrapper
+  // Handle scroll state with hysteresis
   useEffect(() => {
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 100);
+          const currentScrollY = window.scrollY;
+          const direction = currentScrollY > lastScrollY.current ? 'down' : 'up';
+
+          // Hysteresis: different thresholds for scrolling down vs up
+          let shouldBeScrolled = scrolled;
+
+          if (direction === 'down' && currentScrollY > SCROLL_DOWN_THRESHOLD) {
+            shouldBeScrolled = true;
+          } else if (direction === 'up' && currentScrollY < SCROLL_UP_THRESHOLD) {
+            shouldBeScrolled = false;
+          }
+
+          setScrolled(shouldBeScrolled);
+          lastScrollY.current = currentScrollY;
           ticking = false;
         });
         ticking = true;
@@ -70,7 +90,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [scrolled]);
 
   // Measure widths once on locale change only - use layout effect to prevent CLS
   useIsomorphicLayoutEffect(() => {
@@ -149,6 +169,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     <header
       className="header-container sticky top-0 z-20 px-6 sm:px-10"
       data-scrolled={scrolled}
+      data-reduced-motion={prefersReducedMotion}
     >
       <div
         className="header-inner mx-auto border-slate-200"
@@ -177,7 +198,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               aria-label="Buenos Aires AI Safety Hub"
               style={{
                 minWidth: scrolled || isCramped ? '60px' : '220px',
-                transition: 'min-width 0.3s ease'
+                transition: 'min-width 0.4s cubic-bezier(0.215, 0.61, 0.355, 1)'
               }}
             >
               <div
