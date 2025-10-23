@@ -399,7 +399,7 @@
         },
         {
           "question": "Can I propose a new activity or research direction?",
-          "answer": "Absolutely! We're always open to new ideas and collaborations. Please reach out to us at {email} with your proposal."
+          "answer": "Absolutely! We're always open to new ideas and collaborations. Please fill in the contact form above with your proposal."
         }
       ]
     }
@@ -547,5 +547,57 @@
         "contactLink": "Contact page"
       }
     }
+  },
+  "ditherExamples": {
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Dithering Examples"
+    },
+    "title": "Dot Matrix Dithering Variants",
+    "description": "Creative transparent card designs with dot grid patterns and gradients",
+    "dotMatrix": {
+      "title": "Dot Matrix Variants",
+      "description": "Exploring transparency, gradients, and dot patterns for glass-like effects",
+      "variants": {
+        "ethereal": {
+          "name": "Ethereal",
+          "description": "Ultra-transparent with barely-there presence"
+        },
+        "whisper": {
+          "name": "Whisper",
+          "description": "Subtle ghost-like transparency"
+        },
+        "bold": {
+          "name": "Bold",
+          "description": "Strong gradient with prominent visibility"
+        },
+        "fineMesh": {
+          "name": "Fine Mesh",
+          "description": "Tight 8px dot pattern, dense texture"
+        },
+        "macroGrid": {
+          "name": "Macro Grid",
+          "description": "Large 32px dots, open pattern"
+        },
+        "verticalSweep": {
+          "name": "Vertical Sweep",
+          "description": "Top-to-bottom gradient flow"
+        },
+        "cornerGlow": {
+          "name": "Corner Glow",
+          "description": "Radial gradient from top-left"
+        },
+        "dualTone": {
+          "name": "Dual Tone",
+          "description": "Purple and pink gradient blend"
+        }
+      }
+    },
+    "sampleCard": {
+      "title": "Example Card",
+      "body": "This is sample text to demonstrate how content looks with the dithering effect applied to the background."
+    },
+    "showCode": "Show CSS Code",
+    "hideCode": "Hide CSS Code"
   }
 }

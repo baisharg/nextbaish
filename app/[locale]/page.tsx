@@ -145,7 +145,7 @@ export default async function Home({
             ].map((activity) => (
               <article
                 key={activity.title}
-                className="card-glass"
+                className="card-glass dither-bold"
               >
                 <div className="card-eyebrow">{activity.eyebrow}</div>
                 <AnimatedTitle
@@ -207,7 +207,7 @@ export default async function Home({
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <SubstackSignup t={dict.substack} />
 
-          <article className="card-glass">
+          <article className="card-glass dither-bold">
             <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
             <h3 className="card-title">
               {t.getInvolved.communityTitle}

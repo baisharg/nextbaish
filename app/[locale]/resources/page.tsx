@@ -163,7 +163,7 @@ export default function Resources() {
             <div className="grid gap-4 md:grid-cols-3">
               <button
                 onClick={() => setSelectedPathway("beginner")}
-                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`dither-cornerglow relative overflow-hidden group p-6 text-left transition-all ${
                   selectedPathway === "beginner"
                     ? "border-green-500 shadow-lg"
                     : "border-slate-200 hover:border-green-300 hover:shadow-md"
@@ -197,7 +197,7 @@ export default function Resources() {
 
               <button
                 onClick={() => setSelectedPathway("intermediate")}
-                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`dither-cornerglow relative overflow-hidden group p-6 text-left transition-all ${
                   selectedPathway === "intermediate"
                     ? "border-yellow-500 shadow-lg"
                     : "border-slate-200 hover:border-yellow-300 hover:shadow-md"
@@ -231,7 +231,7 @@ export default function Resources() {
 
               <button
                 onClick={() => setSelectedPathway("advanced")}
-                className={`relative overflow-hidden group rounded-2xl border-2 bg-white p-6 text-left transition-all ${
+                className={`dither-cornerglow relative overflow-hidden group p-6 text-left transition-all ${
                   selectedPathway === "advanced"
                     ? "border-red-500 shadow-lg"
                     : "border-slate-200 hover:border-red-300 hover:shadow-md"
@@ -300,7 +300,7 @@ export default function Resources() {
               {quickWins.map((resource) => (
                 <article
                   key={resource.id}
-                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="dither-cornerglow relative overflow-hidden group flex items-start gap-4 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
                   <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button
@@ -364,7 +364,7 @@ export default function Resources() {
               {communityPicks.map((resource) => (
                 <article
                   key={resource.id}
-                  className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-lg"
+                  className="dither-cornerglow group flex h-full flex-col p-6 transition hover:shadow-lg"
                 >
                   <div className="mb-4 flex items-start justify-between">
                     <span className="text-3xl">{RESOURCE_TYPE_ICONS[resource.type]}</span>
@@ -426,7 +426,7 @@ export default function Resources() {
               {latestResources.map((resource) => (
                 <article
                   key={resource.id}
-                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="dither-cornerglow relative overflow-hidden group flex items-start gap-4 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
                   <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button
@@ -601,7 +601,7 @@ export default function Resources() {
               {filteredResources.map((resource) => (
                 <article
                   key={resource.id}
-                  className="relative overflow-hidden group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                  className="dither-cornerglow relative overflow-hidden group flex items-start gap-4 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
                 >
                   <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
                   <button

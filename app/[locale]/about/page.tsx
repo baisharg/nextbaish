@@ -132,7 +132,7 @@ export default async function AboutPage({
           </div>
           <div className="relative grid gap-6 md:grid-cols-2">
             {/* Alignment Forum */}
-            <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article className="dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
                 <div className="text-4xl">🔍</div>
@@ -157,7 +157,7 @@ export default async function AboutPage({
             </article>
 
             {/* LessWrong */}
-            <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article className="dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
                 <div className="text-4xl">💡</div>
@@ -182,7 +182,7 @@ export default async function AboutPage({
             </article>
 
             {/* 80,000 Hours */}
-            <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article className="dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
                 <div className="text-4xl">🧠</div>
@@ -207,7 +207,7 @@ export default async function AboutPage({
             </article>
 
             {/* Stampy's Wiki */}
-            <article className="relative overflow-hidden flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article className="dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
                 <div className="text-4xl">📚</div>
