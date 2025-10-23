@@ -1,4 +1,5 @@
 "use client";
+"use no memo";
 
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";

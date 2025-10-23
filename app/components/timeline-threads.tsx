@@ -1,4 +1,5 @@
 "use client";
+"use no memo";
 
 import { Fragment, useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties } from "react";
