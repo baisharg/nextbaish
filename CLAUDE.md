@@ -2,20 +2,56 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## 🗺️ Quick Navigation
+
+**New to this repo?** Start here:
+1. 📖 **[Project Overview](#project-overview)** - What this project is
+2. 🏗️ **[Directory Structure](#directory-structure)** - Where everything lives
+3. 🎨 **[Key Features](#key-features)** - Major functionality
+4. 📊 **[Performance](#performance-optimizations)** - Recent optimizations (84/100 desktop, 94/100 mobile)
+5. 🌍 **[Internationalization](#internationalization-i18n)** - Bilingual system (EN/ES)
+6. 🎯 **[Common Tasks](#common-development-tasks)** - Quick recipes
+
+**Looking for specific info?**
+- 🔧 **Development Commands:** `npm run dev`, `npm run build`, `npm run analyze`
+- 📁 **Components:** `app/components/` - All React components
+- 🌐 **Pages:** `app/[locale]/*/page.tsx` - All routes
+- 🎨 **Styles:** `app/globals.css` - Tailwind + custom properties
+- 📊 **Performance Docs:** See [DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md](./DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md) and [ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md](./ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md)
+- 🧪 **Testing:** Lighthouse CI in `.github/workflows/lighthouse-ci.yml`
+
+**Performance Highlights:**
+- ✅ **Desktop:** 84/100 (Lighthouse) - TBT: 10ms, CLS: 0.000
+- ✅ **Mobile:** 94/100 (Lighthouse) - Speed Index: 1.2s
+- ✅ **React Compiler:** Enabled (zero manual memoization)
+- ✅ **Virtualization:** Resources page (50+ cards → 12 rendered)
+- ✅ **Code Splitting:** 6 components dynamically imported
+
+---
+
 ## Development Commands
 
+### Core Commands
 - `npm install` - Install dependencies
 - `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
 - `npm run build` - Compile production bundle (run before opening PRs that touch build paths)
 - `npm run start` - Run optimized production server from last build
+
+### Performance & Optimization
+- `npm run analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
 - `npm run optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
 - `npm run optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
-**Note:** Dev server should remain running at port 3000 during active development.
+**Notes:**
+- Dev server should remain running at port 3000 during active development
+- Bundle analyzer requires `ANALYZE=true` environment variable (set automatically by script)
+- View bundle reports at `.next/analyze/client.html`, `nodejs.html`, and `edge.html`
 
 ## Project Overview
 
-This is a **bilingual AI Safety content hub** (BAISH - Buenos Aires AI Safety Hub) built with Next.js 15, featuring 7 pages with AI safety resources, research, events, and educational content in English and Spanish.
+This is a **bilingual AI Safety content hub** (BAISH - Buenos Aires AI Safety Hub) built with Next.js 16, featuring 7 pages with AI safety resources, research, events, and educational content in English and Spanish.
 
 **Project Scale:**
 - 7 full pages with bilingual content
@@ -25,9 +61,21 @@ This is a **bilingual AI Safety content hub** (BAISH - Buenos Aires AI Safety Hu
 - Newsletter subscription via Substack
 - Contact page with FAQ accordion
 
+**Current Performance:**
+- Desktop: **84/100** (Lighthouse) - LCP: 2.6s, TBT: 10ms, CLS: 0.000
+- Mobile: **94/100** (Lighthouse) - LCP: 3.1s, TBT: 20ms, CLS: 0.002
+- Resources page: **79/100** (desktop) with virtualization (50+ cards → 12 rendered)
+
 ## Project Architecture
 
-Next.js 15 app using App Router with Turbopack, React 19, TypeScript, and Tailwind CSS v4.
+Next.js 16 app using App Router with Turbopack, React 19, TypeScript, and Tailwind CSS v4.
+
+**Key Technologies:**
+- **React Compiler:** Enabled for automatic memoization (zero manual memoization needed)
+- **SWC Minification:** Default in Next.js 16 (17x faster than Terser)
+- **Virtual Scrolling:** @tanstack/react-virtual for resources page
+- **View Transitions:** next-view-transitions for smooth page transitions
+- **Bundle Analyzer:** @next/bundle-analyzer for optimization monitoring
 
 ### Directory Structure
 
@@ -47,21 +95,22 @@ app/
 │       ├── es.json              # Spanish translations
 │       └── dictionaries.ts      # Dictionary loader
 ├── components/                  # React components
-│   ├── timeline-threads.tsx     # Animated SVG background
-│   ├── timeline-threads-loader.tsx
-│   ├── animated-title.tsx       # View transitions title
+│   ├── timeline-threads.tsx     # Animated SVG background (60fps, web worker)
+│   ├── timeline-threads-loader.tsx # LCP-deferred timeline loader
+│   ├── animated-title.tsx       # View transitions title (per-word animations)
 │   ├── transition-link.tsx      # View transitions link wrapper
-│   ├── fade-in-section.tsx      # Scroll-triggered fade-in
+│   ├── fade-in-section.tsx      # Scroll-triggered fade-in (IntersectionObserver)
 │   ├── header.tsx               # Main navigation
 │   ├── header.css               # Header-specific styles
-│   ├── mobile-menu.tsx          # Mobile navigation
+│   ├── mobile-menu.tsx          # Mobile navigation (portal-based)
 │   ├── footer.tsx               # Site footer
-│   ├── substack-signup.tsx      # Newsletter subscription
-│   ├── calendar-section.tsx     # lu.ma calendar embed
-│   ├── airtable-embed.tsx       # Airtable integration
+│   ├── substack-signup.tsx      # Newsletter subscription (dynamic import)
+│   ├── calendar-section.tsx     # lu.ma calendar embed (lazy loaded)
+│   ├── airtable-embed.tsx       # Airtable integration (IntersectionObserver lazy load)
 │   ├── research-filters.tsx     # Category filter buttons
-│   ├── faq-accordion.tsx        # Reusable accordion
-│   └── events-carousel.tsx      # Auto-scrolling image gallery
+│   ├── faq-accordion.tsx        # Reusable accordion (dynamic import on contact page)
+│   ├── events-carousel.tsx      # Auto-scrolling gallery (dynamic import on activities)
+│   └── rum-monitor.tsx          # Real User Monitoring (Core Web Vitals)
 ├── hooks/
 │   ├── use-fade-in.ts           # Intersection observer hook
 │   ├── use-isomorphic-layout-effect.ts  # SSR-safe useLayoutEffect
@@ -97,6 +146,19 @@ scripts/
 docs/
 ├── view-transitions-guide.md
 └── view-transitions-implementation-plan.md
+
+.github/
+└── workflows/
+    └── lighthouse-ci.yml        # Automated Lighthouse CI (mobile + desktop)
+
+Root Documentation:
+├── README.md                    # Project README (comprehensive)
+├── CLAUDE.md                    # This file (AI assistant guidance)
+├── DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md  # Phase 1-5 optimizations
+├── ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md         # Additional optimizations
+├── PERFORMANCE_PLAN_CHANGES.md  # Performance planning docs
+├── lighthouserc.json            # Lighthouse CI config (mobile)
+└── lighthouserc-desktop.json   # Lighthouse CI config (desktop)
 ```
 
 ### Pages Overview
@@ -785,6 +847,87 @@ Renders as: "Learn about AI safety^1 and interpretability^4." with superscript l
 - ALWAYS use dictionary references
 - Template variables for dynamic content: `{variable}`
 - FAQ accordion supports `{resourcesLink}` and `{email}` templates
+
+---
+
+## Common Development Tasks
+
+### Quick Recipes
+
+**🔍 Finding Things:**
+```bash
+# Find a component
+find app/components -name "*component-name*"
+
+# Search for text in code
+grep -r "search term" app/
+
+# Find where a function/variable is used
+grep -r "functionName" app/
+```
+
+**🎨 Adding a New Page:**
+1. Create `app/[locale]/your-page/page.tsx`
+2. Add translations to `app/[locale]/dictionaries/en.json` and `es.json`
+3. Add link in `app/components/header.tsx` and `mobile-menu.tsx`
+4. Test both `/en/your-page` and `/es/your-page`
+5. Run `npm run build` to verify
+
+**🌍 Adding Translations:**
+1. Add key to BOTH `en.json` and `es.json` in same nested location
+2. Use in component: `const dict = useDict(); return <p>{dict.section.key}</p>`
+3. NEVER use inline ternaries: `{locale === "en" ? "English" : "Español"}` ❌
+4. ALWAYS use dictionaries: `{dict.section.text}` ✅
+
+**⚡ Optimizing Performance:**
+- Use `startVisible={true}` on above-fold `FadeInSection` components
+- Use `dynamic(() => import("..."))` for below-fold heavy components
+- Add `loading` prop to dynamic imports for skeleton states
+- Use IntersectionObserver for embeds (see `airtable-embed.tsx`)
+- Run `npm run analyze` to check bundle size
+- Test with Lighthouse after changes
+
+**🧹 Debugging Performance:**
+```bash
+# Build and analyze bundle
+npm run analyze
+open .next/analyze/client.html
+
+# Run Lighthouse audit
+npm run build && npm run start
+# Then open Chrome DevTools > Lighthouse
+
+# Check for console errors
+# Open browser console and look for RUM logs: [RUM] LCP (desktop): X ms
+```
+
+**🔄 Working with React Compiler:**
+- React Compiler is ENABLED - automatic memoization
+- DO NOT add `React.memo()`, `useMemo()`, or `useCallback()`
+- Only use `"use no memo"` directive for components needing manual optimization
+- Currently only used in: `timeline-threads.tsx`, `mobile-menu.tsx`
+
+**📦 Adding Dependencies:**
+```bash
+# Install package
+npm install package-name
+
+# If it's a large package, add to optimizePackageImports in next.config.ts
+# Update package.json description if needed
+# Run npm run build to verify no issues
+```
+
+**🎯 Common File Locations:**
+- **Translations:** `app/[locale]/dictionaries/{en,es}.json`
+- **Components:** `app/components/*.tsx`
+- **Pages:** `app/[locale]/*/page.tsx`
+- **Styles:** `app/globals.css` (global), `app/components/*.css` (component-specific)
+- **Types:** `app/types/*.ts`
+- **Data:** `app/data/*.ts` (e.g., `resources.ts`)
+- **Hooks:** `app/hooks/*.ts`
+- **Utils:** `app/utils/*.ts`
+
+---
 
 ## Testing
 
