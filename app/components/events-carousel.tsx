@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 interface EventImage {
@@ -18,7 +18,7 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Triple the images for seamless infinite scroll
-  const tripleImages = useMemo(() => [...images, ...images, ...images], [images]);
+  const tripleImages = [...images, ...images, ...images];
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {

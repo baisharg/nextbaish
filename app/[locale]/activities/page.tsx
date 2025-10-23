@@ -192,7 +192,7 @@ export default async function Activities({
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="dither-ethereal relative overflow-hidden p-6">
+                  <article className="card-glass dither-ethereal relative overflow-hidden p-6">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
                     <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {agiSafety.programDetails}
@@ -291,7 +291,7 @@ export default async function Activities({
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="dither-ethereal relative overflow-hidden p-6">
+                  <article className="card-glass dither-ethereal relative overflow-hidden p-6">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
                     <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {aisWorkshop.nextSession}
@@ -402,7 +402,7 @@ export default async function Activities({
                 </div>
 
                 <div className="lg:col-span-1">
-                  <article className="dither-ethereal relative overflow-hidden p-6">
+                  <article className="card-glass dither-ethereal relative overflow-hidden p-6">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
                     <h3 className="relative mb-4 text-xl font-semibold text-slate-900">
                       {paperReading.nextSession}

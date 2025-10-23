@@ -49,7 +49,7 @@ export default async function ContactPage({
           <FadeInSection variant="slide-up" delay={100} as="section">
             <section className="grid gap-6 md:grid-cols-3">
               {/* Telegram Card */}
-              <article className="dither-cornerglow flex h-full flex-col justify-between p-6">
+              <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
                   <div className="text-3xl">
                     <svg
@@ -84,7 +84,7 @@ export default async function ContactPage({
               </article>
 
               {/* Location Card */}
-              <article className="dither-cornerglow flex h-full flex-col justify-between p-6">
+              <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
                   <div className="text-3xl">📍</div>
                   <h3 className="text-xl font-semibold text-slate-900">
@@ -104,7 +104,7 @@ export default async function ContactPage({
               </article>
 
               {/* Social Media Card */}
-              <article className="dither-cornerglow flex h-full flex-col justify-between p-6">
+              <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
                   <div className="text-3xl">📱</div>
                   <h3 className="text-xl font-semibold text-slate-900">

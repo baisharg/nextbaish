@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
-import { useEffect, useRef, useState, useCallback, memo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
@@ -143,7 +143,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     };
   }, [locale, restWidths, firstWidths]);
 
-  const toggleMobileMenu = useCallback(() => {
+  const toggleMobileMenu = () => {
     setMobileMenuOpen(prev => {
       const newValue = !prev;
       if (newValue) {
@@ -151,11 +151,11 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
       }
       return newValue;
     });
-  }, []);
+  };
 
-  const closeMobileMenu = useCallback(() => {
+  const closeMobileMenu = () => {
     setMobileMenuOpen(false);
-  }, []);
+  };
 
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
@@ -356,5 +356,4 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   );
 };
 
-// Memoized export for performance
-export default memo(HeaderComponent);
+export default HeaderComponent;

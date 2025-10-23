@@ -547,57 +547,5 @@
         "contactLink": "página de Contacto"
       }
     }
-  },
-  "ditherExamples": {
-    "breadcrumb": {
-      "home": "Inicio",
-      "current": "Ejemplos de Dithering"
-    },
-    "title": "Variantes de Dithering Matriz de Puntos",
-    "description": "Diseños de tarjetas transparentes creativas con patrones de puntos y gradientes",
-    "dotMatrix": {
-      "title": "Variantes Matriz de Puntos",
-      "description": "Explorando transparencia, gradientes y patrones de puntos para efectos tipo cristal",
-      "variants": {
-        "ethereal": {
-          "name": "Etéreo",
-          "description": "Ultra-transparente con presencia apenas perceptible"
-        },
-        "whisper": {
-          "name": "Susurro",
-          "description": "Transparencia sutil como fantasma"
-        },
-        "bold": {
-          "name": "Audaz",
-          "description": "Gradiente fuerte con visibilidad prominente"
-        },
-        "fineMesh": {
-          "name": "Malla Fina",
-          "description": "Patrón denso de puntos de 8px"
-        },
-        "macroGrid": {
-          "name": "Cuadrícula Macro",
-          "description": "Puntos grandes de 32px, patrón abierto"
-        },
-        "verticalSweep": {
-          "name": "Barrido Vertical",
-          "description": "Flujo de gradiente de arriba hacia abajo"
-        },
-        "cornerGlow": {
-          "name": "Brillo de Esquina",
-          "description": "Gradiente radial desde la esquina superior izquierda"
-        },
-        "dualTone": {
-          "name": "Doble Tono",
-          "description": "Mezcla de gradiente púrpura y rosa"
-        }
-      }
-    },
-    "sampleCard": {
-      "title": "Tarjeta de Ejemplo",
-      "body": "Este es un texto de ejemplo para demostrar cómo se ve el contenido con el efecto de dithering aplicado al fondo."
-    },
-    "showCode": "Mostrar Código CSS",
-    "hideCode": "Ocultar Código CSS"
   }
 }

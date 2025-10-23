@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, memo, useEffect, useId, useRef, useState } from "react";
+import { Fragment, useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { WorkerThreadData, ThreadsGeneratedMessage } from "../workers/thread-generator.worker";
 import {
@@ -900,4 +900,4 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   );
 }
 
-export default memo(TimelineThreadsComponent);
+export default TimelineThreadsComponent;

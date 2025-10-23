@@ -1,7 +1,5 @@
 "use client";
 
-import { memo } from "react";
-
 interface AnimatedTitleProps {
   text: string;
   slug: string; // Unique identifier for the page/post
@@ -16,8 +14,6 @@ interface AnimatedTitleProps {
  * to each word. This creates sophisticated word-by-word morphing animations
  * during page transitions (nmn.sh style).
  *
- * Optimized with memo to prevent unnecessary re-renders and improve LCP.
- *
  * @example
  * <AnimatedTitle
  *   text="Buenos Aires AI Safety Hub"
@@ -26,7 +22,7 @@ interface AnimatedTitleProps {
  *   as="h1"
  * />
  */
-export const AnimatedTitle = memo(function AnimatedTitle({
+export function AnimatedTitle({
   text,
   slug,
   className = "",
@@ -59,4 +55,4 @@ export const AnimatedTitle = memo(function AnimatedTitle({
       })}
     </Component>
   );
-});
+}

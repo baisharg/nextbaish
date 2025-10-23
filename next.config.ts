@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
   // Enable strict mode for better development experience
   reactStrictMode: true,
 
+  // Enable React Compiler for automatic memoization (Next.js 16+)
+  reactCompiler: true,
+
   // Security & performance
   poweredByHeader: false,
   compress: true,
