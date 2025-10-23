@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * A client-side hook for managing state synchronized with localStorage
@@ -8,12 +8,12 @@ import { useState } from "react";
  * @template T - The type of the value stored in localStorage
  * @param key - The localStorage key to use
  * @param initialValue - The initial value to use if no value exists in localStorage
- * @returns A tuple containing the stored value and a setter function
+ * @returns A tuple containing the stored value, a setter function, and a loaded flag
  *
  * @example
- * const [theme, setTheme] = useLocalStorage<string>("theme", "light");
- * const [count, setCount] = useLocalStorage<number>("count", 0);
- * const [items, setItems] = useLocalStorage<string[]>("items", []);
+ * const [theme, setTheme, isLoaded] = useLocalStorage<string>("theme", "light");
+ * const [count, setCount, isLoaded] = useLocalStorage<number>("count", 0);
+ * const [items, setItems, isLoaded] = useLocalStorage<string[]>("items", []);
  *
  * @remarks
  * - Handles SSR by checking for window availability
@@ -21,32 +21,29 @@ import { useState } from "react";
  * - Includes error handling with console warnings
  * - Updates localStorage whenever the value changes
  * - Setter accepts either a raw value or a functional updater, matching React's useState API
+ * - Returns isLoaded flag to indicate when localStorage has been read (prevents hydration blocking)
  */
 export function useLocalStorage<T>(
   key: string,
   initialValue: T
-): [T, (value: T | ((prev: T) => T)) => void] {
-  // State to store the value
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    // SSR guard: return initialValue on server
-    if (typeof window === "undefined") {
-      return initialValue;
-    }
+): readonly [T, (value: T | ((prev: T) => T)) => void, boolean] {
+  // Initialize with server-safe value to prevent hydration mismatch
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // Read from localStorage after mount to avoid blocking hydration
+  useEffect(() => {
     try {
-      // Get from localStorage by key
       const item = window.localStorage.getItem(key);
-      // Parse stored JSON or return initialValue if null
-      return item ? JSON.parse(item) : initialValue;
+      if (item) {
+        setStoredValue(JSON.parse(item));
+      }
     } catch (error) {
-      // If error reading localStorage, log warning and return initialValue
-      console.warn(
-        `Error reading localStorage key "${key}":`,
-        error
-      );
-      return initialValue;
+      console.warn(`Error reading localStorage key "${key}":`, error);
+    } finally {
+      setIsLoaded(true);
     }
-  });
+  }, [key]);
 
   // Return a wrapped version of useState's setter function that
   // persists the new value to localStorage
@@ -74,5 +71,5 @@ export function useLocalStorage<T>(
     });
   };
 
-  return [storedValue, setValue];
+  return [storedValue, setValue, isLoaded] as const;
 }

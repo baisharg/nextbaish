@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";

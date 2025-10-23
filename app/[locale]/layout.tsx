@@ -11,6 +11,7 @@ import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
 import Head from "../head";
 import Header from "../components/header";
+import RUMMonitor from "../components/rum-monitor";
 import "../globals.css";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -111,6 +112,7 @@ export default async function LocaleLayout({
               {children}
               <SpeedInsights />
               <Analytics />
+              <RUMMonitor />
             </LanguageProvider>
           </Suspense>
         </body>

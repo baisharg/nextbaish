@@ -15,6 +15,10 @@ export default function Head() {
       <link rel="preconnect" href="https://lu.ma" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://cdn.lu.ma" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://va.vercel-scripts.com" crossOrigin="anonymous" />
+
+      {/* Preconnect for Google Fonts */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
     </>
   );
 }

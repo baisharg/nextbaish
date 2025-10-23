@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
-import AirtableEmbed from "@/app/components/airtable-embed";
 import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
@@ -11,6 +10,10 @@ import { withLocale } from "@/app/utils/locale";
 import type { Resource, ResourceType, ResourceTopic, DifficultyLevel } from "@/app/types/resources";
 import { resources, RESOURCE_TYPE_ICONS, DIFFICULTY_COLORS } from "@/app/data/resources";
 import { useLocalStorage } from "@/app/hooks/use-local-storage";
+import { useVirtualizer } from "@tanstack/react-virtual";
+
+// Lazy load heavy components for better initial load performance
+const AirtableEmbed = lazy(() => import("@/app/components/airtable-embed"));
 
 export default function Resources() {
   const locale = useLocale();
@@ -21,7 +24,8 @@ export default function Resources() {
   const [topicFilter, setTopicFilter] = useState<ResourceTopic | "all">("all");
 
   // Use localStorage hook with array (since Set is not JSON-serializable)
-  const [completedArray, setCompletedArray] = useLocalStorage<string[]>(
+  // isLoaded prevents blocking hydration while localStorage is being read
+  const [completedArray, setCompletedArray, isCompletedLoaded] = useLocalStorage<string[]>(
     "baish-completed-resources",
     []
   );
@@ -72,6 +76,16 @@ export default function Resources() {
     if (typeFilter !== "all" && resource.type !== typeFilter) return false;
     if (topicFilter !== "all" && resource.topic !== topicFilter) return false;
     return true;
+  });
+
+  // Virtualizer setup for main resources list
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: filteredResources.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100, // Estimated height of each resource card
+    overscan: 5, // Render 5 extra items above/below viewport for smooth scrolling
   });
 
   // Quick wins - resources under 30 minutes
@@ -496,15 +510,21 @@ export default function Resources() {
               </p>
             </div>
             <div className="overflow-hidden rounded-xl border-2 border-slate-200 bg-white shadow-lg">
-              <AirtableEmbed
-                appId="appdsx5KxeooxGPFO"
-                shareId="shrgXV0z193dC7uyI"
-                tableId="tblD1rFhCfD8p5lfU"
-                viewId="viwFUfEv4CfXQemqD"
-                showViewControls={false}
-                height="800px"
-                title="Open Applications Timeline"
-              />
+              <Suspense fallback={
+                <div className="flex h-[800px] w-full items-center justify-center bg-slate-50 animate-pulse">
+                  <div className="text-slate-400">Loading timeline...</div>
+                </div>
+              }>
+                <AirtableEmbed
+                  appId="appdsx5KxeooxGPFO"
+                  shareId="shrgXV0z193dC7uyI"
+                  tableId="tblD1rFhCfD8p5lfU"
+                  viewId="viwFUfEv4CfXQemqD"
+                  showViewControls={false}
+                  height="800px"
+                  title="Open Applications Timeline"
+                />
+              </Suspense>
             </div>
           </div>
         </section>
@@ -596,63 +616,88 @@ export default function Resources() {
                 .replace("{total}", resources.length.toString())}
             </div>
 
-            {/* Resources List */}
-            <div className="space-y-3">
-              {filteredResources.map((resource) => (
-                <article
-                  key={resource.id}
-                  className="card-glass dither-cornerglow relative overflow-hidden group flex items-start gap-4 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
-                >
-                  <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
-                  <button
-                    onClick={() => toggleResourceComplete(resource.id)}
-                    className="flex-shrink-0 mt-0.5"
-                  >
-                    <div
-                      className={`h-5 w-5 rounded border-2 transition ${
-                        completedResources.has(resource.id)
-                          ? "border-green-500 bg-green-500"
-                          : "border-slate-300 bg-white group-hover:border-green-400"
-                      }`}
+            {/* Virtualized Resources List */}
+            <div
+              ref={parentRef}
+              className="relative"
+              style={{
+                height: '600px',
+                overflow: 'auto',
+              }}
+            >
+              <div
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  width: '100%',
+                  position: 'relative',
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const resource = filteredResources[virtualRow.index];
+                  return (
+                    <article
+                      key={resource.id}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                      className="card-glass dither-cornerglow relative overflow-hidden group flex items-start gap-4 p-4 transition hover:border-[var(--color-accent-primary)] hover:shadow-md mb-3"
                     >
-                      {completedResources.has(resource.id) && (
-                        <svg className="h-full w-full text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                  </button>
-                  <div className="relative min-w-0 flex-1">
-                    <div className="mb-2 flex items-start gap-3">
-                      <span className="text-xl">{RESOURCE_TYPE_ICONS[resource.type]}</span>
-                      <div className="flex-1">
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
-                          <a
-                            href={resource.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-semibold text-slate-900 hover:text-[var(--color-accent-primary)] transition"
-                          >
-                            {locale === "en" ? resource.title : resource.titleEs}
-                          </a>
-                          {resource.isNew && (
-                            <span className="inline-flex rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                              NEW
-                            </span>
+                      <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
+                      <button
+                        onClick={() => toggleResourceComplete(resource.id)}
+                        className="flex-shrink-0 mt-0.5"
+                      >
+                        <div
+                          className={`h-5 w-5 rounded border-2 transition ${
+                            completedResources.has(resource.id)
+                              ? "border-green-500 bg-green-500"
+                              : "border-slate-300 bg-white group-hover:border-green-400"
+                          }`}
+                        >
+                          {completedResources.has(resource.id) && (
+                            <svg className="h-full w-full text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
                           )}
                         </div>
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
-                          <span className={`rounded-full px-2 py-0.5 font-semibold ${DIFFICULTY_COLORS[resource.difficulty]}`}>
-                            {dict.resources.difficulties[resource.difficulty]}
-                          </span>
-                          <span>⏱️ {locale === "en" ? resource.timeToComplete : resource.timeToCompleteEs}</span>
-                          <span>📚 {resource.topic}</span>
+                      </button>
+                      <div className="relative min-w-0 flex-1">
+                        <div className="mb-2 flex items-start gap-3">
+                          <span className="text-xl">{RESOURCE_TYPE_ICONS[resource.type]}</span>
+                          <div className="flex-1">
+                            <div className="mb-1 flex flex-wrap items-center gap-2">
+                              <a
+                                href={resource.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-semibold text-slate-900 hover:text-[var(--color-accent-primary)] transition"
+                              >
+                                {locale === "en" ? resource.title : resource.titleEs}
+                              </a>
+                              {resource.isNew && (
+                                <span className="inline-flex rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
+                              <span className={`rounded-full px-2 py-0.5 font-semibold ${DIFFICULTY_COLORS[resource.difficulty]}`}>
+                                {dict.resources.difficulties[resource.difficulty]}
+                              </span>
+                              <span>⏱️ {locale === "en" ? resource.timeToComplete : resource.timeToCompleteEs}</span>
+                              <span>📚 {resource.topic}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>

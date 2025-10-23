@@ -116,9 +116,13 @@ const computePerformanceProfile = (): PerformanceProfile => {
   const isSlowConnection = effectiveType.includes("2g") || effectiveType.includes("slow-2g");
 
   let threadScale = 1;
+  // Mobile viewport scaling
   if (width <= 480) threadScale = 0.72;
   else if (width <= 640) threadScale = 0.82;
   else if (width <= 820) threadScale = 0.9;
+  // Desktop viewport scaling (reduce threads on large screens)
+  else if (width > 1920) threadScale = 0.80; // 4K displays
+  else if (width > 1440) threadScale = 0.85; // Large desktop
 
   if (dpr >= 3) {
     threadScale *= 0.92;
@@ -132,7 +136,10 @@ const computePerformanceProfile = (): PerformanceProfile => {
   if (dpr >= 3.5) blurStdDeviation = 1.8;
   else if (dpr >= 3) blurStdDeviation = 2.1;
   else if (dpr >= 2) blurStdDeviation = 2.75;
+  // Scale blur for both small and large screens
   if (width <= 480) blurStdDeviation *= 0.9;
+  else if (width > 1920) blurStdDeviation *= 0.75; // 4K displays
+  else if (width > 1440) blurStdDeviation *= 0.85; // Large desktop
   blurStdDeviation = Math.max(1.6, Number(blurStdDeviation.toFixed(2)));
 
   const lowPowerHardware = hardware > 0 && hardware <= 4;

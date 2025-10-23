@@ -27,7 +27,11 @@ const nextConfig: NextConfig = {
   // Experimental features for better performance
   experimental: {
     // Enable optimizePackageImports for better tree-shaking
-    optimizePackageImports: ["@vercel/analytics", "@vercel/speed-insights"],
+    optimizePackageImports: [
+      "@vercel/analytics",
+      "@vercel/speed-insights",
+      "@tanstack/react-virtual", // Optimize virtualization library
+    ],
   },
 };
 

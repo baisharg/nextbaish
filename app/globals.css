@@ -149,10 +149,10 @@ section#about {
   contain: layout;
 }
 
-/* Prioritize rendering of above-the-fold hero content */
+/* Prioritize rendering of above-the-fold hero content - LCP element */
 section#about h1 {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 200px;
+  content-visibility: visible; /* Force immediate render for LCP */
+  contain: none; /* Disable containment for LCP element */
 }
 
 /* Optimize hero section background rendering */
@@ -288,8 +288,8 @@ canvas {
     background-size: 100% 100%, var(--grid-standard);
     border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-20));
     box-shadow: 0 2px 8px rgba(var(--brand-primary-rgb), 0.08);
-    backdrop-filter: var(--blur-lg);
-    -webkit-backdrop-filter: var(--blur-lg);
+    backdrop-filter: var(--blur-md); /* Reduced from blur-lg (16px) to blur-md (12px) for better performance */
+    -webkit-backdrop-filter: var(--blur-md);
   }
 
   /* Dither Fine Mesh - Research page */
@@ -327,8 +327,8 @@ canvas {
     background-size: 100% 100%, var(--grid-standard), 100% 100%;
     border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-30));
     box-shadow: 0 4px 12px rgba(var(--brand-primary-rgb), var(--opacity-12));
-    backdrop-filter: var(--blur-lg);
-    -webkit-backdrop-filter: var(--blur-lg);
+    backdrop-filter: var(--blur-md); /* Reduced from blur-lg (16px) to blur-md (12px) for better performance */
+    -webkit-backdrop-filter: var(--blur-md);
   }
 }
 
@@ -545,6 +545,17 @@ canvas {
   .link-arrow {
     transition: none;
     transform: none;
+  }
+}
+
+/* Desktop viewport optimization: Further reduce blur on large screens for better performance */
+@media (min-width: 1024px) {
+  @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+    .card-glass.dither-ethereal,
+    .card-glass.dither-cornerglow {
+      backdrop-filter: var(--blur-sm); /* Further reduced to 8px on desktop for performance */
+      -webkit-backdrop-filter: var(--blur-sm);
+    }
   }
 }
 

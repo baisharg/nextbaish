@@ -10,6 +10,7 @@
     "optimize-images": "node scripts/optimize-images.js"
   },
   "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "next": "^16.0.0",
