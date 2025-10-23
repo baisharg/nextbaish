@@ -92,11 +92,11 @@ export default function Resources() {
             </div>
 
             {/* Newsletter CTA */}
-            <div className="card-glass dither-cornerglow relative overflow-hidden p-6 shadow-md">
+            <div className="card-glass dither-cornerglow relative overflow-hidden py-4 px-6 shadow-md">
               <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
-              <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-                <div className="flex-1 space-y-2">
-                  <h3 className="text-xl font-semibold text-slate-900">
+              <div className="relative flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
+                <div className="flex-1 space-y-1">
+                  <h3 className="text-lg font-semibold text-slate-900">
                     📬 {dict.resources.sections.externalOpportunities.newsletter.title}
                   </h3>
                   <p className="text-sm text-slate-600">
@@ -107,7 +107,7 @@ export default function Resources() {
                   href="https://aisafetyeventsandtraining.substack.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 rounded-lg bg-[var(--color-accent-primary)] px-6 py-3 font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-tertiary)] hover:shadow-lg"
+                  className="flex-shrink-0 rounded-lg bg-[var(--color-accent-primary)] px-5 py-2 font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-tertiary)] hover:shadow-lg"
                 >
                   {dict.resources.sections.externalOpportunities.newsletter.cta}
                 </a>
