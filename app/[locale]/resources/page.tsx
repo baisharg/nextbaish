@@ -90,6 +90,29 @@ export default function Resources() {
                 {dict.resources.sections.externalOpportunities.description}
               </p>
             </div>
+
+            {/* Newsletter CTA */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#9275E5] to-[#C77DDA] p-6 shadow-md">
+              <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-xl font-semibold text-white">
+                    📬 {dict.resources.sections.externalOpportunities.newsletter.title}
+                  </h3>
+                  <p className="text-sm text-white/90">
+                    {dict.resources.sections.externalOpportunities.newsletter.description}
+                  </p>
+                </div>
+                <a
+                  href="https://aisafetyeventsandtraining.substack.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 rounded-lg bg-white px-6 py-3 font-semibold text-[#9275E5] shadow-md transition hover:bg-slate-50 hover:shadow-lg"
+                >
+                  {dict.resources.sections.externalOpportunities.newsletter.cta}
+                </a>
+              </div>
+            </div>
+
             <div className="overflow-hidden rounded-xl border-2 border-slate-200 bg-white shadow-lg">
               <Suspense fallback={
                 <div className="flex h-[800px] w-full items-center justify-center bg-slate-50 animate-pulse">

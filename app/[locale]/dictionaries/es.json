@@ -448,7 +448,12 @@
       "externalOpportunities": {
         "title": "Oportunidades de Capacitación Externa",
         "subtitle": "Próximos cursos, talleres y programas de organizaciones de todo el mundo",
-        "description": "Hay una amplia gama de eventos y programas de capacitación en seguridad de IA, tanto online como presenciales. Estos te pueden ayudar a desarrollar habilidades, hacer conexiones y descubrir oportunidades."
+        "description": "Hay una amplia gama de eventos y programas de capacitación en seguridad de IA, tanto online como presenciales. Estos te pueden ayudar a desarrollar habilidades, hacer conexiones y descubrir oportunidades.",
+        "newsletter": {
+          "title": "Suscribite al Newsletter de Nuevas Oportunidades",
+          "description": "Recibí un email semanal resumiendo todos los nuevos eventos y programas de capacitación",
+          "cta": "Suscribite"
+        }
       }
     }
   },

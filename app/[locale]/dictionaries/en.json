@@ -448,7 +448,12 @@
       "externalOpportunities": {
         "title": "External Training Opportunities",
         "subtitle": "Upcoming courses, workshops, and programs from organizations worldwide",
-        "description": "There's a wide range of events and training programs in AI safety, both online and in-person. These can help you build skills, make connections, and discover opportunities."
+        "description": "There's a wide range of events and training programs in AI safety, both online and in-person. These can help you build skills, make connections, and discover opportunities.",
+        "newsletter": {
+          "title": "Subscribe to New Opportunities Newsletter",
+          "description": "Receive a weekly email summarizing all new events and training programs",
+          "cta": "Subscribe"
+        }
       }
     }
   },
