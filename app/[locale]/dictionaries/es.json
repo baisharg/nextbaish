@@ -7,7 +7,7 @@
       "resources": "Recursos",
       "contact": "Contacto"
     },
-    "cta": "Únete",
+    "cta": "Sumate",
     "language": "Idioma",
     "languages": {
       "en": "English",
@@ -25,21 +25,21 @@
       "research": "Investigación",
       "resources": "Recursos",
       "contact": "Contacto",
-      "getInvolved": "Participa",
+      "getInvolved": "Participá",
       "privacyPolicy": "Política de privacidad"
     }
   },
   "substack": {
     "eyebrow": "Boletín",
-    "title": "Únete a nuestra lista de correo",
-    "description": "Mantente al tanto de nuestras actividades, eventos y oportunidades.",
+    "title": "Unite a nuestra lista de correo",
+    "description": "Mantenete al tanto de nuestras actividades, eventos y oportunidades.",
     "placeholder": "tu@email.com",
-    "button": "Suscribirse",
+    "button": "Suscribite",
     "disclaimer": "Solo enviaremos correos cuando haya novedades importantes.",
-    "success": "¡Te suscribiste! Revisa tu correo para el mensaje de bienvenida.",
-    "confirm": "Queda un paso — confirma la suscripción desde tu bandeja de entrada.",
-    "genericError": "Ocurrió un error. Intenta nuevamente.",
-    "networkError": "Fallo de conexión. Verifica tu internet e inténtalo otra vez."
+    "success": "¡Te suscribiste! Revisá tu correo para el mensaje de bienvenida.",
+    "confirm": "Queda un paso — confirmá la suscripción desde tu bandeja de entrada.",
+    "genericError": "Ocurrió un error. Intentá nuevamente.",
+    "networkError": "Fallo de conexión. Verificá tu internet e intentalo otra vez."
   },
   "home": {
     "breadcrumb": {
@@ -51,14 +51,14 @@
       "paragraph1": "A medida que los modelos de inteligencia artificial avanzan en capacidades{footnote1}, esperamos que tengan un impacto cada vez más profundo en nuestra sociedad{footnote2}. Es esencial que este impacto sea positivo, y que las decisiones tomadas por estos sistemas sean transparentes, confiables y responsables{footnote3} ante las personas afectadas por ellos.",
       "paragraph2": "Creemos que reducir los riesgos asociados a modelos avanzados de IA{footnote4} es uno de los desafíos más importantes de nuestro tiempo. También creemos que es un problema abierto y apasionante{footnote5}, con amplias oportunidades para que más investigadores avancen en este campo{footnote6}.",
       "paragraph3": "La misión de BAISH es apoyar a estudiantes a entrar a este campo y a realizar investigaciones sobre este tema.",
-      "cta": "Participa"
+      "cta": "Participá"
     },
     "events": {
       "eyebrow": "Próximos Eventos",
-      "title": "Únete a nuestros talleres y encuentros comunitarios",
-      "description": "Mantente al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
+      "title": "Unite a nuestros talleres y encuentros comunitarios",
+      "description": "Mantenete al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
       "calendarPlaceholder": "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida.",
-      "subscribe": "Suscribirse al calendario"
+      "subscribe": "Suscribite al calendario"
     },
     "activities": {
       "title": "Nuestras Actividades",
@@ -86,8 +86,8 @@
           "duration": "2 hrs"
         }
       },
-      "joinNow": "Inscríbete",
-      "learnMore": "Más info"
+      "joinNow": "Inscribite",
+      "learnMore": "Ver más"
     },
     "resources": {
       "title": "Recursos",
@@ -113,13 +113,13 @@
         }
       },
       "viewResource": "Ver recurso",
-      "learnMore": "Más info"
+      "learnMore": "Ver más"
     },
     "getInvolved": {
       "communityEyebrow": "Comunidad",
-      "communityTitle": "Únete a nuestra comunidad en Telegram",
+      "communityTitle": "Unite a nuestra comunidad en Telegram",
       "communityDescription": "Conéctate con estudiantes interesados en la seguridad de IA.",
-      "telegramCta": "Unirse al grupo de Telegram"
+      "telegramCta": "Unite al grupo de Telegram"
     }
   },
   "about": {
@@ -162,30 +162,30 @@
       }
     },
     "externalResources": {
-      "title": "Aprendé Más Sobre Seguridad en IA",
+      "title": "Aprendé más sobre Seguridad en IA",
       "alignmentForum": {
         "title": "Alignment Forum",
         "description": "Un foro dedicado a la investigación técnica en alineamiento de IA, con papers y discusiones de investigadores destacados.",
         "level": "Técnico",
-        "cta": "Visitar"
+        "cta": "Visitá"
       },
       "lessWrong": {
         "title": "LessWrong",
         "description": "Un blog comunitario enfocado en la racionalidad humana y las implicaciones de la inteligencia artificial.",
         "level": "Intermedio",
-        "cta": "Visitar"
+        "cta": "Visitá"
       },
       "eightyK": {
         "title": "80,000 Hours",
         "description": "Orientación profesional para trabajar en los problemas más urgentes del mundo, incluida la seguridad de la IA.",
         "level": "Introductorio",
-        "cta": "Visitar"
+        "cta": "Visitá"
       },
       "stampy": {
         "title": "Wiki de Stampy",
         "description": "Una wiki colaborativa que proporciona explicaciones accesibles de conceptos de alineamiento de IA.",
         "level": "Introductorio",
-        "cta": "Visitar"
+        "cta": "Visitá"
       }
     },
     "ourApproach": {
@@ -227,8 +227,8 @@
       "current": "Actividades"
     },
     "title": "Nuestras Actividades",
-    "description": "Únete a nuestra comunidad y participa en investigación y aprendizaje de seguridad en IA",
-    "subscribeCalendar": "Suscribirse al calendario de eventos",
+    "description": "Unite a nuestra comunidad y participá en investigación y aprendizaje de seguridad en IA",
+    "subscribeCalendar": "Suscribite al calendario de eventos",
     "agiSafety": {
       "title": "AI Safety Fundamentals",
       "status": "Actualmente activo",
@@ -256,7 +256,7 @@
       "duration": "13 semanas",
       "fellowshipPeriod": "Viernes 14:30-17:00",
       "viewCurriculum": "Ver currículo",
-      "applyNow": "Aplicar ahora"
+      "applyNow": "Aplicá ahora"
     },
     "aisWorkshop": {
       "title": "AIS Research Workshop",
@@ -284,8 +284,8 @@
       "time": "14:30 - 17:00",
       "location": "Pabellón 0+inf, Ciudad Universitaria",
       "topic": "A definir semanalmente",
-      "joinTelegram": "Únete a Telegram para actualizaciones",
-      "applyNow": "Aplicar ahora"
+      "joinTelegram": "Unite a Telegram para actualizaciones",
+      "applyNow": "Aplicá ahora"
     },
     "paperReading": {
       "title": "Club de Lectura de Papers",
@@ -368,13 +368,13 @@
       "emailLabel": "¿Cuál es tu correo electrónico?",
       "messageLabel": "Mensaje",
       "clearForm": "Limpiar formulario",
-      "submit": "Enviar"
+      "submit": "Enviá"
     },
     "getInvolved": {
       "title": "Sumate",
       "description": "Hay múltiples formas de participar en nuestra comunidad y actividades.",
       "newsletter": {
-        "title": "Suscribite a Nuestra Lista de Correo",
+        "title": "Suscribite a nuestra lista de correo",
         "description": "Mantenete al día con nuestros eventos, actividades y oportunidades suscribiéndote a nuestra lista de correo. Te enviamos newsletters mensuales y anuncios importantes."
       }
     },
@@ -497,14 +497,14 @@
       "advanced": "Avanzado"
     },
     "actions": {
-      "markComplete": "Marcar Completo",
+      "markComplete": "Marcar completo",
       "completed": "✓ Completado",
-      "start": "Empezar"
+      "start": "Empezá"
     },
     "cta": {
-      "title": "¿Listo para Empezar?",
-      "description": "Únete a nuestra comunidad para discutir estos recursos y aprender juntos",
-      "studyGroups": "Únete a Grupos de Estudio",
+      "title": "¿Listo para empezar?",
+      "description": "Unite a nuestra comunidad para discutir estos recursos y aprender juntos",
+      "studyGroups": "Unite a grupos de estudio",
       "getInTouch": "Contactar"
     }
   },
