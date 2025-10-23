@@ -28,7 +28,13 @@ import {
   clamp,
   getUpFraction,
 } from "../utils/thread-utils";
+import TimelinePerformanceMonitor from "./timeline-performance-monitor";
 import "./timeline-threads.css";
+
+// Canvas Renderer imports
+import type { Renderer, FramePacket } from "../types/renderer";
+import type { InitMessage, FrameMessage } from "../workers/animation.worker";
+import { createRenderer, logRendererInfo } from "../utils/create-renderer";
 
 /**
  * --------------------------------------------------------------------------------
@@ -86,6 +92,17 @@ const DEFAULT_PERFORMANCE_PROFILE: PerformanceProfile = {
 };
 
 const LOW_POWER_FRAME_INTERVAL = 1000 / 45;
+
+/**
+ * --------------------------------------------------------------------------------
+ * FEATURE FLAG: Canvas Renderer
+ * --------------------------------------------------------------------------------
+ * When true, uses worker + Canvas/WebGL rendering (zero DOM mutations, GPU-first)
+ * When false, uses current SVG rendering (excellent performance, well-tested)
+ *
+ * ENABLED: Testing WebGL renderer with GPU-accelerated blur pipeline
+ */
+const USE_CANVAS_RENDERER = true;
 
 type NavigatorConnection = {
   saveData?: boolean;
@@ -505,11 +522,18 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
   const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [transitioningCount, setTransitioningCount] = useState(0);
   const { threadCount, frameInterval, blurStdDeviation } = performanceProfile;
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
   const threadsRef = useRef<ThreadState[]>([]);
   const pathRefs = useRef<PathRefMap>(new Map());
+
+  // Canvas renderer refs (only used when USE_CANVAS_RENDERER = true)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationWorkerRef = useRef<Worker | null>(null);
+  const rendererRef = useRef<Renderer | null>(null);
+  const canvasAnimationFrameRef = useRef<number>(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -708,12 +732,137 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   };
 
   /**
+   * Canvas Renderer Initialization (when USE_CANVAS_RENDERER = true)
+   * - Creates renderer using factory (Canvas2D or WebGL)
+   * - Spawns animation worker
+   * - Handles worker messages and draws frames
+   * - Completely offloads animation from main thread
+   */
+  useEffect(() => {
+    if (!USE_CANVAS_RENDERER || !canvasRef.current || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
+      return;
+    }
+
+    let mounted = true;
+
+    const initializeCanvasRenderer = async () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      try {
+        // Create renderer using factory
+        const result = await createRenderer({
+          canvas,
+          config: {
+            viewSize: VIEWBOX_SIZE,
+            blurStdDeviation,
+            dpr: window.devicePixelRatio || 1,
+            enableBlur: true,
+          },
+        });
+
+        if (!mounted) {
+          result.renderer.dispose();
+          return;
+        }
+
+        rendererRef.current = result.renderer;
+        logRendererInfo(result);
+
+        // Create animation worker
+        const worker = new Worker(
+          new URL("../workers/animation.worker.ts", import.meta.url),
+          { type: "module" }
+        );
+
+        animationWorkerRef.current = worker;
+
+        // Handle worker messages
+        worker.onmessage = (event: MessageEvent<FrameMessage>) => {
+          if (!mounted || !rendererRef.current) return;
+
+          if (event.data.type === "frame") {
+            const packet: FramePacket = event.data.packet;
+
+            // Draw frame using renderer
+            rendererRef.current.draw(packet);
+          }
+        };
+
+        worker.onerror = (error) => {
+          console.error("[Timeline] Animation worker error:", error);
+        };
+
+        // Prepare thread data for worker
+        const workerThreads = threadsRef.current.map((thread) => ({
+          id: thread.id,
+          color: thread.color,
+          weight: thread.weight,
+          opacity: thread.opacity,
+          profileNeutral: thread.profile.neutral,
+          profileUp: thread.profile.up,
+          profileDown: thread.profile.down,
+          direction: thread.direction,
+          swayPhase: thread.swayPhase,
+          driftPhase: thread.driftPhase,
+          swayFreq: thread.swayFreq,
+          driftFreq: thread.driftFreq,
+          swayAmp: thread.swayAmp,
+          driftAmp: thread.driftAmp,
+          duration: thread.duration,
+        }));
+
+        // Initialize worker with thread data
+        const initMessage: InitMessage = {
+          type: "init",
+          threads: workerThreads,
+          viewSize: VIEWBOX_SIZE,
+          frameInterval,
+        };
+
+        worker.postMessage(initMessage);
+
+        console.log("[Timeline] Canvas renderer initialized successfully");
+      } catch (error) {
+        console.error("[Timeline] Failed to initialize canvas renderer:", error);
+      }
+    };
+
+    initializeCanvasRenderer();
+
+    return () => {
+      mounted = false;
+
+      // Terminate worker
+      if (animationWorkerRef.current) {
+        animationWorkerRef.current.postMessage({ type: "terminate" });
+        animationWorkerRef.current.terminate();
+        animationWorkerRef.current = null;
+      }
+
+      // Dispose renderer
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+        rendererRef.current = null;
+      }
+
+      console.log("[Timeline] Canvas renderer cleaned up");
+    };
+  }, [USE_CANVAS_RENDERER, isVisible, shouldAnimate, blurStdDeviation, frameInterval]);
+
+  /**
+   * SVG Renderer Animation Loop (when USE_CANVAS_RENDERER = false)
    * OPTIMIZED rAF loop:
    *  - CSS handles drift/sway animations (GPU-accelerated)
    *  - JS only updates paths during direction transitions
    *  - Reduces DOM mutations from 1,500/sec to ~1-2/sec
    */
   useEffect(() => {
+    if (USE_CANVAS_RENDERER) {
+      // Skip SVG animation when using canvas renderer
+      return;
+    }
+
     if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
       if (threadsRef.current.length > 0) {
         threadsRef.current.forEach(setStaticPathForThread);
@@ -792,16 +941,33 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
       if (pathUpdates.length > 0 || gradientUpdates.length > 0) {
         // Use a microtask to batch updates (allows browser to optimize)
         queueMicrotask(() => {
+          const totalMutations = pathUpdates.length + gradientUpdates.length;
+
           for (const { id, path } of pathUpdates) {
             const el = pathRefs.current.get(id);
-            if (el) el.setAttribute("d", path);
+            if (el) {
+              el.setAttribute("d", path);
+              // Report mutation for performance monitoring
+              if ((window as any).__timelineReportMutation) {
+                (window as any).__timelineReportMutation();
+              }
+            }
           }
           for (const { id, direction } of gradientUpdates) {
             const el = pathRefs.current.get(id);
-            if (el) el.setAttribute("stroke", `url(#${gradientBaseId}-${id}-${direction})`);
+            if (el) {
+              el.setAttribute("stroke", `url(#${gradientBaseId}-${id}-${direction})`);
+              // Report mutation for performance monitoring
+              if ((window as any).__timelineReportMutation) {
+                (window as any).__timelineReportMutation();
+              }
+            }
           }
         });
       }
+
+      // Update transitioning count for performance monitor
+      setTransitioningCount(transitioningThreadIds.size);
 
       rafId = requestAnimationFrame(animate);
     };
@@ -821,115 +987,137 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={`pointer-events-none ${className ?? "absolute inset-0"}`}
-      style={{ ...style, contain: "layout style paint" }}
-    >
-      <svg
-        viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
-        preserveAspectRatio="none"
-        className="h-full w-full"
-        style={{
-          contain: "paint",
-          transform: `translateY(${parallaxOffset}px)`,
-          willChange: "transform",
-        }}
+    <>
+      <div
+        ref={containerRef}
+        className={`pointer-events-none ${className ?? "absolute inset-0"}`}
+        style={{ ...style, contain: "layout style paint" }}
       >
-        <defs>
-          <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation={blurStdDeviation} result="blur" />
-            <feColorMatrix
-              in="blur"
-              type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0"
-              result="glow"
-            />
-            <feMerge>
-              <feMergeNode in="glow" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-
-          <linearGradient id={`${filterId}-overlay`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(118, 123, 255, 0.38)" />
-            <stop offset="42%" stopColor="rgba(219, 126, 255, 0.22)" />
-            <stop offset="75%" stopColor="rgba(188, 94, 255, 0.18)" />
-            <stop offset="100%" stopColor="rgba(244, 173, 255, 0.30)" />
-          </linearGradient>
-
-          {threads.map((thread) => {
-            const baseId = `${gradientBaseId}-${thread.id}`;
-            return (
-              <Fragment key={`grad-${thread.id}`}>
-                {/* DOWN gradient */}
-                <linearGradient id={`${baseId}-down`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor={thread.gradDown0} />
-                  <stop offset="30%" stopColor={thread.gradDown30} />
-                  <stop offset="60%" stopColor={thread.gradDown60} />
-                  <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
-                  <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
-                </linearGradient>
-                {/* UP gradient */}
-                <linearGradient id={`${baseId}-up`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor={thread.gradUp0} />
-                  <stop offset="50%" stopColor={thread.gradUp50} />
-                  <stop offset="100%" stopColor={thread.gradUp100} />
-                </linearGradient>
-              </Fragment>
-            );
-          })}
-        </defs>
-
-        <rect
-          x={0}
-          y={0}
-          width={VIEWBOX_SIZE}
-          height={VIEWBOX_SIZE}
-          fill={`url(#${filterId}-overlay)`}
-          opacity={0.9}
-          style={{ mixBlendMode: "screen" }}
-        />
-
-        <g filter={`url(#${filterId})`} style={{ willChange: "filter", transform: "translateZ(0)" }}>
-          {threads.map((thread) => {
-            // Calculate CSS animation parameters from thread properties
-            // Convert frequency (0.0006-0.0015) to duration in seconds
-            const driftDuration = thread.driftFreq > 0 ? 1 / (thread.driftFreq * 1000) : 8;
-            const swayDuration = thread.swayFreq > 0 ? 1 / (thread.swayFreq * 1000) : 8;
-            const floatDuration = (driftDuration + swayDuration) / 2;
-
-            // Convert amplitude (0.003-0.00875) to pixels
-            // Amplitude is in normalized coordinates, scale to viewbox size
-            const driftAmount = thread.driftAmp * VIEWBOX_SIZE * 0.5;
-            const swayAmount = thread.swayAmp * VIEWBOX_SIZE * 0.5;
-
-            // Use phase for animation delay
-            const delay = (thread.swayPhase / (Math.PI * 2)) * floatDuration;
-
-            return (
-              <path
-                key={thread.id}
-                d={thread.path}
-                fill="none"
-                stroke={`url(#${gradientBaseId}-${thread.id}-${thread.direction})`}
-                strokeOpacity={thread.opacity}
-                strokeWidth={thread.weight}
-                strokeLinecap="round"
-                className="thread-path"
-                style={{
-                  "--drift-amount": `${driftAmount}px`,
-                  "--sway-amount": `${swayAmount}px`,
-                  "--float-duration": `${floatDuration}s`,
-                  "--float-delay": `${delay}s`,
-                } as CSSProperties}
-                ref={registerPath(thread.id)}
+        {USE_CANVAS_RENDERER ? (
+          // Canvas Renderer (Worker + GPU)
+          <canvas
+            ref={canvasRef}
+            className="h-full w-full"
+            style={{
+              contain: "paint",
+              transform: `translateY(${parallaxOffset}px)`,
+              willChange: "transform",
+            }}
+          />
+        ) : (
+          // SVG Renderer (Current implementation)
+          <svg
+            viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
+            preserveAspectRatio="none"
+            className="h-full w-full"
+            style={{
+              contain: "paint",
+              transform: `translateY(${parallaxOffset}px)`,
+              willChange: "transform",
+            }}
+          >
+          <defs>
+            <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation={blurStdDeviation} result="blur" />
+              <feColorMatrix
+                in="blur"
+                type="matrix"
+                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0"
+                result="glow"
               />
-            );
-          })}
-        </g>
-      </svg>
-    </div>
+              <feMerge>
+                <feMergeNode in="glow" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+
+            <linearGradient id={`${filterId}-overlay`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(118, 123, 255, 0.38)" />
+              <stop offset="42%" stopColor="rgba(219, 126, 255, 0.22)" />
+              <stop offset="75%" stopColor="rgba(188, 94, 255, 0.18)" />
+              <stop offset="100%" stopColor="rgba(244, 173, 255, 0.30)" />
+            </linearGradient>
+
+            {threads.map((thread) => {
+              const baseId = `${gradientBaseId}-${thread.id}`;
+              return (
+                <Fragment key={`grad-${thread.id}`}>
+                  {/* DOWN gradient */}
+                  <linearGradient id={`${baseId}-down`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor={thread.gradDown0} />
+                    <stop offset="30%" stopColor={thread.gradDown30} />
+                    <stop offset="60%" stopColor={thread.gradDown60} />
+                    <stop offset="85%" stopColor="hsl(0, 0%, 12%)" />
+                    <stop offset="100%" stopColor="hsl(0, 0%, 6%)" />
+                  </linearGradient>
+                  {/* UP gradient */}
+                  <linearGradient id={`${baseId}-up`} x1="0" y1={thread.y1} x2="0" y2={thread.y2} gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor={thread.gradUp0} />
+                    <stop offset="50%" stopColor={thread.gradUp50} />
+                    <stop offset="100%" stopColor={thread.gradUp100} />
+                  </linearGradient>
+                </Fragment>
+              );
+            })}
+          </defs>
+
+          <rect
+            x={0}
+            y={0}
+            width={VIEWBOX_SIZE}
+            height={VIEWBOX_SIZE}
+            fill={`url(#${filterId}-overlay)`}
+            opacity={0.9}
+            style={{ mixBlendMode: "screen" }}
+          />
+
+          <g filter={`url(#${filterId})`} style={{ willChange: "filter", transform: "translateZ(0)" }}>
+            {threads.map((thread) => {
+              // Calculate CSS animation parameters from thread properties
+              // Convert frequency (0.0006-0.0015) to duration in seconds
+              const driftDuration = thread.driftFreq > 0 ? 1 / (thread.driftFreq * 1000) : 8;
+              const swayDuration = thread.swayFreq > 0 ? 1 / (thread.swayFreq * 1000) : 8;
+              const floatDuration = (driftDuration + swayDuration) / 2;
+
+              // Convert amplitude (0.003-0.00875) to pixels
+              // Amplitude is in normalized coordinates, scale to viewbox size
+              const driftAmount = thread.driftAmp * VIEWBOX_SIZE * 0.5;
+              const swayAmount = thread.swayAmp * VIEWBOX_SIZE * 0.5;
+
+              // Use phase for animation delay
+              const delay = (thread.swayPhase / (Math.PI * 2)) * floatDuration;
+
+              return (
+                <path
+                  key={thread.id}
+                  d={thread.path}
+                  fill="none"
+                  stroke={`url(#${gradientBaseId}-${thread.id}-${thread.direction})`}
+                  strokeOpacity={thread.opacity}
+                  strokeWidth={thread.weight}
+                  strokeLinecap="round"
+                  className="thread-path"
+                  style={{
+                    "--drift-amount": `${driftAmount}px`,
+                    "--sway-amount": `${swayAmount}px`,
+                    "--float-duration": `${floatDuration}s`,
+                    "--float-delay": `${delay}s`,
+                  } as CSSProperties}
+                  ref={registerPath(thread.id)}
+                />
+              );
+            })}
+          </g>
+        </svg>
+        )}
+      </div>
+
+      {/* Performance Monitor - Toggle with Ctrl+Shift+P */}
+      <TimelinePerformanceMonitor
+        transitioningThreadCount={transitioningCount}
+        totalThreadCount={threads.length}
+      />
+    </>
   );
 }
 
