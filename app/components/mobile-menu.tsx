@@ -69,7 +69,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
     { href: withLocale(locale, "/activities"), label: t.nav.activities },
-    { href: withLocale(locale, "/research"), label: t.nav.research },
+    // { href: withLocale(locale, "/research"), label: t.nav.research },
     { href: withLocale(locale, "/resources"), label: t.nav.resources },
     { href: withLocale(locale, "/contact"), label: t.nav.contact },
   ];
