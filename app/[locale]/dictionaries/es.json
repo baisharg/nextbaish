@@ -439,73 +439,17 @@
       "current": "Recursos"
     },
     "title": "Recursos de Aprendizaje",
-    "description": "Materiales curados para explorar conceptos de seguridad en IA con seguimiento de progreso",
-    "learningPath": {
-      "title": "Tu Camino de Aprendizaje",
-      "description": "Elige tu nivel para ver recomendaciones personalizadas",
-      "beginner": {
-        "title": "Principiante",
-        "description": "No se requiere formación técnica"
-      },
-      "intermediate": {
-        "title": "Intermedio",
-        "description": "Algo de conocimiento en ML/IA"
-      },
-      "advanced": {
-        "title": "Avanzado",
-        "description": "Sólida formación técnica"
-      },
-      "viewing": "Viendo recursos de nivel {level}",
-      "clearFilter": "Limpiar filtro"
-    },
+    "description": "Materiales curados para explorar conceptos de seguridad en IA",
     "sections": {
       "featuredVideo": {
         "title": "Introducción a la Seguridad en IA",
         "description": "Empieza aquí: Por qué los expertos temen la IA superinteligente – y qué podemos hacer al respecto"
       },
-      "quickWins": {
-        "title": "Victorias Rápidas",
-        "description": "Recursos de 15-30 minutos para estudiantes ocupados"
-      },
-      "communityPicks": {
-        "title": "Favoritos de la Comunidad",
-        "description": "Más recomendados por miembros de BAISH"
-      },
-      "latest": {
-        "title": "Últimas Adiciones",
-        "description": "Recientemente agregados a nuestra colección"
-      },
       "externalOpportunities": {
         "title": "Oportunidades de Capacitación Externa",
         "subtitle": "Próximos cursos, talleres y programas de organizaciones de todo el mundo",
-        "description": "Hay una amplia gama de eventos y programas de capacitación en seguridad de IA, tanto en línea como presenciales. Estos pueden ayudarte a desarrollar habilidades, hacer conexiones y descubrir oportunidades."
-      },
-      "allResources": {
-        "title": "Todos los Recursos",
-        "description": "Filtrar por tipo, tema o nivel de dificultad",
-        "showing": "Mostrando {count} de {total} recursos"
+        "description": "Hay una amplia gama de eventos y programas de capacitación en seguridad de IA, tanto online como presenciales. Estos te pueden ayudar a desarrollar habilidades, hacer conexiones y descubrir oportunidades."
       }
-    },
-    "filters": {
-      "type": "Tipo:",
-      "topic": "Tema:",
-      "all": "Todos"
-    },
-    "difficulties": {
-      "beginner": "Principiante",
-      "intermediate": "Intermedio",
-      "advanced": "Avanzado"
-    },
-    "actions": {
-      "markComplete": "Marcar completo",
-      "completed": "✓ Completado",
-      "start": "Empezá"
-    },
-    "cta": {
-      "title": "¿Listo para empezar?",
-      "description": "Unite a nuestra comunidad para discutir estos recursos y aprender juntos",
-      "studyGroups": "Unite a grupos de estudio",
-      "getInTouch": "Contactar"
     }
   },
   "privacyPolicy": {

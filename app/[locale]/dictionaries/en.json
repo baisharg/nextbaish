@@ -439,73 +439,17 @@
       "current": "Resources"
     },
     "title": "Learning Resources",
-    "description": "Curated materials for exploring AI safety concepts with progress tracking",
-    "learningPath": {
-      "title": "Your Learning Path",
-      "description": "Choose your level to see personalized recommendations",
-      "beginner": {
-        "title": "Beginner",
-        "description": "No technical background needed"
-      },
-      "intermediate": {
-        "title": "Intermediate",
-        "description": "Some ML/AI knowledge"
-      },
-      "advanced": {
-        "title": "Advanced",
-        "description": "Strong technical background"
-      },
-      "viewing": "Viewing {level} resources",
-      "clearFilter": "Clear filter"
-    },
+    "description": "Curated materials for exploring AI safety concepts",
     "sections": {
       "featuredVideo": {
         "title": "Introduction to AI Safety",
         "description": "Start here: Why experts fear superintelligent AI – and what we can do about it"
       },
-      "quickWins": {
-        "title": "Quick Wins",
-        "description": "15-30 minute resources for busy learners"
-      },
-      "communityPicks": {
-        "title": "Community Picks",
-        "description": "Most recommended by BAISH members"
-      },
-      "latest": {
-        "title": "Latest Additions",
-        "description": "Recently added to our collection"
-      },
       "externalOpportunities": {
         "title": "External Training Opportunities",
         "subtitle": "Upcoming courses, workshops, and programs from organizations worldwide",
         "description": "There's a wide range of events and training programs in AI safety, both online and in-person. These can help you build skills, make connections, and discover opportunities."
-      },
-      "allResources": {
-        "title": "All Resources",
-        "description": "Filter by type, topic, or difficulty level",
-        "showing": "Showing {count} of {total} resources"
       }
-    },
-    "filters": {
-      "type": "Type:",
-      "topic": "Topic:",
-      "all": "All"
-    },
-    "difficulties": {
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced"
-    },
-    "actions": {
-      "markComplete": "Mark Complete",
-      "completed": "✓ Completed",
-      "start": "Start"
-    },
-    "cta": {
-      "title": "Ready to Get Started?",
-      "description": "Join our community to discuss these resources and learn together",
-      "studyGroups": "Join Study Groups",
-      "getInTouch": "Get in Touch"
     }
   },
   "privacyPolicy": {
