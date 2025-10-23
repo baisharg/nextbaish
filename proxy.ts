@@ -26,7 +26,7 @@ function prefersLocale(request: NextRequest): string {
   return i18n.defaultLocale;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (LOCALE_PREFIX_PATTERN.test(pathname)) {
