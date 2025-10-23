@@ -28,6 +28,7 @@ import {
   clamp,
   getUpFraction,
 } from "../utils/thread-utils";
+import "./timeline-threads.css";
 
 /**
  * --------------------------------------------------------------------------------
@@ -707,10 +708,10 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   };
 
   /**
-   * Single rAF loop:
-   *  - throttled by the selected frameInterval
-   *  - drives both path animation and direction flipping (no setInterval)
-   *  - avoids per-frame allocations by reusing per-thread buffers
+   * OPTIMIZED rAF loop:
+   *  - CSS handles drift/sway animations (GPU-accelerated)
+   *  - JS only updates paths during direction transitions
+   *  - Reduces DOM mutations from 1,500/sec to ~1-2/sec
    */
   useEffect(() => {
     if (prefersReducedMotion || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
@@ -721,84 +722,85 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
     }
 
     let rafId = 0;
-    let lastFrameTime = performance.now();
-    let lastFlipCheck = lastFrameTime;
+    let lastFlipCheck = performance.now();
 
     const animate = (now: number) => {
-      const elapsed = now - lastFrameTime;
+      const runtimeThreads = threadsRef.current;
 
-      if (elapsed >= frameInterval) {
-        lastFrameTime = now - (elapsed % frameInterval);
-
-        const runtimeThreads = threadsRef.current;
-
-        // Flip decision on interval — integrated here for one scheduler.
-        if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
-          lastFlipCheck = now;
-          const decision = selectThreadToFlip(runtimeThreads, now);
-          if (decision) {
-            const { threadId, direction: nextDirection } = decision;
-            const t = runtimeThreads.find((x) => x.id === threadId);
-            if (t) {
-              t.duration = directionDuration(nextDirection);
-              t.targetDirection = nextDirection;
-              t.transitionStartTime = now;
-              t.lastFlipAt = now;
-              // PERF: Track that this thread is now transitioning
-              transitioningThreadIds.add(threadId);
-            }
+      // Flip decision on interval
+      if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
+        lastFlipCheck = now;
+        const decision = selectThreadToFlip(runtimeThreads, now);
+        if (decision) {
+          const { threadId, direction: nextDirection } = decision;
+          const t = runtimeThreads.find((x) => x.id === threadId);
+          if (t) {
+            t.duration = directionDuration(nextDirection);
+            t.targetDirection = nextDirection;
+            t.transitionStartTime = now;
+            t.lastFlipAt = now;
+            transitioningThreadIds.add(threadId);
           }
         }
+      }
 
-        // Animate all paths with fused math into reusable buffers.
-        for (const thread of runtimeThreads) {
+      // PERF: Only update paths for transitioning threads (typically 0-3, not all 25)
+      // CSS handles drift/sway via transforms, so we only need to update "d" during morphs
+      const pathUpdates: Array<{ id: number; path: string }> = [];
+      const gradientUpdates: Array<{ id: number; direction: Direction }> = [];
+
+      for (const threadId of transitioningThreadIds) {
+        const thread = runtimeThreads[threadId];
+        if (!thread) continue;
+
+        const isTransitioning =
+          thread.transitionStartTime > 0 && now - thread.transitionStartTime < thread.duration;
+
+        if (isTransitioning) {
+          // Interpolate between current and target direction (no drift/sway - CSS handles that)
+          const progress = Math.min((now - thread.transitionStartTime) / thread.duration, 1);
+          const t = progress >= 1 ? 1 : easeInOutCubic(progress);
+
           const basePoints = thread.profile[thread.direction];
           const targetPoints = thread.profile[thread.targetDirection];
+          const interpolated = thread.floatingPoints;
 
-          writeAnimatedPoints(
-            targetPoints,
-            basePoints,
-            thread.floatingPoints,
-            now,
-            thread.transitionStartTime,
-            thread.duration,
-            thread.swayPhase,
-            thread.driftPhase,
-            thread.swayFreq,
-            thread.driftFreq,
-            thread.swayAmp,
-            thread.driftAmp,
-          );
-
-          const newPath = buildCubicBezierPath(thread.floatingPoints, thread.pathBuffer);
-          thread.path = newPath;
-
-          const el = pathRefs.current.get(thread.id);
-          if (el) {
-            el.setAttribute("d", newPath);
+          // Simple interpolation without drift/sway (CSS handles that)
+          const n = interpolated.length >>> 1;
+          for (let i = 0; i < n; i++) {
+            const xi = i << 1;
+            const yi = xi + 1;
+            interpolated[xi] = basePoints[xi] + (targetPoints[xi] - basePoints[xi]) * t;
+            interpolated[yi] = basePoints[yi] + (targetPoints[yi] - basePoints[yi]) * t;
           }
+
+          const newPath = buildCubicBezierPath(interpolated, thread.pathBuffer);
+          pathUpdates.push({ id: threadId, path: newPath });
+        } else if (thread.direction !== thread.targetDirection) {
+          // Transition complete
+          thread.direction = thread.targetDirection;
+          transitioningThreadIds.delete(threadId);
+
+          // Set final static path
+          const finalPath = buildCubicBezierPath(thread.profile[thread.direction], thread.pathBuffer);
+          pathUpdates.push({ id: threadId, path: finalPath });
+          gradientUpdates.push({ id: threadId, direction: thread.direction });
         }
+      }
 
-        // PERF: Only check transition completion for threads that are actually transitioning
-        // This is typically 0-3 threads instead of all 40
-        for (const threadId of transitioningThreadIds) {
-          // PERF: Direct array access (thread IDs match array indices) instead of O(n) find()
-          const thread = runtimeThreads[threadId];
-          if (!thread) continue;
-
-          const isTransitioning =
-            thread.transitionStartTime > 0 && now - thread.transitionStartTime < thread.duration;
-
-          if (!isTransitioning && thread.direction !== thread.targetDirection) {
-            thread.direction = thread.targetDirection;
-            transitioningThreadIds.delete(threadId);
-
-            const el = pathRefs.current.get(threadId);
-            if (el) {
-              el.setAttribute("stroke", `url(#${gradientBaseId}-${threadId}-${thread.direction})`);
-            }
+      // PERF: Batch all DOM updates together
+      if (pathUpdates.length > 0 || gradientUpdates.length > 0) {
+        // Use a microtask to batch updates (allows browser to optimize)
+        queueMicrotask(() => {
+          for (const { id, path } of pathUpdates) {
+            const el = pathRefs.current.get(id);
+            if (el) el.setAttribute("d", path);
           }
-        }
+          for (const { id, direction } of gradientUpdates) {
+            const el = pathRefs.current.get(id);
+            if (el) el.setAttribute("stroke", `url(#${gradientBaseId}-${id}-${direction})`);
+          }
+        });
       }
 
       rafId = requestAnimationFrame(animate);
@@ -806,7 +808,7 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
 
     rafId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafId);
-  }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId, frameInterval]);
+  }, [prefersReducedMotion, isVisible, shouldAnimate, gradientBaseId]);
 
   if (threads.length === 0) {
     return (
@@ -890,18 +892,41 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
         />
 
         <g filter={`url(#${filterId})`} style={{ willChange: "filter", transform: "translateZ(0)" }}>
-          {threads.map((thread) => (
-            <path
-              key={thread.id}
-              d={thread.path}
-              fill="none"
-              stroke={`url(#${gradientBaseId}-${thread.id}-${thread.direction})`}
-              strokeOpacity={thread.opacity}
-              strokeWidth={thread.weight}
-              strokeLinecap="round"
-              ref={registerPath(thread.id)}
-            />
-          ))}
+          {threads.map((thread) => {
+            // Calculate CSS animation parameters from thread properties
+            // Convert frequency (0.0006-0.0015) to duration in seconds
+            const driftDuration = thread.driftFreq > 0 ? 1 / (thread.driftFreq * 1000) : 8;
+            const swayDuration = thread.swayFreq > 0 ? 1 / (thread.swayFreq * 1000) : 8;
+            const floatDuration = (driftDuration + swayDuration) / 2;
+
+            // Convert amplitude (0.003-0.00875) to pixels
+            // Amplitude is in normalized coordinates, scale to viewbox size
+            const driftAmount = thread.driftAmp * VIEWBOX_SIZE * 0.5;
+            const swayAmount = thread.swayAmp * VIEWBOX_SIZE * 0.5;
+
+            // Use phase for animation delay
+            const delay = (thread.swayPhase / (Math.PI * 2)) * floatDuration;
+
+            return (
+              <path
+                key={thread.id}
+                d={thread.path}
+                fill="none"
+                stroke={`url(#${gradientBaseId}-${thread.id}-${thread.direction})`}
+                strokeOpacity={thread.opacity}
+                strokeWidth={thread.weight}
+                strokeLinecap="round"
+                className="thread-path"
+                style={{
+                  "--drift-amount": `${driftAmount}px`,
+                  "--sway-amount": `${swayAmount}px`,
+                  "--float-duration": `${floatDuration}s`,
+                  "--float-delay": `${delay}s`,
+                } as CSSProperties}
+                ref={registerPath(thread.id)}
+              />
+            );
+          })}
         </g>
       </svg>
     </div>

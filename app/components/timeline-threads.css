@@ -1,0 +1,60 @@
+/* Timeline Threads Animation - GPU Accelerated */
+
+/* Drift animation (horizontal oscillation) */
+@keyframes thread-drift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(var(--drift-amount, 3px));
+  }
+}
+
+/* Sway animation (vertical oscillation) */
+@keyframes thread-sway {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--sway-amount, 5px));
+  }
+}
+
+/* Combined drift + sway for better performance */
+@keyframes thread-float {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(var(--drift-amount, 3px), calc(var(--sway-amount, 5px) * 0.7));
+  }
+  50% {
+    transform: translate(calc(var(--drift-amount, 3px) * 0.5), var(--sway-amount, 5px));
+  }
+  75% {
+    transform: translate(calc(var(--drift-amount, 3px) * -0.3), calc(var(--sway-amount, 5px) * 0.5));
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Apply to thread paths */
+.thread-path {
+  /* GPU acceleration hints */
+  will-change: transform;
+  transform: translateZ(0);
+
+  /* Apply animation */
+  animation: thread-float var(--float-duration, 8s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+
+/* Pause animations when reduced motion is preferred */
+@media (prefers-reduced-motion: reduce) {
+  .thread-path {
+    animation: none;
+  }
+}

@@ -3,7 +3,7 @@ import type { ReactNode, CSSProperties } from "react";
 import { Suspense } from "react";
 import { Geist, Geist_Mono, IBM_Plex_Serif } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
-// import TimelineThreads from "../components/timeline-threads-loader";
+import TimelineThreads from "../components/timeline-threads-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { LanguageProvider } from "../contexts/language-context";
@@ -41,7 +41,7 @@ const geistMono = Geist_Mono({
   fallback: ["monospace"],
 });
 
-// const TIMELINE_STYLE: CSSProperties = { opacity: 0.32 };
+const TIMELINE_STYLE: CSSProperties = { opacity: 0.32 };
 
 export async function generateMetadata({
   params,
@@ -107,7 +107,7 @@ export default async function LocaleLayout({
         >
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
-              {/* <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} /> */}
+              <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
               <Header locale={currentLocale} t={dict.header} />
               {children}
               <SpeedInsights />
