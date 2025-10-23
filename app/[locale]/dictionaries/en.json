@@ -445,6 +445,48 @@
         "title": "Introduction to AI Safety",
         "description": "Start here: Why experts fear superintelligent AI – and what we can do about it"
       },
+      "selfStudy": {
+        "title": "Self-study",
+        "lastUpdated": "Last updated: October 22, 2025",
+        "description": "These curricula and reading lists enable you to dive deeper into AI safety through independent learning.",
+        "fundamentalReading": {
+          "title": "Fundamental reading",
+          "items": [
+            {
+              "name": "AI Alignment Forum: Curated Sequences",
+              "description": "List of sequences curated by the AI Alignment Forum team, featuring work from Richard Ngo, Paul Christiano, etc.",
+              "category": "Technical Alignment",
+              "createdBy": "Various",
+              "url": "https://www.alignmentforum.org/library"
+            }
+          ]
+        },
+        "standardCourses": {
+          "title": "Standard introductory courses",
+          "items": [
+            {
+              "name": "BlueDot Impact: Alignment & Governance",
+              "description": "Covers key concepts and research perspectives in AI safety, split into two main streams: Alignment and Governance. Previously known as AI Safety Fundamentals.",
+              "category": "Technical Alignment, Governance",
+              "createdBy": "BlueDot Impact",
+              "url": "https://bluedot.org/courses"
+            }
+          ]
+        },
+        "relatedResources": {
+          "title": "Related resources",
+          "eventsTraining": {
+            "title": "Events & training",
+            "description": "Upcoming fellowships, conferences, facilitated courses etc.",
+            "url": "https://www.aisafety.com/events-and-training"
+          },
+          "aiDigest": {
+            "title": "AI Digest",
+            "description": "Interactive explainers of AI capabilities and trends",
+            "url": "https://theaidigest.org/"
+          }
+        }
+      },
       "externalOpportunities": {
         "title": "External Training Opportunities",
         "subtitle": "Upcoming courses, workshops, and programs from organizations worldwide",

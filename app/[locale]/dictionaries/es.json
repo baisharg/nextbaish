@@ -445,6 +445,48 @@
         "title": "Introducción a la Seguridad en IA",
         "description": "Empieza aquí: Por qué los expertos temen la IA superinteligente – y qué podemos hacer al respecto"
       },
+      "selfStudy": {
+        "title": "Autoestudio",
+        "lastUpdated": "Última actualización: 22 de octubre de 2025",
+        "description": "Estos currículos y listas de lectura te permiten profundizar en la seguridad de IA a través del aprendizaje independiente.",
+        "fundamentalReading": {
+          "title": "Lecturas fundamentales",
+          "items": [
+            {
+              "name": "AI Alignment Forum: Secuencias Curadas",
+              "description": "Lista de secuencias curadas por el equipo del AI Alignment Forum, con trabajos de Richard Ngo, Paul Christiano, etc.",
+              "category": "Alineación Técnica",
+              "createdBy": "Varios",
+              "url": "https://www.alignmentforum.org/library"
+            }
+          ]
+        },
+        "standardCourses": {
+          "title": "Cursos introductorios estándar",
+          "items": [
+            {
+              "name": "BlueDot Impact: Alineación y Gobernanza",
+              "description": "Cubre conceptos clave y perspectivas de investigación en seguridad de IA, divididos en dos áreas principales: Alineación y Gobernanza. Anteriormente conocido como AI Safety Fundamentals.",
+              "category": "Alineación Técnica, Gobernanza",
+              "createdBy": "BlueDot Impact",
+              "url": "https://bluedot.org/courses"
+            }
+          ]
+        },
+        "relatedResources": {
+          "title": "Recursos relacionados",
+          "eventsTraining": {
+            "title": "Eventos y capacitación",
+            "description": "Próximas becas, conferencias, cursos facilitados, etc.",
+            "url": "https://www.aisafety.com/events-and-training"
+          },
+          "aiDigest": {
+            "title": "AI Digest",
+            "description": "Explicaciones interactivas de capacidades y tendencias de IA",
+            "url": "https://theaidigest.org/"
+          }
+        }
+      },
       "externalOpportunities": {
         "title": "Oportunidades de Capacitación Externa",
         "subtitle": "Próximos cursos, talleres y programas de organizaciones de todo el mundo",
