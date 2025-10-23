@@ -78,6 +78,22 @@ export default function Resources() {
     return true;
   });
 
+  // Item 2.1: Responsive Virtual Scroll Viewport
+  // Calculate dynamic height based on viewport
+  const [containerHeight, setContainerHeight] = useState(600);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      // Use viewport height minus header/padding (approximately 400px)
+      const height = Math.max(600, window.innerHeight - 400);
+      setContainerHeight(height);
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
   // Virtualizer setup for main resources list
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -102,6 +118,21 @@ export default function Resources() {
 
   // Latest additions
   const latestResources = resources.filter((r) => r.isNew);
+
+  // Item 2.3: Skeleton Loading Component
+  const ResourceCardSkeleton = () => (
+    <div className="card-glass dither-cornerglow animate-pulse p-4 rounded-xl mb-3">
+      <div className="space-y-3">
+        <div className="h-4 bg-slate-300 rounded w-3/4"></div>
+        <div className="h-3 bg-slate-200 rounded w-full"></div>
+        <div className="h-3 bg-slate-200 rounded w-5/6"></div>
+        <div className="flex gap-2 mt-4">
+          <div className="h-6 w-16 bg-slate-200 rounded-full"></div>
+          <div className="h-6 w-20 bg-slate-200 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -621,7 +652,7 @@ export default function Resources() {
               ref={parentRef}
               className="relative"
               style={{
-                height: '600px',
+                height: `${containerHeight}px`,
                 overflow: 'auto',
               }}
             >
@@ -634,6 +665,25 @@ export default function Resources() {
               >
                 {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                   const resource = filteredResources[virtualRow.index];
+
+                  // Item 2.3: Show skeleton if localStorage not loaded yet
+                  if (!isCompletedLoaded) {
+                    return (
+                      <div
+                        key={virtualRow.key}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <ResourceCardSkeleton />
+                      </div>
+                    );
+                  }
+
                   return (
                     <article
                       key={resource.id}

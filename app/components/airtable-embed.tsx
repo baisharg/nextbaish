@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface AirtableEmbedProps {
   /** Airtable share ID (e.g., shrOUDQGe7Ucei5OG) */
@@ -31,7 +31,32 @@ export default function AirtableEmbed({
   width = '100%',
   title = 'Airtable Timeline View'
 }: AirtableEmbedProps) {
+  const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Lazy load with IntersectionObserver
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' } // Start loading 200px before visible
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
 
   // Build the embed URL
   const buildEmbedUrl = () => {
@@ -57,28 +82,38 @@ export default function AirtableEmbed({
   const embedUrl = buildEmbedUrl();
 
   return (
-    <div className="relative w-full" style={{ height }}>
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Loading timeline...</p>
-          </div>
+    <div ref={containerRef} className="relative w-full" style={{ height }}>
+      {!isVisible ? (
+        // Show placeholder while not visible
+        <div className="flex items-center justify-center w-full h-full bg-slate-100 rounded-lg border border-dashed border-slate-200">
+          <p className="text-sm text-slate-500">Loading timeline...</p>
         </div>
+      ) : (
+        // Render iframe when visible
+        <>
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Loading timeline...</p>
+              </div>
+            </div>
+          )}
+          <iframe
+            className="rounded-lg border border-gray-200 dark:border-gray-700"
+            src={embedUrl}
+            width={width}
+            height={height}
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(0, 0, 0, 0.1)'
+            }}
+            title={title}
+            loading="lazy"
+            onLoad={() => setIsLoading(false)}
+          />
+        </>
       )}
-      <iframe
-        className="rounded-lg border border-gray-200 dark:border-gray-700"
-        src={embedUrl}
-        width={width}
-        height={height}
-        style={{
-          background: 'transparent',
-          border: '1px solid rgba(0, 0, 0, 0.1)'
-        }}
-        title={title}
-        loading="lazy"
-        onLoad={() => setIsLoading(false)}
-      />
     </div>
   );
 }

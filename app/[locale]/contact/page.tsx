@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Script from "next/script";
+import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
@@ -7,7 +8,11 @@ import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
-import FAQAccordion from "@/app/components/faq-accordion";
+
+// Lazy load FAQ accordion since it's below the fold
+const FAQAccordion = dynamic(() => import("@/app/components/faq-accordion"), {
+  loading: () => <div className="h-96 animate-pulse rounded-xl bg-slate-100" />,
+});
 
 export default async function ContactPage({
   params,

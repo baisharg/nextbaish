@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
+const bundleAnalyzer = require("@next/bundle-analyzer");
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig: NextConfig = {
   // Production optimizations
+  // Note: Next.js 16+ uses SWC minification by default (no config needed)
   compiler: {
     // Remove console.log in production
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
@@ -35,4 +41,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

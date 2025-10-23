@@ -1,12 +1,17 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
 import CalendarSection from "@/app/components/calendar-section";
-import EventsCarousel from "@/app/components/events-carousel";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+
+// Lazy load EventsCarousel since it's below the fold
+const EventsCarousel = dynamic(() => import("@/app/components/events-carousel"), {
+  loading: () => <div className="h-96 animate-pulse rounded-xl bg-slate-100" />,
+});
 
 export default async function Activities({
   params,
