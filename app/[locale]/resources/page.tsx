@@ -7,6 +7,7 @@ import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
+import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
 
 // Lazy load heavy components for better initial load performance
 const AirtableEmbed = lazy(() => import("@/app/components/airtable-embed"));
@@ -91,99 +92,41 @@ export default function Resources() {
             {/* Main Content - 2 columns */}
             <div className="lg:col-span-2 space-y-6">
               {/* Fundamental Reading */}
-              <div className="card-glass dither-cornerglow space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-                    {dict.resources.sections.selfStudy.fundamentalReading.title}
-                  </p>
-                  {dict.resources.sections.selfStudy.fundamentalReading.items.map((item: any, idx: number) => (
-                    <div key={idx} className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#9275E5]/10">
-                          <svg className="h-6 w-6 text-[#9275E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <h3 className="text-xl font-semibold text-slate-900">
-                            {item.name}
-                          </h3>
-                          <p className="text-sm text-slate-600">
-                            {item.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <div className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                          <span className="font-medium">Category:</span> {item.category}
-                        </div>
-                        <div className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                          <span className="font-medium">Created by:</span> {item.createdBy}
-                        </div>
-                      </div>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-tertiary)]"
-                      >
-                        Visit Library
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    </div>
-                  ))}
-                </div>
+              <div className="space-y-4">
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
+                  {dict.resources.sections.selfStudy.fundamentalReading.title}
+                </p>
+                {dict.resources.sections.selfStudy.fundamentalReading.items.map((item: any, idx: number) => (
+                  <InteractiveCourseCard
+                    key={idx}
+                    title={item.name}
+                    description={item.description}
+                    category={item.category}
+                    createdBy={item.createdBy}
+                    url={item.url}
+                    icon="book"
+                    accentColor="#9275E5"
+                  />
+                ))}
               </div>
 
               {/* Standard Courses */}
-              <div className="card-glass dither-cornerglow space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-                    {dict.resources.sections.selfStudy.standardCourses.title}
-                  </p>
-                  {dict.resources.sections.selfStudy.standardCourses.items.map((item: any, idx: number) => (
-                    <div key={idx} className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#A8C5FF]/20">
-                          <svg className="h-6 w-6 text-[#9275E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                            <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <h3 className="text-xl font-semibold text-slate-900">
-                            {item.name}
-                          </h3>
-                          <p className="text-sm text-slate-600">
-                            {item.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <div className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                          <span className="font-medium">Category:</span> {item.category}
-                        </div>
-                        <div className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                          <span className="font-medium">Created by:</span> {item.createdBy}
-                        </div>
-                      </div>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-tertiary)]"
-                      >
-                        Explore Courses
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    </div>
-                  ))}
-                </div>
+              <div className="space-y-4">
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
+                  {dict.resources.sections.selfStudy.standardCourses.title}
+                </p>
+                {dict.resources.sections.selfStudy.standardCourses.items.map((item: any, idx: number) => (
+                  <InteractiveCourseCard
+                    key={idx}
+                    title={item.name}
+                    description={item.description}
+                    category={item.category}
+                    createdBy={item.createdBy}
+                    url={item.url}
+                    icon="graduation"
+                    accentColor="#A8C5FF"
+                  />
+                ))}
               </div>
             </div>
 
