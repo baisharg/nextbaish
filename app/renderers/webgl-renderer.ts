@@ -1162,12 +1162,12 @@ export class WebGLRenderer implements Renderer {
 
     // Apply configurable positioning offsets
     const offsetXMultiplier = this.config?.offsetXMultiplier ?? 0.5; // default: center horizontally
-    const offsetYMultiplier = this.config?.offsetYMultiplier ?? -0.35; // default: -0.35 (threads above viewport)
+    const offsetYMultiplier = this.config?.offsetYMultiplier ?? -0.35; // default: 0.0 (centered, prevents gap when scrolling)
     const offsetX = (canvasWidth - scale) * offsetXMultiplier;
     const offsetY = (canvasHeight - scale) * offsetYMultiplier;
 
-    // Scale up thread width to match SVG visual weight (SVG viewBox units scale proportionally)
-    const WIDTH_SCALE = 2.0; // Increase base width for better visibility
+    // Scale up thread width for better visibility and contrast against background
+    const WIDTH_SCALE = 3; // Increased from 2.0 for thicker, more prominent threads
     const halfWidth = (width * dpr * WIDTH_SCALE) / 2;
 
     // Generate smooth curve points using cubic Bezier interpolation

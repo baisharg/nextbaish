@@ -160,35 +160,39 @@ function hslToArray(hsl: HSL): [number, number, number] {
 }
 
 function createGradientStops(color: HSL): { up: ColorStop[]; down: ColorStop[] } {
-  // Match the original SVG gradient stops
+  // UP gradient: Darker, richer colors for better contrast
   const upStops: ColorStop[] = [
-    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: 10 })) },
-    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: 0 })) },
-    { yPct: 1, hsl: hslToArray(adjustColor(color, { h: 24, s: -3, l: -12 })) },
+    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: -5 })) },  // Darker top (was l: 10)
+    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: -5 })) },  // Darker mid (was l: 0)
+    { yPct: 1, hsl: hslToArray(adjustColor(color, { h: 24, s: -3, l: -15 })) }, // Darker bottom (was l: -12)
   ];
 
   const downStops: ColorStop[] = [
-    { yPct: 0, hsl: hslToArray(color) },
-    { yPct: 0.25, hsl: hslToArray(adjustColor(color, { s: -20, l: -15 })) },
-    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { s: -60, l: -35 })) },
-    { yPct: 0.7, hsl: [0, 0, 15] }, // Dark gray starts at 70%
-    { yPct: 1, hsl: [0, 0, 0] }, // Pure black at bottom
+    { yPct: 0, hsl: hslToArray(color) },                                 // Base color
+    { yPct: 0.30, hsl: hslToArray(adjustColor(color, { s: -10, l: -5 })) },  // Subtle darken at 30%
+    { yPct: 0.60, hsl: hslToArray(adjustColor(color, { s: -40, l: -25 })) }, // Heavy darken at 60%
+    { yPct: 0.85, hsl: [0, 0, 12] },                                     // Dark gray at 85%
+    { yPct: 1, hsl: [0, 0, 6] },                                         // Near-black at bottom (not pure black)
   ];
 
   return { up: upStops, down: downStops };
 }
 
 function calculateGradientBounds(profile: PathProfile): { minY: number; maxY: number } {
-  // Calculate static gradient bounds from "down" profile ONLY (matches SVG implementation)
-  // SVG uses the same y1/y2 bounds for both up and down gradients
+  // Calculate static gradient bounds from BOTH up and down profiles
+  // This ensures the gradient covers the full range of thread positions in both directions
   let minY = Infinity;
   let maxY = -Infinity;
-  const down = profile.down;
-  for (let i = 0; i < down.length; i += 2) {
-    const y = down[i + 1];
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
+
+  // Check both up and down profiles to get full Y range
+  for (const path of [profile.up, profile.down]) {
+    for (let i = 0; i < path.length; i += 2) {
+      const y = path[i + 1];
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
   }
+
   return { minY, maxY };
 }
 

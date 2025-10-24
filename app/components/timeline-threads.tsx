@@ -383,14 +383,15 @@ const createThread = (id: number, totalThreads: number): ThreadState => {
   const direction: Direction = rng() < upFraction ? "up" : "down";
   const pathBuffer: string[] = [];
 
-  // Gradient y-bounds (based on "down" path as before).
+  // Gradient y-bounds (from BOTH up and down profiles)
   let minY = Infinity;
   let maxY = -Infinity;
-  const down = profile.down;
-  for (let i = 0; i < down.length; i += 2) {
-    const y = down[i + 1];
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
+  for (const path of [profile.up, profile.down]) {
+    for (let i = 0; i < path.length; i += 2) {
+      const y = path[i + 1];
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
   }
 
   const color = chooseColor(rng);
@@ -437,14 +438,15 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
     down: data.profileDown,
   };
 
-  // Gradient y-bounds from "down" path.
+  // Gradient y-bounds from BOTH up and down profiles
   let minY = Infinity;
   let maxY = -Infinity;
-  const down = profile.down;
-  for (let i = 0; i < down.length; i += 2) {
-    const y = down[i + 1];
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
+  for (const path of [profile.up, profile.down]) {
+    for (let i = 0; i < path.length; i += 2) {
+      const y = path[i + 1];
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
   }
 
   const color = data.color;
@@ -696,7 +698,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
 
-    const PARALLAX_FACTOR = 0.05; // Subtle parallax effect (15% of scroll speed)
+    const PARALLAX_FACTOR = 0.02; // Subtle parallax effect (reduced to prevent bottom gap)
     let rafId = 0;
     let currentScroll = window.scrollY;
 
