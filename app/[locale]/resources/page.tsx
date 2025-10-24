@@ -1,9 +1,7 @@
-"use client";
-
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
-import { useLocale, useDict } from "@/app/contexts/language-context";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
@@ -16,13 +14,20 @@ import {
   ArrowRight01Icon,
   Mail01Icon
 } from "@hugeicons/core-free-icons";
+import { getDictionary } from "../dictionaries";
+import { isAppLocale, type AppLocale } from "@/i18n.config";
 
 // Lazy load heavy components for better initial load performance
-const AirtableEmbed = lazy(() => import("@/app/components/airtable-embed"));
+const AirtableEmbed = dynamic(() => import("@/app/components/airtable-embed"));
 
-export default function Resources() {
-  const locale = useLocale();
-  const dict = useDict();
+export default async function Resources({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -31,7 +36,7 @@ export default function Resources() {
         <FadeInSection variant="fade" as="section">
         <section className="space-y-6">
           <div className="text-sm text-slate-600">
-            <Link href={withLocale(locale, "/")} className="hover:text-[var(--color-accent-primary)] transition">
+            <Link href={withLocale(currentLocale, "/")} className="hover:text-[var(--color-accent-primary)] transition">
               {dict.resources.breadcrumb.home}
             </Link>
             {" / "}
@@ -251,7 +256,7 @@ export default function Resources() {
         </FadeInSection>
       </main>
 
-      <Footer locale={locale} t={dict.footer} />
+      <Footer locale={currentLocale} t={dict.footer} />
     </div>
   );
 }

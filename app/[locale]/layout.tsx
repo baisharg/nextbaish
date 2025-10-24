@@ -5,8 +5,9 @@ import { Geist, Geist_Mono, IBM_Plex_Serif } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
 // import TimelineThreads from "../components/timeline-threads-with-controls"; // Uncomment for testing
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
+import { DeferredAnalytics } from "../components/deferred-analytics";
+import { LCPDebugger } from "../components/lcp-debugger";
+import { PerformanceMonitor } from "../components/performance-monitor";
 import { LanguageProvider } from "../contexts/language-context";
 import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
@@ -19,18 +20,18 @@ const ibmPlexSerif = IBM_Plex_Serif({
   variable: "--font-plex-serif",
   subsets: ["latin"],
   weight: ["400", "600"], // Reduced to only essential weights
-  display: "swap",
+  display: "optional",
   preload: true,
-  fallback: ["Georgia", "serif"],
+  fallback: ["georgia", "serif"],
   adjustFontFallback: true, // Reduce layout shift
 });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   preload: true,
-  fallback: ["system-ui", "-apple-system", "sans-serif"],
+  fallback: ["system-ui", "arial"],
   adjustFontFallback: true, // Reduce layout shift
 });
 
@@ -111,9 +112,10 @@ export default async function LocaleLayout({
               <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
               <Header locale={currentLocale} t={dict.header} />
               {children}
-              <SpeedInsights />
-              <Analytics />
+              <DeferredAnalytics />
+              <PerformanceMonitor />
               <RUMMonitor />
+              {process.env.NODE_ENV === "development" && <LCPDebugger />}
             </LanguageProvider>
           </Suspense>
         </body>

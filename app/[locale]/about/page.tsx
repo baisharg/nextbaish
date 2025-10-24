@@ -303,6 +303,8 @@ export default async function AboutPage({
                   sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center 30%" }}
+                  loading="lazy"
+                  quality={80}
                 />
               </div>
               <div className="space-y-1">
@@ -356,6 +358,8 @@ export default async function AboutPage({
                   sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center 40%" }}
+                  loading="lazy"
+                  quality={80}
                 />
               </div>
               <div className="space-y-1">
@@ -409,6 +413,8 @@ export default async function AboutPage({
                   sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center" }}
+                  loading="lazy"
+                  quality={80}
                 />
               </div>
               <div className="space-y-1">
@@ -462,6 +468,8 @@ export default async function AboutPage({
                   sizes="180px"
                   className="object-cover"
                   style={{ objectPosition: "center" }}
+                  loading="lazy"
+                  quality={80}
                 />
               </div>
               <div className="space-y-1">

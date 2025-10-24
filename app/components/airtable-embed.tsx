@@ -50,7 +50,7 @@ export default function AirtableEmbed({
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' } // Start loading 200px before visible
+      { rootMargin: '300px' } // Start loading 300px before visible
     );
 
     observer.observe(node);

@@ -133,6 +133,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                 height={40}
                 sizes="32px"
                 className="object-contain flex-shrink-0"
+                quality={90}
               />
               <span className={`text-lg font-semibold ${
                 pathname === withLocale(locale, "/")

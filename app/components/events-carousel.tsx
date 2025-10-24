@@ -140,6 +140,8 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
+                  loading="lazy"
+                  quality={80}
                 />
               </div>
             </div>

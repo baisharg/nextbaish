@@ -1,5 +1,3 @@
-"use client";
-
 interface AnimatedTitleProps {
   text: string;
   slug: string; // Unique identifier for the page/post
@@ -13,6 +11,8 @@ interface AnimatedTitleProps {
  * Splits title text into individual words and assigns unique view-transition-name
  * to each word. This creates sophisticated word-by-word morphing animations
  * during page transitions (nmn.sh style).
+ *
+ * Now a Server Component - no client-side JavaScript needed for static markup.
  *
  * @example
  * <AnimatedTitle

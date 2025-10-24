@@ -64,7 +64,9 @@ export function YouTubeFacade({ videoId, title, className = "" }: YouTubeFacadeP
         fill
         sizes="(max-width: 768px) 100vw, 800px"
         className="object-cover"
+        quality={85}
         priority
+        fetchPriority="high"
       />
 
       {/* Dark overlay on hover */}
