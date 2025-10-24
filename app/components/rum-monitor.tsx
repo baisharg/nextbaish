@@ -4,11 +4,66 @@ import { useEffect } from "react";
 
 /**
  * Real User Monitoring (RUM) component
- * Measures Core Web Vitals (LCP, FID, CLS) and sends to analytics
+ * Measures Core Web Vitals (LCP, FID, CLS, INP, TTFB) and sends to analytics
  */
 export default function RUMMonitor() {
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const isDev = process.env.NODE_ENV === "development";
+    const device = () => (window.innerWidth >= 1024 ? "desktop" : "mobile");
+
+    // Helper to send metrics to Vercel Analytics
+    const sendMetric = (name: string, value: number, rating?: string) => {
+      const metric = {
+        name,
+        value,
+        device: device(),
+        rating,
+        pathname: window.location.pathname,
+      };
+
+      // Log in development
+      if (isDev) {
+        console.log(`[RUM] ${name} (${metric.device}):`, value.toFixed(2), "ms", rating ? `[${rating}]` : "");
+      }
+
+      // Send to Vercel Analytics in production
+      if (typeof window !== "undefined" && (window as any).va) {
+        (window as any).va("event", metric);
+      }
+    };
+
+    // Helper to determine rating based on Web Vitals thresholds
+    const getLCPRating = (value: number) => {
+      if (value <= 2500) return "good";
+      if (value <= 4000) return "needs-improvement";
+      return "poor";
+    };
+
+    const getFIDRating = (value: number) => {
+      if (value <= 100) return "good";
+      if (value <= 300) return "needs-improvement";
+      return "poor";
+    };
+
+    const getCLSRating = (value: number) => {
+      if (value <= 0.1) return "good";
+      if (value <= 0.25) return "needs-improvement";
+      return "poor";
+    };
+
+    const getINPRating = (value: number) => {
+      if (value <= 200) return "good";
+      if (value <= 500) return "needs-improvement";
+      return "poor";
+    };
+
+    const getTTFBRating = (value: number) => {
+      if (value <= 800) return "good";
+      if (value <= 1800) return "needs-improvement";
+      return "poor";
+    };
 
     // Measure LCP (Largest Contentful Paint)
     const lcpObserver = new PerformanceObserver((list) => {
@@ -17,39 +72,70 @@ export default function RUMMonitor() {
 
       if (lastEntry) {
         const lcpTime = (lastEntry as any).renderTime || (lastEntry as any).loadTime || 0;
-        const device = window.innerWidth >= 1024 ? "desktop" : "mobile";
-
-        console.log(`[RUM] LCP (${device}):`, lcpTime.toFixed(2), "ms");
-
-        // TODO: Send to Vercel Analytics when available
-        // window.va("event", { name: "LCP", value: lcpTime, device });
+        sendMetric("LCP", lcpTime, getLCPRating(lcpTime));
       }
     });
 
     try {
       lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
     } catch (e) {
-      console.warn("[RUM] LCP observation not supported");
+      if (isDev) console.warn("[RUM] LCP observation not supported");
     }
 
-    // Measure FID (First Input Delay)
+    // Measure FID (First Input Delay) - Legacy metric, being replaced by INP
     const fidObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       entries.forEach((entry: any) => {
         const fidTime = entry.processingStart - entry.startTime;
-        const device = window.innerWidth >= 1024 ? "desktop" : "mobile";
-
-        console.log(`[RUM] FID (${device}):`, fidTime.toFixed(2), "ms");
-
-        // TODO: Send to Vercel Analytics when available
-        // window.va("event", { name: "FID", value: fidTime, device });
+        sendMetric("FID", fidTime, getFIDRating(fidTime));
       });
     });
 
     try {
       fidObserver.observe({ type: "first-input", buffered: true });
     } catch (e) {
-      console.warn("[RUM] FID observation not supported");
+      if (isDev) console.warn("[RUM] FID observation not supported");
+    }
+
+    // Measure INP (Interaction to Next Paint) - New responsiveness metric
+    // Using event timing API which measures interaction latency
+    let worstINP = 0;
+    const inpObserver = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        const eventEntry = entry as any;
+        // Duration property gives the total interaction latency
+        const inpTime = eventEntry.duration || 0;
+        if (inpTime > worstINP && inpTime > 40) {
+          worstINP = inpTime;
+        }
+      }
+    });
+
+    try {
+      inpObserver.observe({
+        type: "event",
+        buffered: true,
+        durationThreshold: 40
+      } as any); // Cast to any due to incomplete TypeScript definitions
+    } catch (e) {
+      if (isDev) console.warn("[RUM] INP observation not supported");
+    }
+
+    // Measure TTFB (Time to First Byte)
+    const navigationObserver = new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      entries.forEach((entry: any) => {
+        const ttfb = entry.responseStart - entry.requestStart;
+        if (ttfb > 0) {
+          sendMetric("TTFB", ttfb, getTTFBRating(ttfb));
+        }
+      });
+    });
+
+    try {
+      navigationObserver.observe({ type: "navigation", buffered: true });
+    } catch (e) {
+      if (isDev) console.warn("[RUM] Navigation timing not supported");
     }
 
     // Measure CLS (Cumulative Layout Shift)
@@ -69,32 +155,36 @@ export default function RUMMonitor() {
       console.warn("[RUM] CLS observation not supported");
     }
 
-    // Report CLS on page visibility change or unload
-    const reportCLS = () => {
-      const device = window.innerWidth >= 1024 ? "desktop" : "mobile";
-      console.log(`[RUM] CLS (${device}):`, clsValue.toFixed(4));
+    // Report CLS and INP on page visibility change or unload
+    const reportFinalMetrics = () => {
+      sendMetric("CLS", clsValue, getCLSRating(clsValue));
 
-      // TODO: Send to Vercel Analytics when available
-      // window.va("event", { name: "CLS", value: clsValue, device });
+      if (worstINP > 0) {
+        sendMetric("INP", worstINP, getINPRating(worstINP));
+      }
     };
 
-    // Report CLS on visibility change (user leaving page)
-    document.addEventListener("visibilitychange", () => {
+    // Report CLS and INP on visibility change (user leaving page)
+    const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        reportCLS();
+        reportFinalMetrics();
       }
-    });
+    };
 
-    // Report CLS on page unload as fallback
-    window.addEventListener("beforeunload", reportCLS);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Report CLS and INP on page unload as fallback
+    window.addEventListener("beforeunload", reportFinalMetrics);
 
     // Cleanup
     return () => {
       lcpObserver.disconnect();
       fidObserver.disconnect();
       clsObserver.disconnect();
-      document.removeEventListener("visibilitychange", reportCLS);
-      window.removeEventListener("beforeunload", reportCLS);
+      inpObserver.disconnect();
+      navigationObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", reportFinalMetrics);
     };
   }, []);
 
