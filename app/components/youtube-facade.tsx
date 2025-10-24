@@ -57,9 +57,9 @@ export function YouTubeFacade({ videoId, title, className = "" }: YouTubeFacadeP
       tabIndex={0}
       aria-label={`Play video: ${title}`}
     >
-      {/* YouTube thumbnail (maxresdefault for highest quality) */}
+      {/* YouTube thumbnail (sddefault for guaranteed availability) */}
       <Image
-        src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`}
+        src={`https://i.ytimg.com/vi/${videoId}/sddefault.jpg`}
         alt={title}
         fill
         sizes="(max-width: 768px) 100vw, 800px"
