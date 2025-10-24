@@ -48,10 +48,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
 - `pnpm optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
+### Code Quality
+- `pnpm lint` - Run ESLint on all files (0 errors, 45 warnings)
+- `pnpm lint:fix` - Auto-fix fixable linting issues
+- `npx tsc --noEmit` - Run TypeScript type checking
+
 **Notes:**
 - Dev server should remain running at port 3000 during active development
 - Bundle analyzer requires `ANALYZE=true` environment variable (set automatically by script)
 - View bundle reports at `.next/analyze/client.html`, `nodejs.html`, and `edge.html`
+- ESLint config: `eslint.config.mjs` (ESLint v9 flat config format)
 
 ## Project Overview
 
@@ -839,6 +845,16 @@ Renders as: "Learn about AI safety^1 and interpretability^4." with superscript l
 - Client components must be marked with `"use client"`
 - Server components are default in App Router
 
+**ESLint:**
+- Configuration: `eslint.config.mjs` (ESLint v9 flat config)
+- TypeScript support via `typescript-eslint@8.46.2`
+- Run `pnpm lint` before committing to check for issues
+- Run `pnpm lint:fix` to auto-fix fixable issues
+- Prefix unused vars with `_` to avoid warnings (e.g., `_unusedVar`)
+- Avoid explicit `any` types - use proper typing or `unknown`
+- Prefer `const` over `let`, never use `var`
+- Use `console.warn()` or `console.error()` instead of `console.log()` (except in debug components)
+
 **Component Patterns:**
 - Memoize expensive components with `React.memo()`
 - Use `useIsomorphicLayoutEffect` for DOM measurements
@@ -964,6 +980,19 @@ No test infrastructure exists yet. When adding coverage:
 - Powered-by header disabled
 - optimizePackageImports for `@vercel/*` packages
 
+**eslint.config.mjs (ESLint v9 flat config):**
+- ESLint v9 with TypeScript support via `typescript-eslint@8.46.2`
+- Extends `@eslint/js` recommended and `typescript-eslint` recommended
+- Key rules:
+  - Warns on unused vars (except prefixed with `_`)
+  - Warns on explicit `any` types
+  - Enforces `prefer-const` and `no-var`
+  - Restricts console (allows `console.warn` and `console.error`)
+  - Allows `require()` in config files and scripts
+  - Allows console in debug/monitor components
+- Ignores: `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `public/`
+- Current status: 0 errors, 45 warnings
+
 **.npmrc:**
 ```
 legacy-peer-deps=true
@@ -985,6 +1014,10 @@ legacy-peer-deps=true
 - `@tailwindcss/postcss` (^4) - Tailwind CSS v4 plugin
 - `tailwindcss` (^4) - Utility-first CSS framework
 - `typescript` (^5) - TypeScript compiler
+- `eslint` (^9.38.0) - JavaScript/TypeScript linter
+- `typescript-eslint` (^8.46.2) - TypeScript support for ESLint
+- `@eslint/js` (^9.38.0) - ESLint JavaScript configs
+- `@eslint/eslintrc` (^3.3.1) - ESLint legacy config support
 - `@types/node`, `@types/react`, `@types/react-dom` - Type definitions
 - `glob` (^11.0.3) - File pattern matching (for optimization scripts)
 

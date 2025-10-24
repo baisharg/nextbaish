@@ -25,6 +25,7 @@ A bilingual AI Safety content hub built with Next.js 15, featuring curated resou
 - **UI Library:** React 19.2.0
 - **Styling:** Tailwind CSS v4 (via PostCSS)
 - **Language:** TypeScript (strict mode)
+- **Code Quality:** ESLint v9 with TypeScript support
 - **Fonts:** IBM Plex Serif, Geist Sans, Geist Mono
 - **Animations:** View Transitions API with next-view-transitions
 - **Analytics:** Vercel Analytics & Speed Insights
@@ -82,6 +83,12 @@ pnpm restart:prod
 
 # Run bundle analysis
 pnpm analyze
+
+# Lint code
+pnpm lint
+
+# Auto-fix linting issues
+pnpm lint:fix
 ```
 
 The dev server supports hot reload and will be available at [http://localhost:3000](http://localhost:3000).
@@ -238,6 +245,46 @@ Add new translations to:
 - `app/[locale]/dictionaries/es.json` (Spanish)
 
 **Important:** Never use inline ternary translations. Always use dictionary references.
+
+## 🔍 Code Quality
+
+### ESLint
+
+Modern ESLint v9 with TypeScript support and flat config format:
+
+```bash
+# Run linter
+pnpm lint
+
+# Auto-fix fixable issues
+pnpm lint:fix
+```
+
+**Configuration:**
+- File: `eslint.config.mjs` (ESLint v9 flat config)
+- TypeScript support via `typescript-eslint@8.46.2`
+- Rules configured for Next.js/React best practices
+- Allows `require()` in config files and scripts
+- Allows `console` in debug/monitor components
+- Current status: **0 errors, 45 warnings** (non-blocking code quality suggestions)
+
+**Key Rules:**
+- Warns on unused variables (except those prefixed with `_`)
+- Warns on explicit `any` types
+- Enforces `prefer-const` and `no-var`
+- Restricts console usage (allows `console.warn` and `console.error`)
+
+**Ignored Paths:**
+- `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `public/`
+
+### TypeScript
+
+TypeScript strict mode enabled with incremental compilation:
+
+```bash
+# Type check (no emit)
+npx tsc --noEmit
+```
 
 ## 📈 Performance Monitoring
 
