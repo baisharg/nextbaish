@@ -101,7 +101,12 @@ export type TerminateMessage = {
   type: "terminate";
 };
 
-export type WorkerMessage = InitMessage | PauseMessage | ResumeMessage | TerminateMessage;
+export type TickMessage = {
+  type: "tick";
+  now: number;
+};
+
+export type WorkerMessage = InitMessage | PauseMessage | ResumeMessage | TerminateMessage | TickMessage;
 
 export type FrameMessage = {
   type: "frame";
@@ -311,7 +316,6 @@ let threads: WorkerThreadState[] = [];
 let viewSize = VIEWBOX_SIZE;
 let frameInterval = FRAME_INTERVAL;
 let isPaused = false;
-let animationFrameId = 0;
 let lastFlipCheck = 0;
 
 // ============================================================================
@@ -342,6 +346,7 @@ function animate(now: number) {
 
   // Compute animated points for all threads
   const threadFrames: ThreadFrame[] = [];
+  const transferables: ArrayBuffer[] = [];
 
   for (const thread of threads) {
     const isTransitioning =
@@ -370,9 +375,12 @@ function animate(now: number) {
       transitioningThreadIds.delete(thread.id);
     }
 
-    // Create thread frame
+    // Create thread frame (copy points for transfer)
+    const pointsCopy = thread.floatingPoints.slice();
+    transferables.push(pointsCopy.buffer);
+
     threadFrames.push({
-      points: thread.floatingPoints.slice(), // Copy for transfer
+      points: pointsCopy,
       width: thread.weight,
       opacity: thread.opacity,
       colorStops: thread.gradientStops[thread.direction],
@@ -390,17 +398,12 @@ function animate(now: number) {
     overlayGradient: OVERLAY_GRADIENT,
   };
 
-  // Post frame to main thread (renderer will draw it)
+  // Post frame to main thread with transferables (zero-copy for typed arrays)
   const message: FrameMessage = {
     type: "frame",
     packet,
   };
-  self.postMessage(message);
-
-  // Schedule next frame
-  animationFrameId = self.setTimeout(() => {
-    animate(performance.now());
-  }, frameInterval);
+  self.postMessage(message, { transfer: transferables });
 }
 
 // ============================================================================
@@ -450,36 +453,34 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       frameInterval = data.frameInterval;
       transitioningThreadIds.clear();
 
-      // Start animation loop
+      // Initialize state (main thread will drive frames via "tick" messages)
       lastFlipCheck = performance.now();
       isPaused = false;
-      animate(performance.now());
+      break;
+    }
+
+    case "tick": {
+      // Main thread drives animation timing via rAF
+      // Worker computes and posts one frame on demand
+      if (!isPaused) {
+        animate(data.now);
+      }
       break;
     }
 
     case "pause": {
       isPaused = true;
-      if (animationFrameId) {
-        self.clearTimeout(animationFrameId);
-        animationFrameId = 0;
-      }
       break;
     }
 
     case "resume": {
-      if (!isPaused) return;
       isPaused = false;
       lastFlipCheck = performance.now();
-      animate(performance.now());
       break;
     }
 
     case "terminate": {
       isPaused = true;
-      if (animationFrameId) {
-        self.clearTimeout(animationFrameId);
-        animationFrameId = 0;
-      }
       threads = [];
       transitioningThreadIds.clear();
       break;

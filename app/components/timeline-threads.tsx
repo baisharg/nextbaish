@@ -123,7 +123,7 @@ const computePerformanceProfile = (): PerformanceProfile => {
   const isSlowConnection = effectiveType.includes("2g") || effectiveType.includes("slow-2g");
 
   let threadScale = 1;
-  // Mobile viewport scaling
+  // Mobile viewport scaling (more aggressive for fill-rate)
   if (width <= 480) threadScale = 0.72;
   else if (width <= 640) threadScale = 0.82;
   else if (width <= 820) threadScale = 0.9;
@@ -135,7 +135,8 @@ const computePerformanceProfile = (): PerformanceProfile => {
     threadScale *= 0.92;
   }
 
-  const minThreads = Math.max(Math.round(THREAD_COUNT * 0.6), 28);
+  // Lower floor for mobile fill-rate (was 28, now 12)
+  const minThreads = Math.max(Math.round(THREAD_COUNT * 0.4), 12);
   const scaled = THREAD_COUNT * threadScale;
   const threadCount = Math.round(clamp(scaled, minThreads, THREAD_COUNT));
 
@@ -745,14 +746,23 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
       if (!canvas) return;
 
       try {
+        // Cap DPR to 2 on mobile (huge fill-rate win)
+        const baseDpr = window.devicePixelRatio || 1;
+        const dpr = Math.min(baseDpr, 2);
+
+        // Disable blur on narrow viewports or high-DPR devices (fill-rate optimization)
+        const isNarrow = (window.innerWidth || 0) <= 480;
+        const highDpr = baseDpr >= 3;
+        const enableBlur = effectiveEnableBlur && !isNarrow && !highDpr;
+
         // Create renderer using factory
         const result = await createRenderer({
           canvas,
           config: {
             viewSize: VIEWBOX_SIZE,
             blurStdDeviation: effectiveBlurStdDeviation,
-            dpr: window.devicePixelRatio || 1,
-            enableBlur: effectiveEnableBlur,
+            dpr,
+            enableBlur,
             offsetXMultiplier: overrideParams?.offsetXMultiplier,
             offsetYMultiplier: overrideParams?.offsetYMultiplier,
           },
@@ -834,6 +844,32 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
         worker.postMessage(initMessage);
 
         console.log("[Timeline] Canvas renderer initialized successfully");
+
+        // Main-thread rAF loop to drive animation timing
+        // (prevents worker timer throttling on mobile)
+        let rafId = 0;
+        let lastTick = 0;
+
+        const tick = (now: number) => {
+          if (!mounted) return;
+
+          // Throttle to frameInterval to avoid piling up messages
+          if (now - lastTick >= frameInterval - 1) {
+            if (animationWorkerRef.current) {
+              animationWorkerRef.current.postMessage({ type: "tick", now });
+            }
+            lastTick = now;
+          }
+
+          rafId = requestAnimationFrame(tick);
+        };
+
+        rafId = requestAnimationFrame(tick);
+
+        // Store rafId for cleanup
+        return () => {
+          if (rafId) cancelAnimationFrame(rafId);
+        };
       } catch (error) {
         console.error("[Timeline] Failed to initialize canvas renderer:", error);
         // WebGL not supported - hide animation
