@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Geist, Geist_Mono, IBM_Plex_Serif } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
+// import TimelineThreads from "../components/timeline-threads-with-controls"; // Uncomment for testing
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { LanguageProvider } from "../contexts/language-context";

@@ -55,6 +55,8 @@ export type RendererConfig = {
   blurStdDeviation: number; // Blur amount for glow effect
   dpr: number; // Device pixel ratio
   enableBlur: boolean; // Whether to apply blur effect
+  offsetXMultiplier?: number; // Horizontal offset multiplier (0.5 = center)
+  offsetYMultiplier?: number; // Vertical offset multiplier (0.5 = center, 1.0 = bottom)
 };
 
 /**

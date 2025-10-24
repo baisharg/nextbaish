@@ -87,7 +87,7 @@ type PerformanceProfile = {
 
 const DEFAULT_PERFORMANCE_PROFILE: PerformanceProfile = {
   threadCount: THREAD_COUNT,
-  blurStdDeviation: 3.5,
+  blurStdDeviation: 5.9,
   frameInterval: FRAME_INTERVAL,
 };
 
@@ -100,7 +100,7 @@ const LOW_POWER_FRAME_INTERVAL = 1000 / 45;
  * When true, uses worker + Canvas/WebGL rendering (zero DOM mutations, GPU-first)
  * When false, uses current SVG rendering (excellent performance, well-tested)
  *
- * ENABLED: Testing WebGL renderer with GPU-accelerated blur pipeline
+ * ENABLED: Testing WebGL renderer with Playwright visual verification
  */
 const USE_CANVAS_RENDERER = true;
 
@@ -511,10 +511,31 @@ const usePrefersReducedMotion = () => {
   return prefers;
 };
 
-type TimelineThreadsProps = { className?: string; style?: CSSProperties };
+type ThreadOverrideParams = {
+  threadCount?: number;
+  pivotX?: number;
+  pivotY?: number;
+  xStart?: number;
+  xEnd?: number;
+  offsetXMultiplier?: number;
+  offsetYMultiplier?: number;
+  flipInterval?: number;
+  upDurationMin?: number;
+  upDurationMax?: number;
+  downDurationMin?: number;
+  downDurationMax?: number;
+  blurStdDeviation?: number;
+  enableBlur?: boolean;
+};
+
+type TimelineThreadsProps = {
+  className?: string;
+  style?: CSSProperties;
+  overrideParams?: ThreadOverrideParams;
+};
 type PathRefMap = Map<number, SVGPathElement>;
 
-function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
+function TimelineThreadsComponent({ className, style, overrideParams }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -523,6 +544,11 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
   const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
   const [parallaxOffset, setParallaxOffset] = useState(0);
   const [transitioningCount, setTransitioningCount] = useState(0);
+
+  // Apply override parameters if provided
+  const effectiveThreadCount = overrideParams?.threadCount ?? performanceProfile.threadCount;
+  const effectiveBlurStdDeviation = overrideParams?.blurStdDeviation ?? performanceProfile.blurStdDeviation;
+  const effectiveEnableBlur = overrideParams?.enableBlur ?? true;
   const { threadCount, frameInterval, blurStdDeviation } = performanceProfile;
   const filterId = useId();
   const gradientBaseId = `${filterId}-grad`;
@@ -755,9 +781,11 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
           canvas,
           config: {
             viewSize: VIEWBOX_SIZE,
-            blurStdDeviation,
+            blurStdDeviation: effectiveBlurStdDeviation,
             dpr: window.devicePixelRatio || 1,
-            enableBlur: true,
+            enableBlur: effectiveEnableBlur,
+            offsetXMultiplier: overrideParams?.offsetXMultiplier,
+            offsetYMultiplier: overrideParams?.offsetYMultiplier,
           },
         });
 
@@ -770,10 +798,17 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
         logRendererInfo(result);
 
         // Create animation worker
-        const worker = new Worker(
-          new URL("../workers/animation.worker.ts", import.meta.url),
-          { type: "module" }
-        );
+        let worker: Worker;
+        try {
+          worker = new Worker(
+            new URL("../workers/animation.worker.ts", import.meta.url),
+            { type: "module" }
+          );
+          console.log("[Timeline] Animation worker created successfully");
+        } catch (err) {
+          console.error("[Timeline] Failed to create animation worker:", err);
+          throw err; // Rethrow to be caught by outer try-catch
+        }
 
         animationWorkerRef.current = worker;
 
@@ -789,8 +824,15 @@ function TimelineThreadsComponent({ className, style }: TimelineThreadsProps) {
           }
         };
 
-        worker.onerror = (error) => {
-          console.error("[Timeline] Animation worker error:", error);
+        worker.onerror = (error: ErrorEvent) => {
+          console.error("[Timeline] Animation worker error:", {
+            message: error.message,
+            filename: error.filename,
+            lineno: error.lineno,
+            colno: error.colno,
+            error: error.error,
+            fullError: error,
+          });
         };
 
         // Prepare thread data for worker
