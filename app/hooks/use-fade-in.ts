@@ -4,70 +4,64 @@ import { useEffect, useRef, useState } from "react";
 
 interface UseFadeInOptions {
   threshold?: number;
-  delay?: number;
-  startVisible?: boolean; // New option to start visible for above-the-fold content
+  rootMargin?: string;
+  triggerOnce?: boolean;
+  startVisible?: boolean; // Start visible for above-the-fold content to improve LCP
 }
 
 export function useFadeIn(options?: UseFadeInOptions) {
+  const {
+    threshold = 0.05, // Lower threshold for faster response
+    rootMargin = "50px", // Trigger 50px before entering viewport
+    triggerOnce = true,
+    startVisible = false,
+  } = options ?? {};
+
   const ref = useRef<HTMLElement>(null);
-  // Start visible for above-the-fold content to improve LCP
-  const [isVisible, setIsVisible] = useState(options?.startVisible ?? false);
-  const mountTimeRef = useRef<number>(0);
+  const [isVisible, setIsVisible] = useState(startVisible);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    mountTimeRef.current = performance.now();
     const element = ref.current;
     if (!element) return;
 
-    // Check if element is already visible in viewport on mount
-    // This handles: View Transitions, back button, and scroll-up cases
-    const rect = element.getBoundingClientRect();
-    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+    // If already visible (above-the-fold), skip observer setup
+    if (startVisible) return;
 
-    if (isInViewport) {
-      // Element already visible - show immediately without animation
-      // Prevents double-animation and re-animation on scroll up
-      setIsVisible(true);
-      return;
+    // Clean up any existing observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
     }
 
-    // Element not visible yet - set up observer for scroll-based animation
-    let timeoutId: number | null = null;
-    let cancelled = false;
-
-    const observer = new IntersectionObserver(
+    // Create new observer with improved settings
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const timeSinceMount = performance.now() - mountTimeRef.current;
+          setIsVisible(true);
 
-          // If intersection happens very quickly (< 400ms), likely from View Transition
-          // or back navigation - skip animation delay
-          if (timeSinceMount < 400 || !options?.delay) {
-            setIsVisible(true);
-          } else {
-            // Normal scroll-based animation with delay
-            timeoutId = window.setTimeout(() => {
-              if (!cancelled) {
-                setIsVisible(true);
-              }
-            }, options.delay);
+          // Disconnect after first trigger for better performance
+          if (triggerOnce && observerRef.current) {
+            observerRef.current.disconnect();
           }
-          observer.disconnect(); // Only animate once, then cleanup
+        } else if (!triggerOnce) {
+          // Allow re-triggering if triggerOnce is false
+          setIsVisible(false);
         }
       },
-      { threshold: options?.threshold ?? 0.1 }
+      {
+        threshold,
+        rootMargin,
+      }
     );
 
-    observer.observe(element);
+    observerRef.current.observe(element);
 
     return () => {
-      cancelled = true;
-      observer.disconnect();
-      if (timeoutId !== null) {
-        window.clearTimeout(timeoutId);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
       }
     };
-  }, [options?.threshold, options?.delay]);
+  }, [threshold, rootMargin, triggerOnce, startVisible]);
 
   return { ref, isVisible };
 }
