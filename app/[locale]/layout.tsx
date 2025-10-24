@@ -115,7 +115,7 @@ export default async function LocaleLayout({
               <DeferredAnalytics />
               <PerformanceMonitor />
               <RUMMonitor />
-              {process.env.NODE_ENV === "development" && <LCPDebugger />}
+              {/* {process.env.NODE_ENV === "development" && <LCPDebugger />} */}
             </LanguageProvider>
           </Suspense>
         </body>

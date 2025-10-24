@@ -9,8 +9,6 @@ export const FOOTNOTES = [
   { id: 6, href: "https://aisafety.training/", label: "6" },
 ];
 
-export const FOOTNOTE_PATTERN = /\{footnote(\d+)\}/g;
-
 function Footnote({ id }: { id: number }) {
   const note = FOOTNOTES.find((fn) => fn.id === id);
   if (!note) return null;
@@ -43,9 +41,10 @@ export function renderWithFootnotes(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
 
-  FOOTNOTE_PATTERN.lastIndex = 0;
+  // Create a new regex instance to avoid state issues between server/client renders
+  const pattern = /\{footnote(\d+)\}/g;
 
-  for (const match of text.matchAll(FOOTNOTE_PATTERN)) {
+  for (const match of text.matchAll(pattern)) {
     const [placeholder, footnoteId] = match;
     const index = match.index ?? 0;
 
