@@ -37,12 +37,12 @@ export default async function Activities({
 
   // Gallery images - replace these paths with your actual event photos
   const galleryImages = [
-    { src: "/images/events/event-1.jpg", alt: "Community event" },
-    { src: "/images/events/event-2.jpg", alt: "Community event" },
-    { src: "/images/events/event-3.jpg", alt: "Community event" },
-    { src: "/images/events/event-4.jpg", alt: "Community event" },
-    { src: "/images/events/event-5.jpg", alt: "Community event" },
-    { src: "/images/events/event-6.jpg", alt: "Community event" },
+    { src: "https://placehold.co/800x600/9275E5/white?text=Event+Photo+1", alt: "Community event" },
+    { src: "https://placehold.co/800x600/A8C5FF/white?text=Event+Photo+2", alt: "Community event" },
+    { src: "https://placehold.co/800x600/C77DDA/white?text=Event+Photo+3", alt: "Community event" },
+    { src: "https://placehold.co/800x600/9275E5/white?text=Event+Photo+4", alt: "Community event" },
+    { src: "https://placehold.co/800x600/A8C5FF/white?text=Event+Photo+5", alt: "Community event" },
+    { src: "https://placehold.co/800x600/C77DDA/white?text=Event+Photo+6", alt: "Community event" },
   ];
 
   return (

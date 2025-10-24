@@ -6,7 +6,6 @@ import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
-import { YouTubeFacade } from "@/app/components/youtube-facade";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Video01Icon,
@@ -73,10 +72,13 @@ export default async function Resources({
               </p>
             </div>
             <div className="relative w-full overflow-hidden rounded-xl" style={{ paddingBottom: "56.25%" }}>
-              <YouTubeFacade
-                videoId="oAJUuY6gAnY"
-                title="Why experts fear superintelligent AI – and what we can do about it"
+              <iframe
                 className="absolute inset-0 h-full w-full"
+                src="https://www.youtube.com/embed/oAJUuY6gAnY"
+                title="Why experts fear superintelligent AI – and what we can do about it"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{ border: 0 }}
               />
             </div>
           </div>
