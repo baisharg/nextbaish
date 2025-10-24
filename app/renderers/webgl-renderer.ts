@@ -387,6 +387,12 @@ export class WebGLRenderer implements Renderer {
   // Context loss tracking
   private contextLost: boolean = false;
 
+  // Rectangular render target dimensions (actual framebuffer size)
+  private rtWidth: number = 0;
+  private rtHeight: number = 0;
+  private blurRtWidth: number = 0;
+  private blurRtHeight: number = 0;
+
   async init(
     canvas: HTMLCanvasElement | OffscreenCanvas,
     config: RendererConfig
@@ -599,14 +605,19 @@ export class WebGLRenderer implements Renderer {
     }
 
     // Set canvas internal resolution (high DPI)
-    this.canvas.width = displayWidth * dpr;
-    this.canvas.height = displayHeight * dpr;
+    this.canvas.width = Math.max(1, Math.floor(displayWidth * dpr));
+    this.canvas.height = Math.max(1, Math.floor(displayHeight * dpr));
+
+    // Track actual render target dimensions (rectangular, not square)
+    this.rtWidth = this.canvas.width;
+    this.rtHeight = this.canvas.height;
 
     // Update config with actual size (needed for coordinate scaling)
+    // Keep viewSize for aesthetic "square world" coordinate system
     this.config.viewSize = Math.max(displayWidth, displayHeight);
 
-    // Set viewport to match canvas size
-    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+    // Set viewport to match actual render target size
+    this.gl.viewport(0, 0, this.rtWidth, this.rtHeight);
   }
 
   private async compileShaders(): Promise<void> {
@@ -788,13 +799,17 @@ export class WebGLRenderer implements Renderer {
   private setupBlurFramebuffers(): void {
     if (!this.gl || !this.config) return;
 
-    const { viewSize, dpr } = this.config;
     const blurScale = 0.5; // Render blur at half resolution for performance
-    const blurSize = Math.floor(viewSize * dpr * blurScale);
+
+    // Create rectangular blur targets matching canvas aspect ratio
+    const blurW = Math.max(1, Math.floor(this.rtWidth * blurScale));
+    const blurH = Math.max(1, Math.floor(this.rtHeight * blurScale));
+    this.blurRtWidth = blurW;
+    this.blurRtHeight = blurH;
 
     // Create framebuffer 1
     this.blurFBO1 = this.gl.createFramebuffer();
-    this.blurTexture1 = this.createTexture(blurSize, blurSize);
+    this.blurTexture1 = this.createTexture(blurW, blurH);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
     this.gl.framebufferTexture2D(
       this.gl.FRAMEBUFFER,
@@ -817,7 +832,7 @@ export class WebGLRenderer implements Renderer {
 
     // Create framebuffer 2
     this.blurFBO2 = this.gl.createFramebuffer();
-    this.blurTexture2 = this.createTexture(blurSize, blurSize);
+    this.blurTexture2 = this.createTexture(blurW, blurH);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO2);
     this.gl.framebufferTexture2D(
       this.gl.FRAMEBUFFER,
@@ -904,24 +919,27 @@ export class WebGLRenderer implements Renderer {
     if (!this.gl || !this.config || !this.lineProgram) return;
 
     const { viewSize, dpr, enableBlur } = this.config;
-    const pixelSize = viewSize * dpr;
+    const targetW = this.rtWidth;
+    const targetH = this.rtHeight;
 
     if (enableBlur && this.blurFBO1 && this.blurFBO2 && this.blurProgram) {
       // ============================================================================
-      // BLUR PIPELINE
+      // BLUR PIPELINE (rectangular render targets matching canvas aspect ratio)
       // ============================================================================
 
-      // Step 1: Render threads to blurFBO1
+      // Step 1: Render threads to blurFBO1 at half resolution
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
-      this.gl.viewport(0, 0, pixelSize * 0.5, pixelSize * 0.5); // Blur at half resolution
+      this.gl.viewport(0, 0, this.blurRtWidth, this.blurRtHeight);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
       this.gl.useProgram(this.lineProgram);
-      this.gl.uniform2f(this.lineUniforms.resolution, pixelSize * 0.5, pixelSize * 0.5);
+      // Keep square coordinate system for aesthetic consistency
+      const squareScaleHalf = viewSize * dpr * 0.5;
+      this.gl.uniform2f(this.lineUniforms.resolution, squareScaleHalf, squareScaleHalf);
 
       for (const thread of frame.threads) {
-        this.drawThread(thread, viewSize, dpr * 0.5);
+        this.drawThread(thread, viewSize, dpr * 0.5, this.blurRtWidth, this.blurRtHeight);
       }
 
       // Step 2: Horizontal blur pass (FBO1 → FBO2)
@@ -929,18 +947,18 @@ export class WebGLRenderer implements Renderer {
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-      this.applyBlurPass(this.blurTexture1, 1, 0, pixelSize * 0.5);
+      this.applyBlurPass(this.blurTexture1, 1, 0, this.blurRtWidth, this.blurRtHeight);
 
       // Step 3: Vertical blur pass (FBO2 → FBO1)
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-      this.applyBlurPass(this.blurTexture2, 0, 1, pixelSize * 0.5);
+      this.applyBlurPass(this.blurTexture2, 0, 1, this.blurRtWidth, this.blurRtHeight);
 
       // Step 4: Composite to main canvas
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-      this.gl.viewport(0, 0, pixelSize, pixelSize);
+      this.gl.viewport(0, 0, targetW, targetH);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
@@ -951,24 +969,28 @@ export class WebGLRenderer implements Renderer {
 
       // Draw sharp layer on top
       this.gl.useProgram(this.lineProgram);
-      this.gl.uniform2f(this.lineUniforms.resolution, pixelSize, pixelSize);
+      // Keep square coordinate system for aesthetic consistency
+      const squareScale = viewSize * dpr;
+      this.gl.uniform2f(this.lineUniforms.resolution, squareScale, squareScale);
 
       for (const thread of frame.threads) {
-        this.drawThread(thread, viewSize, dpr);
+        this.drawThread(thread, viewSize, dpr, targetW, targetH);
       }
     } else {
       // ============================================================================
       // NO BLUR PIPELINE (direct rendering)
       // ============================================================================
-      this.gl.viewport(0, 0, pixelSize, pixelSize);
+      this.gl.viewport(0, 0, targetW, targetH);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
       this.gl.useProgram(this.lineProgram);
-      this.gl.uniform2f(this.lineUniforms.resolution, pixelSize, pixelSize);
+      // Keep square coordinate system for aesthetic consistency
+      const squareScale = viewSize * dpr;
+      this.gl.uniform2f(this.lineUniforms.resolution, squareScale, squareScale);
 
       for (const thread of frame.threads) {
-        this.drawThread(thread, viewSize, dpr);
+        this.drawThread(thread, viewSize, dpr, targetW, targetH);
       }
     }
 
@@ -983,14 +1005,14 @@ export class WebGLRenderer implements Renderer {
     sourceTexture: WebGLTexture | null,
     dirX: number,
     dirY: number,
-    resolution: number
+    resW: number,
+    resH: number
   ): void {
     if (!this.gl || !this.blurProgram || !sourceTexture || !this.quadBuffer) return;
 
-    // Set explicit blend state for blur pass
+    // Disable blending for blur pass - we're writing to empty FBO, blending only adds ROP cost
     this.gl.disable(this.gl.DEPTH_TEST);
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.disable(this.gl.BLEND);
 
     this.gl.useProgram(this.blurProgram);
 
@@ -999,8 +1021,8 @@ export class WebGLRenderer implements Renderer {
     this.gl.bindTexture(this.gl.TEXTURE_2D, sourceTexture);
     this.gl.uniform1i(this.blurUniforms.texture, 0);
 
-    // Set uniforms (use precomputed weights and offsets)
-    this.gl.uniform2f(this.blurUniforms.resolution, resolution, resolution);
+    // Set uniforms (use precomputed weights and offsets, rectangular resolution)
+    this.gl.uniform2f(this.blurUniforms.resolution, resW, resH);
     this.gl.uniform2f(this.blurUniforms.direction, dirX, dirY);
     this.gl.uniform3f(
       this.blurUniforms.weights,
@@ -1071,8 +1093,9 @@ export class WebGLRenderer implements Renderer {
     if (!this.gl || !this.lineProgram || !frame.overlayGradient.length) return;
     if (!this.lineUniforms.resolution || !this.lineUniforms.opacity) return;
 
-    const canvasWidth = this.canvas ? (this.canvas as HTMLCanvasElement | OffscreenCanvas).width : viewSize * dpr;
-    const canvasHeight = this.canvas ? (this.canvas as HTMLCanvasElement | OffscreenCanvas).height : viewSize * dpr;
+    // Use actual render target dimensions for overlay
+    const canvasWidth = this.rtWidth;
+    const canvasHeight = this.rtHeight;
 
     this.gl.useProgram(this.lineProgram);
     this.gl.uniform2f(this.lineUniforms.resolution, canvasWidth, canvasHeight);
@@ -1108,13 +1131,28 @@ export class WebGLRenderer implements Renderer {
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
   }
 
-  private drawThread(thread: ThreadFrame, viewSize: number, dpr: number): void {
+  private drawThread(
+    thread: ThreadFrame,
+    viewSize: number,
+    dpr: number,
+    targetW?: number,
+    targetH?: number
+  ): void {
     if (!this.gl || !this.lineProgram) return;
 
     const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } = thread;
 
     // Build vertex data with line expansion (convert line to triangles)
-    const vertices = this.buildLineVertices(points, width, viewSize, dpr, gradientMinY, gradientMaxY);
+    const vertices = this.buildLineVertices(
+      points,
+      width,
+      viewSize,
+      dpr,
+      gradientMinY,
+      gradientMaxY,
+      targetW,
+      targetH
+    );
 
     if (vertices.length === 0) return;
 
@@ -1134,7 +1172,9 @@ export class WebGLRenderer implements Renderer {
     viewSize: number,
     dpr: number,
     gradientMinY: number,
-    gradientMaxY: number
+    gradientMaxY: number,
+    targetW?: number,
+    targetH?: number
   ): number[] {
     // Build smooth Bezier curves matching SVG implementation
     const vertices: number[] = [];
@@ -1150,9 +1190,9 @@ export class WebGLRenderer implements Renderer {
       return Math.max(0, Math.min(1, pos)); // Clamp to [0,1]
     };
 
-    // Use actual canvas dimensions for scaling
-    const canvasWidth = this.canvas?.width || viewSize * dpr;
-    const canvasHeight = this.canvas?.height || viewSize * dpr;
+    // Use target dimensions if provided (for blur FBO), otherwise use canvas dimensions
+    const canvasWidth = targetW ?? (this.canvas?.width || viewSize * dpr);
+    const canvasHeight = targetH ?? (this.canvas?.height || viewSize * dpr);
 
     // Scale normalized coordinates [0,1] to canvas pixel dimensions
     // Match SVG behavior: use the reference viewSize for both axes to maintain aspect ratio
