@@ -39,6 +39,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm build` - Compile production bundle (run before opening PRs that touch build paths)
 - `pnpm start` - Run optimized production server from last build
 
+### Server Management
+- `pnpm restart:dev` - Kill any running server on port 3000 and restart dev server (useful after config changes)
+- `pnpm restart:prod` - Kill any running server, rebuild, and start production server
+
 ### Performance & Optimization
 - `pnpm analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
 - `pnpm optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)

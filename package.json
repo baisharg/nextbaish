@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "restart:dev": "bash scripts/restart-dev.sh",
+    "restart:prod": "bash scripts/restart-prod.sh",
     "analyze": "ANALYZE=true next build --webpack",
     "optimize-logo": "node scripts/optimize-logo.js",
     "optimize-images": "node scripts/optimize-images.js"

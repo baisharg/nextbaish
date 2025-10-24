@@ -68,11 +68,17 @@ pnpm install
 # Start Turbopack dev server at http://localhost:3000
 pnpm dev
 
+# Restart dev server (kills existing, starts fresh)
+pnpm restart:dev
+
 # Build for production
 pnpm build
 
 # Start production server
 pnpm start
+
+# Restart production server (kills, rebuilds, starts)
+pnpm restart:prod
 
 # Run bundle analysis
 pnpm analyze
