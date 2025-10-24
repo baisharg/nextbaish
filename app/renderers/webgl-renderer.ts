@@ -66,23 +66,22 @@ function computeLinearGaussianWeights(sigma: number): {
   const w2 = gauss(2, sigma);
 
   // Paired weights (for linear sampling)
+  // Note: We apply each weight to BOTH +offset and -offset samples in the shader,
+  // so we use the individual weight (w1, w2) rather than the pair sum (w1+w1, w2+w2)
   const wCenter = w0;
-  const wPair1 = w1 + w1; // symmetric
-  const wPair2 = w2 + w2; // symmetric
+  const wPair1 = w1; // Will be applied to both +offset and -offset
+  const wPair2 = w2; // Will be applied to both +offset and -offset
 
-  // Normalize
-  const total = wCenter + wPair1 + wPair2;
+  // Normalize (total includes both directions: w0 + 2*w1 + 2*w2)
+  const total = wCenter + 2 * wPair1 + 2 * wPair2;
   const weights: [number, number, number] = [
     wCenter / total,
     wPair1 / total,
     wPair2 / total,
   ];
 
-  // Offsets for linear sampling (weighted average of sample positions)
-  // For pair1: blend samples at -1 and +1 → offset = (w1*(-1) + w1*(+1)) / (w1+w1) = 0... wait that's wrong
-  // Actually for linear sampling of symmetric pairs:
-  // Sample at offset o samples both (o) and interpolates with neighbor
-  // For a pair at distance d, the offset is simply d
+  // Offsets for sampling (in units of sigma for Gaussian spread)
+  // We sample at ±1σ and ±2σ for a 5-tap blur approximation
   const offsets: [number, number] = [1.0 * sigma, 2.0 * sigma];
 
   return { weights, offsets };
@@ -973,7 +972,8 @@ export class WebGLRenderer implements Renderer {
       }
     }
 
-    // Step 5: Overlay not applied in WebGL renderer (matches neutral background)
+    // Step 5: Draw overlay gradient with screen blend mode (purple glow)
+    this.drawOverlay(frame, viewSize, dpr);
   }
 
   /**
@@ -1067,17 +1067,54 @@ export class WebGLRenderer implements Renderer {
   /**
    * Draw overlay gradient with screen blend mode
    */
-  private drawOverlay(_frame: FramePacket, _viewSize: number, _dpr: number): void {
-    // Overlay rendering intentionally disabled to keep neutral background.
+  private drawOverlay(frame: FramePacket, viewSize: number, dpr: number): void {
+    if (!this.gl || !this.lineProgram || !frame.overlayGradient.length) return;
+    if (!this.lineUniforms.resolution || !this.lineUniforms.opacity) return;
+
+    const canvasWidth = this.canvas ? (this.canvas as HTMLCanvasElement | OffscreenCanvas).width : viewSize * dpr;
+    const canvasHeight = this.canvas ? (this.canvas as HTMLCanvasElement | OffscreenCanvas).height : viewSize * dpr;
+
+    this.gl.useProgram(this.lineProgram);
+    this.gl.uniform2f(this.lineUniforms.resolution, canvasWidth, canvasHeight);
+
+    const vertices = new Float32Array([
+      0, 0, 0,
+      canvasWidth, 0, 0,
+      0, canvasHeight, 1,
+      0, canvasHeight, 1,
+      canvasWidth, 0, 0,
+      canvasWidth, canvasHeight, 1,
+    ]);
+
+    const vertexCount = this.uploadLineGeometry(vertices);
+    if (vertexCount === 0) return;
+
+    if (this.applyGradientUniforms(frame.overlayGradient) === 0) return;
+    // SVG has per-stop alpha (avg 0.27) × 0.9 rect opacity = 0.24 effective
+    this.gl.uniform1f(this.lineUniforms.opacity, 0.24);
+
+    // Screen blend: S + D - S*D = src ONE, dest (1 - src)
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFuncSeparate(
+      this.gl.ONE,
+      this.gl.ONE_MINUS_SRC_COLOR,
+      this.gl.ONE,
+      this.gl.ONE_MINUS_SRC_ALPHA
+    );
+
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, vertexCount);
+
+    // Restore standard alpha blending
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
   }
 
   private drawThread(thread: ThreadFrame, viewSize: number, dpr: number): void {
     if (!this.gl || !this.lineProgram) return;
 
-    const { points, width, opacity, colorStops } = thread;
+    const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } = thread;
 
     // Build vertex data with line expansion (convert line to triangles)
-    const vertices = this.buildLineVertices(points, width, viewSize, dpr);
+    const vertices = this.buildLineVertices(points, width, viewSize, dpr, gradientMinY, gradientMaxY);
 
     if (vertices.length === 0) return;
 
@@ -1095,12 +1132,19 @@ export class WebGLRenderer implements Renderer {
     points: Float32Array,
     width: number,
     viewSize: number,
-    dpr: number
+    dpr: number,
+    gradientMinY: number,
+    gradientMaxY: number
   ): number[] {
     // Build smooth Bezier curves matching SVG implementation
     const vertices: number[] = [];
     const n = points.length >>> 1;
     if (n === 0) return vertices;
+
+    // Use static gradient bounds (matches SVG gradientUnits="userSpaceOnUse")
+    // These are fixed in world space and don't change with animation
+    const yRange = gradientMaxY - gradientMinY;
+    const normalizeGradPos = (y: number) => yRange > 0 ? (y - gradientMinY) / yRange : 0;
 
     // Use actual canvas dimensions for scaling
     const canvasWidth = this.canvas?.width || viewSize * dpr;
@@ -1118,7 +1162,9 @@ export class WebGLRenderer implements Renderer {
     const offsetX = (canvasWidth - scale) * offsetXMultiplier;
     const offsetY = (canvasHeight - scale) * offsetYMultiplier;
 
-    const halfWidth = (width * dpr) / 2;
+    // Scale up thread width to match SVG visual weight (SVG viewBox units scale proportionally)
+    const WIDTH_SCALE = 2.0; // Increase base width for better visibility
+    const halfWidth = (width * dpr * WIDTH_SCALE) / 2;
 
     // Generate smooth curve points using cubic Bezier interpolation
     const curvePoints: { x: number; y: number; gradPos: number }[] = [];
@@ -1127,7 +1173,7 @@ export class WebGLRenderer implements Renderer {
     curvePoints.push({
       x: points[0] * scaleX + offsetX,
       y: points[1] * scaleY + offsetY,
-      gradPos: points[1],
+      gradPos: normalizeGradPos(points[1]),
     });
 
     // Generate Bezier curves between points (matching SVG implementation)
@@ -1166,9 +1212,10 @@ export class WebGLRenderer implements Renderer {
         const x = omu3 * prevX + 3 * omu2 * u * cp1x + 3 * omu * u2 * cp2x + u3 * currX;
         const y = omu3 * prevY + 3 * omu2 * u * cp1y + 3 * omu * u2 * cp2y + u3 * currY;
 
-        // Interpolate gradient position
+        // Interpolate gradient position (normalized to thread's vertical span)
         const prevGradPos = points[(i - 1) * 2 + 1];
-        const gradPos = prevGradPos + (currGradPos - prevGradPos) * u;
+        const interpY = prevGradPos + (currGradPos - prevGradPos) * u;
+        const gradPos = normalizeGradPos(interpY);
 
         if (t > 0) { // Skip first point (already added)
           curvePoints.push({ x, y, gradPos });

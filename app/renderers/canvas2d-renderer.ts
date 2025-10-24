@@ -173,18 +173,20 @@ export class Canvas2DRenderer implements Renderer {
     thread: ThreadFrame,
     viewSize: number
   ): void {
-    const { points, width, opacity, colorStops } = thread;
+    const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } = thread;
 
     // Build path
     const path = this.buildPath(points, viewSize);
 
-    // Create gradient
-    const gradient = this.createGradient(ctx, colorStops, viewSize);
+    // Create gradient using static bounds (matches SVG gradientUnits="userSpaceOnUse")
+    const gradient = this.createGradient(ctx, colorStops, viewSize, gradientMinY, gradientMaxY);
 
     // Draw thread with gradient stroke
     ctx.save();
     ctx.strokeStyle = gradient;
-    ctx.lineWidth = width;
+    // Scale up thread width to match SVG visual weight
+    const WIDTH_SCALE = 2.0; // Increase base width for better visibility
+    ctx.lineWidth = width * WIDTH_SCALE;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.globalAlpha = opacity;
@@ -237,10 +239,15 @@ export class Canvas2DRenderer implements Renderer {
   private createGradient(
     ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     colorStops: ColorStop[],
-    viewSize: number
+    viewSize: number,
+    minY: number = 0,
+    maxY: number = 1
   ): CanvasGradient {
-    // Create vertical linear gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, viewSize);
+    // Create vertical linear gradient spanning the thread's vertical range
+    // This matches SVG's gradientUnits="userSpaceOnUse"
+    const y1 = minY * viewSize;
+    const y2 = maxY * viewSize;
+    const gradient = ctx.createLinearGradient(0, y1, 0, y2);
 
     // Add color stops
     for (const stop of colorStops) {
@@ -295,7 +302,8 @@ export class Canvas2DRenderer implements Renderer {
 
     // Draw overlay rect with screen blend mode
     this.ctx.save();
-    this.ctx.globalAlpha = 0.9;
+    // SVG has per-stop alpha (avg 0.27) × 0.9 rect opacity = 0.24 effective
+    this.ctx.globalAlpha = 0.24;
     this.ctx.globalCompositeOperation = "screen";
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, viewSize, viewSize);

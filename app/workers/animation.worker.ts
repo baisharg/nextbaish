@@ -56,6 +56,10 @@ type WorkerThreadState = {
     up: ColorStop[];
     down: ColorStop[];
   };
+
+  // Static gradient bounds (from "down" profile only, used for both directions)
+  // Matches SVG implementation which uses same y1/y2 for up and down
+  gradientBounds: { minY: number; maxY: number };
 };
 
 // ============================================================================
@@ -172,6 +176,20 @@ function createGradientStops(color: HSL): { up: ColorStop[]; down: ColorStop[] }
   ];
 
   return { up: upStops, down: downStops };
+}
+
+function calculateGradientBounds(profile: PathProfile): { minY: number; maxY: number } {
+  // Calculate static gradient bounds from "down" profile ONLY (matches SVG implementation)
+  // SVG uses the same y1/y2 bounds for both up and down gradients
+  let minY = Infinity;
+  let maxY = -Infinity;
+  const down = profile.down;
+  for (let i = 0; i < down.length; i += 2) {
+    const y = down[i + 1];
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+  return { minY, maxY };
 }
 
 // ============================================================================
@@ -354,6 +372,8 @@ function animate(now: number) {
       width: thread.weight,
       opacity: thread.opacity,
       colorStops: thread.gradientStops[thread.direction],
+      gradientMinY: thread.gradientBounds.minY,
+      gradientMaxY: thread.gradientBounds.maxY,
     });
   }
 
@@ -397,6 +417,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         };
 
         const gradientStops = createGradientStops(t.color);
+        const gradientBounds = calculateGradientBounds(profile);
 
         return {
           id: t.id,
@@ -417,6 +438,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
           transitionStartTime: 0,
           floatingPoints: new Float32Array(profile.down.length),
           gradientStops,
+          gradientBounds,
         };
       });
 

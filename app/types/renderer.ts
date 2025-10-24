@@ -24,6 +24,9 @@ export type ThreadFrame = {
   width: number; // Stroke width
   opacity: number; // Stroke opacity [0..1]
   colorStops: ColorStop[]; // Gradient stops for this thread
+  // Static gradient bounds (from thread's base profile, not animated)
+  gradientMinY: number; // Min Y in normalized [0..1] space
+  gradientMaxY: number; // Max Y in normalized [0..1] space
 };
 
 /**
