@@ -150,7 +150,7 @@ export default async function AboutPage({
               </div>
               <a
                 href="https://alignmentforum.org/"
-                className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                className="button-secondary relative mt-6"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -175,7 +175,7 @@ export default async function AboutPage({
               </div>
               <a
                 href="https://www.lesswrong.com/"
-                className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                className="button-secondary relative mt-6"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -200,7 +200,7 @@ export default async function AboutPage({
               </div>
               <a
                 href="https://80000hours.org/problem-profiles/artificial-intelligence/"
-                className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                className="button-secondary relative mt-6"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -225,7 +225,7 @@ export default async function AboutPage({
               </div>
               <a
                 href="https://aisafety.info/"
-                className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent-secondary)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-md transition hover:bg-[var(--color-accent-tertiary)]"
+                className="button-secondary relative mt-6"
                 target="_blank"
                 rel="noopener noreferrer"
               >

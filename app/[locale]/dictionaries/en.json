@@ -80,7 +80,7 @@
         },
         "reading": {
           "eyebrow": "Presentations",
-          "title": "Paper Reading Club",
+          "title": "Paper Presentations Club",
           "description": "Full paper presentations by community members with YouTube recordings.",
           "schedule": "Alternate Thursdays · 3pm",
           "duration": "2 hrs"
@@ -288,7 +288,7 @@
       "applyNow": "Apply Now"
     },
     "paperReading": {
-      "title": "Paper Reading Club",
+      "title": "Paper Presentations Club",
       "schedule": "Alternate Thursdays @ 3:00 PM",
       "description": "The Paper Reading Club presents full AI safety papers presented by community members. Each session includes an in-depth presentation followed by discussion.",
       "overview": "Presentations are recorded and uploaded to our YouTube channel so the community can review them later.",

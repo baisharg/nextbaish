@@ -188,7 +188,7 @@ export default async function ResearchPage({
 
               <div className="space-y-6">
                 {/* Publication 1 */}
-                <article className="card-glass dither-finemesh p-6">
+                <article className="card-glass dither-macrogrid p-6">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-2 flex-1">
                       <h3 className="text-xl font-semibold text-slate-900">
@@ -204,13 +204,13 @@ export default async function ResearchPage({
                     <div className="flex gap-3 flex-shrink-0">
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 1
                       </a>
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 2
                       </a>
@@ -219,7 +219,7 @@ export default async function ResearchPage({
                 </article>
 
                 {/* Publication 2 */}
-                <article className="card-glass dither-finemesh p-6">
+                <article className="card-glass dither-macrogrid p-6">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-2 flex-1">
                       <h3 className="text-xl font-semibold text-slate-900">
@@ -235,7 +235,7 @@ export default async function ResearchPage({
                     <div className="flex gap-3 flex-shrink-0">
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 1
                       </a>
@@ -244,7 +244,7 @@ export default async function ResearchPage({
                 </article>
 
                 {/* Publication 3 */}
-                <article className="card-glass dither-finemesh p-6">
+                <article className="card-glass dither-macrogrid p-6">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-2 flex-1">
                       <h3 className="text-xl font-semibold text-slate-900">
@@ -260,19 +260,19 @@ export default async function ResearchPage({
                     <div className="flex gap-3 flex-shrink-0">
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 1
                       </a>
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 2
                       </a>
                       <a
                         href="#"
-                        className="rounded-lg bg-[var(--color-accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[var(--color-accent-tertiary)]"
+                        className="button-secondary"
                       >
                         Link 3
                       </a>
@@ -297,7 +297,7 @@ export default async function ResearchPage({
 
               <div className="space-y-8">
                 {/* Ongoing Project 1 */}
-                <article className="card-glass dither-finemesh space-y-6 p-6">
+                <article className="card-glass dither-macrogrid space-y-6 p-6">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-semibold text-slate-900">
                       Ongoing Project Title One
@@ -335,7 +335,7 @@ export default async function ResearchPage({
                 </article>
 
                 {/* Ongoing Project 2 */}
-                <article className="card-glass dither-finemesh space-y-6 p-6">
+                <article className="card-glass dither-macrogrid space-y-6 p-6">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-semibold text-slate-900">
                       Ongoing Project Title Two
@@ -373,7 +373,7 @@ export default async function ResearchPage({
                 </article>
 
                 {/* Ongoing Project 3 */}
-                <article className="card-glass dither-finemesh space-y-6 p-6">
+                <article className="card-glass dither-macrogrid space-y-6 p-6">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-semibold text-slate-900">
                       Ongoing Project Title Three

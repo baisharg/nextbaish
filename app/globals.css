@@ -178,19 +178,14 @@ canvas {
    Card Glass System - Unified Design System
    ==========================================================================
 
-   A modular glassmorphism card system with multiple visual treatments.
+   A modular glassmorphism card system for consistent styling.
 
    USAGE:
    - Base: <div class="card-glass">...</div>
      Creates a plain card structure without background
 
-   - Accent variant: <div class="card-glass accent">...</div>
-     Original frosted glass with gradient accent bar (for interactive cards)
-
-   - Dither variants: <div class="card-glass dither-bold">...</div>
-     Dot matrix pattern backgrounds (for hero sections & large blocks)
-     Available: dither-bold, dither-ethereal, dither-finemesh,
-                dither-macrogrid, dither-cornerglow
+   - Dither variant: <div class="card-glass dither-macrogrid">...</div>
+     Dot matrix pattern background (standard across site)
 
    BROWSER SUPPORT:
    - backdrop-filter: Chrome 76+, Safari 9+, Firefox 103+, Edge 79+
@@ -199,7 +194,7 @@ canvas {
    ACCESSIBILITY:
    - Respects prefers-reduced-transparency
    - Respects prefers-contrast
-   - All variants maintain WCAG contrast ratios
+   - Maintains WCAG contrast ratios
    ========================================================================== */
 
 /* Base card structure (no visual treatment) */
@@ -223,13 +218,8 @@ canvas {
   box-shadow: 0 0 0 3px var(--ring), var(--shadow-2);
 }
 
-/* Card variants - solid fallback backgrounds for older browsers */
-.card-glass.accent,
-.card-glass.dither-bold,
-.card-glass.dither-ethereal,
-.card-glass.dither-finemesh,
-.card-glass.dither-macrogrid,
-.card-glass.dither-cornerglow {
+/* Card variant - solid fallback background for older browsers */
+.card-glass.dither-macrogrid {
   background: rgba(var(--white-rgb), 0.95);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-1);
@@ -238,97 +228,169 @@ canvas {
 /* Progressive enhancement with backdrop-filter support */
 @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
 
-  /* Accent variant - original frosted glass with gradient bar */
-  .card-glass.accent {
-    background: linear-gradient(180deg, rgba(var(--white-rgb), 0.78), rgba(var(--white-rgb), 0.72));
-    backdrop-filter: saturate(120%) blur(8px);
-    -webkit-backdrop-filter: saturate(120%) blur(8px);
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-35));
+  /* VARIANT 1: Duotone Dot Layers - Horizontal gradient fade with fine dots */
+  .card-glass.duotone-dots {
+    position: relative;
+    overflow: hidden;
+    background:
+      /* Fine dot pattern */
+      radial-gradient(circle, rgba(100, 100, 100, 0.15) 0.5px, transparent 0.5px) 0 0 / 8px 8px,
+      /* Horizontal duotone gradient */
+      linear-gradient(90deg,
+        rgba(147, 117, 229, 0.08) 0%,
+        rgba(168, 197, 255, 0.06) 50%,
+        rgba(199, 125, 218, 0.08) 100%
+      ),
+      /* Base glass */
+      rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px) saturate(115%);
+    -webkit-backdrop-filter: blur(16px) saturate(115%);
+    border: 1px solid rgba(var(--brand-secondary-rgb), 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
-  /* Gradient accent bar for accent variant */
-  .card-glass.accent::before {
-    content: "";
+  /* VARIANT 2: Edge Glow + Microdots - Subtle microdots with edge highlight */
+  .card-glass.edge-glow-microdots {
+    position: relative;
+    overflow: hidden;
+    background:
+      /* Microdot pattern (very small) */
+      radial-gradient(circle, rgba(90, 90, 90, 0.12) 0.3px, transparent 0.3px) 0 0 / 6px 6px,
+      /* Horizontal gradient */
+      linear-gradient(90deg,
+        rgba(147, 117, 229, 0.06) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(168, 197, 255, 0.06) 100%
+      ),
+      /* Base glass */
+      rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(18px) saturate(110%);
+    -webkit-backdrop-filter: blur(18px) saturate(110%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 2px 8px rgba(147, 117, 229, 0.08);
+  }
+
+  /* Edge glow effect with ::before */
+  .card-glass.edge-glow-microdots::before {
+    content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
+    background: linear-gradient(90deg,
+      rgba(147, 117, 229, 0.15) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(168, 197, 255, 0.15) 100%
+    );
     pointer-events: none;
-    background: linear-gradient(120deg, rgba(109, 91, 245, var(--opacity-18)), rgba(var(--brand-secondary-rgb), 0) 40%);
-    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    padding: 1px;
+    opacity: 0.6;
   }
 
-  /* Hover effect for accent cards */
-  .card-glass.accent:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-2);
-  }
-
-  /* Dither Bold - Home page */
-  .card-glass.dither-bold {
+  /* VARIANT 3: Ultra-Fine Stipple - Very dense, newspaper-like */
+  .card-glass.ultra-fine {
+    position: relative;
+    overflow: hidden;
     background:
-      linear-gradient(135deg, rgba(var(--brand-primary-rgb), var(--opacity-30)) 0%, transparent 55%),
-      radial-gradient(circle at center, rgba(var(--dot-color-rgb), var(--opacity-18)) 1px, transparent 1px),
-      linear-gradient(180deg, rgba(var(--white-rgb), var(--opacity-20)), rgba(var(--surface-tint-rgb), var(--opacity-18)));
-    background-size: 100% 100%, var(--grid-standard), 100% 100%;
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-35));
-    box-shadow: 0 4px 12px rgba(var(--brand-primary-rgb), var(--opacity-15));
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
+      /* Ultra-fine dots (more visible) */
+      radial-gradient(circle, rgba(90, 90, 90, 0.18) 0.6px, transparent 0.6px) 0 0 / 5px 5px,
+      /* Subtle horizontal fade */
+      linear-gradient(90deg,
+        rgba(147, 117, 229, 0.06) 0%,
+        rgba(255, 255, 255, 0.04) 50%,
+        rgba(199, 125, 218, 0.06) 100%
+      ),
+      /* Base */
+      rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px) saturate(110%);
+    -webkit-backdrop-filter: blur(18px) saturate(110%);
+    border: 1px solid rgba(var(--brand-secondary-rgb), 0.24);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 
-  /* Dither Ethereal - Activities page */
-  .card-glass.dither-ethereal {
+  /* Corner-to-corner subtle glass gradient overlay */
+  .card-glass.ultra-fine::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+      rgba(147, 117, 229, 0.22) 0%,
+      rgba(168, 197, 255, 0.08) 35%,
+      transparent 50%,
+      rgba(168, 197, 255, 0.08) 65%,
+      rgba(168, 197, 255, 0.18) 100%
+    );
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  /* VARIANT 4: Soft Duotone - Larger dots, softer gradient */
+  .card-glass.soft-duotone {
+    position: relative;
+    overflow: hidden;
     background:
-      linear-gradient(135deg, rgba(var(--brand-primary-rgb), var(--opacity-18)) 0%, transparent 60%),
-      radial-gradient(circle at center, rgba(var(--dot-color-rgb), var(--opacity-10)) 1px, transparent 1px);
-    background-size: 100% 100%, var(--grid-standard);
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-20));
-    box-shadow: 0 2px 8px rgba(var(--brand-primary-rgb), 0.08);
-    backdrop-filter: var(--blur-md); /* Reduced from blur-lg (16px) to blur-md (12px) for better performance */
-    -webkit-backdrop-filter: var(--blur-md);
+      /* Soft dots */
+      radial-gradient(circle, rgba(110, 110, 110, 0.13) 1px, transparent 1px) 0 0 / 10px 10px,
+      /* Horizontal gradient */
+      linear-gradient(90deg,
+        rgba(147, 117, 229, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(255, 255, 255, 0.05) 60%,
+        rgba(168, 197, 255, 0.1) 100%
+      ),
+      /* Base */
+      rgba(255, 255, 255, 0.87);
+    backdrop-filter: blur(14px) saturate(112%);
+    -webkit-backdrop-filter: blur(14px) saturate(112%);
+    border: 1px solid rgba(var(--brand-secondary-rgb), 0.28);
+    box-shadow: 0 2px 4px rgba(147, 117, 229, 0.06);
   }
 
-  /* Dither Fine Mesh - Research page */
-  .card-glass.dither-finemesh {
-    background:
-      linear-gradient(135deg, rgba(var(--brand-primary-rgb), var(--opacity-20)) 0%, transparent 50%),
-      radial-gradient(circle at center, rgba(var(--dot-color-rgb), var(--opacity-12)) 0.8px, transparent 0.8px),
-      linear-gradient(180deg, rgba(var(--white-rgb), var(--opacity-18)), rgba(var(--surface-tint-rgb), var(--opacity-15)));
-    background-size: 100% 100%, var(--grid-fine), 100% 100%;
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-25));
-    box-shadow: 0 2px 8px rgba(var(--brand-primary-rgb), 0.08);
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-  }
-
-  /* Dither Macro Grid - About page */
+  /* Default: Use ultra-fine as standard */
   .card-glass.dither-macrogrid {
+    position: relative;
+    overflow: hidden;
     background:
-      linear-gradient(135deg, rgba(var(--brand-primary-rgb), var(--opacity-22)) 0%, transparent 50%),
-      radial-gradient(circle at center, rgba(var(--dot-color-rgb), var(--opacity-20)) 2px, transparent 2px),
-      linear-gradient(180deg, rgba(var(--white-rgb), var(--opacity-15)), rgba(var(--surface-tint-rgb), var(--opacity-12)));
-    background-size: 100% 100%, var(--grid-macro), 100% 100%;
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-28));
-    box-shadow: 0 2px 8px rgba(var(--brand-primary-rgb), var(--opacity-10));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+      /* Ultra-fine dots */
+      radial-gradient(circle, rgba(90, 90, 90, 0.18) 0.6px, transparent 0.6px) 0 0 / 5px 5px,
+      /* Subtle horizontal fade */
+      linear-gradient(90deg,
+        rgba(147, 117, 229, 0.06) 0%,
+        rgba(255, 255, 255, 0.04) 50%,
+        rgba(199, 125, 218, 0.06) 100%
+      ),
+      /* Base */
+      rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px) saturate(110%);
+    -webkit-backdrop-filter: blur(18px) saturate(110%);
+    border: 1px solid rgba(var(--brand-secondary-rgb), 0.24);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 
-  /* Dither Corner Glow - Contact & Resources pages */
-  .card-glass.dither-cornerglow {
-    background:
-      radial-gradient(circle at 0% 0%, rgba(var(--brand-primary-rgb), var(--opacity-28)) 0%, transparent 50%),
-      radial-gradient(circle at center, rgba(var(--dot-color-rgb), var(--opacity-20)) 1px, transparent 1px),
-      linear-gradient(180deg, rgba(var(--white-rgb), var(--opacity-70)), rgba(var(--surface-tint-rgb), var(--opacity-60)));
-    background-size: 100% 100%, var(--grid-standard), 100% 100%;
-    border: 1px solid rgba(var(--brand-secondary-rgb), var(--opacity-40));
-    box-shadow: 0 4px 12px rgba(var(--brand-primary-rgb), var(--opacity-12));
-    backdrop-filter: var(--blur-md); /* Reduced from blur-lg (16px) to blur-md (12px) for better performance */
-    -webkit-backdrop-filter: var(--blur-md);
+  /* Corner-to-corner gradient overlay for standard cards */
+  .card-glass.dither-macrogrid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+      rgba(147, 117, 229, 0.22) 0%,
+      rgba(168, 197, 255, 0.08) 35%,
+      transparent 50%,
+      rgba(168, 197, 255, 0.08) 65%,
+      rgba(168, 197, 255, 0.18) 100%
+    );
+    pointer-events: none;
+    opacity: 0.85;
+    z-index: 0;
+  }
+
+  /* Ensure card content appears above the gradient overlay */
+  .card-glass.dither-macrogrid > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -548,44 +610,20 @@ canvas {
   }
 }
 
-/* Desktop viewport optimization: Further reduce blur on large screens for better performance */
-@media (min-width: 1024px) {
-  @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
-    .card-glass.dither-ethereal,
-    .card-glass.dither-cornerglow {
-      backdrop-filter: var(--blur-sm); /* Further reduced to 8px on desktop for performance */
-      -webkit-backdrop-filter: var(--blur-sm);
-    }
-  }
-}
 
 /* Accessibility: Reduced transparency */
 @media (prefers-reduced-transparency: reduce) {
-  .card-glass.accent,
-  .card-glass.dither-bold,
-  .card-glass.dither-ethereal,
-  .card-glass.dither-finemesh,
-  .card-glass.dither-macrogrid,
-  .card-glass.dither-cornerglow {
+  .card-glass.dither-macrogrid {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: var(--surface-card);
     border: 2px solid var(--border);
   }
-
-  .card-glass.accent::before {
-    display: none;
-  }
 }
 
 /* Accessibility: High contrast */
 @media (prefers-contrast: more) {
-  .card-glass.accent,
-  .card-glass.dither-bold,
-  .card-glass.dither-ethereal,
-  .card-glass.dither-finemesh,
-  .card-glass.dither-macrogrid,
-  .card-glass.dither-cornerglow {
+  .card-glass.dither-macrogrid {
     border: 2px solid var(--brand-600);
     box-shadow: var(--shadow-2);
   }
