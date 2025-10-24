@@ -34,15 +34,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### Core Commands
-- `npm install` - Install dependencies
-- `npm run dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
-- `npm run build` - Compile production bundle (run before opening PRs that touch build paths)
-- `npm run start` - Run optimized production server from last build
+- `pnpm install` - Install dependencies
+- `pnpm dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
+- `pnpm build` - Compile production bundle (run before opening PRs that touch build paths)
+- `pnpm start` - Run optimized production server from last build
 
 ### Performance & Optimization
-- `npm run analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
-- `npm run optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
-- `npm run optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
+- `pnpm analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
+- `pnpm optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
+- `pnpm optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
 **Notes:**
 - Dev server should remain running at port 3000 during active development
@@ -871,7 +871,7 @@ grep -r "functionName" app/
 2. Add translations to `app/[locale]/dictionaries/en.json` and `es.json`
 3. Add link in `app/components/header.tsx` and `mobile-menu.tsx`
 4. Test both `/en/your-page` and `/es/your-page`
-5. Run `npm run build` to verify
+5. Run `pnpm build` to verify
 
 **🌍 Adding Translations:**
 1. Add key to BOTH `en.json` and `es.json` in same nested location
@@ -884,17 +884,17 @@ grep -r "functionName" app/
 - Use `dynamic(() => import("..."))` for below-fold heavy components
 - Add `loading` prop to dynamic imports for skeleton states
 - Use IntersectionObserver for embeds (see `airtable-embed.tsx`)
-- Run `npm run analyze` to check bundle size
+- Run `pnpm analyze` to check bundle size
 - Test with Lighthouse after changes
 
 **🧹 Debugging Performance:**
 ```bash
 # Build and analyze bundle
-npm run analyze
+pnpm analyze
 open .next/analyze/client.html
 
 # Run Lighthouse audit
-npm run build && npm run start
+pnpm build && pnpm start
 # Then open Chrome DevTools > Lighthouse
 
 # Check for console errors
@@ -910,11 +910,11 @@ npm run build && npm run start
 **📦 Adding Dependencies:**
 ```bash
 # Install package
-npm install package-name
+pnpm add package-name
 
 # If it's a large package, add to optimizePackageImports in next.config.ts
 # Update package.json description if needed
-# Run npm run build to verify no issues
+# Run pnpm build to verify no issues
 ```
 
 **🎯 Common File Locations:**
@@ -945,7 +945,7 @@ No test infrastructure exists yet. When adding coverage:
 - One concern per commit
 - Reference issue IDs in commit body when relevant
 - PRs should explain motivation, implementation, test evidence, and deployment considerations
-- Execute `npm run build` before opening PRs that touch build paths
+- Execute `pnpm build` before opening PRs that touch build paths
 
 ## Configuration
 
@@ -964,6 +964,8 @@ No test infrastructure exists yet. When adding coverage:
 ```
 legacy-peer-deps=true
 ```
+
+**Note:** Using pnpm instead of npm. The `.npmrc` file is kept for compatibility but peer dependency warnings are handled by pnpm automatically.
 
 ## Dependencies
 

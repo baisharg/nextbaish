@@ -49,7 +49,7 @@ See [DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md](./DESKTOP_OPTIMIZATION_IMPL
 ### Prerequisites
 
 - Node.js 20+
-- npm (or yarn/pnpm/bun)
+- pnpm (install with `npm install -g pnpm`)
 
 ### Installation
 
@@ -59,23 +59,23 @@ git clone <repository-url>
 cd nextbaish
 
 # Install dependencies
-npm install
+pnpm install
 ```
 
 ### Development
 
 ```bash
 # Start Turbopack dev server at http://localhost:3000
-npm run dev
+pnpm dev
 
 # Build for production
-npm run build
+pnpm build
 
 # Start production server
-npm run start
+pnpm start
 
 # Run bundle analysis
-npm run analyze
+pnpm analyze
 ```
 
 The dev server supports hot reload and will be available at [http://localhost:3000](http://localhost:3000).
@@ -201,7 +201,7 @@ Production-ready optimizations:
 - Responsive backdrop blur reduction on desktop
 - Font preconnect and display:swap
 - SWC minification (default)
-- Bundle analysis ready (`npm run analyze`)
+- Bundle analysis ready (`pnpm analyze`)
 
 ## 🔧 Configuration
 
@@ -258,7 +258,7 @@ Production monitoring with Core Web Vitals tracking:
 
 ```bash
 # Generate bundle reports
-npm run analyze
+pnpm analyze
 
 # View reports
 open .next/analyze/client.html
@@ -338,10 +338,10 @@ Features automatically enabled on Vercel:
 
 ```bash
 # Build production bundle
-npm run build
+pnpm build
 
 # Start production server
-npm run start
+pnpm start
 
 # Or use your preferred hosting (Netlify, AWS, etc.)
 ```
@@ -375,8 +375,8 @@ Comprehensive documentation available:
 
 ```bash
 # Run Lighthouse
-npm run build
-npm run start
+pnpm build
+pnpm start
 
 # Then use Chrome DevTools Lighthouse or:
 # https://pagespeed.web.dev/
@@ -393,7 +393,7 @@ Contributions are welcome! Please:
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
-5. Run `npm run build` to verify
+5. Run `pnpm build` to verify
 6. Submit a pull request
 
 Guidelines:
