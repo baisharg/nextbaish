@@ -8,6 +8,16 @@ import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  TelegramIcon,
+  Location01Icon,
+  SmartPhone01Icon,
+  InstagramIcon,
+  Linkedin01Icon,
+  WhatsappIcon,
+  ReloadIcon,
+} from "@hugeicons/core-free-icons";
 
 // Lazy load FAQ accordion since it's below the fold
 const FAQAccordion = dynamic(() => import("@/app/components/faq-accordion"), {
@@ -56,22 +66,12 @@ export default async function ContactPage({
               {/* Telegram Card */}
               <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
-                  <div className="text-3xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                  <div>
+                    <HugeiconsIcon
+                      icon={TelegramIcon}
+                      size={32}
                       className="text-[var(--color-accent-primary)]"
-                    >
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                    />
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900">Telegram</h3>
                   <p className="text-sm text-slate-600">
@@ -91,7 +91,13 @@ export default async function ContactPage({
               {/* Location Card */}
               <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
-                  <div className="text-3xl">📍</div>
+                  <div>
+                    <HugeiconsIcon
+                      icon={Location01Icon}
+                      size={32}
+                      className="text-[var(--color-accent-primary)]"
+                    />
+                  </div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {dict.contact.cards.location.title}
                   </h3>
@@ -111,7 +117,13 @@ export default async function ContactPage({
               {/* Social Media Card */}
               <article className="card-glass dither-cornerglow flex h-full flex-col justify-between p-6">
                 <div className="space-y-4">
-                  <div className="text-3xl">📱</div>
+                  <div>
+                    <HugeiconsIcon
+                      icon={SmartPhone01Icon}
+                      size={32}
+                      className="text-[var(--color-accent-primary)]"
+                    />
+                  </div>
                   <h3 className="text-xl font-semibold text-slate-900">
                     {dict.contact.cards.social.title}
                   </h3>
@@ -127,21 +139,7 @@ export default async function ContactPage({
                     rel="noopener noreferrer"
                     aria-label="Instagram"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
+                    <HugeiconsIcon icon={InstagramIcon} size={20} />
                     Instagram
                   </a>
                   <a
@@ -151,21 +149,7 @@ export default async function ContactPage({
                     rel="noopener noreferrer"
                     aria-label="LinkedIn"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                      <rect x="2" y="9" width="4" height="12"></rect>
-                      <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
+                    <HugeiconsIcon icon={Linkedin01Icon} size={20} />
                     LinkedIn
                   </a>
                   <a
@@ -175,20 +159,7 @@ export default async function ContactPage({
                     rel="noopener noreferrer"
                     aria-label="Telegram"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                    <HugeiconsIcon icon={TelegramIcon} size={20} />
                     Telegram
                   </a>
                   <a
@@ -198,19 +169,7 @@ export default async function ContactPage({
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
+                    <HugeiconsIcon icon={WhatsappIcon} size={20} />
                     WhatsApp
                   </a>
                 </div>
@@ -279,7 +238,7 @@ export default async function ContactPage({
                       type="reset"
                       className="inline-flex items-center gap-2 text-sm text-[#4a93fb] transition hover:text-[var(--color-accent-tertiary)]"
                     >
-                      <span className="text-lg">↺</span>
+                      <HugeiconsIcon icon={ReloadIcon} size={18} />
                       {dict.contact.form.clearForm}
                     </button>
                     <button

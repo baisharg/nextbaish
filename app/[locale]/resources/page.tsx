@@ -8,6 +8,13 @@ import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Video01Icon,
+  GraduationScrollIcon,
+  ArrowRight01Icon,
+  Mail01Icon
+} from "@hugeicons/core-free-icons";
 
 // Lazy load heavy components for better initial load performance
 const AirtableEmbed = lazy(() => import("@/app/components/airtable-embed"));
@@ -51,8 +58,9 @@ export default function Resources() {
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
           <div className="relative space-y-4">
             <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                🎥 {dict.resources.sections.featuredVideo.title}
+              <h2 className="flex items-center gap-2 text-2xl font-semibold text-slate-900">
+                <HugeiconsIcon icon={Video01Icon} size={28} className="text-[var(--color-accent-primary)]" />
+                {dict.resources.sections.featuredVideo.title}
               </h2>
               <p className="text-base text-slate-600">
                 {dict.resources.sections.featuredVideo.description}
@@ -148,9 +156,7 @@ export default function Resources() {
                     <h4 className="font-semibold text-slate-900">
                       {dict.resources.sections.selfStudy.relatedResources.eventsTraining.title}
                     </h4>
-                    <svg className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    <HugeiconsIcon icon={ArrowRight01Icon} size={16} className="text-slate-400" />
                   </div>
                   <p className="text-sm text-slate-600">
                     {dict.resources.sections.selfStudy.relatedResources.eventsTraining.description}
@@ -170,9 +176,7 @@ export default function Resources() {
                     <h4 className="font-semibold text-slate-900">
                       {dict.resources.sections.selfStudy.relatedResources.aiDigest.title}
                     </h4>
-                    <svg className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    <HugeiconsIcon icon={ArrowRight01Icon} size={16} className="text-slate-400" />
                   </div>
                   <p className="text-sm text-slate-600">
                     {dict.resources.sections.selfStudy.relatedResources.aiDigest.description}
@@ -191,8 +195,9 @@ export default function Resources() {
           <div className="relative space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  🎓 {dict.resources.sections.externalOpportunities.title}
+                <h2 className="flex items-center gap-2 text-3xl font-semibold text-slate-900">
+                  <HugeiconsIcon icon={GraduationScrollIcon} size={32} className="text-[var(--color-accent-primary)]" />
+                  {dict.resources.sections.externalOpportunities.title}
                 </h2>
                 <p className="text-base text-slate-600">
                   {dict.resources.sections.externalOpportunities.subtitle}
@@ -208,8 +213,9 @@ export default function Resources() {
               <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
               <div className="relative flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
                 <div className="flex-1 space-y-1">
-                  <h3 className="text-lg font-semibold text-slate-900">
-                    📬 {dict.resources.sections.externalOpportunities.newsletter.title}
+                  <h3 className="flex items-center justify-center gap-2 text-lg font-semibold text-slate-900 sm:justify-start">
+                    <HugeiconsIcon icon={Mail01Icon} size={22} className="text-[var(--color-accent-primary)]" />
+                    {dict.resources.sections.externalOpportunities.newsletter.title}
                   </h3>
                   <p className="text-sm text-slate-600">
                     {dict.resources.sections.externalOpportunities.newsletter.description}

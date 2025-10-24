@@ -4,6 +4,8 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { withLocale } from "@/app/utils/locale";
 import type { AppLocale } from "@/i18n.config";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 
 interface FAQItem {
   question: string;
@@ -78,22 +80,13 @@ export default function FAQAccordion({ items, title, locale, resourcesPageLabel 
               aria-expanded={openFaqIndex === index}
             >
               <h3 className="text-lg font-semibold text-slate-900">{item.question}</h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                size={20}
                 className={`flex-shrink-0 text-[var(--color-accent-primary)] transition-transform ${
                   openFaqIndex === index ? "rotate-180" : ""
                 }`}
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              />
             </button>
             {openFaqIndex === index && (
               <div className="border-t border-slate-200 px-6 py-4">

@@ -3,14 +3,27 @@
  */
 
 import type { Resource, ResourceType, DifficultyLevel } from "@/app/types/resources";
+import type { HugeiconsProps } from "@hugeicons/react";
+import {
+  Video01Icon,
+  File01Icon,
+  CourseIcon,
+  BookEditIcon,
+  Book02Icon,
+  BookOpen01Icon,
+} from "@hugeicons/core-free-icons";
 
-export const RESOURCE_TYPE_ICONS: Record<ResourceType, string> = {
-  video: "🎥",
-  paper: "📄",
-  course: "🎓",
-  article: "📝",
-  wiki: "📚",
-  book: "📖",
+/**
+ * Map of resource types to their corresponding HugeIcon icon data.
+ * Use with HugeiconsIcon component: <HugeiconsIcon icon={RESOURCE_TYPE_ICONS.video} size={20} />
+ */
+export const RESOURCE_TYPE_ICONS: Record<ResourceType, HugeiconsProps["icon"]> = {
+  video: Video01Icon,
+  paper: File01Icon,
+  course: CourseIcon,
+  article: BookEditIcon,
+  wiki: Book02Icon,
+  book: BookOpen01Icon,
 } as const;
 
 export const DIFFICULTY_COLORS: Record<DifficultyLevel, string> = {

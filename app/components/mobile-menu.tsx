@@ -8,6 +8,8 @@ import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { buildLangSwitchHref, withLocale } from "@/app/utils/locale";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -110,9 +112,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
               aria-label={t.closeMenu}
               type="button"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <HugeiconsIcon icon={Cancel01Icon} size={20} />
             </button>
           </div>
 

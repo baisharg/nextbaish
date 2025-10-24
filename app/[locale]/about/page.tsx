@@ -6,6 +6,8 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { AiSearchIcon, AiIdeaIcon, BrainIcon, Book02Icon } from "@hugeicons/core-free-icons";
 
 export default async function AboutPage({
   params,
@@ -135,7 +137,7 @@ export default async function AboutPage({
             <article className="card-glass dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
-                <div className="text-4xl">🔍</div>
+                <HugeiconsIcon icon={AiSearchIcon} size={40} className="text-slate-700" />
                 <h3 className="text-xl font-semibold text-slate-900">
                   {t.externalResources.alignmentForum.title}
                 </h3>
@@ -160,7 +162,7 @@ export default async function AboutPage({
             <article className="card-glass dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
-                <div className="text-4xl">💡</div>
+                <HugeiconsIcon icon={AiIdeaIcon} size={40} className="text-slate-700" />
                 <h3 className="text-xl font-semibold text-slate-900">
                   {t.externalResources.lessWrong.title}
                 </h3>
@@ -185,7 +187,7 @@ export default async function AboutPage({
             <article className="card-glass dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
-                <div className="text-4xl">🧠</div>
+                <HugeiconsIcon icon={BrainIcon} size={40} className="text-slate-700" />
                 <h3 className="text-xl font-semibold text-slate-900">
                   {t.externalResources.eightyK.title}
                 </h3>
@@ -210,7 +212,7 @@ export default async function AboutPage({
             <article className="card-glass dither-macrogrid relative overflow-hidden flex h-full flex-col justify-between p-6">
               <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
               <div className="relative space-y-4">
-                <div className="text-4xl">📚</div>
+                <HugeiconsIcon icon={Book02Icon} size={40} className="text-slate-700" />
                 <h3 className="text-xl font-semibold text-slate-900">
                   {t.externalResources.stampy.title}
                 </h3>
