@@ -169,10 +169,10 @@ function createGradientStops(color: HSL): { up: ColorStop[]; down: ColorStop[] }
 
   const downStops: ColorStop[] = [
     { yPct: 0, hsl: hslToArray(color) },                                 // Base color
-    { yPct: 0.30, hsl: hslToArray(adjustColor(color, { s: -10, l: -5 })) },  // Subtle darken at 30%
-    { yPct: 0.60, hsl: hslToArray(adjustColor(color, { s: -40, l: -25 })) }, // Heavy darken at 60%
-    { yPct: 0.85, hsl: [0, 0, 12] },                                     // Dark gray at 85%
-    { yPct: 1, hsl: [0, 0, 6] },                                         // Near-black at bottom (not pure black)
+    { yPct: 0.30, hsl: hslToArray(adjustColor(color, { s: -8, l: -3 })) },   // Slight darken at 30%
+    { yPct: 0.60, hsl: hslToArray(adjustColor(color, { s: -36, l: -24 })) }, // Moderate darken at 60%
+    { yPct: 0.85, hsl: [0, 0, 18] },                                     // Gentle shadow near floor
+    { yPct: 1, hsl: [0, 0, 12] },                                        // Soft dark base
   ];
 
   return { up: upStops, down: downStops };
@@ -201,10 +201,10 @@ function calculateGradientBounds(profile: PathProfile): { minY: number; maxY: nu
 // ============================================================================
 
 const OVERLAY_GRADIENT: ColorStop[] = [
-  { yPct: 0, hsl: [235, 100, 73] }, // rgba(118, 123, 255, 0.38) approximation
-  { yPct: 0.42, hsl: [287, 100, 75] }, // rgba(219, 126, 255, 0.22)
-  { yPct: 0.75, hsl: [277, 100, 68] }, // rgba(188, 94, 255, 0.18)
-  { yPct: 1, hsl: [309, 100, 84] }, // rgba(244, 173, 255, 0.30)
+  { yPct: 0, hsl: [235, 100, 73] }, // retain vivid glow above threads
+  { yPct: 0.42, hsl: [287, 100, 75] },
+  { yPct: 0.75, hsl: [0, 0, 26] },   // soften the darkening near the floor
+  { yPct: 1, hsl: [0, 0, 18] },      // leave a hint of light in the base glow
 ];
 
 // ============================================================================
