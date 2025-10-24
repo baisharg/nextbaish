@@ -944,10 +944,10 @@ export class WebGLRenderer implements Renderer {
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-      // Draw blurred layer (glow) with reduced opacity
+      // Draw blurred layer (glow) - make it prominent and bright
       this.gl.enable(this.gl.BLEND);
       this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-      this.drawTextureToScreen(this.blurTexture1, 0.5); // Match feColorMatrix opacity
+      this.drawTextureToScreen(this.blurTexture1, 0.8); // Brighter glow for visibility
 
       // Draw sharp layer on top
       this.gl.useProgram(this.lineProgram);
@@ -1090,8 +1090,8 @@ export class WebGLRenderer implements Renderer {
     if (vertexCount === 0) return;
 
     if (this.applyGradientUniforms(frame.overlayGradient) === 0) return;
-    // SVG has per-stop alpha (avg 0.27) × 0.9 rect opacity = 0.24 effective
-    this.gl.uniform1f(this.lineUniforms.opacity, 0.24);
+    // Increase overlay brightness to make threads more visible against background
+    this.gl.uniform1f(this.lineUniforms.opacity, 0.45);
 
     // Screen blend: S + D - S*D = src ONE, dest (1 - src)
     this.gl.enable(this.gl.BLEND);
@@ -1144,7 +1144,11 @@ export class WebGLRenderer implements Renderer {
     // Use static gradient bounds (matches SVG gradientUnits="userSpaceOnUse")
     // These are fixed in world space and don't change with animation
     const yRange = gradientMaxY - gradientMinY;
-    const normalizeGradPos = (y: number) => yRange > 0 ? (y - gradientMinY) / yRange : 0;
+    const normalizeGradPos = (y: number) => {
+      if (yRange <= 0) return 0;
+      const pos = (y - gradientMinY) / yRange;
+      return Math.max(0, Math.min(1, pos)); // Clamp to [0,1]
+    };
 
     // Use actual canvas dimensions for scaling
     const canvasWidth = this.canvas?.width || viewSize * dpr;

@@ -169,10 +169,10 @@ function createGradientStops(color: HSL): { up: ColorStop[]; down: ColorStop[] }
 
   const downStops: ColorStop[] = [
     { yPct: 0, hsl: hslToArray(color) },
-    { yPct: 0.3, hsl: hslToArray(adjustColor(color, { s: -10, l: -5 })) },
-    { yPct: 0.6, hsl: hslToArray(adjustColor(color, { s: -40, l: -25 })) },
-    { yPct: 0.85, hsl: [0, 0, 12] }, // hsl(0, 0%, 12%)
-    { yPct: 1, hsl: [0, 0, 6] }, // hsl(0, 0%, 6%)
+    { yPct: 0.25, hsl: hslToArray(adjustColor(color, { s: -20, l: -15 })) },
+    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { s: -60, l: -35 })) },
+    { yPct: 0.7, hsl: [0, 0, 15] }, // Dark gray starts at 70%
+    { yPct: 1, hsl: [0, 0, 0] }, // Pure black at bottom
   ];
 
   return { up: upStops, down: downStops };

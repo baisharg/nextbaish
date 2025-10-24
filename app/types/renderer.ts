@@ -147,18 +147,16 @@ export enum RendererType {
 
 /**
  * Choose the best renderer based on capabilities
+ * Only returns WebGL - no fallbacks
  */
-export function chooseBestRenderer(capabilities: RendererCapabilities): RendererType {
-  // Prefer WebGL2 > WebGL > Canvas2D > SVG (fallback)
-  if (capabilities.offscreenCanvas && capabilities.webgl2) {
+export function chooseBestRenderer(capabilities: RendererCapabilities): RendererType | null {
+  // WebGL2 preferred, WebGL acceptable
+  if (capabilities.webgl2) {
     return RendererType.WebGL2;
   }
-  if (capabilities.offscreenCanvas && capabilities.webgl) {
+  if (capabilities.webgl) {
     return RendererType.WebGL;
   }
-  if (capabilities.offscreenCanvas) {
-    return RendererType.Canvas2D;
-  }
-  // Canvas2D can work without OffscreenCanvas (on main thread)
-  return RendererType.Canvas2D;
+  // No WebGL support - return null (no animation)
+  return null;
 }

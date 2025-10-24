@@ -65,8 +65,8 @@ export async function createRenderer(
   // Detect browser capabilities
   const capabilities = detectCapabilities();
 
-  // Determine renderer type
-  let rendererType: RendererType;
+  // Determine renderer type (WebGL only - no fallbacks)
+  let rendererType: RendererType | null;
 
   if (forceRenderer) {
     // Force specific renderer (bypass capability checks)
@@ -76,8 +76,16 @@ export async function createRenderer(
     // Use preferred renderer if capabilities allow
     rendererType = validateRendererChoice(preferredRenderer, capabilities);
   } else {
-    // Auto-select best renderer
+    // Auto-select best renderer (WebGL only)
     rendererType = chooseBestRenderer(capabilities);
+  }
+
+  // If no WebGL support, throw error (no fallback)
+  if (!rendererType) {
+    throw new Error(
+      'WebGL not supported - timeline animation disabled. ' +
+      'Please use a browser with WebGL support (Chrome, Firefox, Safari, Edge).'
+    );
   }
 
   console.log(
@@ -102,73 +110,40 @@ export async function createRenderer(
       onError(err);
     }
 
-    // Try to fallback to Canvas2D if not already using it
-    if (rendererType !== RendererType.Canvas2D) {
-      console.error(
-        `[Timeline] ${rendererType} renderer failed, falling back to Canvas2D`,
-        err
-      );
-
-      try {
-        const renderer = await instantiateRenderer(
-          RendererType.Canvas2D,
-          canvas,
-          config
-        );
-        return {
-          renderer,
-          type: RendererType.Canvas2D,
-          capabilities,
-        };
-      } catch (fallbackError) {
-        const fallbackErr =
-          fallbackError instanceof Error
-            ? fallbackError
-            : new Error(String(fallbackError));
-        console.error("[Timeline] Canvas2D fallback failed", fallbackErr);
-        throw fallbackErr;
-      }
-    }
-
+    // No fallback - WebGL only
+    console.error(`[Timeline] ${rendererType} renderer failed - no fallback available`, err);
     throw err;
   }
 }
 
 /**
- * Validate renderer choice against capabilities
+ * Validate renderer choice against capabilities (WebGL only)
  */
 function validateRendererChoice(
   preferredRenderer: RendererType,
   capabilities: RendererCapabilities
-): RendererType {
+): RendererType | null {
   switch (preferredRenderer) {
     case RendererType.WebGL2:
-      if (!capabilities.webgl2 || !capabilities.offscreenCanvas) {
-        console.warn(
-          "[Timeline] WebGL2 not available, falling back to best alternative"
-        );
+      if (!capabilities.webgl2) {
+        console.warn("[Timeline] WebGL2 not available");
         return chooseBestRenderer(capabilities);
       }
       return RendererType.WebGL2;
 
     case RendererType.WebGL:
-      if (!capabilities.webgl || !capabilities.offscreenCanvas) {
-        console.warn(
-          "[Timeline] WebGL not available, falling back to best alternative"
-        );
+      if (!capabilities.webgl) {
+        console.warn("[Timeline] WebGL not available");
         return chooseBestRenderer(capabilities);
       }
       return RendererType.WebGL;
 
     case RendererType.Canvas2D:
-      // Canvas2D always works (with or without OffscreenCanvas)
-      return RendererType.Canvas2D;
-
     case RendererType.SVG:
       console.warn(
-        "[Timeline] SVG renderer not implemented yet, using Canvas2D"
+        `[Timeline] ${preferredRenderer} renderer not supported - WebGL only`
       );
-      return RendererType.Canvas2D;
+      return chooseBestRenderer(capabilities);
 
     default:
       return chooseBestRenderer(capabilities);

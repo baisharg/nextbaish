@@ -302,8 +302,8 @@ export class Canvas2DRenderer implements Renderer {
 
     // Draw overlay rect with screen blend mode
     this.ctx.save();
-    // SVG has per-stop alpha (avg 0.27) × 0.9 rect opacity = 0.24 effective
-    this.ctx.globalAlpha = 0.24;
+    // Increase overlay brightness to make threads more visible against background
+    this.ctx.globalAlpha = 0.45;
     this.ctx.globalCompositeOperation = "screen";
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, viewSize, viewSize);
