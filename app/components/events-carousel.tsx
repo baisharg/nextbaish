@@ -15,97 +15,74 @@ interface EventsCarouselProps {
 }
 
 export default function EventsCarousel({ images }: EventsCarouselProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Triple the images for seamless infinite scroll
-  const tripleImages = [...images, ...images, ...images];
+  // Duplicate first image at the end for seamless infinite loop
+  const extendedImages = [...images, images[0]];
+  const totalSlides = images.length;
 
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
-
-    updatePreference();
-    mediaQuery.addEventListener("change", updatePreference);
-
-    return () => mediaQuery.removeEventListener("change", updatePreference);
-  }, []);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    // Start at the middle set of images
-    const cardWidth = container.scrollWidth / tripleImages.length;
-    container.scrollLeft = cardWidth * images.length;
-
-    if (prefersReducedMotion) {
-      return;
-    }
-
-    const autoScroll = () => {
-      if (!isPaused && container) {
-        container.scrollBy({
-          left: cardWidth,
-          behavior: "smooth",
-        });
-      }
-    };
-
-    const intervalId = window.setInterval(autoScroll, 3000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [images, isPaused, prefersReducedMotion, tripleImages]);
-
-  // Handle infinite scroll wraparound
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const cardWidth = container.scrollWidth / tripleImages.length;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const scrollPos = container.scrollLeft;
-
-      // If scrolled past the end of the middle set, jump to start of middle set
-      if (scrollPos >= cardWidth * images.length * 2) {
-        container.scrollLeft = scrollPos - cardWidth * images.length;
-      }
-      // If scrolled before the start of the middle set, jump to end of middle set
-      else if (scrollPos < cardWidth * images.length) {
-        container.scrollLeft = scrollPos + cardWidth * images.length;
-      }
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [images, tripleImages]);
-
-  const scroll = (direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const cardWidth = container.scrollWidth / tripleImages.length;
-    const scrollAmount = direction === "left" ? -cardWidth : cardWidth;
-
-    container.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
+  const goToNext = () => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
   };
 
+  const goToPrevious = () => {
+    if (currentIndex === 0) {
+      // Jump to the duplicate (last position) without animation
+      setIsTransitioning(false);
+      setCurrentIndex(totalSlides);
+      // Then animate to the previous slide
+      setTimeout(() => {
+        setIsTransitioning(true);
+        setCurrentIndex(totalSlides - 1);
+      }, 50);
+    } else {
+      setIsTransitioning(true);
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  // Handle infinite loop reset
+  useEffect(() => {
+    if (currentIndex === totalSlides) {
+      // We're at the duplicate, reset to index 0 after transition
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(0);
+      }, 500); // Match CSS transition duration
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, totalSlides]);
+
+  // Auto-play
+  useEffect(() => {
+    if (!isPaused) {
+      autoPlayRef.current = setInterval(() => {
+        goToNext();
+      }, 3000);
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+    };
+  }, [isPaused, currentIndex]);
+
   return (
-    <div className="relative group">
+    <div
+      className="relative group"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       {/* Navigation Buttons */}
       <button
-        onClick={() => scroll("left")}
+        onClick={goToPrevious}
         className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white"
         aria-label="Previous image"
       >
@@ -113,40 +90,62 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
       </button>
 
       <button
-        onClick={() => scroll("right")}
+        onClick={goToNext}
         className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white"
         aria-label="Next image"
       >
         <HugeiconsIcon icon={ArrowRight01Icon} size={24} className="text-slate-900" />
       </button>
 
-      {/* Carousel */}
-      <div
-        ref={scrollContainerRef}
-        className="relative overflow-x-auto pb-4 scrollbar-hide scroll-smooth"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        <div className="flex gap-6 px-6 sm:px-10">
-          {tripleImages.map((image, index) => (
+      {/* Carousel Container */}
+      <div className="overflow-hidden">
+        <div
+          ref={containerRef}
+          className="flex"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+            transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+          }}
+        >
+          {extendedImages.map((image, index) => (
             <div
-              key={index}
-              className="flex-none w-[80vw] sm:w-[45vw] lg:w-[30vw]"
+              key={`${image.src}-${index}`}
+              className="flex-none w-full px-6 sm:px-10"
             >
-              <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-slate-100 shadow-lg transition-all duration-300 hover:shadow-xl">
+              <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-slate-100 shadow-lg">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
+                  sizes="100vw"
                   loading="lazy"
-                  quality={80}
+                  quality={85}
+                  priority={index === 0}
                 />
               </div>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="flex justify-center gap-2 mt-6">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setIsTransitioning(true);
+              setCurrentIndex(index);
+            }}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              currentIndex % totalSlides === index
+                ? 'w-8 bg-[var(--color-accent-primary)]'
+                : 'w-2 bg-slate-300 hover:bg-slate-400'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
