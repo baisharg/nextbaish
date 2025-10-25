@@ -297,6 +297,34 @@ export default async function AboutPage({
                   </div>
                 </article>
               </div>
+
+              {/* Book a Call CTA */}
+              <div className="mt-8 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 text-center">
+                <h3 className="text-2xl font-semibold text-slate-900 mb-2">
+                  Want to chat?
+                </h3>
+                <p className="text-base text-slate-600 mb-6">
+                  We welcome anyone interested in AI safety to book a call with us!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a
+                    href="https://calendly.com/eitusprejer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="button-primary inline-flex items-center justify-center gap-2"
+                  >
+                    Book with Eitan
+                  </a>
+                  <a
+                    href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="button-primary inline-flex items-center justify-center gap-2"
+                  >
+                    Book with Luca
+                  </a>
+                </div>
+              </div>
             </div>
           </section>
         </FadeInSection>
