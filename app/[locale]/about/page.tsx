@@ -448,13 +448,13 @@ export default async function AboutPage({
                       </div>
                       <div className="flex gap-3">
                         <a
-                          href="https://github.com/sergioabriola"
+                          href="https://glyc.dc.uba.ar/abriola/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label="GitHub"
+                          aria-label="Website"
                           className="text-slate-700 transition hover:opacity-70"
                         >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                          <HugeiconsIcon icon={Globe02Icon} size={20} />
                         </a>
                       </div>
                     </div>
