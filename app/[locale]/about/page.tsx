@@ -46,7 +46,7 @@ export default async function AboutPage({
                 className="text-4xl font-semibold text-slate-900 sm:text-5xl"
                 as="h1"
               />
-              <a href="#team" className="button-primary whitespace-nowrap">
+              <a href="#cofounders" className="button-primary whitespace-nowrap">
                 {t.team.meetTheTeam}
               </a>
             </div>
