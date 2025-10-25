@@ -320,23 +320,23 @@ export default async function AboutPage({
                 </h3>
                 <div className="grid gap-6 md:grid-cols-2">
                   {/* Lucas Vitali */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[180px] w-[180px]">
+                    <div className="relative flex flex-col items-center space-y-3">
+                      <div className="h-[140px] w-[140px]">
                         <Image
                           src="/images/team/lucas-new.png"
                           alt="Lucas Vitali"
                           width={500}
                           height={500}
-                          sizes="180px"
+                          sizes="140px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-lg font-semibold text-slate-900">
                           Lucas Vitali
                         </h3>
                         <p className="text-sm text-slate-600">
@@ -367,23 +367,23 @@ export default async function AboutPage({
                   </article>
 
                   {/* Carlos Giudice */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[180px] w-[180px]">
+                    <div className="relative flex flex-col items-center space-y-3">
+                      <div className="h-[140px] w-[140px]">
                         <Image
                           src="/images/team/carlos-new.png"
                           alt="Carlos Giudice"
                           width={500}
                           height={500}
-                          sizes="180px"
+                          sizes="140px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-lg font-semibold text-slate-900">
                           Carlos Giudice
                         </h3>
                         <p className="text-sm text-slate-600">
@@ -423,23 +423,23 @@ export default async function AboutPage({
                   </article>
 
                   {/* Sergio Abriola */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[180px] w-[180px]">
+                    <div className="relative flex flex-col items-center space-y-3">
+                      <div className="h-[140px] w-[140px]">
                         <Image
                           src="/images/team/sergio-new.png"
                           alt="Sergio Abriola, PhD"
                           width={500}
                           height={500}
-                          sizes="180px"
+                          sizes="140px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-lg font-semibold text-slate-900">
                           Sergio Abriola, PhD
                         </h3>
                         <p className="text-sm text-slate-600">
@@ -469,23 +469,23 @@ export default async function AboutPage({
                 </h3>
                 <div className="grid gap-6 md:grid-cols-3">
                   {/* Gaspi Labastie */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/gaspar-new.png"
                           alt="Gaspar Labastie"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="text-lg font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Gaspar Labastie
                         </h4>
                         <p className="text-xs text-slate-600">
@@ -496,23 +496,23 @@ export default async function AboutPage({
                   </article>
 
                   {/* Tobias Bersia */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/tobias-new.png"
                           alt="Tobias Bersia"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="text-lg font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Tobias Bersia
                         </h4>
                         <p className="text-xs text-slate-600">
@@ -523,23 +523,23 @@ export default async function AboutPage({
                   </article>
 
                   {/* Gonzalo Heredia */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/gonzalo-new.png"
                           alt="Gonzalo Heredia"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="text-lg font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Gonzalo Heredia
                         </h4>
                         <p className="text-xs text-slate-600">
