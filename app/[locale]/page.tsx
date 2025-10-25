@@ -8,7 +8,7 @@ import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { renderWithFootnotes } from "@/app/utils/footnotes";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Calendar03Icon, Clock01Icon } from "@hugeicons/core-free-icons";
+import { Calendar03Icon, Clock01Icon, TelegramIcon, WhatsappIcon } from "@hugeicons/core-free-icons";
 
 // Lazy load below-the-fold components for better initial load
 const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
@@ -17,7 +17,7 @@ const CalendarSection = dynamic(() => import("@/app/components/calendar-section"
   ),
 });
 
-const SubstackSignup = dynamic(() => import("@/app/components/substack-signup"), {
+const SupascribeSignup = dynamic(() => import("@/app/components/supascribe-signup"), {
   loading: () => <div className="card-glass h-64 animate-pulse" />,
 });
 
@@ -61,9 +61,7 @@ export default async function Home({
             <div>
               <a
                 className="button-primary"
-                href="https://baish.com.ar/#get-involved"
-                rel="noopener noreferrer"
-                target="_blank"
+                href="#get-involved"
               >
                 {t.mission.cta}
                 <span aria-hidden>→</span>
@@ -113,7 +111,7 @@ export default async function Home({
             {[
               {
                 slug: "activity-fundamentals",
-                anchor: "fundamentals",
+                route: "fundamentals",
                 eyebrow: t.activities.items.fundamentals.eyebrow,
                 title: t.activities.items.fundamentals.title,
                 description: t.activities.items.fundamentals.description,
@@ -124,7 +122,7 @@ export default async function Home({
               },
               {
                 slug: "activity-workshop",
-                anchor: "workshop",
+                route: "workshop",
                 eyebrow: t.activities.items.workshop.eyebrow,
                 title: t.activities.items.workshop.title,
                 description: t.activities.items.workshop.description,
@@ -135,7 +133,7 @@ export default async function Home({
               },
               {
                 slug: "activity-reading",
-                anchor: "reading",
+                route: "reading",
                 eyebrow: t.activities.items.reading.eyebrow,
                 title: t.activities.items.reading.title,
                 description: t.activities.items.reading.description,
@@ -172,15 +170,20 @@ export default async function Home({
                 </div>
 
                 <div className="card-footer">
-                  <a
-                    className="button-primary"
-                    href="#contact"
-                  >
-                    {t.activities.joinNow}
-                  </a>
+                  {activity.route === "reading" && (
+                    <a
+                      className="button-primary"
+                      href="https://t.me/+zhSGhXrn56g1YjVh"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <HugeiconsIcon icon={TelegramIcon} size={18} />
+                      {t.activities.joinTelegram}
+                    </a>
+                  )}
                   <TransitionLink
                     className="link-arrow"
-                    href={`/${currentLocale}/activities#${activity.anchor}`}
+                    href={`/${currentLocale}/activities/${activity.route}`}
                   >
                     {t.activities.learnMore}
                     <span>→</span>
@@ -199,7 +202,7 @@ export default async function Home({
             id="get-involved"
           >
           <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-          <SubstackSignup t={dict.substack} />
+          <SupascribeSignup t={dict.substack} />
 
           <article className="card-glass dither-macrogrid">
             <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
@@ -209,14 +212,32 @@ export default async function Home({
             <p className="card-body">
               {t.getInvolved.communityDescription}
             </p>
-            <a
-              className="button-outline mt-auto"
-              href="https://t.me/+zhSGhXrn56g1YjVh"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {t.getInvolved.telegramCta}
-            </a>
+            <div className="flex flex-col gap-3 mt-auto">
+              <a
+                className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                href="https://t.me/+zhSGhXrn56g1YjVh"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon icon={TelegramIcon} size={20} />
+                  <span className="font-semibold">{t.getInvolved.telegramCta}</span>
+                </div>
+                <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
+              </a>
+              <a
+                className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon icon={WhatsappIcon} size={20} />
+                  <span className="font-semibold">{t.getInvolved.whatsappCta}</span>
+                </div>
+                <span className="text-xs opacity-90">{t.getInvolved.whatsappMembers}</span>
+              </a>
+            </div>
           </article>
           </section>
         </FadeInSection>

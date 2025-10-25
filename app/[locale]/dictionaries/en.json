@@ -87,7 +87,16 @@
         }
       },
       "joinNow": "Join now",
+      "joinTelegram": "Join Telegram",
       "learnMore": "Learn more"
+    },
+    "aisar": {
+      "eyebrow": "Sister Project",
+      "title": "AISAR Scholarships",
+      "description": "In-person part-time program for advanced students to work on AI Safety research projects. $600/month stipend + computing budget. Topics include interpretability, evaluations, and oversight.",
+      "duration": "6 months",
+      "commitment": "20 hrs/week",
+      "visitWebsite": "Visit Website"
     },
     "resources": {
       "title": "Resources",
@@ -117,9 +126,12 @@
     },
     "getInvolved": {
       "communityEyebrow": "Community",
-      "communityTitle": "Join our Telegram Community",
+      "communityTitle": "Join our Community",
       "communityDescription": "Connect with fellow students interested in AI safety.",
-      "telegramCta": "Join Telegram Group"
+      "telegramCta": "AI Safety Argentina",
+      "telegramMembers": "190+ members",
+      "whatsappCta": "BAISH Community",
+      "whatsappMembers": "140+ members"
     }
   },
   "about": {
@@ -204,6 +216,19 @@
         "eitan": "Eitan is a co-founding director of BAISH with expertise in AI safety research and interpretability. He leads technical research initiatives and helps coordinate the community's research activities.",
         "luca": "Luca is a co-founding director of BAISH focused on building the AI safety research community in Buenos Aires. He brings experience in machine learning and is passionate about making AI safety research more accessible."
       }
+    },
+    "support": {
+      "title": "Supported By",
+      "description": "BAISH is supported by:",
+      "openPhilanthropy": {
+        "name": "Open Philanthropy",
+        "description": "Open Philanthropy's mission is to give as effectively as possible in order to help others as much as possible."
+      },
+      "kairos": {
+        "name": "Kairos",
+        "program": "Pathfinder Program",
+        "description": "Kairos supports AI safety field-building through their Pathfinder program, which helps accelerate promising initiatives."
+      }
     }
   },
   "activities": {
@@ -270,6 +295,7 @@
       "location": "Pabellon 0+inf, Ciudad Universitaria",
       "topic": "To be defined weekly",
       "joinTelegram": "Join Telegram for Updates",
+      "joinWhatsapp": "Join WhatsApp",
       "applyNow": "Apply Now"
     },
     "paperReading": {

@@ -13,9 +13,9 @@
       "en": "English",
       "es": "Español"
     },
-    "menu": "Menú",
-    "closeMenu": "Cerrar menú",
-    "openMenu": "Abrir menú"
+    "menu": "Menu",
+    "closeMenu": "Cerrar menu",
+    "openMenu": "Abrir menu"
   },
   "footer": {
     "copyright": "Todos los derechos reservados.",
@@ -30,8 +30,8 @@
     }
   },
   "substack": {
-    "eyebrow": "Boletín",
-    "title": "Unite a nuestra lista de correo",
+    "eyebrow": "Boletin",
+    "title": "Sumate a nuestra lista de correo",
     "description": "Mantenete al tanto de nuestras actividades, eventos y oportunidades.",
     "placeholder": "tu@email.com",
     "button": "Suscribite",
@@ -46,7 +46,7 @@
       "home": "Inicio"
     },
     "mission": {
-      "eyebrow": "Misión",
+      "eyebrow": "Mision",
       "title": "Asegurando que la IA Beneficie a la Humanidad",
       "paragraph1": "A medida que los modelos de inteligencia artificial avanzan en capacidades{footnote1}, esperamos que tengan un impacto cada vez más profundo en nuestra sociedad{footnote2}. Es esencial que este impacto sea positivo, y que las decisiones tomadas por estos sistemas sean transparentes, confiables y responsables{footnote3} ante las personas afectadas por ellos.",
       "paragraph2": "Creemos que reducir los riesgos asociados a modelos avanzados de IA{footnote4} es uno de los desafíos más importantes de nuestro tiempo. También creemos que es un problema abierto y apasionante{footnote5}, con amplias oportunidades para que más investigadores avancen en este campo{footnote6}.",
@@ -54,8 +54,8 @@
       "cta": "Participá"
     },
     "events": {
-      "eyebrow": "Próximos Eventos",
-      "title": "Unite a nuestros talleres y encuentros comunitarios",
+      "eyebrow": "Proximos Eventos",
+      "title": "Sumate a nuestros talleres y encuentros comunitarios",
       "description": "Mantenete al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
       "calendarPlaceholder": "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida.",
       "subscribe": "Suscribite al calendario"
@@ -80,14 +80,23 @@
         },
         "reading": {
           "eyebrow": "Actividades",
-          "title": "Club de Lectura",
+          "title": "Club del Paper",
           "description": "Presentaciones completas de papers por miembros de la comunidad con grabaciones en YouTube.",
           "schedule": "Jueves alternos · 15h",
           "duration": "2 hrs"
         }
       },
       "joinNow": "Inscribite",
+      "joinTelegram": "Sumate al Telegram",
       "learnMore": "Ver más"
+    },
+    "aisar": {
+      "eyebrow": "Proyecto Hermano",
+      "title": "Becas AISAR",
+      "description": "Programa presencial part-time para estudiantes avanzados que trabajan en proyectos de investigación en AI Safety. Estipendio de $600/mes + presupuesto para cómputo. Temas incluyen interpretabilidad, evaluaciones y supervisión.",
+      "duration": "6 meses",
+      "commitment": "20 hrs/semana",
+      "visitWebsite": "Visitar sitio web"
     },
     "resources": {
       "title": "Recursos",
@@ -109,7 +118,7 @@
           "eyebrow": "Recursos",
           "title": "Manual Comunitario",
           "description": "Guía para organizar encuentros y facilitar discusiones productivas.",
-          "meta": "Guía"
+          "meta": "Guia"
         }
       },
       "viewResource": "Ver recurso",
@@ -117,9 +126,12 @@
     },
     "getInvolved": {
       "communityEyebrow": "Comunidad",
-      "communityTitle": "Unite a nuestra comunidad en Telegram",
+      "communityTitle": "Sumate a nuestra comunidad",
       "communityDescription": "Conéctate con estudiantes interesados en la seguridad de IA.",
-      "telegramCta": "Unite al grupo de Telegram"
+      "telegramCta": "AI Safety Argentina",
+      "telegramMembers": "190+ miembros",
+      "whatsappCta": "Comunidad BAISH",
+      "whatsappMembers": "140+ miembros"
     }
   },
   "about": {
@@ -130,15 +142,15 @@
     "title": "Entendiendo la Seguridad en IA",
     "coreConcepts": {
       "whatIsAiSafety": {
-        "title": "¿Qué es la Seguridad en IA?",
+        "title": "¿Que es la Seguridad en IA?",
         "content": "La Seguridad en IA es un campo de investigación enfocado en asegurar que los sistemas avanzados de inteligencia artificial sigan siendo beneficiosos, alineados con los valores humanos y bajo control humano a medida que se vuelven más capaces. Abarca áreas técnicas de investigación como alineamiento, interpretabilidad y robustez, así como consideraciones de gobernanza sobre cómo deberían desarrollarse e implementarse los sistemas de IA."
       },
       "whyItMatters": {
-        "title": "¿Por qué es Importante?",
+        "title": "¿Por que es Importante?",
         "content": "A medida que los sistemas de IA se vuelven más poderosos y autónomos, pueden desarrollar capacidades que podrían llevar a consecuencias no deseadas si no están diseñados y controlados adecuadamente. Lo que está en juego es importante: la IA avanzada podría ayudar a resolver los mayores desafíos de la humanidad, pero también presenta riesgos significativos si se desarrolla sin medidas de seguridad adecuadas. El campo busca maximizar los beneficios mientras minimiza los daños potenciales."
       },
       "risks": {
-        "title": "Riesgos y Desafíos Principales",
+        "title": "Riesgos y Desafios Principales",
         "alignment": {
           "title": "Problema de Alineamiento",
           "description": "Asegurar que los sistemas de IA persigan objetivos alineados con los valores e intenciones humanas, incluso cuando se vuelven más capaces."
@@ -152,11 +164,11 @@
           "description": "Crear sistemas que se comporten de manera segura incluso cuando se implementan en nuevos entornos o enfrentan situaciones inesperadas."
         },
         "powerSeeking": {
-          "title": "Comportamiento de Búsqueda de Poder",
+          "title": "Comportamiento de Busqueda de Poder",
           "description": "Prevenir que los sistemas de IA desarrollen objetivos instrumentales que entren en conflicto con el bienestar humano."
         },
         "coordination": {
-          "title": "Desafíos de Coordinación",
+          "title": "Desafios de Coordinacion",
           "description": "Garantizar que se mantengan estándares de seguridad en todos los principales esfuerzos de desarrollo de IA a nivel mundial."
         }
       }
@@ -164,16 +176,16 @@
     "ourApproach": {
       "title": "Nuestro Enfoque",
       "focusAreas": {
-        "title": "Áreas de Enfoque",
+        "title": "Areas de Enfoque",
         "intro": "En BAISH - Buenos Aires AI Safety Hub, nos enfocamos en varias áreas clave dentro de la investigación de seguridad en IA:",
         "items": [
           "Interpretabilidad de Cadena de Pensamiento",
           "Evaluaciones de LLMs",
-          "Interpretabilidad mecánica de redes neuronales"
+          "Interpretabilidad mecanica de redes neuronales"
         ]
       },
       "contribution": {
-        "title": "Nuestra Contribución",
+        "title": "Nuestra Contribucion",
         "intro": "Contribuimos al campo a través de:",
         "items": [
           "Apoyando proyectos de investigación estudiantil",
@@ -185,7 +197,7 @@
     },
     "team": {
       "title": "Equipo Principal",
-      "meetTheTeam": "Conocé al Equipo",
+      "meetTheTeam": "Conoce al Equipo",
       "cofoundersTitle": "Fundadores",
       "leadershiptTitle": "Liderazgo",
       "roles": {
@@ -204,6 +216,19 @@
         "eitan": "Eitan es co-director fundador de BAISH con experiencia en investigación de seguridad en IA e interpretabilidad. Lidera iniciativas de investigación técnica y ayuda a coordinar las actividades de investigación de la comunidad.",
         "luca": "Luca es co-director fundador de BAISH enfocado en construir la comunidad de investigación de seguridad en IA en Buenos Aires. Aporta experiencia en aprendizaje automático y le apasiona hacer la investigación en seguridad de IA más accesible."
       }
+    },
+    "support": {
+      "title": "Apoyo Externo",
+      "description": "BAISH cuenta con el apoyo de:",
+      "openPhilanthropy": {
+        "name": "Open Philanthropy",
+        "description": "La misión de Open Philanthropy es donar de la manera más efectiva posible para ayudar a otros tanto como sea posible."
+      },
+      "kairos": {
+        "name": "Kairos",
+        "program": "Programa Pathfinder",
+        "description": "Kairos apoya el desarrollo del campo de seguridad en IA a través de su programa Pathfinder, que ayuda a acelerar iniciativas prometedoras."
+      }
     }
   },
   "activities": {
@@ -212,7 +237,7 @@
       "current": "Programas"
     },
     "title": "Nuestros Programas",
-    "description": "Unite a nuestra comunidad y participá en investigación y aprendizaje de seguridad en IA",
+    "description": "Sumate a nuestra comunidad y participá en investigación y aprendizaje de seguridad en IA",
     "subscribeCalendar": "Suscribite al calendario de eventos",
     "agiSafety": {
       "title": "AI Safety Fundamentals",
@@ -228,7 +253,7 @@
         "2.5 horas semanales presenciales (Viernes 14:30-17:00)",
         "Certificado de compleción (requiere 7/9 encuentros + proyecto final)"
       ],
-      "whoWeSeek": "¿A quiénes buscamos?",
+      "whoWeSeek": "¿A quienes buscamos?",
       "seekCriteria": [
         "Te interesa abordar conceptos como vulnerabilidades en sistemas de IA o riesgos existenciales",
         "Querés explorar qué oportunidades hay en el campo y tus siguientes pasos a seguir",
@@ -240,7 +265,7 @@
       "programDetails": "Detalles del Programa",
       "duration": "13 semanas",
       "fellowshipPeriod": "Viernes 14:30-17:00",
-      "viewCurriculum": "Ver currículo",
+      "viewCurriculum": "Ver curriculo",
       "applyNow": "Aplicá ahora"
     },
     "aisWorkshop": {
@@ -248,7 +273,7 @@
       "schedule": "Todos los martes @ 14:30",
       "description": "La actividad consiste en discutir y replicar (programando) investigaciones recientes sobre AI Safety de forma presencial para adquirir las habilidades técnicas necesarias para poder investigar de forma independiente.",
       "overview": "Este taller se llevará a cabo los martes de 14:30 a 17:00 y está diseñado para estudiantes que quieren desarrollar habilidades técnicas prácticas en seguridad de IA.",
-      "whoWeSeek": "¿A quiénes buscamos?",
+      "whoWeSeek": "¿A quienes buscamos?",
       "seekCriteria": [
         "Podes dedicarte al menos 5 horas semanales (2 hrs presenciales + 3 hrs asincrónicas)",
         "Tenés buen nivel de inglés",
@@ -264,12 +289,13 @@
         "Trabajo asincrónico para familiarizarse con el material (3 hrs/semana)",
         "Mentoría para desarrollar habilidades de investigación independiente"
       ],
-      "nextSession": "Próxima Sesión",
+      "nextSession": "Proxima Sesion",
       "date": "Consultar calendario",
       "time": "14:30 - 17:00",
-      "location": "Pabellón 0+inf, Ciudad Universitaria",
+      "location": "Pabellon 0+inf, Ciudad Universitaria",
       "topic": "A definir semanalmente",
-      "joinTelegram": "Unite a Telegram para actualizaciones",
+      "joinTelegram": "Sumate a Telegram para actualizaciones",
+      "joinWhatsapp": "Sumate al WhatsApp",
       "applyNow": "Aplicá ahora"
     },
     "paperReading": {
@@ -277,44 +303,44 @@
       "schedule": "Jueves alternos @ 15:00",
       "description": "El Club del Paper presenta papers completos de seguridad en IA e IA en general expuestos por miembros de la comunidad. Cada sesión incluye una presentación profunda seguida de discusión.",
       "overview": "Las presentaciones son grabadas y subidas a nuestro canal de YouTube para que la comunidad pueda revisarlas posteriormente.",
-      "selectionCriteriaTitle": "¿Qué Esperamos?",
+      "selectionCriteriaTitle": "¿Que Esperamos?",
       "criteria": [
         "Presentaciones completas de papers por miembros de la comunidad",
         "Análisis profundo de métodos y resultados",
         "Discusión abierta sobre implicaciones",
         "Grabaciones disponibles en YouTube"
       ],
-      "sessionFormatTitle": "Formato de Sesión",
+      "sessionFormatTitle": "Formato de Sesion",
       "format": [
         "Presentación completa del paper (30-40 minutos)",
         "Discusión abierta y preguntas (30-40 minutos)",
         "Sesión grabada y subida a YouTube",
         "Chat de Telegram para coordinación y discusión continua"
       ],
-      "nextSession": "Próxima Sesión de Paper",
+      "nextSession": "Proxima Sesion de Paper",
       "paper": "Consultar en Telegram o calendario",
       "discussionLead": "Miembro de la comunidad",
       "accessList": "Ver grabaciones en YouTube",
       "date": "Consultar calendario",
       "time": "15:00 - 17:00",
-      "location": "Pabellón 0+inf, Ciudad Universitaria",
+      "location": "Pabellon 0+inf, Ciudad Universitaria",
       "youtubeChannel": "Canal de YouTube",
       "telegramGroup": "Grupo de Telegram"
     },
     "common": {
-      "duration": "Duración:",
+      "duration": "Duracion:",
       "startDate": "Fecha de inicio:",
-      "endDate": "Fecha de finalización:",
-      "applicationDeadline": "Fecha límite de inscripción:",
-      "location": "Ubicación:",
+      "endDate": "Fecha de finalizacion:",
+      "applicationDeadline": "Fecha limite de inscripcion:",
+      "location": "Ubicacion:",
       "instructors": "Instructores:",
-      "fellowshipPeriod": "Período de Fellowship:",
+      "fellowshipPeriod": "Periodo de Fellowship:",
       "date": "Fecha:",
       "time": "Hora:",
       "topic": "Tema:",
       "facilitator": "Facilitador:",
       "paper": "Paper:",
-      "discussionLead": "Líder de Discusión:"
+      "discussionLead": "Lider de Discusion:"
     },
     "gallery": {
       "eyebrow": "Comunidad",
@@ -338,7 +364,7 @@
         "description": "Sumate a nuestro canal de comunidad para discusiones y actualizaciones:"
       },
       "location": {
-        "title": "Ubicación",
+        "title": "Ubicacion",
         "description": "Estamos ubicados en el Departamento de Ciencias de la Computación:"
       },
       "social": {
@@ -403,20 +429,20 @@
       "robustness": "Robustez",
       "valueLearning": "Aprendizaje de Valores"
     },
-    "approachTitle": "Enfoque de Investigación",
-    "focusAreasTitle": "Áreas de Enfoque",
+    "approachTitle": "Enfoque de Investigacion",
+    "focusAreasTitle": "Areas de Enfoque",
     "focusAreas": {
       "mechInterp": "Interpretabilidad Mecánica - Entender cómo las redes neuronales procesan información internamente",
       "alignment": "Alineamiento de IA - Asegurar que los sistemas de IA actúen de acuerdo a valores e intenciones humanas",
       "robustness": "Robustez y Pruebas Adversarias - Construir sistemas resilientes resistentes a ataques",
       "valueLearning": "Aprendizaje de Valores - Enseñar a los sistemas de IA a aprender y respetar preferencias humanas"
     },
-    "projectsTitle": "Proyectos de Investigación",
+    "projectsTitle": "Proyectos de Investigacion",
     "linkPlaceholder": "Enlace",
     "publicationsTitle": "Publicaciones",
-    "ongoingTitle": "Investigación en Curso",
+    "ongoingTitle": "Investigacion en Curso",
     "started": "Iniciado",
-    "expectedCompletion": "Finalización Esperada"
+    "expectedCompletion": "Finalizacion Esperada"
   },
   "resources": {
     "breadcrumb": {
@@ -427,12 +453,12 @@
     "description": "Materiales curados para explorar conceptos de seguridad en IA",
     "sections": {
       "featuredVideo": {
-        "title": "Introducción a la Seguridad en IA",
+        "title": "Introduccion a la Seguridad en IA",
         "description": "Empieza aquí: Por qué los expertos temen la IA superinteligente – y qué podemos hacer al respecto"
       },
       "selfStudy": {
         "title": "Autoestudio",
-        "lastUpdated": "Última actualización: 22 de octubre de 2025",
+        "lastUpdated": "Ultima actualizacion: 22 de octubre de 2025",
         "description": "Estos currículos y listas de lectura te permiten profundizar en la seguridad de IA a través del aprendizaje independiente.",
         "fundamentalReading": {
           "title": "Lecturas fundamentales",
@@ -440,19 +466,19 @@
             {
               "name": "AI Alignment Forum: Secuencias Curadas",
               "description": "Lista de secuencias curadas por el equipo del AI Alignment Forum, con trabajos de Richard Ngo, Paul Christiano, etc.",
-              "category": "Alineación Técnica",
+              "category": "Alineacion Tecnica",
               "createdBy": "Varios",
               "url": "https://www.alignmentforum.org/library"
             }
           ]
         },
         "standardCourses": {
-          "title": "Cursos introductorios estándar",
+          "title": "Cursos introductorios estandar",
           "items": [
             {
               "name": "BlueDot Impact: Alineación y Gobernanza",
               "description": "Cubre conceptos clave y perspectivas de investigación en seguridad de IA, divididos en dos áreas principales: Alineación y Gobernanza. Anteriormente conocido como AI Safety Fundamentals.",
-              "category": "Alineación Técnica, Gobernanza",
+              "category": "Alineacion Tecnica, Gobernanza",
               "createdBy": "BlueDot Impact",
               "url": "https://bluedot.org/courses"
             }
@@ -461,7 +487,7 @@
         "relatedResources": {
           "title": "Recursos relacionados",
           "eventsTraining": {
-            "title": "Eventos y capacitación",
+            "title": "Eventos y capacitacion",
             "description": "Próximas becas, conferencias, cursos facilitados, etc.",
             "url": "https://www.aisafety.com/events-and-training"
           },
@@ -473,12 +499,12 @@
         }
       },
       "externalOpportunities": {
-        "title": "Oportunidades de Capacitación Externa",
-        "subtitle": "Próximos cursos, talleres y programas de organizaciones de todo el mundo",
+        "title": "Oportunidades de Capacitacion Externa",
+        "subtitle": "Proximos cursos, talleres y programas de organizaciones de todo el mundo",
         "description": "Hay una amplia gama de eventos y programas de capacitación en seguridad de IA, tanto online como presenciales. Estos te pueden ayudar a desarrollar habilidades, hacer conexiones y descubrir oportunidades.",
         "newsletter": {
           "title": "Suscribite al Newsletter de Nuevas Oportunidades",
-          "description": "Recibí un email semanal resumiendo todos los nuevos eventos y programas de capacitación",
+          "description": "Recibí un email semanal resumiendo todos los nuevos eventos y programas de capacitacion",
           "cta": "Suscribite"
         }
       }
@@ -496,7 +522,7 @@
         "content": "En BAISH (Buenos Aires AI Safety Hub), estamos comprometidos a respetar tu privacidad. Esta Política de Privacidad describe nuestras prácticas con respecto a la recopilación, uso y protección de tu información cuando utilizas nuestro sitio web y servicios."
       },
       "dataCollection": {
-        "title": "Recopilación de Datos",
+        "title": "Recopilacion de Datos",
         "content": "Recopilamos información personal mínima. Los únicos datos personales que recopilamos son las direcciones de correo electrónico cuando los usuarios se registran voluntariamente para recibir nuestro boletín a través de Substack. Esta información es almacenada y gestionada por Substack de acuerdo con su política de privacidad."
       },
       "noTracking": {
@@ -514,11 +540,11 @@
         "content": "Tienes derecho a cancelar la suscripción a nuestro boletín en cualquier momento haciendo clic en el enlace para cancelar la suscripción en cualquiera de nuestros correos electrónicos o contactándonos directamente. Si tienes alguna pregunta sobre tus datos o deseas acceder, corregir o eliminar tu información, contáctanos."
       },
       "changes": {
-        "title": "Cambios a Esta Política",
+        "title": "Cambios a Esta Politica",
         "content": "Podemos actualizar esta Política de Privacidad de vez en cuando. Te notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página."
       },
       "contact": {
-        "title": "Contáctanos",
+        "title": "Contactanos",
         "content": "Si tienes alguna pregunta sobre esta Política de Privacidad, contáctanos a través de nuestra",
         "contactLink": "página de Contacto"
       }

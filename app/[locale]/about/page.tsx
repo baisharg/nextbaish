@@ -603,6 +603,125 @@ export default async function AboutPage({
             </div>
           </section>
         </FadeInSection>
+
+        {/* Support Section */}
+        <FadeInSection variant="slide-up" delay={500} as="section">
+          <section
+            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            id="support"
+          >
+            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
+            <div className="relative text-center space-y-6">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.support.title}
+                </h2>
+                <p className="text-lg text-slate-700">
+                  {t.support.description}
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto pt-4">
+                {/* Open Philanthropy */}
+                <article className="card-glass dither-macrogrid relative overflow-hidden p-6 text-left">
+                  <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <div className="relative space-y-3">
+                    <h3 className="text-xl font-semibold text-slate-900">
+                      {t.support.openPhilanthropy.name}
+                    </h3>
+                    <p className="text-base text-slate-700">
+                      {t.support.openPhilanthropy.description}
+                    </p>
+                    <a
+                      href="https://www.openphilanthropy.org/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
+                    >
+                      Visit website
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </article>
+
+                {/* Kairos Pathfinder */}
+                <article className="card-glass dither-macrogrid relative overflow-hidden p-6 text-left">
+                  <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <div className="relative space-y-3">
+                    <div>
+                      <h3 className="text-xl font-semibold text-slate-900">
+                        {t.support.kairos.name}
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        {t.support.kairos.program}
+                      </p>
+                    </div>
+                    <p className="text-base text-slate-700">
+                      {t.support.kairos.description}
+                    </p>
+                    <div className="flex gap-3">
+                      <a
+                        href="https://pathfinder.kairos-project.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
+                      >
+                        Pathfinder
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                      <span className="text-slate-400">·</span>
+                      <a
+                        href="https://kairos-project.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
+                      >
+                        Kairos
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+        </FadeInSection>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>

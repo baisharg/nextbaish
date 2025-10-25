@@ -65,7 +65,7 @@ export default function CalendarSection({
       <div className="flex justify-center mt-6">
         <a
           href="https://www.google.com/calendar/render?cid=http%3A%2F%2Fapi.lu.ma%2Fics%2Fget%3Fentity%3Dcalendar%26id%3Dcal-0oFAsTn5vpwcAwb"
-          className="button-secondary"
+          className="button-primary"
           target="_blank"
           rel="noopener noreferrer"
         >

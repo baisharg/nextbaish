@@ -196,19 +196,6 @@ export default async function Activities({
                     ],
                     isExternal: false,
                   },
-                  {
-                    slug: "aisar-scholarships",
-                    route: "https://scholarship.aisafety.ar/",
-                    eyebrow: dict.home.aisar.eyebrow,
-                    title: dict.home.aisar.title,
-                    description: dict.home.aisar.description,
-                    metaItems: [
-                      { icon: "calendar", text: dict.home.aisar.duration },
-                      { icon: "clock", text: dict.home.aisar.commitment },
-                    ],
-                    isExternal: true,
-                    buttonText: dict.home.aisar.visitWebsite,
-                  },
                 ].map((activity) => (
                   <article
                     key={activity.title}
