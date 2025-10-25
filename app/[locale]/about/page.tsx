@@ -346,32 +346,32 @@ export default async function AboutPage({
                 <h3 className="text-2xl font-semibold text-slate-900">
                   {t.team.leadershiptTitle}
                 </h3>
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-3">
                   {/* Lucas Vitali */}
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-3">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/lucas-new.png"
                           alt="Lucas Vitali"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-slate-900">
+                        <h3 className="text-base font-semibold text-slate-900">
                           Lucas Vitali
                         </h3>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-xs text-slate-600">
                           {t.team.roles.commDirector}
                         </p>
                       </div>
-                      <div className="flex gap-3">
+                      <div className="flex gap-2">
                         <a
                           href="https://github.com/lucasvitali"
                           target="_blank"
@@ -397,28 +397,28 @@ export default async function AboutPage({
                   {/* Carlos Giudice */}
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-3">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/carlos-new.png"
                           alt="Carlos Giudice"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-slate-900">
+                        <h3 className="text-base font-semibold text-slate-900">
                           Carlos Giudice
                         </h3>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-xs text-slate-600">
                           {t.team.roles.advisor}
                         </p>
                       </div>
-                      <div className="flex gap-3">
+                      <div className="flex gap-2">
                         <a
                           href="https://github.com/CatOfTheCannals"
                           target="_blank"
@@ -453,28 +453,28 @@ export default async function AboutPage({
                   {/* Sergio Abriola */}
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative flex flex-col items-center space-y-3">
-                      <div className="h-[140px] w-[140px]">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
                         <Image
                           src="/images/team/sergio-new.png"
                           alt="Sergio Abriola, PhD"
                           width={500}
                           height={500}
-                          sizes="140px"
+                          sizes="120px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-slate-900">
+                        <h3 className="text-base font-semibold text-slate-900">
                           Sergio Abriola, PhD
                         </h3>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-xs text-slate-600">
                           {t.team.roles.advisor}
                         </p>
                       </div>
-                      <div className="flex gap-3">
+                      <div className="flex gap-2">
                         <a
                           href="https://glyc.dc.uba.ar/abriola/"
                           target="_blank"
@@ -495,7 +495,7 @@ export default async function AboutPage({
                 <h3 className="text-2xl font-semibold text-slate-900">
                   {t.team.volunteersTitle}
                 </h3>
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-3">
                   {/* Gaspi Labastie */}
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
