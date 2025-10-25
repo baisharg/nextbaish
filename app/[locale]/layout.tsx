@@ -62,6 +62,7 @@ const ttHovesPro = localFont({
   display: "swap",
   preload: true,
   weight: "100 900", // Variable font supports full range
+  style: "normal", // Explicitly set normal style to prevent italic rendering on some devices
   fallback: ["system-ui", "-apple-system", "Arial"],
 });
 
