@@ -32,7 +32,7 @@ import "./timeline-threads.css";
 
 // Canvas Renderer imports
 import type { Renderer, FramePacket } from "../types/renderer";
-import type { InitMessage, FrameMessage } from "../workers/animation.worker";
+import type { InitMessage, FrameMessage } from "../workers/animation-types";
 import { createRenderer, logRendererInfo } from "../utils/create-renderer";
 
 /**

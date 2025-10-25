@@ -19,7 +19,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 📁 **Components:** `app/components/` - All React components
 - 🌐 **Pages:** `app/[locale]/*/page.tsx` - All routes
 - 🎨 **Styles:** `app/globals.css` - Tailwind + custom properties
-- 📊 **Performance Docs:** See [DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md](./DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md) and [ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md](./ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md)
 - 🧪 **Testing:** Lighthouse CI in `.github/workflows/lighthouse-ci.yml`
 
 **Performance Highlights:**
@@ -164,9 +163,6 @@ docs/
 Root Documentation:
 ├── README.md                    # Project README (comprehensive)
 ├── CLAUDE.md                    # This file (AI assistant guidance)
-├── DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md  # Phase 1-5 optimizations
-├── ITEMS_2_AND_4_IMPLEMENTATION_SUMMARY.md         # Additional optimizations
-├── PERFORMANCE_PLAN_CHANGES.md  # Performance planning docs
 ├── lighthouserc.json            # Lighthouse CI config (mobile)
 └── lighthouserc-desktop.json   # Lighthouse CI config (desktop)
 ```
@@ -1021,23 +1017,8 @@ legacy-peer-deps=true
 - `@types/node`, `@types/react`, `@types/react-dom` - Type definitions
 - `glob` (^11.0.3) - File pattern matching (for optimization scripts)
 
-## Backup Files
-
-The repo contains `.bak` and `.backup` files from recent refactoring:
-- Dictionary files: `en.json.bak`, `es.json.bak`
-- Page files: `page.tsx.bak` for activities, research, resources, contact, privacy-policy
-
-**Note**: These backup files can be safely deleted after verifying the refactored versions work correctly.
-
 ## Documentation
 
 Additional documentation in `docs/`:
 - `view-transitions-guide.md` - Comprehensive View Transitions API guide
 - `view-transitions-implementation-plan.md` - Implementation plan
-
-Performance documentation (root level):
-- `PERFORMANCE_OPTIMIZATIONS.md`
-- `PERFORMANCE-TESTING.md`
-- `PERFORMANCE-IMPROVEMENTS.md`
-- `PERFORMANCE_FIX_PLAN.md`
-- `LCP_OPTIMIZATION_SUMMARY.md`
