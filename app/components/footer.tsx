@@ -35,7 +35,7 @@ export default function Footer({ locale, t }: FooterProps) {
                 sizes="32px"
                 className="object-contain"
               />
-              <p className="text-base font-semibold text-slate-900">
+              <p className="text-base font-semibold text-slate-900 font-serif">
                 Buenos Aires AI Safety Hub
               </p>
             </div>

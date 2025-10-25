@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode, CSSProperties } from "react";
 import { Suspense } from "react";
-import { Geist, Geist_Mono, IBM_Plex_Serif } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
 // import TimelineThreads from "../components/timeline-threads-with-controls"; // Uncomment for testing
@@ -16,14 +17,52 @@ import Header from "../components/header";
 import RUMMonitor from "../components/rum-monitor";
 import "../globals.css";
 
-const ibmPlexSerif = IBM_Plex_Serif({
-  variable: "--font-plex-serif",
-  subsets: ["latin"],
-  weight: ["400", "600"], // Reduced to only essential weights
-  display: "optional",
+const signifier = localFont({
+  src: [
+    {
+      path: "../../public/fonts/signifier/Signifier-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/signifier/Signifier-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/signifier/Signifier-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/signifier/Signifier-MediumItalic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/signifier/Signifier-Bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/signifier/Signifier-BoldItalic.woff2",
+      weight: "600",
+      style: "italic",
+    },
+  ],
+  variable: "--font-signifier",
+  display: "swap",
+  preload: true, // Preload since it's used for all headings (LCP element)
+  fallback: ["Georgia", "Times New Roman", "serif"],
+});
+
+const ttHovesPro = localFont({
+  src: "../../public/fonts/tt-hoves-pro/TT-Hoves-Pro-Variable.woff2",
+  variable: "--font-tt-hoves",
+  display: "swap",
   preload: true,
-  fallback: ["georgia", "serif"],
-  adjustFontFallback: true, // Reduce layout shift
+  weight: "100 900", // Variable font supports full range
+  fallback: ["system-ui", "-apple-system", "Arial"],
 });
 
 const geistSans = Geist({
@@ -105,7 +144,7 @@ export default async function LocaleLayout({
       <html lang={currentLocale}>
         <Head />
         <body
-          className={`${ibmPlexSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
+          className={`${ttHovesPro.variable} ${signifier.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
         >
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>

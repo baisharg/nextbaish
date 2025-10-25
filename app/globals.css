@@ -87,7 +87,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-plex-serif);
+  --font-sans: var(--font-tt-hoves);
+  --font-serif: var(--font-signifier);
   --font-display: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -103,8 +104,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-plex-serif), var(--font-geist-sans), Georgia, "Times New Roman",
-    serif;
+  font-family: var(--font-tt-hoves), system-ui, -apple-system, sans-serif;
 }
 
 /* Reduce cumulative layout shift from font loading */
@@ -115,6 +115,7 @@ body {
 
 /* Ensure critical text is immediately visible */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
   text-rendering: optimizeSpeed;
   font-synthesis: none;
 }
@@ -406,6 +407,7 @@ canvas {
 }
 
 .card-title {
+  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
   font-size: 20px;
   line-height: 26px;
   font-weight: 600;

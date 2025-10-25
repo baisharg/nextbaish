@@ -68,6 +68,7 @@
   will-change: transform;
   gap: 0.25rem;
   letter-spacing: 0.01em;
+  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
   transition: letter-spacing var(--header-duration) var(--header-easing);
 }
 
