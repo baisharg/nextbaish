@@ -48,7 +48,6 @@ export default tseslint.config(
       "**/lcp-debugger.tsx",
       "**/performance-monitor.tsx",
       "**/rum-monitor.tsx",
-      "**/timeline-performance-monitor.tsx",
       "**/create-renderer.ts",
       "**/webgl-renderer.ts",
       "**/*.worker.ts",

@@ -28,7 +28,6 @@ import {
   clamp,
   getUpFraction,
 } from "../utils/thread-utils";
-import TimelinePerformanceMonitor from "./timeline-performance-monitor";
 import "./timeline-threads.css";
 
 // Canvas Renderer imports
@@ -535,7 +534,6 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
   const [parallaxOffset, setParallaxOffset] = useState(0);
-  const [transitioningCount, setTransitioningCount] = useState(0);
   const [webglSupported, setWebglSupported] = useState(true);
 
   // Apply override parameters if provided
@@ -926,29 +924,21 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   }
 
   return (
-    <>
-      <div
-        ref={containerRef}
-        className={`pointer-events-none ${className ?? "absolute inset-0"}`}
-        style={{ ...style, contain: "layout style paint" }}
-      >
-        <canvas
-          ref={canvasRef}
-          className="h-full w-full"
-          style={{
-            contain: "paint",
-            transform: `translateY(${parallaxOffset}px)`,
-            willChange: "transform",
-          }}
-        />
-      </div>
-
-      {/* Performance Monitor - Toggle with Ctrl+Shift+P */}
-      <TimelinePerformanceMonitor
-        transitioningThreadCount={transitioningCount}
-        totalThreadCount={threads.length}
+    <div
+      ref={containerRef}
+      className={`pointer-events-none ${className ?? "absolute inset-0"}`}
+      style={{ ...style, contain: "layout style paint" }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="h-full w-full"
+        style={{
+          contain: "paint",
+          transform: `translateY(${parallaxOffset}px)`,
+          willChange: "transform",
+        }}
       />
-    </>
+    </div>
   );
 }
 
