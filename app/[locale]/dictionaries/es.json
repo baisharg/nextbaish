@@ -2,7 +2,7 @@
   "header": {
     "nav": {
       "about": "Sobre nosotros",
-      "activities": "Actividades",
+      "activities": "Programas",
       "research": "Investigación",
       "resources": "Recursos",
       "contact": "Contacto"
@@ -21,7 +21,7 @@
     "copyright": "Todos los derechos reservados.",
     "nav": {
       "about": "Sobre nosotros",
-      "activities": "Actividades",
+      "activities": "Programas",
       "research": "Investigación",
       "resources": "Recursos",
       "contact": "Contacto",
@@ -61,7 +61,7 @@
       "subscribe": "Suscribite al calendario"
     },
     "activities": {
-      "title": "Nuestras Actividades",
+      "title": "Nuestros Programas",
       "description": "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA.",
       "items": {
         "fundamentals": {
@@ -209,9 +209,9 @@
   "activities": {
     "breadcrumb": {
       "home": "Inicio",
-      "current": "Actividades"
+      "current": "Programas"
     },
-    "title": "Nuestras Actividades",
+    "title": "Nuestros Programas",
     "description": "Unite a nuestra comunidad y participá en investigación y aprendizaje de seguridad en IA",
     "subscribeCalendar": "Suscribite al calendario de eventos",
     "agiSafety": {

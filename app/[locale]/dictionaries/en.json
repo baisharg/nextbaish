@@ -2,7 +2,7 @@
   "header": {
     "nav": {
       "about": "About",
-      "activities": "Activities",
+      "activities": "Programs",
       "research": "Research",
       "resources": "Resources",
       "contact": "Contact"
@@ -21,7 +21,7 @@
     "copyright": "All rights reserved.",
     "nav": {
       "about": "About",
-      "activities": "Activities",
+      "activities": "Programs",
       "research": "Research",
       "resources": "Resources",
       "contact": "Contact",
@@ -61,7 +61,7 @@
       "subscribe": "Subscribe to Calendar"
     },
     "activities": {
-      "title": "Our Activities",
+      "title": "Our Programs",
       "description": "Explore recurring programs designed to grow the AI safety community.",
       "items": {
         "fundamentals": {
@@ -209,9 +209,9 @@
   "activities": {
     "breadcrumb": {
       "home": "Home",
-      "current": "Activities"
+      "current": "Programs"
     },
-    "title": "Our Activities",
+    "title": "Our Programs",
     "description": "Join our community and participate in AI safety research and learning",
     "subscribeCalendar": "Subscribe to Events Calendar",
     "agiSafety": {
