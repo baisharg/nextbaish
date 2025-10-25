@@ -346,6 +346,24 @@
       "eyebrow": "Comunidad",
       "title": "Eventos Pasados",
       "description": "Momentos de nuestros encuentros y actividades recientes"
+    },
+    "sisterProjects": {
+      "title": "Proyectos Hermanos",
+      "description": "Iniciativas colaborativas que avanzan la seguridad de IA en América Latina"
+    },
+    "lanais": {
+      "eyebrow": "Proyecto Hermano",
+      "title": "LANAIS",
+      "subtitle": "Red Latinoamericana de Seguridad en IA",
+      "description": "Conectando investigadores y responsables de políticas para el desarrollo seguro de inteligencia artificial en América Latina. LANAIS mantiene un directorio de expertos en seguridad de IA en toda la región y opera en inglés, español y portugués.",
+      "visitWebsite": "Visitar sitio web"
+    },
+    "fair": {
+      "eyebrow": "Proyecto Hermano",
+      "title": "FAIR",
+      "subtitle": "Frontier Artificial Intelligence Research",
+      "description": "Organización de investigación en seguridad de IA de la Universidad de Buenos Aires que avanza la seguridad de IA de frontera mediante investigación de alto impacto. Áreas de enfoque incluyen alineamiento de IA, riesgos existenciales, gobernanza y evaluaciones de sistemas.",
+      "visitWebsite": "Visitar sitio web"
     }
   },
   "contact": {

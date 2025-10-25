@@ -604,9 +604,34 @@ canvas {
   color: var(--text-dim);
 }
 
+/* ==========================================================================
+   Card Hover Effects - Subtle Interactivity
+   ========================================================================== */
+
+/* Subtle hover effect for all cards */
+.card-glass:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(109, 91, 245, 0.12);
+}
+
+/* Interactive card with cursor tracking (use with interactive-card class) */
+.interactive-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s var(--easing), box-shadow 0.3s var(--easing);
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(109, 91, 245, 0.15);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .card-glass,
+  .card-glass:hover,
+  .interactive-card,
+  .interactive-card:hover,
   .button-primary,
   .button-secondary,
   .button-outline,

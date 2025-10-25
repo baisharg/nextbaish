@@ -346,6 +346,24 @@
       "eyebrow": "Community",
       "title": "Past Events",
       "description": "Moments from our recent gatherings and activities"
+    },
+    "sisterProjects": {
+      "title": "Sister Projects",
+      "description": "Collaborative initiatives advancing AI safety across Latin America"
+    },
+    "lanais": {
+      "eyebrow": "Sister Project",
+      "title": "LANAIS",
+      "subtitle": "Latin American Network for AI Safety",
+      "description": "Connecting researchers and policy-makers for safe artificial intelligence in Latin America. LANAIS maintains a directory of AI safety experts across the region and operates in English, Spanish, and Portuguese.",
+      "visitWebsite": "Visit Website"
+    },
+    "fair": {
+      "eyebrow": "Sister Project",
+      "title": "FAIR",
+      "subtitle": "Frontier Artificial Intelligence Research",
+      "description": "AI safety research organization at University of Buenos Aires advancing frontier AI safety through high-impact research. Focus areas include AI alignment, existential risks, governance, and systems evaluations.",
+      "visitWebsite": "Visit Website"
     }
   },
   "contact": {

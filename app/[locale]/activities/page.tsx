@@ -237,6 +237,107 @@ export default async function Activities({
               </div>
             </section>
           </FadeInSection>
+
+          {/* Sister Projects Section */}
+          <FadeInSection variant="slide-up" delay={300} as="section">
+            <section className="space-y-8">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.sisterProjects.title}
+                </h2>
+                <p className="text-base text-slate-600">
+                  {t.sisterProjects.description}
+                </p>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <article className="card-glass dither-macrogrid">
+                  <div className="card-eyebrow">{dict.home.aisar.eyebrow}</div>
+                  <AnimatedTitle
+                    text={dict.home.aisar.title}
+                    slug="aisar"
+                    className="card-title"
+                    as="h3"
+                  />
+                  <p className="card-body">{dict.home.aisar.description}</p>
+
+                  <div className="card-meta">
+                    <span className="pill">
+                      <HugeiconsIcon icon={Clock01Icon} size={16} />
+                      {dict.home.aisar.duration}
+                    </span>
+                    <span className="pill">
+                      <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                      {dict.home.aisar.commitment}
+                    </span>
+                  </div>
+
+                  <div className="card-footer">
+                    <a
+                      className="button-primary w-full"
+                      href="https://scholarship.aisafety.ar/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {dict.home.aisar.visitWebsite}
+                      <span>→</span>
+                    </a>
+                  </div>
+                </article>
+
+                <article className="card-glass dither-macrogrid">
+                  <div className="card-eyebrow">{t.lanais.eyebrow}</div>
+                  <AnimatedTitle
+                    text={t.lanais.title}
+                    slug="lanais"
+                    className="card-title"
+                    as="h3"
+                  />
+                  <p className="text-sm font-medium text-slate-600 mb-3">
+                    {t.lanais.subtitle}
+                  </p>
+                  <p className="card-body">{t.lanais.description}</p>
+
+                  <div className="card-footer">
+                    <a
+                      className="button-primary w-full"
+                      href="https://lanais.org/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t.lanais.visitWebsite}
+                      <span>→</span>
+                    </a>
+                  </div>
+                </article>
+
+                <article className="card-glass dither-macrogrid">
+                  <div className="card-eyebrow">{t.fair.eyebrow}</div>
+                  <AnimatedTitle
+                    text={t.fair.title}
+                    slug="fair"
+                    className="card-title"
+                    as="h3"
+                  />
+                  <p className="text-sm font-medium text-slate-600 mb-3">
+                    {t.fair.subtitle}
+                  </p>
+                  <p className="card-body">{t.fair.description}</p>
+
+                  <div className="card-footer">
+                    <a
+                      className="button-primary w-full"
+                      href="https://frontierartificialinteligenceresearch.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t.fair.visitWebsite}
+                      <span>→</span>
+                    </a>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </FadeInSection>
         </div>
       </div>
 
