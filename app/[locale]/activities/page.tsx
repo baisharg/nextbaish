@@ -224,25 +224,13 @@ export default async function Activities({
                     </div>
 
                     <div className="card-footer">
-                      {activity.isExternal ? (
-                        <a
-                          className="button-primary w-full"
-                          href={activity.route}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {activity.buttonText}
-                          <span>↗</span>
-                        </a>
-                      ) : (
-                        <TransitionLink
-                          className="button-primary w-full"
-                          href={`/${currentLocale}/activities/${activity.route}`}
-                        >
-                          {dict.home.activities.learnMore}
-                          <span>→</span>
-                        </TransitionLink>
-                      )}
+                      <TransitionLink
+                        className="button-primary w-full"
+                        href={`/${currentLocale}/activities/${activity.route}`}
+                      >
+                        {dict.home.activities.learnMore}
+                        <span>→</span>
+                      </TransitionLink>
                     </div>
                   </article>
                 ))}
