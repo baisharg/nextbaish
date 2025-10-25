@@ -194,17 +194,16 @@ export default async function AboutPage({
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative flex flex-col gap-6 md:flex-row md:items-start">
                     <div className="flex-shrink-0">
-                      <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
+                      <div className="h-[200px] w-[200px]">
                         <Image
-                          src="/images/optimized/Eitan-400w.webp"
+                          src="/images/team/eitan-new.png"
                           alt="Eitan Sprejer"
-                          width={400}
-                          height={267}
+                          width={500}
+                          height={500}
                           sizes="200px"
-                          className="h-full w-full object-cover"
-                          style={{ objectPosition: "center 30%" }}
+                          className="h-full w-full object-contain"
                           loading="lazy"
-                          quality={80}
+                          quality={90}
                         />
                       </div>
                     </div>
@@ -249,17 +248,16 @@ export default async function AboutPage({
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative flex flex-col gap-6 md:flex-row md:items-start">
                     <div className="flex-shrink-0">
-                      <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
+                      <div className="h-[200px] w-[200px]">
                         <Image
-                          src="/images/optimized/Luca-400w.webp"
+                          src="/images/team/luca-new.png"
                           alt="Luca De Leo"
-                          width={400}
-                          height={400}
+                          width={500}
+                          height={500}
                           sizes="200px"
-                          className="h-full w-full object-cover"
-                          style={{ objectPosition: "center 40%" }}
+                          className="h-full w-full object-contain"
                           loading="lazy"
-                          quality={80}
+                          quality={90}
                         />
                       </div>
                     </div>
@@ -325,17 +323,16 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[180px] w-[180px] overflow-hidden rounded-xl">
+                      <div className="h-[180px] w-[180px]">
                         <Image
-                          src="/images/optimized/Lucas-400w.webp"
+                          src="/images/team/lucas-new.png"
                           alt="Lucas Vitali"
-                          width={400}
-                          height={267}
+                          width={500}
+                          height={500}
                           sizes="180px"
-                          className="h-full w-full object-cover"
-                          style={{ objectPosition: "center" }}
+                          className="h-full w-full object-contain"
                           loading="lazy"
-                          quality={80}
+                          quality={90}
                         />
                       </div>
                       <div className="space-y-1">
@@ -373,15 +370,24 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="flex h-[180px] w-[180px] items-center justify-center rounded-xl bg-gradient-to-br from-[#9275E5] to-[#A8C5FF] text-5xl font-bold text-white">
-                        CG
+                      <div className="h-[180px] w-[180px]">
+                        <Image
+                          src="/images/team/carlos-new.png"
+                          alt="Carlos Giudice"
+                          width={500}
+                          height={500}
+                          sizes="180px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h3 className="text-xl font-semibold text-slate-900">
                           Carlos Giudice
                         </h3>
                         <p className="text-sm text-slate-600">
-                          {t.team.roles.headOfStrategy}
+                          {t.team.roles.advisor}
                         </p>
                       </div>
                       <div className="flex gap-3">
@@ -420,17 +426,16 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="h-[180px] w-[180px] overflow-hidden rounded-xl">
+                      <div className="h-[180px] w-[180px]">
                         <Image
-                          src="/images/optimized/Sergio-400w.webp"
+                          src="/images/team/sergio-new.png"
                           alt="Sergio Abriola, PhD"
-                          width={400}
-                          height={400}
+                          width={500}
+                          height={500}
                           sizes="180px"
-                          className="h-full w-full object-cover"
-                          style={{ objectPosition: "center" }}
+                          className="h-full w-full object-contain"
                           loading="lazy"
-                          quality={80}
+                          quality={90}
                         />
                       </div>
                       <div className="space-y-1">
@@ -467,8 +472,17 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="flex h-[140px] w-[140px] items-center justify-center rounded-xl bg-gradient-to-br from-[#C77DDA] to-[#9275E5] text-4xl font-bold text-white">
-                        GL
+                      <div className="h-[140px] w-[140px]">
+                        <Image
+                          src="/images/team/gaspar-new.png"
+                          alt="Gaspar Labastie"
+                          width={500}
+                          height={500}
+                          sizes="140px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-lg font-semibold text-slate-900">
@@ -485,8 +499,17 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="flex h-[140px] w-[140px] items-center justify-center rounded-xl bg-gradient-to-br from-[#A8C5FF] to-[#9275E5] text-4xl font-bold text-white">
-                        TB
+                      <div className="h-[140px] w-[140px]">
+                        <Image
+                          src="/images/team/tobias-new.png"
+                          alt="Tobias Bersia"
+                          width={500}
+                          height={500}
+                          sizes="140px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-lg font-semibold text-slate-900">
@@ -503,8 +526,17 @@ export default async function AboutPage({
                   <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-6 text-center">
                     <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                     <div className="relative flex flex-col items-center space-y-4">
-                      <div className="flex h-[140px] w-[140px] items-center justify-center rounded-xl bg-gradient-to-br from-[#9275E5] to-[#C77DDA] text-4xl font-bold text-white">
-                        GH
+                      <div className="h-[140px] w-[140px]">
+                        <Image
+                          src="/images/team/gonzalo-new.png"
+                          alt="Gonzalo Heredia"
+                          width={500}
+                          height={500}
+                          sizes="140px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-lg font-semibold text-slate-900">
