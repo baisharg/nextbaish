@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
@@ -22,6 +21,10 @@ import {
 // Lazy load FAQ accordion since it's below the fold
 const FAQAccordion = dynamic(() => import("@/app/components/faq-accordion"), {
   loading: () => <div className="h-96 animate-pulse rounded-xl bg-slate-100" />,
+});
+
+const SupascribeSignup = dynamic(() => import("@/app/components/supascribe-signup"), {
+  loading: () => <div className="card-glass h-64 animate-pulse" />,
 });
 
 export default async function ContactPage({
@@ -63,49 +66,53 @@ export default async function ContactPage({
           {/* Contact Info Cards */}
           <FadeInSection variant="slide-up" delay={100} as="section">
             <section className="grid gap-6 md:grid-cols-3">
-              {/* Telegram Card */}
-              <article className="card-glass dither-macrogrid flex h-full flex-col justify-between p-6">
-                <div className="space-y-4">
-                  <div>
-                    <HugeiconsIcon
-                      icon={TelegramIcon}
-                      size={32}
-                      className="text-[var(--color-accent-primary)]"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900">Telegram</h3>
-                  <p className="text-sm text-slate-600">
-                    {dict.contact.cards.telegram.description}
-                  </p>
+              {/* Community Card with Stacked Buttons */}
+              <article className="card-glass dither-macrogrid">
+                <div className="card-eyebrow">{dict.home.getInvolved.communityEyebrow}</div>
+                <h3 className="card-title">
+                  {dict.home.getInvolved.communityTitle}
+                </h3>
+                <p className="card-body">
+                  {dict.home.getInvolved.communityDescription}
+                </p>
+                <div className="flex flex-col gap-3 mt-auto">
+                  <a
+                    className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                    href="https://t.me/+zhSGhXrn56g1YjVh"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div className="flex items-center gap-2">
+                      <HugeiconsIcon icon={TelegramIcon} size={20} />
+                      <span className="font-semibold">{dict.home.getInvolved.telegramCta}</span>
+                    </div>
+                    <span className="text-xs opacity-90">{dict.home.getInvolved.telegramMembers}</span>
+                  </a>
+                  <a
+                    className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                    href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div className="flex items-center gap-2">
+                      <HugeiconsIcon icon={WhatsappIcon} size={20} />
+                      <span className="font-semibold">{dict.home.getInvolved.whatsappCta}</span>
+                    </div>
+                    <span className="text-xs opacity-90">{dict.home.getInvolved.whatsappMembers}</span>
+                  </a>
                 </div>
-                <a
-                  href="https://t.me/+zhSGhXrn56g1YjVh"
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  t.me/+zfvMHU8TaAhjNjVh →
-                </a>
               </article>
 
               {/* Location Card */}
-              <article className="card-glass dither-macrogrid flex h-full flex-col justify-between p-6">
-                <div className="space-y-4">
-                  <div>
-                    <HugeiconsIcon
-                      icon={Location01Icon}
-                      size={32}
-                      className="text-[var(--color-accent-primary)]"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {dict.contact.cards.location.title}
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    {dict.contact.cards.location.description}
-                  </p>
-                </div>
-                <address className="mt-6 text-sm text-slate-700 not-italic">
+              <article className="card-glass dither-macrogrid">
+                <div className="card-eyebrow">{dict.contact.cards.location.eyebrow}</div>
+                <h3 className="card-title">
+                  {dict.contact.cards.location.title}
+                </h3>
+                <p className="card-body">
+                  {dict.contact.cards.location.description}
+                </p>
+                <address className="mt-auto text-sm text-slate-700 not-italic">
                   Pabellon 0+inf, Ciudad Universitaria
                   <br />
                   C1428EGA Buenos Aires
@@ -115,23 +122,15 @@ export default async function ContactPage({
               </article>
 
               {/* Social Media Card */}
-              <article className="card-glass dither-macrogrid flex h-full flex-col justify-between p-6">
-                <div className="space-y-4">
-                  <div>
-                    <HugeiconsIcon
-                      icon={SmartPhone01Icon}
-                      size={32}
-                      className="text-[var(--color-accent-primary)]"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {dict.contact.cards.social.title}
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    {dict.contact.cards.social.description}
-                  </p>
-                </div>
-                <div className="mt-6 flex flex-col gap-3">
+              <article className="card-glass dither-macrogrid">
+                <div className="card-eyebrow">{dict.contact.cards.social.eyebrow}</div>
+                <h3 className="card-title">
+                  {dict.contact.cards.social.title}
+                </h3>
+                <p className="card-body">
+                  {dict.contact.cards.social.description}
+                </p>
+                <div className="flex flex-col gap-3 mt-auto">
                   <a
                     href="https://www.instagram.com/baish_arg"
                     className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
@@ -152,50 +151,29 @@ export default async function ContactPage({
                     <HugeiconsIcon icon={Linkedin01Icon} size={20} />
                     LinkedIn
                   </a>
-                  <a
-                    href="https://t.me/+zhSGhXrn56g1YjVh"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Telegram"
-                  >
-                    <HugeiconsIcon icon={TelegramIcon} size={20} />
-                    Telegram
-                  </a>
-                  <a
-                    href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                  >
-                    <HugeiconsIcon icon={WhatsappIcon} size={20} />
-                    WhatsApp
-                  </a>
                 </div>
               </article>
             </section>
           </FadeInSection>
 
-          {/* Contact Form & Newsletter - Dark Theme */}
+          {/* Contact Form & Newsletter */}
           <FadeInSection variant="slide-up" delay={200} as="section">
-            <section className="grid gap-8 rounded-3xl bg-[#1e1e30] px-6 py-12 sm:px-12 md:grid-cols-[1.5fr_1fr]">
-              {/* Left: Contact Form */}
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h2 className="text-3xl font-semibold text-white">
-                    {dict.contact.form.title}
-                  </h2>
-                  <p className="text-base text-slate-300">
-                    {dict.contact.form.description}
-                  </p>
-                </div>
+            <section className="relative overflow-hidden grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm md:grid-cols-2">
+              <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
 
-                <div className="h-px bg-[#232336]" />
+              {/* Contact Form */}
+              <article className="card-glass dither-macrogrid">
+                <div className="card-eyebrow">{dict.contact.form.eyebrow}</div>
+                <h2 className="card-title">
+                  {dict.contact.form.title}
+                </h2>
+                <p className="card-body">
+                  {dict.contact.form.description}
+                </p>
 
-                <form action="https://formspree.io/f/xjkyoknb" method="POST" className="space-y-5">
+                <form action="https://formspree.io/f/xjkyoknb" method="POST" className="space-y-4 mt-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="block text-sm font-medium text-white">
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700">
                       {dict.contact.form.nameLabel}
                     </label>
                     <input
@@ -203,12 +181,12 @@ export default async function ContactPage({
                       name="name"
                       id="name"
                       required
-                      className="w-full rounded-md border border-[#2a2a40] bg-[#161624] px-4 py-3 text-white placeholder-slate-500 transition focus:border-[var(--color-accent-primary)] focus:bg-[#2a2a45] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 transition focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-white">
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                       {dict.contact.form.emailLabel}
                     </label>
                     <input
@@ -216,12 +194,12 @@ export default async function ContactPage({
                       name="email"
                       id="email"
                       required
-                      className="w-full rounded-md border border-[#2a2a40] bg-[#161624] px-4 py-3 text-white placeholder-slate-500 transition focus:border-[var(--color-accent-primary)] focus:bg-[#2a2a45] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 transition focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="block text-sm font-medium text-white">
+                    <label htmlFor="message" className="block text-sm font-medium text-slate-700">
                       {dict.contact.form.messageLabel}
                     </label>
                     <textarea
@@ -229,14 +207,14 @@ export default async function ContactPage({
                       id="message"
                       rows={5}
                       required
-                      className="w-full rounded-md border border-[#2a2a40] bg-[#161624] px-4 py-3 text-white placeholder-slate-500 transition focus:border-[var(--color-accent-primary)] focus:bg-[#2a2a45] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 transition focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-opacity-20"
                     ></textarea>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pt-2">
                     <button
                       type="reset"
-                      className="inline-flex items-center gap-2 text-sm text-[#4a93fb] transition hover:text-[var(--color-accent-tertiary)]"
+                      className="inline-flex items-center gap-2 text-sm text-[var(--color-accent-primary)] transition hover:text-[var(--color-accent-tertiary)]"
                     >
                       <HugeiconsIcon icon={ReloadIcon} size={18} />
                       {dict.contact.form.clearForm}
@@ -249,29 +227,10 @@ export default async function ContactPage({
                     </button>
                   </div>
                 </form>
-              </div>
+              </article>
 
-              {/* Right: Get Involved / Newsletter */}
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h2 className="text-3xl font-semibold text-white">
-                    {dict.contact.getInvolved.title}
-                  </h2>
-                  <p className="text-base text-slate-300">
-                    {dict.contact.getInvolved.description}
-                  </p>
-                </div>
-
-                <div className="space-y-4 rounded-lg border border-[#2a2a40] bg-[#232336] p-5">
-                  <h3 className="text-xl font-semibold text-white">
-                    {dict.contact.getInvolved.newsletter.title}
-                  </h3>
-                  <p className="text-sm text-slate-300">
-                    {dict.contact.getInvolved.newsletter.description}
-                  </p>
-                  <div id="custom-substack-embed"></div>
-                </div>
-              </div>
+              {/* Newsletter Signup */}
+              <SupascribeSignup t={dict.substack} />
             </section>
           </FadeInSection>
 
@@ -288,25 +247,6 @@ export default async function ContactPage({
 
         <Footer locale={currentLocale} t={dict.footer} />
       </div>
-
-      {/* Substack Widget Script */}
-      <Script id="substack-widget-config" strategy="afterInteractive">
-        {`
-          window.CustomSubstackWidget = {
-            substackUrl: "baish.substack.com",
-            placeholder: "example@gmail.com",
-            buttonText: "Subscribe",
-            theme: "custom",
-            colors: {
-              primary: "#5A9FFF",
-              input: "#121620",
-              email: "#606878",
-              text: "#000000",
-            },
-          };
-        `}
-      </Script>
-      <Script src="https://substackapi.com/widget.js" strategy="afterInteractive" />
     </>
   );
 }

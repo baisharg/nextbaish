@@ -364,15 +364,18 @@
         "description": "Join our community channel for discussions and updates:"
       },
       "location": {
+        "eyebrow": "Visit Us",
         "title": "Location",
         "description": "We're based at the Department of Computer Science:"
       },
       "social": {
+        "eyebrow": "Social",
         "title": "Social Media",
         "description": "Follow us for updates and announcements:"
       }
     },
     "form": {
+      "eyebrow": "Get in Touch",
       "title": "Contact Us",
       "description": "Get in touch with our team and join our community",
       "nameLabel": "What is your name?",

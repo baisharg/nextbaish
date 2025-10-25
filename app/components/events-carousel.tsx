@@ -119,7 +119,7 @@ export default function EventsCarousel({ images }: EventsCarouselProps) {
                   fill
                   className="object-cover"
                   sizes="100vw"
-                  loading="lazy"
+                  loading={index === 0 ? undefined : "lazy"}
                   quality={85}
                   priority={index === 0}
                 />

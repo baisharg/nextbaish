@@ -58,13 +58,22 @@ export default async function Home({
               <p>{t.mission.paragraph3}</p>
             </article>
 
-            <div>
+            <div className="flex flex-wrap gap-3">
               <a
                 className="button-primary"
                 href="#get-involved"
               >
                 {t.mission.cta}
                 <span aria-hidden>→</span>
+              </a>
+              <a
+                className="button-primary"
+                href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <HugeiconsIcon icon={WhatsappIcon} size={18} />
+                {t.getInvolved.whatsappCta}
               </a>
             </div>
           </div>

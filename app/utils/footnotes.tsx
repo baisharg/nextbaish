@@ -16,10 +16,11 @@ function Footnote({ id }: { id: number }) {
   return (
     <sup className="align-super text-xs">
       <a
-        className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
+        className="inline-flex items-center justify-center min-w-[1rem] h-4 px-1 ml-0.5 rounded bg-[var(--color-accent-primary)]/70 text-white font-medium hover:bg-[var(--color-accent-primary)] transition-all duration-200 hover:scale-105 shadow-sm text-[0.65rem]"
         href={note.href}
         rel="noopener noreferrer"
         target="_blank"
+        title="Click to view source"
       >
         {note.label}
       </a>
