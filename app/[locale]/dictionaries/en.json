@@ -161,43 +161,15 @@
         }
       }
     },
-    "externalResources": {
-      "title": "Learn More About AI Safety",
-      "alignmentForum": {
-        "title": "Alignment Forum",
-        "description": "A forum dedicated to technical research in AI alignment, with papers and discussions from leading researchers.",
-        "level": "Technical",
-        "cta": "Visit"
-      },
-      "lessWrong": {
-        "title": "LessWrong",
-        "description": "A community blog focused on human rationality and the implications of artificial intelligence.",
-        "level": "Intermediate",
-        "cta": "Visit"
-      },
-      "eightyK": {
-        "title": "80,000 Hours",
-        "description": "Career guidance for working on the world's most pressing problems, including AI safety.",
-        "level": "Introductory",
-        "cta": "Visit"
-      },
-      "stampy": {
-        "title": "Stampy's Wiki",
-        "description": "A collaborative wiki providing accessible explanations of AI alignment concepts.",
-        "level": "Introductory",
-        "cta": "Visit"
-      }
-    },
     "ourApproach": {
       "title": "Our Approach",
       "focusAreas": {
         "title": "Focus Areas",
         "intro": "At BAISH - Buenos Aires AI Safety Hub, we focus on several key areas within AI safety research:",
         "items": [
-          "Mechanistic interpretability of neural networks",
-          "Alignment techniques for large language models",
-          "Robust training methodologies",
-          "Value learning and preference inference"
+          "Chain of Thought interpretability",
+          "LLM evaluations",
+          "Mechanistic interpretability of neural networks"
         ]
       },
       "contribution": {
@@ -205,19 +177,32 @@
         "intro": "We contribute to the field through:",
         "items": [
           "Supporting student research projects",
-          "Developing educational resources in Spanish",
           "Building a regional community of AI safety researchers",
-          "Organizing workshops and training programs",
+          "Organizing workshops, training programs, and hackathons",
           "Mentoring students interested in AI safety careers"
         ]
       }
     },
     "team": {
       "title": "Our Core Team",
+      "meetTheTeam": "Meet the Team",
+      "cofoundersTitle": "Cofounders",
+      "leadershiptTitle": "Leadership",
       "roles": {
         "coDirector": "Co-founding Director",
         "commDirector": "Communications Director",
+        "headOfStrategy": "Head of Strategy",
         "advisor": "Advisor"
+      },
+      "volunteersTitle": "Volunteers",
+      "volunteerRoles": {
+        "asfFacilitator": "AI Safety Fundamentals Facilitator",
+        "aisWorkshopFacilitator": "AIS Workshop Facilitator",
+        "programAssistant": "Program Assistant"
+      },
+      "bios": {
+        "eitan": "Eitan is a co-founding director of BAISH with expertise in AI safety research and interpretability. He leads technical research initiatives and helps coordinate the community's research activities.",
+        "luca": "Luca is a co-founding director of BAISH focused on building the AI safety research community in Buenos Aires. He brings experience in machine learning and is passionate about making AI safety research more accessible."
       }
     }
   },

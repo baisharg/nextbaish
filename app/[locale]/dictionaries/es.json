@@ -161,43 +161,15 @@
         }
       }
     },
-    "externalResources": {
-      "title": "Aprendé más sobre Seguridad en IA",
-      "alignmentForum": {
-        "title": "Alignment Forum",
-        "description": "Un foro dedicado a la investigación técnica en alineamiento de IA, con papers y discusiones de investigadores destacados.",
-        "level": "Técnico",
-        "cta": "Visitá"
-      },
-      "lessWrong": {
-        "title": "LessWrong",
-        "description": "Un blog comunitario enfocado en la racionalidad humana y las implicaciones de la inteligencia artificial.",
-        "level": "Intermedio",
-        "cta": "Visitá"
-      },
-      "eightyK": {
-        "title": "80,000 Hours",
-        "description": "Orientación profesional para trabajar en los problemas más urgentes del mundo, incluida la seguridad de la IA.",
-        "level": "Introductorio",
-        "cta": "Visitá"
-      },
-      "stampy": {
-        "title": "Wiki de Stampy",
-        "description": "Una wiki colaborativa que proporciona explicaciones accesibles de conceptos de alineamiento de IA.",
-        "level": "Introductorio",
-        "cta": "Visitá"
-      }
-    },
     "ourApproach": {
       "title": "Nuestro Enfoque",
       "focusAreas": {
         "title": "Áreas de Enfoque",
         "intro": "En BAISH - Buenos Aires AI Safety Hub, nos enfocamos en varias áreas clave dentro de la investigación de seguridad en IA:",
         "items": [
-          "Interpretabilidad mecánica de redes neuronales",
-          "Técnicas de alineamiento para modelos grandes de lenguaje",
-          "Metodologías de entrenamiento robustas",
-          "Aprendizaje de valores e inferencia de preferencias"
+          "Interpretabilidad de Cadena de Pensamiento",
+          "Evaluaciones de LLMs",
+          "Interpretabilidad mecánica de redes neuronales"
         ]
       },
       "contribution": {
@@ -205,19 +177,32 @@
         "intro": "Contribuimos al campo a través de:",
         "items": [
           "Apoyando proyectos de investigación estudiantil",
-          "Desarrollando recursos educativos en español",
           "Construyendo una comunidad regional de investigadores en seguridad de IA",
-          "Organizando talleres y programas de formación",
+          "Organizando talleres, programas de formación y hackathons",
           "Mentoreando a estudiantes interesados en carreras de seguridad en IA"
         ]
       }
     },
     "team": {
       "title": "Equipo Principal",
+      "meetTheTeam": "Conocé al Equipo",
+      "cofoundersTitle": "Fundadores",
+      "leadershiptTitle": "Liderazgo",
       "roles": {
         "coDirector": "Co-director Fundador",
         "commDirector": "Director de Comunicación",
+        "headOfStrategy": "Director de Estrategia",
         "advisor": "Advisor"
+      },
+      "volunteersTitle": "Voluntarios",
+      "volunteerRoles": {
+        "asfFacilitator": "Facilitador de AI Safety Fundamentals",
+        "aisWorkshopFacilitator": "Facilitador del AIS Workshop",
+        "programAssistant": "Asistente de Programas"
+      },
+      "bios": {
+        "eitan": "Eitan es co-director fundador de BAISH con experiencia en investigación de seguridad en IA e interpretabilidad. Lidera iniciativas de investigación técnica y ayuda a coordinar las actividades de investigación de la comunidad.",
+        "luca": "Luca es co-director fundador de BAISH enfocado en construir la comunidad de investigación de seguridad en IA en Buenos Aires. Aporta experiencia en aprendizaje automático y le apasiona hacer la investigación en seguridad de IA más accesible."
       }
     }
   },
