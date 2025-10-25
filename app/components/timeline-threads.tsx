@@ -530,6 +530,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const isVisibleRef = useRef(true);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
@@ -695,6 +696,11 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
     return () => observer.disconnect();
   }, []);
 
+  // Keep ref in sync with state
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+  }, [isVisible]);
+
   // Parallax scroll effect
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
@@ -735,7 +741,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
    * - Completely offloads animation from main thread
    */
   useEffect(() => {
-    if (!canvasRef.current || !isVisible || !shouldAnimate || threadsRef.current.length === 0) {
+    if (!canvasRef.current || !shouldAnimate || threadsRef.current.length === 0) {
       return;
     }
 
@@ -853,12 +859,16 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
         const tick = (now: number) => {
           if (!mounted) return;
 
-          // Throttle to frameInterval to avoid piling up messages
-          if (now - lastTick >= frameInterval - 1) {
-            if (animationWorkerRef.current) {
-              animationWorkerRef.current.postMessage({ type: "tick", now });
+          // Pause animation when off-screen (battery optimization)
+          // Keep renderer alive to prevent positional jumps on mobile
+          if (isVisibleRef.current) {
+            // Throttle to frameInterval to avoid piling up messages
+            if (now - lastTick >= frameInterval - 1) {
+              if (animationWorkerRef.current) {
+                animationWorkerRef.current.postMessage({ type: "tick", now });
+              }
+              lastTick = now;
             }
-            lastTick = now;
           }
 
           rafId = requestAnimationFrame(tick);
@@ -897,7 +907,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
 
       console.log("[Timeline] Canvas renderer cleaned up");
     };
-  }, [isVisible, shouldAnimate, blurStdDeviation, frameInterval]);
+  }, [shouldAnimate, blurStdDeviation, frameInterval]);
 
   // Return nothing if WebGL is not supported
   if (!webglSupported) {
