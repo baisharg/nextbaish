@@ -5,6 +5,7 @@ import { ComponentProps } from "react";
 
 type TransitionLinkProps = ComponentProps<typeof Link> & {
   scroll?: boolean;
+  prefetch?: boolean;
 };
 
 /**
@@ -16,15 +17,17 @@ type TransitionLinkProps = ComponentProps<typeof Link> & {
  *
  * @example
  * <TransitionLink href="/about">About</TransitionLink>
+ * <TransitionLink href="/es" prefetch={false}>Español</TransitionLink>
  */
 export function TransitionLink({
   href,
   children,
   scroll = true,
+  prefetch = true,
   ...props
 }: TransitionLinkProps) {
   return (
-    <Link href={href} scroll={scroll} {...props}>
+    <Link href={href} scroll={scroll} prefetch={prefetch} {...props}>
       {children}
     </Link>
   );

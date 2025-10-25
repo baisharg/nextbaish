@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
@@ -48,6 +48,7 @@ const rafThrottle = <T extends (...args: any[]) => void>(fn: T): ((...args: Para
 
 const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const pathname = usePathname() ?? "/";
+  const router = useRouter();
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
@@ -60,6 +61,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Handle scroll state with hysteresis
   useEffect(() => {
@@ -156,6 +158,32 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
+
+  // Hover-based prefetching for language toggle
+  // Only prefetches after 200ms hover to avoid accidental hovers
+  const handleLanguageHover = (href: string) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      router.prefetch(href);
+    }, 200);
+  };
+
+  const handleLanguageHoverEnd = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
@@ -288,10 +316,14 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             }`}>
               {LANGUAGES.map((lang) => {
                 const active = lang.code === locale;
+                const langHref = buildLangSwitchHref(pathname, lang.code);
                 return (
                   <TransitionLink
                     key={lang.code}
-                    href={buildLangSwitchHref(pathname, lang.code)}
+                    href={langHref}
+                    prefetch={false}
+                    onMouseEnter={() => !active && handleLanguageHover(langHref)}
+                    onMouseLeave={handleLanguageHoverEnd}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
                         ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"

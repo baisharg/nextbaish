@@ -4,6 +4,7 @@
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
@@ -25,6 +26,7 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: MobileMenuProps) {
+  const router = useRouter();
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -33,6 +35,12 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
     setMounted(true);
     return () => setMounted(false);
   }, []);
+
+  // Touch-based prefetching for language toggle on mobile
+  // Prefetches immediately on touch to prepare for navigation
+  const handleLanguageTouch = (href: string) => {
+    router.prefetch(href);
+  };
 
   // Trigger animation after mount for smooth slide-in
   useEffect(() => {
@@ -172,10 +180,13 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
               <div className="flex gap-3">
                 {LANGUAGES.map((lang) => {
                   const active = lang.code === locale;
+                  const langHref = buildLangSwitchHref(pathname, lang.code);
                   return (
                     <TransitionLink
                       key={lang.code}
-                      href={buildLangSwitchHref(pathname, lang.code)}
+                      href={langHref}
+                      prefetch={false}
+                      onTouchStart={() => !active && handleLanguageTouch(langHref)}
                       className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
                         active
                           ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
