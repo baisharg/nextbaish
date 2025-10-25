@@ -558,6 +558,17 @@ export default async function AboutPage({
                           {t.team.volunteerRoles.aisWorkshopFacilitator}
                         </p>
                       </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://www.linkedin.com/in/tobias-bersia-70a448132/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="LinkedIn"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                        </a>
+                      </div>
                     </div>
                   </article>
 
