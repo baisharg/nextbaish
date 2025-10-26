@@ -213,7 +213,7 @@
         "programAssistant": "Asistente de Programas"
       },
       "bios": {
-        "eitan": "Eitan es investigador de Seguridad en IA a tiempo completo a través del programa {aisarLink} y la {apartLabLink}. Ha sido primer autor de {eitanPaperLink} de Seguridad en IA aceptados en workshops de las principales conferencias de ML. Es Licenciado en Física en la Universidad de Buenos Aires. Ha sido asistente de enseñanza en los campamentos de {ml4gLink} en dos ocasiones y ha sido facilitador del {aisesLink} del Center for AI Safety. Actualmente es facilitador del {blueDotAgiLink}.",
+        "eitan": "Eitan es investigador de Seguridad en IA a tiempo completo a través del programa {aisarLink} y la {apartLabLink}. Ha sido primer autor de {eitanPaperLink} de Seguridad en IA aceptados en workshops de NeurIPS. Es Licenciado en Física en la Universidad de Buenos Aires. Ha sido asistente de enseñanza en los campamentos de {ml4gLink} en dos ocasiones y ha sido facilitador del {aisesLink} del Center for AI Safety. Actualmente es facilitador del {blueDotAgiLink}.",
         "luca": "Luca ha estado involucrado en Seguridad en IA desde 2016. Después de abandonar una maestría en Ciencias de la Computación en la Universidad de Buenos Aires, recibió becas de {acxLink} y el {ltffLink} para capacitarse en investigación de Seguridad en IA. Ha trabajado en operaciones en {nonlinearLink} y logró el primer lugar en dos sprints separados de {apartResearchLink} y un segundo lugar. Actualmente realiza operaciones a tiempo parcial para el canal de YouTube {aiSpeciesLink}, que ha obtenido más de 14 millones de vistas creando conciencia sobre Seguridad en IA. Actualmente es facilitador del {blueDotAgiLink}."
       }
     },
