@@ -29,6 +29,7 @@ export const BIO_LINKS: Record<string, { href: string; text: string }> = {
   aiSpeciesLink: { href: "https://www.youtube.com/@AISpecies", text: "AI Species" },
   blueDotAgiLink: { href: "https://bluedot.org/courses/agi-strategy", text: "Blue Dot Research's AGI Strategy course" },
   aisesLink: { href: "https://www.aisafetybook.com/virtual-course", text: "AISES course" },
+  eitanPaperLink: { href: "https://openreview.net/forum?id=F8cIIwrgCZ#discussion", text: "papers" },
 };
 
 function Footnote({ id }: { id: number }) {
