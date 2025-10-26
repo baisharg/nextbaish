@@ -228,7 +228,16 @@
         "name": "Kairos",
         "program": "Pathfinder Program",
         "description": "Kairos supports AI safety field-building through their Pathfinder program, which helps accelerate promising initiatives."
-      }
+      },
+      "visitWebsiteCta": "Visit website",
+      "pathfinderCta": "Pathfinder",
+      "kairosCta": "Kairos"
+    },
+    "callToAction": {
+      "title": "Want to chat?",
+      "description": "We welcome anyone interested in AI safety to book a call with us!",
+      "bookWithEitan": "Book with Eitan",
+      "bookWithLuca": "Book with Luca"
     }
   },
   "activities": {
@@ -463,7 +472,139 @@
     "publicationsTitle": "Publications",
     "ongoingTitle": "Ongoing Research",
     "started": "Started",
-    "expectedCompletion": "Expected Completion"
+    "expectedCompletion": "Expected Completion",
+    "intro": "Discover how BAISH researchers explore interpretability, alignment, robustness, and value learning to keep frontier AI systems safe.",
+    "overview": {
+      "paragraphs": [
+        "We prototype small collaborative research sprints focused on mechanistic interpretability, evals, and alignment theory that local students can join.",
+        "Our goal is to make Buenos Aires a consistent contributor to global AI safety work and to publish open resources other teams can reuse."
+      ]
+    },
+    "publicationsIntro": "Selected write-ups, preprints, and workshop submissions from the BAISH network.",
+    "publications": [
+      {
+        "title": "Tracing Gradient Circuits in Sparse Autoencoders",
+        "authors": "Eitan Braun, Luca Sambucci",
+        "venue": "NeurIPS AI Safety Workshop · 2024",
+        "links": [
+          {
+            "label": "Paper",
+            "url": "#"
+          },
+          {
+            "label": "Slides",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "title": "Alignment Case Studies for Spanish-Speaking Teams",
+        "authors": "Martina Lopez, Tomas Villar",
+        "venue": "BAISH Research Notes · 2025",
+        "links": [
+          {
+            "label": "Read",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "title": "Learning from Mechanistic Feature Drift",
+        "authors": "Ana Paredes, Facundo Ibarra",
+        "venue": "BAIR Interpretability Sprint · 2025",
+        "links": [
+          {
+            "label": "Summary",
+            "url": "#"
+          },
+          {
+            "label": "Repo",
+            "url": "#"
+          },
+          {
+            "label": "Video",
+            "url": "#"
+          }
+        ]
+      }
+    ],
+    "ongoingDescription": "Snapshot of workstreams that are currently recruiting collaborators or mentors.",
+    "ongoingProjects": [
+      {
+        "title": "Circuit Breakers for Speculative Decoding",
+        "researchers": "Eitan Braun, Sofia Molina",
+        "completion": "45% complete",
+        "description": "Testing how speculative decoding changes failure modes in multilingual assistants and building mitigations.",
+        "started": "January 2025",
+        "expectedCompletion": "May 2025"
+      },
+      {
+        "title": "Human Feedback Benchmarks in Spanish",
+        "researchers": "Juan Perez, Camila Torres",
+        "completion": "30% complete",
+        "description": "Collecting RLHF-style preference data in Spanish to evaluate open frontier models on culturally-relevant prompts.",
+        "started": "November 2024",
+        "expectedCompletion": "June 2025"
+      },
+      {
+        "title": "Agentic Eval Harness for Open Models",
+        "researchers": "Maria Fuentes, Diego Catalan",
+        "completion": "70% complete",
+        "description": "Building a lightweight harness to test auto-GPT style agents for tool misuse and goal drift.",
+        "started": "August 2024",
+        "expectedCompletion": "March 2025"
+      }
+    ],
+    "projects": [
+      {
+        "title": "Mechanistic Feature Cartography",
+        "year": "2025",
+        "researchers": "Eitan Braun, Azul Fernandez",
+        "abstract": "Mapping neuron circuits in Llama 3 70B to build Spanish-language interpretability demos.",
+        "category": "interpretability",
+        "tag": "Interpretability"
+      },
+      {
+        "title": "Speculative Decoding Safety",
+        "year": "2025",
+        "researchers": "Luca Sambucci, Florencia Neme",
+        "abstract": "Evaluating failure modes in speculative decoding pipelines for alignment-sensitive deployments.",
+        "category": "alignment",
+        "tag": "Alignment"
+      },
+      {
+        "title": "Robust Benchmark Translation",
+        "year": "2024",
+        "researchers": "Martina Lopez, Diego Catalan",
+        "abstract": "Porting adversarial QA datasets into Spanish to stress-test bilingual assistants.",
+        "category": "robustness",
+        "tag": "Robustness"
+      },
+      {
+        "title": "Interpretability Tooling Sprint",
+        "year": "2024",
+        "researchers": "Agustin Rivas, Tomas Villar",
+        "abstract": "Building lightweight tools that visualize transformer attention heads for local researchers.",
+        "category": "interpretability",
+        "tag": "Interpretability"
+      },
+      {
+        "title": "Value Learning Case Library",
+        "year": "2023",
+        "researchers": "Tamara Ponce, Ivan Mazzino",
+        "abstract": "Documenting concrete alignment scenarios for Latin American policy teams.",
+        "category": "value-learning",
+        "tag": "Value Learning"
+      },
+      {
+        "title": "Alignment Reading Reports",
+        "year": "2022",
+        "researchers": "Community Fellows",
+        "abstract": "Short technical summaries from the BAISH reading group covering new governance and safety papers.",
+        "category": "alignment",
+        "tag": "Alignment"
+      }
+    ]
   },
   "resources": {
     "breadcrumb": {
@@ -527,6 +668,10 @@
           "title": "Subscribe to New Opportunities Newsletter",
           "description": "Receive a weekly email summarizing all new events and training programs",
           "cta": "Subscribe"
+        },
+        "timeline": {
+          "title": "Open Applications Timeline",
+          "loading": "Loading timeline..."
         }
       }
     }

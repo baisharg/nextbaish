@@ -23,6 +23,7 @@ export default async function AboutPage({
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
   const t = dict.about;
+  const callToAction = t.callToAction;
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -47,7 +48,10 @@ export default async function AboutPage({
                 className="text-4xl font-semibold text-slate-900 sm:text-5xl"
                 as="h1"
               />
-              <a href="#cofounders" className="button-primary whitespace-nowrap">
+              <a
+                href="#cofounders"
+                className="button-primary whitespace-nowrap"
+              >
                 {t.team.meetTheTeam}
               </a>
             </div>
@@ -302,10 +306,10 @@ export default async function AboutPage({
               {/* Book a Call CTA */}
               <div className="mt-8 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 text-center">
                 <h3 className="text-2xl font-semibold text-slate-900 mb-2">
-                  Want to chat?
+                  {callToAction.title}
                 </h3>
                 <p className="text-base text-slate-600 mb-6">
-                  We welcome anyone interested in AI safety to book a call with us!
+                  {callToAction.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
@@ -314,7 +318,7 @@ export default async function AboutPage({
                     rel="noopener noreferrer"
                     className="button-primary inline-flex items-center justify-center gap-2"
                   >
-                    Book with Eitan
+                    {callToAction.bookWithEitan}
                   </a>
                   <a
                     href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
@@ -322,7 +326,7 @@ export default async function AboutPage({
                     rel="noopener noreferrer"
                     className="button-primary inline-flex items-center justify-center gap-2"
                   >
-                    Book with Luca
+                    {callToAction.bookWithLuca}
                   </a>
                 </div>
               </div>
@@ -639,7 +643,7 @@ export default async function AboutPage({
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
                     >
-                      Visit website
+                      {t.support.visitWebsiteCta}
                       <svg
                         className="w-4 h-4"
                         fill="none"
@@ -679,7 +683,7 @@ export default async function AboutPage({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
                       >
-                        Pathfinder
+                        {t.support.pathfinderCta}
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -701,7 +705,7 @@ export default async function AboutPage({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
                       >
-                        Kairos
+                        {t.support.kairosCta}
                         <svg
                           className="w-4 h-4"
                           fill="none"

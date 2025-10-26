@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 interface AirtableEmbedProps {
   /** Airtable share ID (e.g., shrOUDQGe7Ucei5OG) */
@@ -19,6 +19,8 @@ interface AirtableEmbedProps {
   width?: string;
   /** Optional title for accessibility */
   title?: string;
+  /** Optional loading text for placeholders */
+  loadingText?: string;
 }
 
 export default function AirtableEmbed({
@@ -27,9 +29,10 @@ export default function AirtableEmbed({
   tableId,
   viewId,
   showViewControls = false,
-  height = '600px',
-  width = '100%',
-  title = 'Airtable Timeline View'
+  height = "600px",
+  width = "100%",
+  title = "Airtable Timeline View",
+  loadingText = "Loading timeline...",
 }: AirtableEmbedProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +53,7 @@ export default function AirtableEmbed({
           observer.disconnect();
         }
       },
-      { rootMargin: '300px' } // Start loading 300px before visible
+      { rootMargin: "300px" }, // Start loading 300px before visible
     );
 
     observer.observe(node);
@@ -72,7 +75,7 @@ export default function AirtableEmbed({
 
     const params = new URLSearchParams();
     if (!showViewControls) {
-      params.append('showViewControls', 'false');
+      params.append("showViewControls", "false");
     }
 
     const queryString = params.toString();
@@ -86,7 +89,7 @@ export default function AirtableEmbed({
       {!isVisible ? (
         // Show placeholder while not visible
         <div className="flex items-center justify-center w-full h-full bg-slate-100 rounded-lg border border-dashed border-slate-200">
-          <p className="text-sm text-slate-500">Loading timeline...</p>
+          <p className="text-sm text-slate-500">{loadingText}</p>
         </div>
       ) : (
         // Render iframe when visible
@@ -95,7 +98,9 @@ export default function AirtableEmbed({
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
               <div className="flex flex-col items-center gap-2">
                 <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Loading timeline...</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {loadingText}
+                </p>
               </div>
             </div>
           )}
@@ -105,8 +110,8 @@ export default function AirtableEmbed({
             width={width}
             height={height}
             style={{
-              background: 'transparent',
-              border: '1px solid rgba(0, 0, 0, 0.1)'
+              background: "transparent",
+              border: "1px solid rgba(0, 0, 0, 0.1)",
             }}
             title={title}
             loading="lazy"

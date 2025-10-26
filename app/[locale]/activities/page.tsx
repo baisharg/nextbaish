@@ -152,10 +152,10 @@ export default async function Activities({
             <section className="space-y-8">
               <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
-                  Our Programs
+                  {dict.home.activities.title}
                 </h2>
                 <p className="text-base text-slate-600">
-                  Explore our programs and choose the one that fits your interests.
+                  {dict.home.activities.description}
                 </p>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -165,10 +165,17 @@ export default async function Activities({
                     route: "fundamentals",
                     eyebrow: dict.home.activities.items.fundamentals.eyebrow,
                     title: dict.home.activities.items.fundamentals.title,
-                    description: dict.home.activities.items.fundamentals.description,
+                    description:
+                      dict.home.activities.items.fundamentals.description,
                     metaItems: [
-                      { icon: "calendar", text: dict.home.activities.items.fundamentals.schedule },
-                      { icon: "clock", text: dict.home.activities.items.fundamentals.duration },
+                      {
+                        icon: "calendar",
+                        text: dict.home.activities.items.fundamentals.schedule,
+                      },
+                      {
+                        icon: "clock",
+                        text: dict.home.activities.items.fundamentals.duration,
+                      },
                     ],
                     isExternal: false,
                   },
@@ -177,10 +184,17 @@ export default async function Activities({
                     route: "workshop",
                     eyebrow: dict.home.activities.items.workshop.eyebrow,
                     title: dict.home.activities.items.workshop.title,
-                    description: dict.home.activities.items.workshop.description,
+                    description:
+                      dict.home.activities.items.workshop.description,
                     metaItems: [
-                      { icon: "calendar", text: dict.home.activities.items.workshop.schedule },
-                      { icon: "clock", text: dict.home.activities.items.workshop.duration },
+                      {
+                        icon: "calendar",
+                        text: dict.home.activities.items.workshop.schedule,
+                      },
+                      {
+                        icon: "clock",
+                        text: dict.home.activities.items.workshop.duration,
+                      },
                     ],
                     isExternal: false,
                   },
@@ -191,8 +205,14 @@ export default async function Activities({
                     title: dict.home.activities.items.reading.title,
                     description: dict.home.activities.items.reading.description,
                     metaItems: [
-                      { icon: "calendar", text: dict.home.activities.items.reading.schedule },
-                      { icon: "clock", text: dict.home.activities.items.reading.duration },
+                      {
+                        icon: "calendar",
+                        text: dict.home.activities.items.reading.schedule,
+                      },
+                      {
+                        icon: "clock",
+                        text: dict.home.activities.items.reading.duration,
+                      },
                     ],
                     isExternal: false,
                   },
