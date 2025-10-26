@@ -12,6 +12,7 @@ import {
   Linkedin01Icon,
   Globe02Icon,
 } from "@hugeicons/core-free-icons";
+import { renderWithFootnotes, renderWithBioLinks } from "@/app/utils/footnotes";
 
 export default async function AboutPage({
   params,
@@ -188,26 +189,26 @@ export default async function AboutPage({
               </h2>
 
               {/* Cofounders Grid */}
-              <div className="grid gap-8 md:grid-cols-2">
+              <div className="grid gap-8">
                 {/* Eitan Sprejer */}
                 <article className="card-glass dither-macrogrid relative overflow-hidden p-6">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                  <div className="relative flex flex-col gap-6 md:flex-row md:items-start">
-                    <div className="flex-shrink-0">
-                      <div className="h-[200px] w-[200px]">
+                  <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start">
+                    <div className="flex-shrink-0 mx-auto sm:mx-0">
+                      <div className="h-[160px] w-[160px]">
                         <Image
                           src="/images/team/eitan-new.png"
                           alt="Eitan Sprejer"
                           width={500}
                           height={500}
-                          sizes="200px"
+                          sizes="160px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 flex-1">
                       <div>
                         <h3 className="text-2xl font-semibold text-slate-900">
                           Eitan Sprejer
@@ -216,8 +217,8 @@ export default async function AboutPage({
                           {t.team.roles.coDirector}
                         </p>
                       </div>
-                      <p className="text-base text-slate-700">
-                        {t.team.bios.eitan}
+                      <p className="text-sm leading-relaxed text-slate-700">
+                        {renderWithBioLinks(t.team.bios.eitan)}
                       </p>
                       <div className="flex gap-3">
                         <a
@@ -246,22 +247,22 @@ export default async function AboutPage({
                 {/* Luca De Leo */}
                 <article className="card-glass dither-macrogrid relative overflow-hidden p-6">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                  <div className="relative flex flex-col gap-6 md:flex-row md:items-start">
-                    <div className="flex-shrink-0">
-                      <div className="h-[200px] w-[200px]">
+                  <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start">
+                    <div className="flex-shrink-0 mx-auto sm:mx-0">
+                      <div className="h-[160px] w-[160px]">
                         <Image
                           src="/images/team/luca-new.png"
                           alt="Luca De Leo"
                           width={500}
                           height={500}
-                          sizes="200px"
+                          sizes="160px"
                           className="h-full w-full object-contain"
                           loading="lazy"
                           quality={90}
                         />
                       </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 flex-1">
                       <div>
                         <h3 className="text-2xl font-semibold text-slate-900">
                           Luca De Leo
@@ -270,8 +271,8 @@ export default async function AboutPage({
                           {t.team.roles.coDirector}
                         </p>
                       </div>
-                      <p className="text-base text-slate-700">
-                        {t.team.bios.luca}
+                      <p className="text-sm leading-relaxed text-slate-700">
+                        {renderWithBioLinks(t.team.bios.luca)}
                       </p>
                       <div className="flex gap-3">
                         <a
