@@ -115,6 +115,7 @@ body {
 /* Use system fonts as fallback to prevent invisible text */
 body {
   text-rendering: optimizeSpeed;
+  font-synthesis: none; /* Prevent iOS Safari from synthesizing faux italic/bold */
 }
 
 /* Ensure critical text is immediately visible */
