@@ -399,8 +399,8 @@ const createThread = (id: number, totalThreads: number): ThreadState => {
   return {
     id,
     color,
-    weight: randomInRangeWith(rng, 0.8, 1.4),
-    opacity: clamp(0.6 + id / (totalThreads * 3.5), 0.7, 0.95), // Increased for better visibility
+    weight: randomInRangeWith(rng, 1.6, 2.4), // Doubled for better visibility
+    opacity: clamp(0.7 + id / (totalThreads * 2.5), 0.8, 1.0), // Further increased for better visibility
     profile,
     direction,
     pathBuffer,

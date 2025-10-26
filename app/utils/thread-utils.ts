@@ -25,9 +25,9 @@ export const X_END = 1.15;
 export const VIEWBOX_SIZE = 1000;
 
 export const COLOR_PALETTE: HSL[] = [
-  { h: 259, s: 98, l: 68 },
-  { h: 233, s: 100, l: 74 },
-  { h: 304, s: 96, l: 70 },
+  { h: 259, s: 100, l: 55 }, // Darker, more saturated purple
+  { h: 233, s: 100, l: 58 }, // Darker, more saturated blue
+  { h: 304, s: 100, l: 56 }, // Darker, more saturated pink
 ];
 
 // ============================================================================
@@ -99,8 +99,8 @@ export const chooseColor = (rng: () => number) => {
   const base = COLOR_PALETTE[Math.floor(rng() * COLOR_PALETTE.length)];
   return {
     h: wrapHue(base.h + randomInRangeWith(rng, -8, 8)),
-    s: clamp(base.s + randomInRangeWith(rng, -2, 2), 92, 100),
-    l: clamp(base.l + randomInRangeWith(rng, -6, 6), 58, 80),
+    s: clamp(base.s + randomInRangeWith(rng, -2, 2), 95, 100), // Higher saturation
+    l: clamp(base.l + randomInRangeWith(rng, -6, 6), 48, 65), // Darker range
   };
 };
 
