@@ -213,7 +213,7 @@
         "programAssistant": "Program Assistant"
       },
       "bios": {
-        "eitan": "Eitan is a full-time AI Safety researcher through the {aisarLink} program and the {apartLabLink}. He has first authored AI Safety {eitanPaperLink} accepted to NeurIPS workshops. He holds a bachelor's + master's degree in Physics from the University of Buenos Aires. He has served as a teaching assistant at {ml4gLink} camps on two occasions and has been a facilitator for the {aisesLink} from the Center for AI Safety. He is currently a facilitator for {blueDotAgiLink}.",
+        "eitan": "Eitan is a full-time AI Safety researcher through the {aisarLink} program and the {apartLabLink}. He has first authored AI Safety {eitanPaperLink} accepted to NeurIPS workshops and co-authored {eitanArxivPaperLink}. He holds a bachelor's + master's degree in Physics from the University of Buenos Aires. He has served as a teaching assistant at {ml4gLink} camps on two occasions and has been a facilitator for the {aisesLink} from the Center for AI Safety. He is currently a facilitator for {blueDotAgiLink}.",
         "luca": "Luca has been involved in AI Safety since 2016. After dropping out of a master's in Computer Science at the University of Buenos Aires, he received grants from {acxLink} and the {ltffLink} to upskill for AI Safety research. He has worked in operations at {nonlinearLink} and achieved first place in two separate {apartResearchLink} sprints and one second place. He currently does part-time operations for the {aiSpeciesLink} YouTube channel, which has garnered over 14 million views raising awareness about AI Safety. He is currently a facilitator for {blueDotAgiLink}."
       }
     },
