@@ -83,8 +83,11 @@ export const createSeededRandom = (seed: number) => {
   };
 };
 
-export const randomInRangeWith = (rng: () => number, min: number, max: number) =>
-  rng() * (max - min) + min;
+export const randomInRangeWith = (
+  rng: () => number,
+  min: number,
+  max: number,
+) => rng() * (max - min) + min;
 
 // ============================================================================
 // COLOR UTILITIES
@@ -133,13 +136,10 @@ export const createPathProfile = (
     0.92,
   );
 
-  const downDepth = randomInRangeWith(rng, 0.28, 0.40);
   const upRise = randomInRangeWith(rng, 0.45, 0.85);
 
   const upCurve = randomInRangeWith(rng, 0.4, 2.2);
-  const upStartY = randomInRangeWith(rng, 0.48, 0.58);
-  const flattenStrength = randomInRangeWith(rng, 25.0, 35.0);
-  const flattenThreshold = randomInRangeWith(rng, 0.20, 0.85);
+  const flattenThreshold = randomInRangeWith(rng, 0.2, 0.85);
   const extinctionY = randomInRangeWith(rng, 0.84, 0.89);
 
   const tangleFreq = randomInRangeWith(rng, 5.5, 9.2);
@@ -156,8 +156,6 @@ export const createPathProfile = (
   const up = new Float32Array(SEGMENTS * 2);
   const down = new Float32Array(SEGMENTS * 2);
 
-  const pivotIndex = Math.round(PIVOT_X * (SEGMENTS - 1));
-
   for (let i = 0; i < SEGMENTS; i++) {
     const t = i / (SEGMENTS - 1);
     const xBase = X_START + (X_END - X_START) * t;
@@ -165,7 +163,8 @@ export const createPathProfile = (
     const tightness = 1 - Math.pow(Math.abs(t - PIVOT_X) / 0.5, 1.2);
     const noise =
       (Math.sin(t * tangleFreq + tanglePhase) * tangleAmplitude +
-        Math.sin(t * tangleFreq * 0.5 + tanglePhase * 1.7) * (tangleAmplitude * 0.55)) *
+        Math.sin(t * tangleFreq * 0.5 + tanglePhase * 1.7) *
+          (tangleAmplitude * 0.55)) *
       clamp(0.55 + tightness * 0.85, 0.55, 1.4);
     const lateralShift =
       Math.sin(t * lateralFreq + lateralPhase) * lateralAmp * (0.8 + t * 0.9);
@@ -175,16 +174,16 @@ export const createPathProfile = (
 
     if (t <= PIVOT_X) {
       const preP = t / PIVOT_X;
-      const convergeCurve = Math.pow(preP, 1.35);
-
       const spreadFactor = 0.25 + preP * 0.25;
       const compressedBaseY = PIVOT_Y + (baseY - PIVOT_Y) * spreadFactor;
 
       const ringTightness = Math.pow(preP, 3.5);
       const sharedY = clamp(
-        compressedBaseY + (PIVOT_Y - compressedBaseY) * ringTightness + noise * 0.85 * (1 - preP * 0.95),
+        compressedBaseY +
+          (PIVOT_Y - compressedBaseY) * ringTightness +
+          noise * 0.85 * (1 - preP * 0.95),
         0.04,
-        0.96
+        0.96,
       );
 
       const sharedX = xBase + lateralShift * 0.8;
@@ -199,11 +198,19 @@ export const createPathProfile = (
 
     const postP = (t - PIVOT_X) / (1 - PIVOT_X);
 
-    const neutralY = clamp(PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.72, 0.04, 0.96);
+    const neutralY = clamp(
+      PIVOT_Y + neutralDrift * Math.pow(postP, 1.1) + noise * 0.72,
+      0.04,
+      0.96,
+    );
     neutral[xIndex] = xBase + lateralShift * 0.75;
     neutral[yIndex] = neutralY;
 
-    const upY = clamp(PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85, -0.30, 0.96);
+    const upY = clamp(
+      PIVOT_Y - upRise * Math.pow(postP, upCurve) - noise * 0.85,
+      -0.3,
+      0.96,
+    );
     up[xIndex] = xBase + lateralShift * 1.2;
     up[yIndex] = upY;
 
@@ -211,7 +218,11 @@ export const createPathProfile = (
     if (postP < flattenThreshold) {
       const downProgress = postP / flattenThreshold;
       const downShape = Math.pow(downProgress, 2.2);
-      downY = clamp(PIVOT_Y + (extinctionY - PIVOT_Y) * downShape + noise * 0.85, 0.06, 0.96);
+      downY = clamp(
+        PIVOT_Y + (extinctionY - PIVOT_Y) * downShape + noise * 0.85,
+        0.06,
+        0.96,
+      );
     } else {
       downY = extinctionY;
     }
@@ -231,7 +242,10 @@ export const directionDuration = (direction: Direction) =>
     ? randomInRange(UP_DURATION_MIN, UP_DURATION_MAX)
     : randomInRange(DOWN_DURATION_MIN, DOWN_DURATION_MAX);
 
-export const directionDurationSeeded = (direction: Direction, rng: () => number) =>
+export const directionDurationSeeded = (
+  direction: Direction,
+  rng: () => number,
+) =>
   direction === "up"
     ? randomInRangeWith(rng, UP_DURATION_MIN, UP_DURATION_MAX)
     : randomInRangeWith(rng, DOWN_DURATION_MIN, DOWN_DURATION_MAX);

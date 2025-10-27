@@ -32,10 +32,12 @@ const COLLAPSE_BUFFER = 80;
 
 // Scroll hysteresis thresholds to prevent jittering
 const SCROLL_DOWN_THRESHOLD = 100; // Pixels scrolled down before collapsing
-const SCROLL_UP_THRESHOLD = 50;    // Pixels scrolled up before expanding
+const SCROLL_UP_THRESHOLD = 50; // Pixels scrolled up before expanding
 
 // RAF throttle utility for performance
-const rafThrottle = <T extends (...args: any[]) => void>(fn: T): ((...args: Parameters<T>) => void) => {
+const rafThrottle = <T extends (...args: unknown[]) => void>(
+  fn: T,
+): ((...args: Parameters<T>) => void) => {
   let rafId: number | null = null;
   return (...args: Parameters<T>) => {
     if (rafId !== null) return;
@@ -71,14 +73,18 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
-          const direction = currentScrollY > lastScrollY.current ? 'down' : 'up';
+          const direction =
+            currentScrollY > lastScrollY.current ? "down" : "up";
 
           // Hysteresis: different thresholds for scrolling down vs up
           let shouldBeScrolled = scrolled;
 
-          if (direction === 'down' && currentScrollY > SCROLL_DOWN_THRESHOLD) {
+          if (direction === "down" && currentScrollY > SCROLL_DOWN_THRESHOLD) {
             shouldBeScrolled = true;
-          } else if (direction === 'up' && currentScrollY < SCROLL_UP_THRESHOLD) {
+          } else if (
+            direction === "up" &&
+            currentScrollY < SCROLL_UP_THRESHOLD
+          ) {
             shouldBeScrolled = false;
           }
 
@@ -98,7 +104,9 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   useIsomorphicLayoutEffect(() => {
     const widths = restRefs.current.map((element) => element?.offsetWidth ?? 0);
     setRestWidths(widths);
-    const leading = firstRefs.current.map((element) => element?.offsetWidth ?? 0);
+    const leading = firstRefs.current.map(
+      (element) => element?.offsetWidth ?? 0,
+    );
     setFirstWidths(leading);
   }, [locale]);
 
@@ -111,8 +119,8 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     const throttledCheck = rafThrottle(checkWidth);
 
     checkWidth();
-    window.addEventListener('resize', throttledCheck, { passive: true });
-    return () => window.removeEventListener('resize', throttledCheck);
+    window.addEventListener("resize", throttledCheck, { passive: true });
+    return () => window.removeEventListener("resize", throttledCheck);
   }, []);
 
   // RAF-throttled ResizeObserver for overflow detection
@@ -146,7 +154,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   }, [locale, restWidths, firstWidths]);
 
   const toggleMobileMenu = () => {
-    setMobileMenuOpen(prev => {
+    setMobileMenuOpen((prev) => {
       const newValue = !prev;
       if (newValue) {
         setHasMenuBeenOpened(true);
@@ -204,7 +212,10 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
         data-scrolled={scrolled}
       >
         <div className="flex items-center justify-between gap-6">
-          <TransitionLink href={withLocale(locale, "/")} className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
+          <TransitionLink
+            href={withLocale(locale, "/")}
+            className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity"
+          >
             <div
               className="logo-container w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
               data-collapsed={scrolled || isNarrow || isCramped}
@@ -226,8 +237,9 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               className="overflow-hidden min-w-0 flex items-center"
               aria-label="Buenos Aires AI Safety Hub"
               style={{
-                minWidth: scrolled || isCramped ? '60px' : '220px',
-                transition: 'min-width 0.4s cubic-bezier(0.215, 0.61, 0.355, 1)'
+                minWidth: scrolled || isCramped ? "60px" : "220px",
+                transition:
+                  "min-width 0.4s cubic-bezier(0.215, 0.61, 0.355, 1)",
               }}
             >
               <div
@@ -269,17 +281,16 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                         className={`title-word-rest title-word-rest-${index} inline-block overflow-hidden`}
                         data-collapsed={collapseRest}
                         style={{
-                          maxWidth:
-                            collapseRest
-                              ? '0px'
-                              : measuredWidth !== undefined
-                                ? `${measuredWidth}px`
-                                : undefined,
-                          transformOrigin: 'left',
-                          whiteSpace: 'nowrap',
+                          maxWidth: collapseRest
+                            ? "0px"
+                            : measuredWidth !== undefined
+                              ? `${measuredWidth}px`
+                              : undefined,
+                          transformOrigin: "left",
+                          whiteSpace: "nowrap",
                         }}
                       >
-                        {rest ? rest : ''}
+                        {rest ? rest : ""}
                       </span>
                     </span>
                   );
@@ -291,9 +302,10 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             className="header-nav hidden md:flex items-center text-sm font-medium text-slate-600"
             data-scrolled={scrolled}
           >
-            {navLinks.map(link => {
+            {navLinks.map((link) => {
               const isActive = pathname === link.href;
-              const pathSegment = link.href.split('/').filter(Boolean).pop() || '';
+              const pathSegment =
+                link.href.split("/").filter(Boolean).pop() || "";
               const transitionClass = `header-nav-${pathSegment}`;
               return (
                 <TransitionLink
@@ -311,9 +323,11 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             })}
           </nav>
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
-              scrolled ? "hidden sm:flex" : "hidden md:flex"
-            }`}>
+            <div
+              className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
+                scrolled ? "hidden sm:flex" : "hidden md:flex"
+              }`}
+            >
               {LANGUAGES.map((lang) => {
                 const active = lang.code === locale;
                 const langHref = buildLangSwitchHref(pathname, lang.code);
@@ -322,7 +336,9 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                     key={lang.code}
                     href={langHref}
                     prefetch={false}
-                    onMouseEnter={() => !active && handleLanguageHover(langHref)}
+                    onMouseEnter={() =>
+                      !active && handleLanguageHover(langHref)
+                    }
                     onMouseLeave={handleLanguageHoverEnd}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
@@ -354,7 +370,9 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 <span
                   className="w-full h-0.5 bg-slate-900 transition-all duration-300"
                   style={{
-                    transform: mobileMenuOpen ? 'rotate(45deg) translateY(7px)' : 'none',
+                    transform: mobileMenuOpen
+                      ? "rotate(45deg) translateY(7px)"
+                      : "none",
                   }}
                 />
                 <span
@@ -366,7 +384,9 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 <span
                   className="w-full h-0.5 bg-slate-900 transition-all duration-300"
                   style={{
-                    transform: mobileMenuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none',
+                    transform: mobileMenuOpen
+                      ? "rotate(-45deg) translateY(-7px)"
+                      : "none",
                   }}
                 />
               </div>

@@ -1221,7 +1221,7 @@ export class WebGLRenderer implements Renderer {
     }
 
     // Step 5: Draw overlay gradient with screen blend mode (purple glow)
-    this.drawOverlay(frame, viewSize, dpr);
+    this.drawOverlay(frame);
   }
 
   /**
@@ -1321,7 +1321,7 @@ export class WebGLRenderer implements Renderer {
   /**
    * Draw overlay gradient with screen blend mode
    */
-  private drawOverlay(frame: FramePacket, viewSize: number, dpr: number): void {
+  private drawOverlay(frame: FramePacket): void {
     if (!this.gl || !this.lineProgram || !frame.overlayGradient.length) return;
     if (!this.lineUniforms.resolution || !this.lineUniforms.opacity) return;
 

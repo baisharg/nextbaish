@@ -18,20 +18,26 @@ import type {
 import { BEZIER_CONTROL_FACTOR } from "../utils/thread-utils";
 
 export class Canvas2DRenderer implements Renderer {
-  private ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null = null;
+  private ctx:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null = null;
   private canvas: HTMLCanvasElement | OffscreenCanvas | null = null;
   private config: RendererConfig | null = null;
 
   // Offscreen canvas for blur effect (if needed)
   private blurCanvas: HTMLCanvasElement | OffscreenCanvas | null = null;
-  private blurCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null = null;
+  private blurCtx:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null = null;
 
   // Path2D cache for reuse
   private path2DCache = new Map<number, Path2D>();
 
   async init(
     canvas: HTMLCanvasElement | OffscreenCanvas,
-    config: RendererConfig
+    config: RendererConfig,
   ): Promise<void> {
     this.canvas = canvas;
     this.config = config;
@@ -71,7 +77,7 @@ export class Canvas2DRenderer implements Renderer {
     this.canvas.height = viewSize * dpr;
 
     // Set canvas display size (CSS pixels) - only for HTMLCanvasElement
-    if ('style' in this.canvas) {
+    if ("style" in this.canvas) {
       this.canvas.style.width = `${viewSize}px`;
       this.canvas.style.height = `${viewSize}px`;
     }
@@ -145,7 +151,8 @@ export class Canvas2DRenderer implements Renderer {
     this.ctx.clearRect(0, 0, viewSize, viewSize);
 
     // Draw to blur canvas if enabled, otherwise draw directly
-    const targetCtx = this.config.enableBlur && this.blurCtx ? this.blurCtx : this.ctx;
+    const targetCtx =
+      this.config.enableBlur && this.blurCtx ? this.blurCtx : this.ctx;
     const targetSize = this.config.enableBlur ? viewSize * 0.5 : viewSize;
 
     // Save context state
@@ -171,15 +178,22 @@ export class Canvas2DRenderer implements Renderer {
   private drawThread(
     ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     thread: ThreadFrame,
-    viewSize: number
+    viewSize: number,
   ): void {
-    const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } = thread;
+    const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } =
+      thread;
 
     // Build path
     const path = this.buildPath(points, viewSize);
 
     // Create gradient using static bounds (matches SVG gradientUnits="userSpaceOnUse")
-    const gradient = this.createGradient(ctx, colorStops, viewSize, gradientMinY, gradientMaxY);
+    const gradient = this.createGradient(
+      ctx,
+      colorStops,
+      viewSize,
+      gradientMinY,
+      gradientMaxY,
+    );
 
     // Draw thread with gradient stroke
     ctx.save();
@@ -216,7 +230,7 @@ export class Canvas2DRenderer implements Renderer {
       const currX = points[currIdx] * viewSize;
       const currY = points[currIdx + 1] * viewSize;
 
-      const nextIdx = i < n - 1 ? ((i + 1) << 1) : currIdx;
+      const nextIdx = i < n - 1 ? (i + 1) << 1 : currIdx;
       const nextX = points[nextIdx] * viewSize;
       const nextY = points[nextIdx + 1] * viewSize;
 
@@ -241,7 +255,7 @@ export class Canvas2DRenderer implements Renderer {
     colorStops: ColorStop[],
     viewSize: number,
     minY: number = 0,
-    maxY: number = 1
+    maxY: number = 1,
   ): CanvasGradient {
     // Create vertical linear gradient spanning the thread's vertical range
     // This matches SVG's gradientUnits="userSpaceOnUse"
@@ -270,24 +284,13 @@ export class Canvas2DRenderer implements Renderer {
     // Draw blur layer (glow effect)
     this.ctx.globalAlpha = 0.5; // Match feColorMatrix opacity
     this.ctx.filter = `blur(${blurStdDeviation}px)`;
-    this.ctx.drawImage(
-      this.blurCanvas as any,
-      0,
-      0,
-      viewSize,
-      viewSize
-    );
+    const blurSource = this.blurCanvas as CanvasImageSource;
+    this.ctx.drawImage(blurSource, 0, 0, viewSize, viewSize);
 
     // Draw sharp layer on top (no blur)
     this.ctx.globalAlpha = 1;
     this.ctx.filter = "none";
-    this.ctx.drawImage(
-      this.blurCanvas as any,
-      0,
-      0,
-      viewSize,
-      viewSize
-    );
+    this.ctx.drawImage(blurSource, 0, 0, viewSize, viewSize);
 
     this.ctx.restore();
   }

@@ -3,18 +3,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import type { WorkerThreadData, ThreadsGeneratedMessage } from "../workers/thread-generator.worker";
+import type {
+  WorkerThreadData,
+  ThreadsGeneratedMessage,
+} from "../workers/thread-generator.worker";
 import {
   type Direction,
   type HSL,
   type PathProfile,
   THREAD_COUNT,
   VIEWBOX_SIZE,
-  FLIP_INTERVAL_MS,
-  SETTLE_BUFFER_MS,
   FRAME_INTERVAL,
   BEZIER_CONTROL_FACTOR,
-  PIVOT_DAMPING,
   SEGMENT_FACTORS,
   GOLDEN_RATIO_SEED,
   adjustColor,
@@ -22,7 +22,6 @@ import {
   createSeededRandom,
   chooseColor,
   createPathProfile,
-  directionDuration,
   directionDurationSeeded,
   randomInRangeWith,
   clamp,
@@ -52,31 +51,11 @@ for (let i = 0; i < SEG_LEN; i++) {
   COS_OFFSETS[i] = s * Math.PI * 0.5;
 }
 
-// PERF: Track which threads are currently transitioning (typically 0-3 threads)
-// Allows us to skip transition checks for the majority of threads
-const transitioningThreadIds = new Set<number>();
-
-// PERF: Sin/Cos lookup table with linear interpolation (3-4x faster than Math.sin/cos)
-// High resolution table (4096 entries) for smooth interpolation
-const SIN_TABLE_SIZE = 4096;
-const SIN_TABLE = new Float32Array(SIN_TABLE_SIZE);
-const TWO_PI = Math.PI * 2;
-for (let i = 0; i < SIN_TABLE_SIZE; i++) {
-  SIN_TABLE[i] = Math.sin((i / SIN_TABLE_SIZE) * TWO_PI);
-}
-
-const fastSin = (angle: number): number => {
-  // Normalize angle to [0, 1) range
-  const normalized = ((angle / TWO_PI) % 1 + 1) % 1;
-  const scaled = normalized * SIN_TABLE_SIZE;
-  const index = scaled | 0;
-  const nextIndex = (index + 1) % SIN_TABLE_SIZE;
-  const fraction = scaled - index;
-  // Linear interpolation between table values
-  return SIN_TABLE[index] + (SIN_TABLE[nextIndex] - SIN_TABLE[index]) * fraction;
+const logTimelineDebug = (...message: unknown[]) => {
+  if (process.env.NODE_ENV !== "production") {
+    console.warn("[Timeline]", ...message);
+  }
 };
-
-const fastCos = (angle: number): number => fastSin(angle + Math.PI * 0.5);
 
 type PerformanceProfile = {
   threadCount: number;
@@ -115,11 +94,15 @@ const computePerformanceProfile = (): PerformanceProfile => {
 
   const width = window.innerWidth || 0;
   const dpr = window.devicePixelRatio || 1;
-  const nav = (typeof navigator !== "undefined" ? (navigator as NavigatorWithConnection) : undefined);
+  const nav =
+    typeof navigator !== "undefined"
+      ? (navigator as NavigatorWithConnection)
+      : undefined;
   const hardware = nav?.hardwareConcurrency ?? 0;
   const saveData = Boolean(nav?.connection?.saveData);
   const effectiveType = nav?.connection?.effectiveType ?? "";
-  const isSlowConnection = effectiveType.includes("2g") || effectiveType.includes("slow-2g");
+  const isSlowConnection =
+    effectiveType.includes("2g") || effectiveType.includes("slow-2g");
 
   let threadScale = 1;
   // Mobile viewport scaling (more aggressive for fill-rate)
@@ -127,7 +110,8 @@ const computePerformanceProfile = (): PerformanceProfile => {
   else if (width <= 640) threadScale = 0.82;
   else if (width <= 820) threadScale = 0.9;
   // Desktop viewport scaling (reduce threads on large screens)
-  else if (width > 1920) threadScale = 0.80; // 4K displays
+  else if (width > 1920)
+    threadScale = 0.8; // 4K displays
   else if (width > 1440) threadScale = 0.85; // Large desktop
 
   if (dpr >= 3) {
@@ -145,13 +129,17 @@ const computePerformanceProfile = (): PerformanceProfile => {
   else if (dpr >= 2) blurStdDeviation = 2.75;
   // Scale blur for both small and large screens
   if (width <= 480) blurStdDeviation *= 0.9;
-  else if (width > 1920) blurStdDeviation *= 0.75; // 4K displays
+  else if (width > 1920)
+    blurStdDeviation *= 0.75; // 4K displays
   else if (width > 1440) blurStdDeviation *= 0.85; // Large desktop
   blurStdDeviation = Math.max(1.6, Number(blurStdDeviation.toFixed(2)));
 
   const lowPowerHardware = hardware > 0 && hardware <= 4;
-  const lowPower = lowPowerHardware || saveData || isSlowConnection || width <= 480;
-  const frameInterval = lowPower ? Math.max(FRAME_INTERVAL, LOW_POWER_FRAME_INTERVAL) : FRAME_INTERVAL;
+  const lowPower =
+    lowPowerHardware || saveData || isSlowConnection || width <= 480;
+  const frameInterval = lowPower
+    ? Math.max(FRAME_INTERVAL, LOW_POWER_FRAME_INTERVAL)
+    : FRAME_INTERVAL;
 
   return {
     threadCount,
@@ -233,7 +221,10 @@ const formatCoord = (value: number): string => {
  * scaled to the SVG viewBox. Reuses an optional buffer to avoid per-frame allocations.
  * Optimized: reuses coordinates from previous iteration (50% fewer array reads).
  */
-const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string => {
+const buildCubicBezierPath = (
+  points: Float32Array,
+  buffer?: string[],
+): string => {
   const n = points.length >>> 1; // number of (x,y) points
   if (n === 0) return "";
 
@@ -255,7 +246,7 @@ const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string =
     const currX = points[currIdx] * VIEWBOX_SIZE;
     const currY = points[currIdx + 1] * VIEWBOX_SIZE;
 
-    const nextIdx = i < n - 1 ? ((i + 1) << 1) : currIdx;
+    const nextIdx = i < n - 1 ? (i + 1) << 1 : currIdx;
     const nextX = points[nextIdx] * VIEWBOX_SIZE;
     const nextY = points[nextIdx + 1] * VIEWBOX_SIZE;
 
@@ -276,103 +267,6 @@ const buildCubicBezierPath = (points: Float32Array, buffer?: string[]): string =
   }
 
   return out.join(" ");
-};
-
-const easeInOutCubic = (t: number): number =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-/**
- * Writes final animated (drift+sway) coordinates into thread.floatingPoints.
- * This fuses interpolation + drift/sway. No new arrays per frame.
- * Optimized: skips interpolation math when not transitioning.
- */
-const writeAnimatedPoints = (
-  target: Float32Array,
-  base: Float32Array,
-  into: Float32Array,
-  now: number,
-  transitionStartTime: number,
-  duration: number,
-  swayPhase: number,
-  driftPhase: number,
-  swayFreq: number,
-  driftFreq: number,
-  swayAmp: number,
-  driftAmp: number,
-): void => {
-  const n = into.length >>> 1;
-
-  // PERF: Hoist frequency calculations outside loop (saves 2 muls + 2 adds per point)
-  const swayBase = now * swayFreq + swayPhase;
-  const driftBase = now * driftFreq + driftPhase;
-
-  // PERF: Split into two paths to avoid interpolation math when not transitioning
-  if (transitionStartTime > 0) {
-    // Transitioning: interpolate between base and target
-    const progress = Math.min((now - transitionStartTime) / duration, 1);
-    const t = progress >= 1 ? 1 : easeInOutCubic(progress);
-
-    for (let i = 0; i < n; i++) {
-      const xi = i << 1;
-      const yi = xi + 1;
-
-      const ix = base[xi] + (target[xi] - base[xi]) * t;
-      const iy = base[yi] + (target[yi] - base[yi]) * t;
-
-      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
-      const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
-
-      into[xi] = ix + driftOffset;
-      into[yi] = iy + swayOffset;
-    }
-  } else {
-    // Not transitioning: use target directly (saves 4 reads + 2 subs + 2 muls + 2 adds per point)
-    for (let i = 0; i < n; i++) {
-      const xi = i << 1;
-      const yi = xi + 1;
-
-      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
-      const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
-
-      into[xi] = target[xi] + driftOffset;
-      into[yi] = target[yi] + swayOffset;
-    }
-  }
-};
-
-// --------------------------------------------------------------------------------
-// THREAD MANAGEMENT
-// --------------------------------------------------------------------------------
-
-type FlipDecision = { threadId: number; direction: Direction } | null;
-
-const selectThreadToFlip = (
-  threads: ThreadState[],
-  now: number,
-  settleBufferMs: number = SETTLE_BUFFER_MS,
-  preferDownWeight: number = 0.75,
-): FlipDecision => {
-  const eligible = (dir: Direction) =>
-    threads.filter((thread) => thread.direction === dir && now - thread.lastFlipAt > settleBufferMs);
-
-  const pick = (dir: Direction) => {
-    const candidates = eligible(dir);
-    if (!candidates.length) return null;
-    return candidates[(Math.random() * candidates.length) | 0];
-  };
-
-  let target = Math.random() < preferDownWeight ? pick("down") : null;
-  if (!target) target = pick("up");
-  if (!target) target = pick("down");
-  if (!target) return null;
-
-  const nextDirection: Direction = target.direction === "down" ? "up" : "down";
-
-  // Ensure at least one "up" thread remains.
-  const upThreads = threads.filter((t) => t.direction === "up" || t.targetDirection === "up");
-  if (nextDirection === "down" && upThreads.length <= 1) return null;
-
-  return { threadId: target.id, direction: nextDirection };
 };
 
 // Factory (main-thread) — unchanged visuals; we add scratch + gradient bounds/stops.
@@ -492,7 +386,11 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
 const usePrefersReducedMotion = () => {
   const [prefers, setPrefers] = useState(false);
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    )
+      return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setPrefers(media.matches);
     update();
@@ -525,22 +423,29 @@ type TimelineThreadsProps = {
   overrideParams?: ThreadOverrideParams;
 };
 
-function TimelineThreadsComponent({ className, style, overrideParams }: TimelineThreadsProps) {
+function TimelineThreadsComponent({
+  className,
+  style,
+  overrideParams,
+}: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const isVisibleRef = useRef(true);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [threads, setThreads] = useState<ThreadState[]>([]);
-  const [performanceProfile, setPerformanceProfile] = useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
+  const [performanceProfile, setPerformanceProfile] =
+    useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
   const [parallaxOffset, setParallaxOffset] = useState(0);
   const [webglSupported, setWebglSupported] = useState(true);
 
   // Apply override parameters if provided
-  const effectiveThreadCount = overrideParams?.threadCount ?? performanceProfile.threadCount;
-  const effectiveBlurStdDeviation = overrideParams?.blurStdDeviation ?? performanceProfile.blurStdDeviation;
+  const threadCount =
+    overrideParams?.threadCount ?? performanceProfile.threadCount;
+  const blurStdDeviation =
+    overrideParams?.blurStdDeviation ?? performanceProfile.blurStdDeviation;
   const effectiveEnableBlur = overrideParams?.enableBlur ?? true;
-  const { threadCount, frameInterval, blurStdDeviation } = performanceProfile;
+  const frameInterval = performanceProfile.frameInterval;
   const threadsRef = useRef<ThreadState[]>([]);
 
   // WebGL renderer refs
@@ -554,7 +459,9 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
     let rafId = 0;
     const updateProfile = () => {
       const next = computePerformanceProfile();
-      setPerformanceProfile((prev) => (profilesEqual(prev, next) ? prev : next));
+      setPerformanceProfile((prev) =>
+        profilesEqual(prev, next) ? prev : next,
+      );
     };
 
     const scheduleUpdate = () => {
@@ -570,13 +477,17 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
     window.addEventListener("resize", scheduleUpdate, { passive: true });
     window.addEventListener("orientationchange", scheduleUpdate);
 
-    const nav = (typeof navigator !== "undefined" ? (navigator as NavigatorWithConnection) : undefined);
+    const nav =
+      typeof navigator !== "undefined"
+        ? (navigator as NavigatorWithConnection)
+        : undefined;
     const connection = nav?.connection;
     const detachConnection =
       connection && typeof connection.addEventListener === "function"
         ? (() => {
             connection.addEventListener("change", scheduleUpdate);
-            return () => connection.removeEventListener?.("change", scheduleUpdate);
+            return () =>
+              connection.removeEventListener?.("change", scheduleUpdate);
           })()
         : undefined;
 
@@ -591,7 +502,10 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   const syncThreads = (incoming: ThreadState[]) => {
     const normalized = incoming.map((thread) => {
       const pathBuffer = thread.pathBuffer ?? [];
-      const path = buildCubicBezierPath(thread.profile[thread.direction], pathBuffer);
+      const path = buildCubicBezierPath(
+        thread.profile[thread.direction],
+        pathBuffer,
+      );
       return {
         ...thread,
         pathBuffer,
@@ -610,25 +524,30 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
 
     threadsRef.current = [];
     setThreads([]);
-    // PERF: Clear transitioning threads when reinitializing
-    transitioningThreadIds.clear();
-
     let mounted = true;
     let worker: Worker | null = null;
     let fallbackTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const initThreadsFromMain = () => {
       if (!mounted) return;
-      const mainThreads = Array.from({ length: totalThreads }, (_, id) => createThread(id, totalThreads));
+      const mainThreads = Array.from({ length: totalThreads }, (_, id) =>
+        createThread(id, totalThreads),
+      );
       const hasUpThread = mainThreads.some((t) => t.direction === "up");
       if (!hasUpThread) {
-        mainThreads[0] = { ...mainThreads[0], direction: "up", targetDirection: "up" };
+        mainThreads[0] = {
+          ...mainThreads[0],
+          direction: "up",
+          targetDirection: "up",
+        };
       }
       syncThreads(mainThreads);
     };
 
     try {
-      worker = new Worker(new URL("../workers/thread-generator.worker.ts", import.meta.url));
+      worker = new Worker(
+        new URL("../workers/thread-generator.worker.ts", import.meta.url),
+      );
       // If the worker is too slow, fall back to main thread to avoid blocking visuals.
       fallbackTimeout = setTimeout(() => {
         if (mounted && threadsRef.current.length === 0) initThreadsFromMain();
@@ -666,9 +585,14 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
     const enable = () => {
       const requestIdle =
         typeof window !== "undefined"
-          ? ((window as typeof window & {
-              requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number;
-            }).requestIdleCallback)
+          ? (
+              window as typeof window & {
+                requestIdleCallback?: (
+                  cb: () => void,
+                  opts?: { timeout?: number },
+                ) => number;
+              }
+            ).requestIdleCallback
           : undefined;
 
       if (typeof requestIdle === "function") {
@@ -689,7 +613,10 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
   // Pause when off-screen
   useEffect(() => {
     if (!containerRef.current) return;
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0 });
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
@@ -739,7 +666,11 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
    * - Completely offloads animation from main thread
    */
   useEffect(() => {
-    if (!canvasRef.current || !shouldAnimate || threadsRef.current.length === 0) {
+    if (
+      !canvasRef.current ||
+      !shouldAnimate ||
+      threadsRef.current.length === 0
+    ) {
       return;
     }
 
@@ -764,7 +695,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
           canvas,
           config: {
             viewSize: VIEWBOX_SIZE,
-            blurStdDeviation: effectiveBlurStdDeviation,
+            blurStdDeviation,
             dpr,
             enableBlur,
             offsetXMultiplier: overrideParams?.offsetXMultiplier,
@@ -785,9 +716,9 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
         try {
           worker = new Worker(
             new URL("../workers/animation.worker.ts", import.meta.url),
-            { type: "module" }
+            { type: "module" },
           );
-          console.log("[Timeline] Animation worker created successfully");
+          logTimelineDebug("Animation worker created successfully");
         } catch (err) {
           console.error("[Timeline] Failed to create animation worker:", err);
           throw err; // Rethrow to be caught by outer try-catch
@@ -847,7 +778,7 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
 
         worker.postMessage(initMessage);
 
-        console.log("[Timeline] Canvas renderer initialized successfully");
+        logTimelineDebug("Canvas renderer initialized successfully");
 
         // Main-thread rAF loop to drive animation timing
         // (prevents worker timer throttling on mobile)
@@ -879,7 +810,10 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
           if (rafId) cancelAnimationFrame(rafId);
         };
       } catch (error) {
-        console.error("[Timeline] Failed to initialize canvas renderer:", error);
+        console.error(
+          "[Timeline] Failed to initialize canvas renderer:",
+          error,
+        );
         // WebGL not supported - hide animation
         setWebglSupported(false);
       }
@@ -903,13 +837,13 @@ function TimelineThreadsComponent({ className, style, overrideParams }: Timeline
         rendererRef.current = null;
       }
 
-      console.log("[Timeline] Canvas renderer cleaned up");
+      logTimelineDebug("Canvas renderer cleaned up");
     };
   }, [shouldAnimate, blurStdDeviation, frameInterval]);
 
   // Return nothing if WebGL is not supported
   if (!webglSupported) {
-    console.log("[Timeline] WebGL not supported - animation hidden");
+    logTimelineDebug("WebGL not supported - animation hidden");
     return null;
   }
 

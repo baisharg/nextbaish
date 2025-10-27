@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useLCPComplete() {
   const [isLCPComplete, setIsLCPComplete] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -25,10 +25,10 @@ export function useLCPComplete() {
 
     try {
       observer.observe({
-        type: 'largest-contentful-paint',
-        buffered: true
+        type: "largest-contentful-paint",
+        buffered: true,
       });
-    } catch (e) {
+    } catch {
       // Fallback if LCP not supported
       timeoutId = setTimeout(() => setIsLCPComplete(true), 2000);
     }

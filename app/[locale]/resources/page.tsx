@@ -16,6 +16,14 @@ import {
 import { getDictionary } from "../dictionaries";
 import { isAppLocale, type AppLocale } from "@/i18n.config";
 
+type SelfStudyResourceItem = {
+  name: string;
+  description: string;
+  category: string;
+  createdBy: string;
+  url: string;
+};
+
 // Lazy load heavy components for better initial load performance
 const AirtableEmbed = dynamic(() => import("@/app/components/airtable-embed"));
 
@@ -29,6 +37,10 @@ export default async function Resources({
   const dict = await getDictionary(currentLocale);
   const externalOpportunities = dict.resources.sections.externalOpportunities;
   const timelineCopy = externalOpportunities.timeline;
+  const fundamentalReadingItems = dict.resources.sections.selfStudy
+    .fundamentalReading.items as SelfStudyResourceItem[];
+  const standardCourseItems = dict.resources.sections.selfStudy.standardCourses
+    .items as SelfStudyResourceItem[];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -120,20 +132,18 @@ export default async function Resources({
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
                     {dict.resources.sections.selfStudy.fundamentalReading.title}
                   </p>
-                  {dict.resources.sections.selfStudy.fundamentalReading.items.map(
-                    (item: any, idx: number) => (
-                      <InteractiveCourseCard
-                        key={idx}
-                        title={item.name}
-                        description={item.description}
-                        category={item.category}
-                        createdBy={item.createdBy}
-                        url={item.url}
-                        icon="book"
-                        accentColor="#9275E5"
-                      />
-                    ),
-                  )}
+                  {fundamentalReadingItems.map((item, idx) => (
+                    <InteractiveCourseCard
+                      key={idx}
+                      title={item.name}
+                      description={item.description}
+                      category={item.category}
+                      createdBy={item.createdBy}
+                      url={item.url}
+                      icon="book"
+                      accentColor="#9275E5"
+                    />
+                  ))}
                 </div>
 
                 {/* Standard Courses */}
@@ -141,20 +151,18 @@ export default async function Resources({
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
                     {dict.resources.sections.selfStudy.standardCourses.title}
                   </p>
-                  {dict.resources.sections.selfStudy.standardCourses.items.map(
-                    (item: any, idx: number) => (
-                      <InteractiveCourseCard
-                        key={idx}
-                        title={item.name}
-                        description={item.description}
-                        category={item.category}
-                        createdBy={item.createdBy}
-                        url={item.url}
-                        icon="graduation"
-                        accentColor="#A8C5FF"
-                      />
-                    ),
-                  )}
+                  {standardCourseItems.map((item, idx) => (
+                    <InteractiveCourseCard
+                      key={idx}
+                      title={item.name}
+                      description={item.description}
+                      category={item.category}
+                      createdBy={item.createdBy}
+                      url={item.url}
+                      icon="graduation"
+                      accentColor="#A8C5FF"
+                    />
+                  ))}
                 </div>
               </div>
 

@@ -20,7 +20,6 @@ import {
   SEGMENT_FACTORS,
   VIEWBOX_SIZE,
   adjustColor,
-  clamp,
   directionDuration,
 } from "../utils/thread-utils";
 
@@ -106,7 +105,12 @@ export type TickMessage = {
   now: number;
 };
 
-export type WorkerMessage = InitMessage | PauseMessage | ResumeMessage | TerminateMessage | TickMessage;
+export type WorkerMessage =
+  | InitMessage
+  | PauseMessage
+  | ResumeMessage
+  | TerminateMessage
+  | TickMessage;
 
 export type FrameMessage = {
   type: "frame";
@@ -136,12 +140,14 @@ for (let i = 0; i < SIN_TABLE_SIZE; i++) {
 }
 
 const fastSin = (angle: number): number => {
-  const normalized = ((angle / TWO_PI) % 1 + 1) % 1;
+  const normalized = (((angle / TWO_PI) % 1) + 1) % 1;
   const scaled = normalized * SIN_TABLE_SIZE;
   const index = scaled | 0;
   const nextIndex = (index + 1) % SIN_TABLE_SIZE;
   const fraction = scaled - index;
-  return SIN_TABLE[index] + (SIN_TABLE[nextIndex] - SIN_TABLE[index]) * fraction;
+  return (
+    SIN_TABLE[index] + (SIN_TABLE[nextIndex] - SIN_TABLE[index]) * fraction
+  );
 };
 
 const fastCos = (angle: number): number => fastSin(angle + Math.PI * 0.5);
@@ -164,26 +170,32 @@ function hslToArray(hsl: HSL): [number, number, number] {
   return [hsl.h, hsl.s, hsl.l];
 }
 
-function createGradientStops(color: HSL): { up: ColorStop[]; down: ColorStop[] } {
+function createGradientStops(color: HSL): {
+  up: ColorStop[];
+  down: ColorStop[];
+} {
   // UP gradient: Darker, richer colors for better contrast
   const upStops: ColorStop[] = [
-    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: -5 })) },  // Darker top (was l: 10)
-    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: -5 })) },  // Darker mid (was l: 0)
+    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: -5 })) }, // Darker top (was l: 10)
+    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: -5 })) }, // Darker mid (was l: 0)
     { yPct: 1, hsl: hslToArray(adjustColor(color, { h: 24, s: -3, l: -15 })) }, // Darker bottom (was l: -12)
   ];
 
   const downStops: ColorStop[] = [
-    { yPct: 0, hsl: hslToArray(color) },                                 // Base color
-    { yPct: 0.30, hsl: hslToArray(adjustColor(color, { s: -8, l: -3 })) },   // Slight darken at 30%
-    { yPct: 0.60, hsl: hslToArray(adjustColor(color, { s: -36, l: -24 })) }, // Moderate darken at 60%
-    { yPct: 0.85, hsl: [0, 0, 18] },                                     // Gentle shadow near floor
-    { yPct: 1, hsl: [0, 0, 12] },                                        // Soft dark base
+    { yPct: 0, hsl: hslToArray(color) }, // Base color
+    { yPct: 0.3, hsl: hslToArray(adjustColor(color, { s: -8, l: -3 })) }, // Slight darken at 30%
+    { yPct: 0.6, hsl: hslToArray(adjustColor(color, { s: -36, l: -24 })) }, // Moderate darken at 60%
+    { yPct: 0.85, hsl: [0, 0, 18] }, // Gentle shadow near floor
+    { yPct: 1, hsl: [0, 0, 12] }, // Soft dark base
   ];
 
   return { up: upStops, down: downStops };
 }
 
-function calculateGradientBounds(profile: PathProfile): { minY: number; maxY: number } {
+function calculateGradientBounds(profile: PathProfile): {
+  minY: number;
+  maxY: number;
+} {
   // Calculate static gradient bounds from BOTH up and down profiles
   // This ensures the gradient covers the full range of thread positions in both directions
   let minY = Infinity;
@@ -208,8 +220,8 @@ function calculateGradientBounds(profile: PathProfile): { minY: number; maxY: nu
 const OVERLAY_GRADIENT: ColorStop[] = [
   { yPct: 0, hsl: [235, 100, 73] }, // retain vivid glow above threads
   { yPct: 0.42, hsl: [287, 100, 75] },
-  { yPct: 0.75, hsl: [0, 0, 26] },   // soften the darkening near the floor
-  { yPct: 1, hsl: [0, 0, 18] },      // leave a hint of light in the base glow
+  { yPct: 0.75, hsl: [0, 0, 26] }, // soften the darkening near the floor
+  { yPct: 1, hsl: [0, 0, 18] }, // leave a hint of light in the base glow
 ];
 
 // ============================================================================
@@ -225,7 +237,10 @@ const selectThreadToFlip = (
   preferDownWeight: number = 0.75,
 ): FlipDecision => {
   const eligible = (dir: Direction) =>
-    threads.filter((thread) => thread.direction === dir && now - thread.lastFlipAt > settleBufferMs);
+    threads.filter(
+      (thread) =>
+        thread.direction === dir && now - thread.lastFlipAt > settleBufferMs,
+    );
 
   const pick = (dir: Direction) => {
     const candidates = eligible(dir);
@@ -241,7 +256,9 @@ const selectThreadToFlip = (
   const nextDirection: Direction = target.direction === "down" ? "up" : "down";
 
   // Ensure at least one "up" thread remains
-  const upThreads = threads.filter((t) => t.direction === "up" || t.targetDirection === "up");
+  const upThreads = threads.filter(
+    (t) => t.direction === "up" || t.targetDirection === "up",
+  );
   if (nextDirection === "down" && upThreads.length <= 1) return null;
 
   return { threadId: target.id, direction: nextDirection };
@@ -287,7 +304,8 @@ const writeAnimatedPoints = (
       const ix = base[xi] + (target[xi] - base[xi]) * t;
       const iy = base[yi] + (target[yi] - base[yi]) * t;
 
-      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
+      const swayOffset =
+        fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
       const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
 
       into[xi] = ix + driftOffset;
@@ -299,7 +317,8 @@ const writeAnimatedPoints = (
       const xi = i << 1;
       const yi = xi + 1;
 
-      const swayOffset = fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
+      const swayOffset =
+        fastSin(swayBase + SIN_OFFSETS[i]) * swayAmp * PIVOT_DAMPING[i];
       const driftOffset = fastCos(driftBase + COS_OFFSETS[i]) * driftAmp;
 
       into[xi] = target[xi] + driftOffset;
@@ -317,6 +336,7 @@ let viewSize = VIEWBOX_SIZE;
 let frameInterval = FRAME_INTERVAL;
 let isPaused = false;
 let lastFlipCheck = 0;
+let lastFrameTime = 0;
 
 // ============================================================================
 // ANIMATION LOOP
@@ -326,6 +346,11 @@ function animate(now: number) {
   if (isPaused || threads.length === 0) {
     return;
   }
+
+  if (now - lastFrameTime < frameInterval - 1) {
+    return;
+  }
+  lastFrameTime = now;
 
   // Flip decision on interval
   if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
@@ -350,7 +375,8 @@ function animate(now: number) {
 
   for (const thread of threads) {
     const isTransitioning =
-      thread.transitionStartTime > 0 && now - thread.transitionStartTime < thread.duration;
+      thread.transitionStartTime > 0 &&
+      now - thread.transitionStartTime < thread.duration;
 
     // Compute animated points
     writeAnimatedPoints(
@@ -451,6 +477,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
 
       viewSize = data.viewSize;
       frameInterval = data.frameInterval;
+      lastFrameTime = 0;
       transitioningThreadIds.clear();
 
       // Initialize state (main thread will drive frames via "tick" messages)
@@ -476,6 +503,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
     case "resume": {
       isPaused = false;
       lastFlipCheck = performance.now();
+      lastFrameTime = 0;
       break;
     }
 
@@ -483,6 +511,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       isPaused = true;
       threads = [];
       transitioningThreadIds.clear();
+      lastFrameTime = 0;
       break;
     }
   }

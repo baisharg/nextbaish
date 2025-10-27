@@ -7,7 +7,6 @@ import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
 // import TimelineThreads from "../components/timeline-threads-with-controls"; // Uncomment for testing
 import { DeferredAnalytics } from "../components/deferred-analytics";
-import { LCPDebugger } from "../components/lcp-debugger";
 import { PerformanceMonitor } from "../components/performance-monitor";
 import { LanguageProvider } from "../contexts/language-context";
 import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
@@ -100,7 +99,8 @@ export async function generateMetadata({
     metadataBase: new URL("https://baish.com.ar"),
     openGraph: {
       title: "BAISH — Buenos Aires AI Safety Hub",
-      description: "Ensuring AI benefits humanity through research, education, and community",
+      description:
+        "Ensuring AI benefits humanity through research, education, and community",
       url: "https://baish.com.ar",
       siteName: "BAISH",
       locale: validLocale === "es" ? "es_ES" : "en_US",
@@ -109,7 +109,8 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: "BAISH — Buenos Aires AI Safety Hub",
-      description: "Ensuring AI benefits humanity through research, education, and community",
+      description:
+        "Ensuring AI benefits humanity through research, education, and community",
     },
     icons: {
       icon: [
@@ -117,7 +118,9 @@ export async function generateMetadata({
         { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
         { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       ],
-      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+      apple: [
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      ],
     },
     manifest: "/site.webmanifest",
   };
@@ -137,7 +140,9 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const currentLocale: AppLocale = (isAppLocale(locale) ? locale : i18n.defaultLocale) as AppLocale;
+  const currentLocale: AppLocale = (
+    isAppLocale(locale) ? locale : i18n.defaultLocale
+  ) as AppLocale;
   const dict = await getDictionary(currentLocale);
 
   return (
@@ -149,7 +154,10 @@ export default async function LocaleLayout({
         >
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
-              <TimelineThreads className="fixed inset-0 -z-10" style={TIMELINE_STYLE} />
+              <TimelineThreads
+                className="fixed inset-0 -z-10"
+                style={TIMELINE_STYLE}
+              />
               <Header locale={currentLocale} t={dict.header} />
               {children}
               <DeferredAnalytics />

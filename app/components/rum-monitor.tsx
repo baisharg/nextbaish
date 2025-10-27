@@ -2,6 +2,11 @@
 
 import { useEffect } from "react";
 
+type VercelAnalyticsClient = (
+  eventName: "beforeSend" | "event" | "pageview",
+  payload?: Record<string, unknown>,
+) => void;
+
 /**
  * Real User Monitoring (RUM) component
  * Measures Core Web Vitals (LCP, FID, CLS, INP, TTFB) and sends to analytics
@@ -12,6 +17,11 @@ export default function RUMMonitor() {
 
     const isDev = process.env.NODE_ENV === "development";
     const device = () => (window.innerWidth >= 1024 ? "desktop" : "mobile");
+
+    const getAnalyticsClient = (): VercelAnalyticsClient | undefined => {
+      const candidate = (window as typeof window & { va?: unknown }).va;
+      return typeof candidate === "function" ? candidate : undefined;
+    };
 
     // Helper to send metrics to Vercel Analytics
     const sendMetric = (name: string, value: number, rating?: string) => {
@@ -25,13 +35,15 @@ export default function RUMMonitor() {
 
       // Log in development
       if (isDev) {
-        console.log(`[RUM] ${name} (${metric.device}):`, value.toFixed(2), "ms", rating ? `[${rating}]` : "");
+        console.warn(
+          `[RUM] ${name} (${metric.device}):`,
+          value.toFixed(2),
+          "ms",
+          rating ? `[${rating}]` : "",
+        );
       }
 
-      // Send to Vercel Analytics in production
-      if (typeof window !== "undefined" && (window as any).va) {
-        (window as any).va("event", metric);
-      }
+      getAnalyticsClient()?.("event", metric);
     };
 
     // Helper to determine rating based on Web Vitals thresholds
@@ -68,33 +80,40 @@ export default function RUMMonitor() {
     // Measure LCP (Largest Contentful Paint)
     const lcpObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      const lastEntry = entries[entries.length - 1];
+      const lastEntry = entries[entries.length - 1] as
+        | LargestContentfulPaint
+        | undefined;
 
       if (lastEntry) {
-        const lcpTime = (lastEntry as any).renderTime || (lastEntry as any).loadTime || 0;
+        const lcpTime =
+          lastEntry.renderTime ??
+          lastEntry.loadTime ??
+          lastEntry.startTime ??
+          0;
         sendMetric("LCP", lcpTime, getLCPRating(lcpTime));
       }
     });
 
     try {
       lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
-    } catch (e) {
-      if (isDev) console.warn("[RUM] LCP observation not supported");
+    } catch (error) {
+      if (isDev) console.warn("[RUM] LCP observation not supported", error);
     }
 
     // Measure FID (First Input Delay) - Legacy metric, being replaced by INP
     const fidObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      entries.forEach((entry: any) => {
-        const fidTime = entry.processingStart - entry.startTime;
+      entries.forEach((entry) => {
+        const fidEntry = entry as PerformanceEventTiming;
+        const fidTime = fidEntry.processingStart - fidEntry.startTime;
         sendMetric("FID", fidTime, getFIDRating(fidTime));
       });
     });
 
     try {
       fidObserver.observe({ type: "first-input", buffered: true });
-    } catch (e) {
-      if (isDev) console.warn("[RUM] FID observation not supported");
+    } catch (error) {
+      if (isDev) console.warn("[RUM] FID observation not supported", error);
     }
 
     // Measure INP (Interaction to Next Paint) - New responsiveness metric
@@ -102,7 +121,7 @@ export default function RUMMonitor() {
     let worstINP = 0;
     const inpObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        const eventEntry = entry as any;
+        const eventEntry = entry as PerformanceEventTiming;
         // Duration property gives the total interaction latency
         const inpTime = eventEntry.duration || 0;
         if (inpTime > worstINP && inpTime > 40) {
@@ -112,20 +131,25 @@ export default function RUMMonitor() {
     });
 
     try {
-      inpObserver.observe({
+      const eventObserverInit: PerformanceObserverInit & {
+        durationThreshold?: number;
+      } = {
         type: "event",
         buffered: true,
-        durationThreshold: 40
-      } as any); // Cast to any due to incomplete TypeScript definitions
-    } catch (e) {
-      if (isDev) console.warn("[RUM] INP observation not supported");
+        durationThreshold: 40,
+      };
+      inpObserver.observe(eventObserverInit);
+    } catch (error) {
+      if (isDev) console.warn("[RUM] INP observation not supported", error);
     }
 
     // Measure TTFB (Time to First Byte)
     const navigationObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      entries.forEach((entry: any) => {
-        const ttfb = entry.responseStart - entry.requestStart;
+      entries.forEach((entry) => {
+        const navigationEntry = entry as PerformanceNavigationTiming;
+        const ttfb =
+          navigationEntry.responseStart - navigationEntry.requestStart;
         if (ttfb > 0) {
           sendMetric("TTFB", ttfb, getTTFBRating(ttfb));
         }
@@ -134,15 +158,15 @@ export default function RUMMonitor() {
 
     try {
       navigationObserver.observe({ type: "navigation", buffered: true });
-    } catch (e) {
-      if (isDev) console.warn("[RUM] Navigation timing not supported");
+    } catch (error) {
+      if (isDev) console.warn("[RUM] Navigation timing not supported", error);
     }
 
     // Measure CLS (Cumulative Layout Shift)
     let clsValue = 0;
     const clsObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        const layoutShiftEntry = entry as any;
+        const layoutShiftEntry = entry as LayoutShift;
         if (!layoutShiftEntry.hadRecentInput) {
           clsValue += layoutShiftEntry.value;
         }
@@ -151,8 +175,8 @@ export default function RUMMonitor() {
 
     try {
       clsObserver.observe({ type: "layout-shift", buffered: true });
-    } catch (e) {
-      console.warn("[RUM] CLS observation not supported");
+    } catch (error) {
+      if (isDev) console.warn("[RUM] CLS observation not supported", error);
     }
 
     // Report CLS and INP on page visibility change or unload

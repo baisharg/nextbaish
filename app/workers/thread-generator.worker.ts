@@ -1,7 +1,6 @@
 import {
   type Direction,
   type HSL,
-  type PathProfile,
   GOLDEN_RATIO_SEED,
   THREAD_COUNT,
   chooseColor,
@@ -49,7 +48,11 @@ export type ThreadsGeneratedMessage = {
 // THREAD GENERATION
 // ============================================================================
 
-const generateThread = (id: number, totalThreads: number, upFraction: number): WorkerThreadData => {
+const generateThread = (
+  id: number,
+  totalThreads: number,
+  upFraction: number,
+): WorkerThreadData => {
   const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
   const safeTotal = Math.max(totalThreads, 1);
   const profile = createPathProfile(id, rng, safeTotal);
@@ -102,7 +105,7 @@ self.onmessage = (event: MessageEvent<GenerateThreadsMessage>) => {
       transferables.push(
         thread.profileNeutral.buffer as ArrayBuffer,
         thread.profileUp.buffer as ArrayBuffer,
-        thread.profileDown.buffer as ArrayBuffer
+        thread.profileDown.buffer as ArrayBuffer,
       );
     });
 

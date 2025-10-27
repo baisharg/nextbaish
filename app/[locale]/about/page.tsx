@@ -12,7 +12,7 @@ import {
   Linkedin01Icon,
   Globe02Icon,
 } from "@hugeicons/core-free-icons";
-import { renderWithFootnotes, renderWithBioLinks } from "@/app/utils/footnotes";
+import { renderWithBioLinks } from "@/app/utils/footnotes";
 
 export default async function AboutPage({
   params,

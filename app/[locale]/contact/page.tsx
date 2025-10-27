@@ -10,8 +10,6 @@ import { isAppLocale } from "@/i18n.config";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   TelegramIcon,
-  Location01Icon,
-  SmartPhone01Icon,
   InstagramIcon,
   Linkedin01Icon,
   WhatsappIcon,
@@ -23,9 +21,12 @@ const FAQAccordion = dynamic(() => import("@/app/components/faq-accordion"), {
   loading: () => <div className="h-96 animate-pulse rounded-xl bg-slate-100" />,
 });
 
-const SupascribeSignup = dynamic(() => import("@/app/components/supascribe-signup"), {
-  loading: () => <div className="card-glass h-64 animate-pulse" />,
-});
+const SupascribeSignup = dynamic(
+  () => import("@/app/components/supascribe-signup"),
+  {
+    loading: () => <div className="card-glass h-64 animate-pulse" />,
+  },
+);
 
 export default async function ContactPage({
   params,
@@ -39,13 +40,15 @@ export default async function ContactPage({
   return (
     <>
       <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
           {/* Page Header */}
           <FadeInSection variant="fade" as="section">
             <section className="space-y-4">
               <div className="text-sm text-slate-600">
-                <Link href={withLocale(currentLocale, "/")} className="hover:text-[var(--color-accent-primary)] transition">
+                <Link
+                  href={withLocale(currentLocale, "/")}
+                  className="hover:text-[var(--color-accent-primary)] transition"
+                >
                   {dict.contact.breadcrumb.home}
                 </Link>
                 {" / "}
@@ -68,7 +71,9 @@ export default async function ContactPage({
             <section className="grid gap-6 md:grid-cols-3">
               {/* Community Card with Stacked Buttons */}
               <article className="card-glass dither-macrogrid">
-                <div className="card-eyebrow">{dict.home.getInvolved.communityEyebrow}</div>
+                <div className="card-eyebrow">
+                  {dict.home.getInvolved.communityEyebrow}
+                </div>
                 <h3 className="card-title">
                   {dict.home.getInvolved.communityTitle}
                 </h3>
@@ -84,9 +89,13 @@ export default async function ContactPage({
                   >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon icon={TelegramIcon} size={20} />
-                      <span className="font-semibold">{dict.home.getInvolved.telegramCta}</span>
+                      <span className="font-semibold">
+                        {dict.home.getInvolved.telegramCta}
+                      </span>
                     </div>
-                    <span className="text-xs opacity-90">{dict.home.getInvolved.telegramMembers}</span>
+                    <span className="text-xs opacity-90">
+                      {dict.home.getInvolved.telegramMembers}
+                    </span>
                   </a>
                   <a
                     className="button-primary flex flex-col items-center justify-center gap-1 py-4"
@@ -96,16 +105,22 @@ export default async function ContactPage({
                   >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon icon={WhatsappIcon} size={20} />
-                      <span className="font-semibold">{dict.home.getInvolved.whatsappCta}</span>
+                      <span className="font-semibold">
+                        {dict.home.getInvolved.whatsappCta}
+                      </span>
                     </div>
-                    <span className="text-xs opacity-90">{dict.home.getInvolved.whatsappMembers}</span>
+                    <span className="text-xs opacity-90">
+                      {dict.home.getInvolved.whatsappMembers}
+                    </span>
                   </a>
                 </div>
               </article>
 
               {/* Location Card */}
               <article className="card-glass dither-macrogrid">
-                <div className="card-eyebrow">{dict.contact.cards.location.eyebrow}</div>
+                <div className="card-eyebrow">
+                  {dict.contact.cards.location.eyebrow}
+                </div>
                 <h3 className="card-title">
                   {dict.contact.cards.location.title}
                 </h3>
@@ -123,7 +138,9 @@ export default async function ContactPage({
 
               {/* Social Media Card */}
               <article className="card-glass dither-macrogrid">
-                <div className="card-eyebrow">{dict.contact.cards.social.eyebrow}</div>
+                <div className="card-eyebrow">
+                  {dict.contact.cards.social.eyebrow}
+                </div>
                 <h3 className="card-title">
                   {dict.contact.cards.social.title}
                 </h3>
@@ -164,16 +181,19 @@ export default async function ContactPage({
               {/* Contact Form */}
               <article className="card-glass dither-macrogrid">
                 <div className="card-eyebrow">{dict.contact.form.eyebrow}</div>
-                <h2 className="card-title">
-                  {dict.contact.form.title}
-                </h2>
-                <p className="card-body">
-                  {dict.contact.form.description}
-                </p>
+                <h2 className="card-title">{dict.contact.form.title}</h2>
+                <p className="card-body">{dict.contact.form.description}</p>
 
-                <form action="https://formspree.io/f/xjkyoknb" method="POST" className="space-y-4 mt-6">
+                <form
+                  action="https://formspree.io/f/xjkyoknb"
+                  method="POST"
+                  className="space-y-4 mt-6"
+                >
                   <div className="space-y-2">
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       {dict.contact.form.nameLabel}
                     </label>
                     <input
@@ -186,7 +206,10 @@ export default async function ContactPage({
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       {dict.contact.form.emailLabel}
                     </label>
                     <input
@@ -199,7 +222,10 @@ export default async function ContactPage({
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       {dict.contact.form.messageLabel}
                     </label>
                     <textarea
@@ -219,10 +245,7 @@ export default async function ContactPage({
                       <HugeiconsIcon icon={ReloadIcon} size={18} />
                       {dict.contact.form.clearForm}
                     </button>
-                    <button
-                      type="submit"
-                      className="button-primary"
-                    >
+                    <button type="submit" className="button-primary">
                       {dict.contact.form.submit}
                     </button>
                   </div>
