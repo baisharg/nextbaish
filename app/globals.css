@@ -849,6 +849,12 @@ span[style*="view-transition-name"] {
   contain-intrinsic-size: 0 300px;
 }
 
+/* Newsletter embed needs traditional rendering so the script can measure the container */
+.card-glass.supascribe-card {
+  content-visibility: visible;
+  contain-intrinsic-size: auto;
+}
+
 /* Activities cards on homepage (taller content) */
 article.card-glass {
   content-visibility: auto;
@@ -870,4 +876,3 @@ section {
 main {
   contain: layout;
 }
-
