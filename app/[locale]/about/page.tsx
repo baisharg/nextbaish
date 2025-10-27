@@ -9,6 +9,7 @@ import { isAppLocale } from "@/i18n.config";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   GithubIcon,
+  InstagramIcon,
   Linkedin01Icon,
   Globe02Icon,
 } from "@hugeicons/core-free-icons";
@@ -385,6 +386,15 @@ export default async function AboutPage({
                           className="text-slate-700 transition hover:opacity-70"
                         >
                           <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                        <a
+                          href="https://www.instagram.com/unpibedecompu/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Instagram"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={InstagramIcon} size={20} />
                         </a>
                         <a
                           href="https://linkedin.com/in/lucasvitali"
