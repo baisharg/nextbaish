@@ -221,13 +221,13 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               data-collapsed={scrolled || isNarrow || isCramped}
             >
               <Image
-                src="/images/logos/logo-40.webp"
+                src="/images/logos/logo-80.webp"
                 alt="BAISH Logo"
-                width={40}
-                height={40}
+                width={80}
+                height={80}
                 sizes="40px"
                 className="w-full h-full object-contain site-logo"
-                quality={90}
+                quality={95}
                 priority
                 fetchPriority="high"
               />

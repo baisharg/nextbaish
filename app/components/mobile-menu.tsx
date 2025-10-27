@@ -25,7 +25,13 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
-export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: MobileMenuProps) {
+export default function MobileMenu({
+  locale,
+  t,
+  pathname,
+  isOpen,
+  onClose,
+}: MobileMenuProps) {
   const router = useRouter();
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -57,24 +63,24 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
   // Body scroll lock
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   // Escape key handler
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   const navLinks = [
@@ -95,7 +101,7 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
           onClick={onClose}
           style={{
-            animation: 'fadeIn 0.3s ease-out',
+            animation: "fadeIn 0.3s ease-out",
           }}
         />
       )}
@@ -104,9 +110,9 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
       <div
         className="fixed top-0 right-0 w-full h-screen z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FFE6] shadow-xl overflow-y-auto"
         style={{
-          transform: shouldAnimate ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          pointerEvents: isOpen ? 'auto' : 'none',
+          transform: shouldAnimate ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: isOpen ? "auto" : "none",
         }}
       >
         <div className="flex flex-col">
@@ -135,25 +141,30 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
               onClick={onClose}
             >
               <Image
-                src="/images/logos/logo-40.webp"
+                src="/images/logos/logo-80.webp"
                 alt="BAISH Logo"
-                width={40}
-                height={40}
+                width={80}
+                height={80}
                 sizes="32px"
                 className="object-contain flex-shrink-0"
-                quality={90}
+                quality={95}
               />
-              <span className={`text-lg font-semibold ${
-                pathname === withLocale(locale, "/")
-                  ? "text-[var(--color-accent-primary)]"
-                  : "text-slate-900"
-              }`}>BAISH</span>
+              <span
+                className={`text-lg font-semibold ${
+                  pathname === withLocale(locale, "/")
+                    ? "text-[var(--color-accent-primary)]"
+                    : "text-slate-900"
+                }`}
+              >
+                BAISH
+              </span>
             </TransitionLink>
 
             <ul className="space-y-2">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
-                const pathSegment = link.href.split('/').filter(Boolean).pop() || '';
+                const pathSegment =
+                  link.href.split("/").filter(Boolean).pop() || "";
                 const transitionClass = `header-nav-${pathSegment}`;
                 return (
                   <li key={link.href}>
@@ -186,7 +197,9 @@ export default function MobileMenu({ locale, t, pathname, isOpen, onClose }: Mob
                       key={lang.code}
                       href={langHref}
                       prefetch={false}
-                      onTouchStart={() => !active && handleLanguageTouch(langHref)}
+                      onTouchStart={() =>
+                        !active && handleLanguageTouch(langHref)
+                      }
                       className={`flex-1 text-center rounded-lg px-4 py-3 text-base font-medium transition ${
                         active
                           ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"

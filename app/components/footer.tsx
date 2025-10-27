@@ -17,7 +17,6 @@ interface FooterProps {
 }
 
 export default function Footer({ locale, t }: FooterProps) {
-
   return (
     <footer
       className="border-t border-slate-200 bg-white px-6 py-10 text-sm text-slate-600 sm:px-10"
@@ -28,10 +27,10 @@ export default function Footer({ locale, t }: FooterProps) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Image
-                src="/images/logos/logo-40.webp"
+                src="/images/logos/logo-80.webp"
                 alt="BAISH Logo"
-                width={40}
-                height={40}
+                width={80}
+                height={80}
                 sizes="32px"
                 className="object-contain"
               />
@@ -39,25 +38,39 @@ export default function Footer({ locale, t }: FooterProps) {
                 Buenos Aires AI Safety Hub
               </p>
             </div>
-            <p>© {new Date().getFullYear()} BAISH. {t.copyright}</p>
+            <p>
+              © {new Date().getFullYear()} BAISH. {t.copyright}
+            </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/about")}>
+            <TransitionLink
+              className="hover:text-slate-900"
+              href={withLocale(locale, "/about")}
+            >
               {t.nav.about}
             </TransitionLink>
-            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/activities")}>
+            <TransitionLink
+              className="hover:text-slate-900"
+              href={withLocale(locale, "/activities")}
+            >
               {t.nav.activities}
             </TransitionLink>
             {/* <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/research")}>
               {t.nav.research}
             </TransitionLink> */}
-            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/resources")}>
+            <TransitionLink
+              className="hover:text-slate-900"
+              href={withLocale(locale, "/resources")}
+            >
               {t.nav.resources}
             </TransitionLink>
             <a className="hover:text-slate-900" href="#get-involved">
               {t.nav.getInvolved}
             </a>
-            <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/contact")}>
+            <TransitionLink
+              className="hover:text-slate-900"
+              href={withLocale(locale, "/contact")}
+            >
               {t.nav.contact}
             </TransitionLink>
           </div>
@@ -101,7 +114,10 @@ export default function Footer({ locale, t }: FooterProps) {
               <HugeiconsIcon icon={WhatsappIcon} size={20} />
             </a>
           </div>
-          <TransitionLink className="hover:text-slate-900" href={withLocale(locale, "/privacy-policy")}>
+          <TransitionLink
+            className="hover:text-slate-900"
+            href={withLocale(locale, "/privacy-policy")}
+          >
             {t.nav.privacyPolicy}
           </TransitionLink>
         </div>

@@ -10,7 +10,10 @@ const nextConfig: NextConfig = {
   // Note: Next.js 16+ uses SWC minification by default (no config needed)
   compiler: {
     // Remove console.log in production
-    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
   },
 
   // Optimize images
@@ -18,7 +21,7 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [32, 48, 64, 96, 128, 256, 384],
-    qualities: [75, 90],
+    qualities: [75, 90, 95],
     remotePatterns: [
       {
         protocol: "https",
