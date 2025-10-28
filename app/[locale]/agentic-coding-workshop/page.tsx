@@ -5,6 +5,49 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
 import { getDictionary } from "../dictionaries";
 import { i18n, isAppLocale, type AppLocale } from "@/i18n.config";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  AddTeamIcon,
+  Analytics02Icon,
+  BookEditIcon,
+  Books01Icon,
+  BubbleChatAddIcon,
+  CheckListIcon,
+  ClipboardIcon,
+  CodeCircleIcon,
+  CommandLineIcon,
+  ComputerTerminal01Icon,
+  CompassIcon,
+  CursorPointer01Icon,
+  DocumentValidationIcon,
+  Download01Icon,
+  Flag03Icon,
+  FlashIcon,
+  FolderLibraryIcon,
+  GalaxyIcon,
+  GraduationScrollIcon,
+  Layers02Icon,
+  LibraryIcon,
+  RepeatIcon,
+  Robot01Icon,
+  Rocket01Icon,
+  Shield01Icon,
+  SparklesIcon,
+  Structure01Icon,
+  Target02Icon,
+  Task01Icon,
+  TickDouble02Icon,
+  ToolsIcon,
+  UserGroupIcon,
+  Wallet01Icon,
+  WebDesign01Icon,
+  WorkHistoryIcon,
+  AlertSquareIcon,
+  Brain01Icon,
+  Wrench01Icon,
+  Video01Icon,
+  BulbIcon,
+} from "@hugeicons/core-free-icons";
 
 const NAV_ITEMS = [
   { label: "Resumen", href: "#overview" },
@@ -15,6 +58,18 @@ const NAV_ITEMS = [
   { label: "Development", href: "#development" },
   { label: "Recursos", href: "#recursos" },
 ];
+
+type IconDefinition = typeof Analytics02Icon;
+
+interface ProblemCard {
+  icon: IconDefinition;
+  title: string;
+  description: string;
+  highlight: string;
+  details: string[];
+  sourceLabel: string;
+  sourceHref: string;
+}
 
 const CALLOUT_STYLES = {
   info: "border-sky-200 bg-sky-50 text-sky-900",
@@ -37,6 +92,7 @@ type PlanningStep = {
     title: string;
     text: string;
   };
+  icon: IconDefinition;
 };
 
 type DevelopmentStep = {
@@ -50,11 +106,13 @@ type DevelopmentStep = {
     title: string;
     text: string;
   }>;
+  icon: IconDefinition;
 };
 
-const PROBLEM_CARDS = [
+const PROBLEM_CARDS: ProblemCard[] = [
   {
-    title: "📉 Degradación con Contexto Largo",
+    icon: AlertSquareIcon,
+    title: "Degradación con contexto largo",
     description:
       "El benchmark LoCoDiff (enero 2025) muestra que incluso el mejor modelo disponible, Sonnet 4.5, degrada significativamente con contextos largos.",
     highlight:
@@ -67,7 +125,8 @@ const PROBLEM_CARDS = [
     sourceHref: "https://abanteai.github.io/LoCoDiff-bench/",
   },
   {
-    title: "🧠 Sin Memoria a Largo Plazo",
+    icon: Brain01Icon,
+    title: "Sin memoria a largo plazo",
     description:
       "Un estudio de METR (julio 2025) demostró que developers expertos con 2+ años de experiencia en sus propios proyectos fueron 20 % más lentos usando AI que trabajando solos.",
     highlight:
@@ -82,23 +141,33 @@ const PROBLEM_CARDS = [
   },
 ];
 
-const SOLUTION_CARDS = [
+interface SolutionCard {
+  icon: IconDefinition;
+  title: string;
+  description: string;
+  outcome: string;
+}
+
+const SOLUTION_CARDS: SolutionCard[] = [
   {
-    title: "🔪 Sharding",
+    icon: Layers02Icon,
+    title: "Sharding",
     description:
       "Documentos grandes se dividen en fragmentos pequeños y enfocados. En vez de darle al Developer un PRD de 10 000 tokens, recibe un shard de 400–600 tokens con lo esencial para la story.",
     outcome:
       "Resultado: cada agente opera en la zona de 96 % de precisión (<5 K tokens) sin ruido adicional.",
   },
   {
-    title: "👥 Agentes Especializados",
+    icon: AddTeamIcon,
+    title: "Agentes especializados",
     description:
       "Ocho agentes con roles concretos: Product Manager, Architect, Developer, QA, etc. Cada uno tiene instrucciones y checklist propios, y consulta solamente el contexto que necesita.",
     outcome:
       "Resultado: contexto quirúrgicamente preciso para cada decisión, sin sobrecargar al modelo.",
   },
   {
-    title: "🎯 Documentación Estructurada",
+    icon: DocumentValidationIcon,
+    title: "Documentación estructurada",
     description:
       "Planning riguroso antes de codear: PRD completo, arquitectura definida y stories secuenciales que se validan entre sí. Eso crea la “memoria” que los LLMs no tienen.",
     outcome:
@@ -152,7 +221,7 @@ const COMMAND_SWITCH_STEPS = [
 const PLANNING_STEPS: PlanningStep[] = [
   {
     number: "1",
-    title: "📋 PM: PRD Creation",
+    title: "PM: PRD Creation",
     summary:
       "El Product Manager crea el Product Requirements Document guiando al usuario sección por sección.",
     bullets: [
@@ -168,10 +237,11 @@ const PLANNING_STEPS: PlanningStep[] = [
       title: "Nota importante",
       text: "Las stories en el PRD son breves (solo títulos). Más adelante el Scrum Master las expandirá con tareas detalladas.",
     },
+    icon: Task01Icon,
   },
   {
     number: "2",
-    title: "🏗️ Architect: System Design",
+    title: "Architect: System Design",
     summary:
       "El Architect lee el PRD y diseña la arquitectura técnica completa, siempre de forma interactiva.",
     bullets: [
@@ -182,10 +252,11 @@ const PLANNING_STEPS: PlanningStep[] = [
       "Cada sección se valida con el usuario antes de avanzar.",
     ],
     commands: ["/architect *create-full-stack-architecture"],
+    icon: Structure01Icon,
   },
   {
     number: "3",
-    title: "✅ PO: Master Checklist",
+    title: "PO: Master Checklist",
     summary:
       "El Product Owner valida que PRD y arquitectura estén perfectamente alineados antes de sharding.",
     bullets: [
@@ -199,10 +270,11 @@ const PLANNING_STEPS: PlanningStep[] = [
       title: "Si algo no cierra",
       text: "Se refinan los documentos hasta que todo tenga sentido. No se pasa a la siguiente fase sin validación completa.",
     },
+    icon: CheckListIcon,
   },
   {
     number: "4",
-    title: "🔪 PO: Sharding",
+    title: "PO: Sharding",
     summary:
       "El Product Owner ejecuta el sharding de PRD y Arquitectura en epics y stories manejables (<2 K tokens).",
     bullets: [
@@ -220,6 +292,7 @@ const PLANNING_STEPS: PlanningStep[] = [
       title: "Resultado",
       text: "Backlog priorizado, con stories shardeadas y listas para desarrollo iterativo.",
     },
+    icon: Layers02Icon,
   },
 ];
 
@@ -239,7 +312,7 @@ const PLANNING_SUMMARY_POINTS = [
 const DEVELOPMENT_STEPS: DevelopmentStep[] = [
   {
     number: "1",
-    title: "📝 SM: Review Previous Notes",
+    title: "SM: Review previous notes",
     summary:
       "El Scrum Master repasa las notas de la story anterior para arrancar con aprendizaje acumulado.",
     bullets: [
@@ -256,10 +329,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
         text: "Las notas de hoy alimentan el draft de mañana. El equipo mejora story tras story.",
       },
     ],
+    icon: WorkHistoryIcon,
   },
   {
     number: "2",
-    title: "📋 SM: Draft Next Story",
+    title: "SM: Draft next story",
     summary:
       "El Scrum Master arma el draft de la próxima story usando únicamente el contexto relevante.",
     bullets: [
@@ -270,10 +344,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
       "Incluye suficiente contexto sin ahogar al modelo.",
     ],
     commands: ["/sm *draft story 1.1"],
+    icon: BookEditIcon,
   },
   {
     number: "3",
-    title: "✅ PO: Validate Story Draft",
+    title: "PO: Validate story draft",
     summary:
       "El Product Owner valida el draft con el PRD para asegurar coherencia antes de codear.",
     bullets: [
@@ -290,10 +365,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
         text: "Garantiza que el Developer implemente exactamente lo acordado en planning.",
       },
     ],
+    icon: CheckListIcon,
   },
   {
     number: "4",
-    title: "💻 Dev: Implementation",
+    title: "Dev: Implementation",
     summary:
       "El Developer implementa la story completa siguiendo arquitectura, UX y checklist de pruebas.",
     bullets: [
@@ -303,10 +379,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
       "Puede invocar MCPs como Playwright para automatizar pruebas end-to-end.",
     ],
     commands: ["/dev *develop-story @docs/stories/1.1.md"],
+    icon: CodeCircleIcon,
   },
   {
     number: "5",
-    title: "🔍 QA: Test Story Thoroughly",
+    title: "QA: Test story thoroughly",
     summary:
       "El QA ejerce el rol de gatekeeper de calidad antes de que la story avance.",
     bullets: [
@@ -314,7 +391,7 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
       "Realiza testing manual sobre user flows y edge cases.",
       "Verifica que se cumplan los criterios de aceptación.",
       "Perfila riesgos (seguridad, performance, fiabilidad).",
-      "Emite veredicto: PASS ✅ / CONCERNS ⚠️ / FAIL ❌ / WAIVED 🔓.",
+      "Emite veredicto: PASS (todo ok) / CONCERNS (revisar) / FAIL (crítico) / WAIVED (aceptado explícitamente).",
     ],
     commands: ["/qa *review @docs/stories/1.1.md"],
     callouts: [
@@ -329,10 +406,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
         text: "El QA asegura que el código funciona y cumple estándares profesionales antes de pasar a producción.",
       },
     ],
+    icon: Shield01Icon,
   },
   {
     number: "6",
-    title: "🔧 Dev: Fix According to QA Review",
+    title: "Dev: Fix according to QA review",
     summary:
       "El Developer corrige según el reporte del QA y deja todo en estado PASS.",
     bullets: [
@@ -349,10 +427,11 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
         text: "Si el QA emitió FAIL, se repite la revisión hasta obtener PASS o WAIVED.",
       },
     ],
+    icon: Wrench01Icon,
   },
   {
     number: "7",
-    title: "🔄 Mark Done & Next Story",
+    title: "Mark done & next story",
     summary:
       "Se cierra la story y el equipo vuelve al paso 1 con la siguiente prioridad.",
     bullets: [
@@ -368,6 +447,7 @@ const DEVELOPMENT_STEPS: DevelopmentStep[] = [
         text: "Story por story, commit por commit, hasta completar el proyecto.",
       },
     ],
+    icon: RepeatIcon,
   },
 ];
 
@@ -384,16 +464,24 @@ const DEVELOPMENT_SUMMARY_POINTS = [
   "La persona sigue en control: aprueba cada transición clave.",
 ];
 
-const TOOL_OPTIONS = [
+interface ToolOption {
+  icon: IconDefinition;
+  title: string;
+  highlight: string;
+  bullets: string[];
+  note?: string;
+}
+
+const TOOL_OPTIONS: ToolOption[] = [
   {
-    icon: "🏆",
+    icon: SparklesIcon,
     title: "Claude Code",
     highlight:
       "Mejor opción: herramienta oficial de Anthropic con Sonnet 4.5 (top del benchmark).",
     bullets: ["Máxima calidad", "Integración perfecta", "$100/mes (Max Plan)"],
   },
   {
-    icon: "⚡",
+    icon: ComputerTerminal01Icon,
     title: "OpenCode",
     highlight: "Más versátil: te logueás con tu proveedor y usa ese plan.",
     bullets: [
@@ -401,16 +489,16 @@ const TOOL_OPTIONS = [
       "Usa el plan de tu proveedor",
       "Open source y multi-modelo",
     ],
-    note: "⚠️ Requiere workaround (ver más abajo).",
+    note: "Requiere workaround (ver más abajo).",
   },
   {
-    icon: "💻",
+    icon: CursorPointer01Icon,
     title: "Cursor / Windsurf",
     highlight: "IDEs populares que soportan BMAD con sintaxis @mention.",
     bullets: ["Editores completos", "Comunidad grande", "Sintaxis @agent"],
   },
   {
-    icon: "✨",
+    icon: GalaxyIcon,
     title: "Gemini CLI",
     highlight: "Gratis: Gemini 2.5 Pro con soporte oficial BMAD.",
     bullets: [
@@ -420,11 +508,11 @@ const TOOL_OPTIONS = [
     ],
   },
   {
-    icon: "🤖",
+    icon: Robot01Icon,
     title: "Droid CLI",
     highlight: "Gratis: GPT-5-Codex a través de Factory AI.",
     bullets: ["GPT-5-Codex model", "100 % gratis", "Factory AI platform"],
-    note: "⚠️ Requiere workaround (ver más abajo).",
+    note: "Requiere workaround (ver más abajo).",
   },
 ];
 
@@ -451,9 +539,20 @@ const QUICK_START = {
   note: "El script instala Droid CLI (gratis, GPT-5-Codex) y configura todos los comandos BMAD automáticamente.",
 };
 
-const LEARNING_RESOURCES = [
+interface ResourceCard {
+  icon: IconDefinition;
+  title: string;
+  description: string;
+  bullets: string[];
+  link: {
+    label: string;
+    href: string;
+  };
+}
+
+const LEARNING_RESOURCES: ResourceCard[] = [
   {
-    icon: "📦",
+    icon: FolderLibraryIcon,
     title: "BMAD Repository",
     description: "Repositorio completo con prompts, documentación y ejemplos.",
     bullets: [
@@ -468,7 +567,7 @@ const LEARNING_RESOURCES = [
     },
   },
   {
-    icon: "🎥",
+    icon: Video01Icon,
     title: "BMAD Method Masterclass",
     description: "Tutorial en video que recorre el método de punta a punta.",
     bullets: [
@@ -484,9 +583,20 @@ const LEARNING_RESOURCES = [
   },
 ];
 
-const PLAN_OPTIONS = [
+interface PlanOption {
+  icon: IconDefinition;
+  title: string;
+  highlight: string;
+  bullets: string[];
+  link: {
+    label: string;
+    href: string;
+  };
+}
+
+const PLAN_OPTIONS: PlanOption[] = [
   {
-    icon: "💎",
+    icon: Wallet01Icon,
     title: "Z.ai Coding Plan",
     highlight: "Recomendado: opción económica para estudiantes y makers.",
     bullets: [
@@ -498,7 +608,7 @@ const PLAN_OPTIONS = [
     link: { label: "z.ai/subscribe", href: "https://z.ai/subscribe" },
   },
   {
-    icon: "🚀",
+    icon: FlashIcon,
     title: "Claude Code + Max Plan",
     highlight: "Para entusiastas: máxima calidad para agentic coding.",
     bullets: [
@@ -513,7 +623,7 @@ const PLAN_OPTIONS = [
     },
   },
   {
-    icon: "🎓",
+    icon: GraduationScrollIcon,
     title: "GitHub Student Pack",
     highlight: "Si sos estudiante, conseguís Copilot Pro gratis.",
     bullets: [
@@ -529,9 +639,23 @@ const PLAN_OPTIONS = [
   },
 ];
 
-const CLI_TOOLS = [
+interface CliTool {
+  icon: IconDefinition;
+  title: string;
+  description: string;
+  bullets: string[];
+  link: {
+    label: string;
+    href: string;
+  };
+  install?: string;
+  steps?: string[];
+  note?: string;
+}
+
+const CLI_TOOLS: CliTool[] = [
   {
-    icon: "⚡",
+    icon: ComputerTerminal01Icon,
     title: "OpenCode",
     description:
       "Programa de terminal open source. Te logueás con tu proveedor y OpenCode usa ese plan.",
@@ -551,7 +675,7 @@ const CLI_TOOLS = [
     note: "Requiere workaround para mapear la carpeta de BMAD.",
   },
   {
-    icon: "🤖",
+    icon: Robot01Icon,
     title: "Droid CLI",
     description:
       "Cliente de Factory AI que expone GPT-5-Codex gratis, compatible con BMAD.",
@@ -573,9 +697,23 @@ const CLI_TOOLS = [
   },
 ];
 
-const SETUP_RESOURCES = [
+interface SetupResource {
+  icon: IconDefinition;
+  title: string;
+  description: string;
+  commandLabel?: string;
+  command?: string;
+  bullets: string[];
+  link?: {
+    label: string;
+    href: string;
+  };
+  note?: string;
+}
+
+const SETUP_RESOURCES: SetupResource[] = [
   {
-    icon: "📥",
+    icon: Download01Icon,
     title: "Instalación de BMAD",
     description:
       "BMAD se instala por proyecto en el directorio raíz, dejando todo versionable.",
@@ -588,7 +726,7 @@ const SETUP_RESOURCES = [
     ],
   },
   {
-    icon: "🔧",
+    icon: ToolsIcon,
     title: "MCP Tools recomendadas",
     description: "Herramientas que amplían las capacidades de los agentes.",
     bullets: [
@@ -604,9 +742,18 @@ const SETUP_RESOURCES = [
   },
 ];
 
-const AGENTS = [
+interface AgentCard {
+  icon: IconDefinition;
+  name: string;
+  role: string;
+  command: string;
+  description: string;
+  artifacts: string[];
+}
+
+const AGENTS: AgentCard[] = [
   {
-    icon: "📊",
+    icon: Analytics02Icon,
     name: "Business Analyst",
     role: "Insightful Analyst & Strategic Ideation Partner",
     command: "/analyst *create-project-brief",
@@ -620,7 +767,7 @@ const AGENTS = [
     ],
   },
   {
-    icon: "📋",
+    icon: ClipboardIcon,
     name: "Product Manager",
     role: "Investigative Product Strategist & Market-Savvy PM",
     command: "/pm *create-prd",
@@ -629,7 +776,7 @@ const AGENTS = [
     artifacts: ["PRD (Product Requirements Document)", "Brownfield PRD"],
   },
   {
-    icon: "🏗️",
+    icon: Structure01Icon,
     name: "Architect",
     role: "Holistic System Architect & Full-Stack Technical Leader",
     command: "/architect *create-full-stack-architecture",
@@ -643,7 +790,7 @@ const AGENTS = [
     ],
   },
   {
-    icon: "🎨",
+    icon: WebDesign01Icon,
     name: "UX Expert",
     role: "User Experience Designer & UI Specialist",
     command: "/ux-expert *create-front-end-spec",
@@ -652,7 +799,7 @@ const AGENTS = [
     artifacts: ["Front-end spec", "UI design prompts"],
   },
   {
-    icon: "📝",
+    icon: CheckListIcon,
     name: "Product Owner",
     role: "Technical Product Owner & Process Steward",
     command: "/po *shard-doc",
@@ -661,7 +808,7 @@ const AGENTS = [
     artifacts: ["Sharded documents", "Epic files", "Story validations"],
   },
   {
-    icon: "🏃",
+    icon: Flag03Icon,
     name: "Scrum Master",
     role: "Technical Scrum Master & Story Preparation Specialist",
     command: "/sm *draft",
@@ -670,7 +817,7 @@ const AGENTS = [
     artifacts: ["User story drafts", "Sequential tasks", "Acceptance criteria"],
   },
   {
-    icon: "💻",
+    icon: CodeCircleIcon,
     name: "Developer",
     role: "Expert Senior Software Engineer & Implementation Specialist",
     command: "/dev *develop-story",
@@ -685,7 +832,7 @@ const AGENTS = [
     ],
   },
   {
-    icon: "🧪",
+    icon: Shield01Icon,
     name: "QA",
     role: "Test Architect with Quality Advisory Authority",
     command: "/qa *review",
@@ -794,8 +941,7 @@ export default async function AgenticCodingWorkshopPage({
                   usar.
                 </p>
                 <p className="text-base text-slate-600">
-                  📅 Viernes 3 de octubre 2025, 16:00hs • 📍 Salas 1109 y 1110 —
-                  BAISH x Y-hat
+                  Viernes 3 de octubre 2025, 16:00hs · Salas 1109 y 1110 — BAISH x Y-hat
                 </p>
                 <p className="text-sm text-slate-500">
                   Esta página reúne todos los materiales y recursos del
@@ -804,19 +950,24 @@ export default async function AgenticCodingWorkshopPage({
               </div>
 
               <div className="w-full rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5 text-slate-800 shadow-sm">
-                <p className="text-base font-medium text-emerald-800">
-                  💬 Unite al grupo de WhatsApp "Agentic Coding" dentro de la
-                  comunidad BAISH para discutir ideas, compartir proyectos y
-                  pedir ayuda con BMAD.
-                </p>
+                <div className="flex items-start gap-3">
+                  <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                    <HugeiconsIcon icon={BubbleChatAddIcon} size={22} primaryColor="#047857" />
+                  </span>
+                  <p className="text-base font-medium text-emerald-800">
+                    Unite al grupo de WhatsApp "Agentic Coding" dentro de la comunidad BAISH para discutir ideas,
+                    compartir proyectos y pedir ayuda con BMAD.
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <a
                   href="#workshop-repo"
-                  className="button-primary bg-emerald-500 text-white hover:bg-emerald-600"
+                  className="button-primary flex items-center gap-2 bg-emerald-500 text-white hover:bg-emerald-600"
                 >
-                  🚀 Empezar ahora
+                  <HugeiconsIcon icon={Rocket01Icon} size={18} primaryColor="#ffffff" />
+                  <span>Empezar ahora</span>
                 </a>
                 <a
                   href="https://baish.com.ar"
@@ -838,12 +989,14 @@ export default async function AgenticCodingWorkshopPage({
                   href="https://chat.whatsapp.com/IpVPWqa5gcM9ePJRgTMUPM"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="button-secondary"
+                  className="button-secondary flex items-center gap-2"
                 >
-                  💬 Unirse al WhatsApp
+                  <HugeiconsIcon icon={BubbleChatAddIcon} size={18} primaryColor="var(--color-accent-primary)" />
+                  <span>Unirse al WhatsApp</span>
                 </a>
-                <a href="#recursos" className="button-secondary">
-                  📚 Ver recursos
+                <a href="#recursos" className="button-secondary flex items-center gap-2">
+                  <HugeiconsIcon icon={Books01Icon} size={18} primaryColor="var(--color-accent-primary)" />
+                  <span>Ver recursos</span>
                 </a>
               </div>
             </div>
@@ -856,8 +1009,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Contexto
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                🚨 El problema con los LLMs tradicionales
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={AlertSquareIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>El problema con los LLMs tradicionales</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Dos obstáculos hacen que “darle todo al modelo” no funcione:
@@ -873,9 +1031,18 @@ export default async function AgenticCodingWorkshopPage({
                   className="rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-sm shadow-slate-900/5 backdrop-blur"
                 >
                   <div className="space-y-4">
-                    <h3 className="text-2xl font-semibold text-slate-900">
-                      {card.title}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon
+                          icon={card.icon}
+                          size={24}
+                          primaryColor="var(--color-accent-primary)"
+                        />
+                      </span>
+                      <h3 className="text-2xl font-semibold text-slate-900">
+                        {card.title}
+                      </h3>
+                    </div>
                     <p className="text-base text-slate-700">
                       {card.description}
                     </p>
@@ -893,7 +1060,7 @@ export default async function AgenticCodingWorkshopPage({
                       ))}
                     </ul>
                     <p className="text-sm text-slate-500">
-                      📄 Fuente:{" "}
+                      Fuente:{" "}
                       <a
                         href={card.sourceHref}
                         target="_blank"
@@ -916,8 +1083,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Método BMAD
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                ✅ La solución: un equipo agentic que planifica y ejecuta
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={CheckListIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>La solución: un equipo agentic que planifica y ejecuta</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-700">
                 BMAD es un método de desarrollo con AI donde ocho agentes
@@ -938,9 +1110,18 @@ export default async function AgenticCodingWorkshopPage({
                   key={card.title}
                   className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-sm shadow-slate-900/5 backdrop-blur"
                 >
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {card.title}
-                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                      <HugeiconsIcon
+                        icon={card.icon}
+                        size={24}
+                        primaryColor="var(--color-accent-primary)"
+                      />
+                    </span>
+                    <h3 className="text-xl font-semibold text-slate-900">
+                      {card.title}
+                    </h3>
+                  </div>
                   <p className="flex-1 text-base text-slate-700">
                     {card.description}
                   </p>
@@ -952,9 +1133,14 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-slate-900 p-8 text-slate-100 shadow-lg shadow-slate-900/20">
-              <h3 className="text-xl font-semibold text-emerald-200">
-                💡 ¿Por qué funciona BMAD?
-              </h3>
+              <div className="flex items-center gap-3 text-xl font-semibold text-emerald-200">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-200/20 text-emerald-200">
+                  <HugeiconsIcon icon={BulbIcon} size={24} primaryColor="#A7F3D0" />
+                </span>
+                <h3 className="text-xl font-semibold text-emerald-200">
+                  ¿Por qué funciona BMAD?
+                </h3>
+              </div>
               <div className="mt-6 grid gap-6 md:grid-cols-3">
                 {BMAD_REASON_POINTS.map((point) => (
                   <div
@@ -980,8 +1166,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Equipo Agentic
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                👥 Los ocho agentes de BMAD
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={UserGroupIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>Los ocho agentes de BMAD</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Cada rol es el mismo modelo con un prompt especializado y
@@ -997,7 +1188,13 @@ export default async function AgenticCodingWorkshopPage({
                   className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white/95 p-7 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="text-2xl">{agent.icon}</span>
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                      <HugeiconsIcon
+                        icon={agent.icon}
+                        size={24}
+                        primaryColor="var(--color-accent-primary)"
+                      />
+                    </span>
                     <div>
                       <h3 className="text-xl font-semibold text-slate-900">
                         {agent.name}
@@ -1043,8 +1240,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Operativa diaria
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                ⌨️ Cómo se usan los comandos
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={CommandLineIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>Cómo se usan los comandos</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Los agentes se invocan por terminal o en el IDE usando comandos
@@ -1054,9 +1256,18 @@ export default async function AgenticCodingWorkshopPage({
 
             <div className="grid gap-6 md:grid-cols-2">
               <article className="rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-white p-8 shadow-sm shadow-slate-900/5">
-                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
-                  📝 Sintaxis de comandos
-                </h3>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                    <HugeiconsIcon
+                      icon={CommandLineIcon}
+                      size={22}
+                      primaryColor="var(--color-accent-primary)"
+                    />
+                  </span>
+                  <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                    Sintaxis de comandos
+                  </h3>
+                </div>
                 <p className="mt-2 text-sm text-slate-600">
                   Elegí la herramienta que uses y seguí la misma estructura:
                   comando + acción + archivos relevantes.
@@ -1086,9 +1297,14 @@ export default async function AgenticCodingWorkshopPage({
               </article>
 
               <article className="rounded-3xl border border-emerald-200 bg-emerald-50/80 p-8 shadow-sm shadow-emerald-900/10">
-                <h3 className="text-xl font-semibold text-emerald-700">
-                  🔄 Cambiar de agente sin ruido
-                </h3>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-200/40 text-emerald-700">
+                    <HugeiconsIcon icon={RepeatIcon} size={22} primaryColor="#047857" />
+                  </span>
+                  <h3 className="text-xl font-semibold text-emerald-700">
+                    Cambiar de agente sin ruido
+                  </h3>
+                </div>
                 <p className="mt-2 text-sm text-emerald-900/80">
                   Cada agente opera en su propio contexto. Para alternar sin
                   confusiones:
@@ -1125,8 +1341,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Fase 1
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                📐 Planning (una sola vez al inicio)
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={CompassIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>Planning (una sola vez al inicio)</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Diseño completo antes de escribir código. Todo se ejecuta desde
@@ -1141,8 +1362,17 @@ export default async function AgenticCodingWorkshopPage({
                   className="rounded-3xl border border-white/60 bg-white/70 p-6 shadow-sm shadow-slate-900/5 backdrop-blur"
                 >
                   <div className="flex flex-col gap-5 md:flex-row">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-lg font-semibold text-white">
-                      {step.number}
+                    <div className="flex flex-shrink-0 items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-lg font-semibold text-white">
+                        {step.number}
+                      </div>
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon
+                          icon={step.icon}
+                          size={24}
+                          primaryColor="var(--color-accent-primary)"
+                        />
+                      </span>
                     </div>
                     <div className="flex-1 space-y-4">
                       <div>
@@ -1192,9 +1422,14 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm">
-              <h3 className="text-base font-semibold text-slate-900">
-                📌 Agentes adicionales según necesidad
-              </h3>
+              <div className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                  <HugeiconsIcon icon={CheckListIcon} size={20} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-base font-semibold text-slate-900">
+                  Agentes adicionales según necesidad
+                </h3>
+              </div>
               <ul className="mt-3 space-y-2 text-sm text-slate-700">
                 {PLANNING_OPTIONAL_AGENTS.map((item) => (
                   <li key={item}>
@@ -1208,9 +1443,14 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="rounded-3xl border border-emerald-200 bg-emerald-50/80 p-6 shadow-sm">
-              <h3 className="text-xl font-semibold text-emerald-700">
-                🎯 Al finalizar planning tenés:
-              </h3>
+              <div className="flex items-center gap-2 text-xl font-semibold text-emerald-700">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-200/40 text-emerald-700">
+                  <HugeiconsIcon icon={Target02Icon} size={22} primaryColor="#047857" />
+                </span>
+                <h3 className="text-xl font-semibold text-emerald-700">
+                  Al finalizar planning tenés:
+                </h3>
+              </div>
               <ul className="mt-3 space-y-2 text-sm text-emerald-900/90">
                 {PLANNING_SUMMARY_POINTS.map((point) => (
                   <li key={point}>
@@ -1238,8 +1478,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Fase 2
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                🔄 Development loop iterativo
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={RepeatIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>Development loop iterativo</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Implementación story por story con validaciones integradas.
@@ -1308,15 +1553,21 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-slate-900/95 p-6 text-slate-100 shadow-lg shadow-slate-900/20">
-              <p className="text-sm font-medium">
-                🔁 Este loop se repite: volvés al paso 1 con la próxima story.
+              <p className="flex items-center gap-2 text-sm font-medium">
+                <HugeiconsIcon icon={RepeatIcon} size={20} primaryColor="#A855F7" />
+                <span>Este loop se repite: volvés al paso 1 con la próxima story.</span>
               </p>
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
-              <h3 className="text-base font-semibold text-slate-900">
-                📌 Notas sobre el proceso
-              </h3>
+              <div className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                  <HugeiconsIcon icon={CheckListIcon} size={20} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-base font-semibold text-slate-900">
+                  Notas sobre el proceso
+                </h3>
+              </div>
               <ul className="mt-3 space-y-2 text-sm text-slate-700">
                 {DEVELOPMENT_NOTES.map((note) => (
                   <li key={note}>
@@ -1328,9 +1579,14 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="rounded-3xl border border-emerald-200 bg-emerald-50/80 p-6 shadow-sm">
-              <h3 className="text-xl font-semibold text-emerald-700">
-                💪 Ventajas del loop iterativo
-              </h3>
+              <div className="flex items-center gap-2 text-xl font-semibold text-emerald-700">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-200/40 text-emerald-700">
+                  <HugeiconsIcon icon={TickDouble02Icon} size={22} primaryColor="#047857" />
+                </span>
+                <h3 className="text-xl font-semibold text-emerald-700">
+                  Ventajas del loop iterativo
+                </h3>
+              </div>
               <ul className="mt-3 space-y-2 text-sm text-emerald-900/90">
                 {DEVELOPMENT_SUMMARY_POINTS.map((point) => (
                   <li key={point}>
@@ -1354,8 +1610,13 @@ export default async function AgenticCodingWorkshopPage({
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 Recursos
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                📚 Todo para empezar hoy mismo
+              <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-slate-900">
+                <HugeiconsIcon
+                  icon={LibraryIcon}
+                  size={26}
+                  primaryColor="var(--color-accent-primary)"
+                />
+                <span>Todo para empezar hoy mismo</span>
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-600">
                 Herramientas, plantillas y guías para ejecutar BMAD sin
@@ -1364,18 +1625,28 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-r from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm">
-              <h3 className="text-center text-xl font-semibold text-[var(--color-accent-primary)]">
-                🛠️ ¿Qué herramienta usar?
-              </h3>
+              <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
+                  <HugeiconsIcon icon={ToolsIcon} size={22} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                  ¿Qué herramienta usar?
+                </h3>
+              </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {TOOL_OPTIONS.map((tool) => (
                   <article
                     key={tool.title}
                     className="flex h-full flex-col gap-3 rounded-2xl border border-white/60 bg-white/70 p-5 shadow-sm shadow-slate-900/5 backdrop-blur"
                   >
-                    <h4 className="text-lg font-semibold text-slate-900">
-                      {tool.icon} {tool.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon icon={tool.icon} size={20} primaryColor="var(--color-accent-primary)" />
+                      </span>
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        {tool.title}
+                      </h4>
+                    </div>
                     <p className="text-sm font-medium text-slate-700">
                       {tool.highlight}
                     </p>
@@ -1404,8 +1675,8 @@ export default async function AgenticCodingWorkshopPage({
               className="rounded-3xl border border-emerald-200 bg-emerald-50/80 p-8 shadow-sm"
             >
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-                <div className="rounded-2xl border border-emerald-300 bg-white/80 p-5 font-semibold text-emerald-600">
-                  🚀
+                <div className="rounded-2xl border border-emerald-300 bg-white/80 p-5 text-emerald-600">
+                  <HugeiconsIcon icon={Rocket01Icon} size={28} primaryColor="#16A34A" />
                 </div>
                 <div className="flex-1 space-y-4">
                   <h3 className="text-2xl font-semibold text-emerald-700">
@@ -1432,8 +1703,9 @@ export default async function AgenticCodingWorkshopPage({
                     <span aria-hidden>↗</span>
                   </a>
                   <div className="rounded-2xl border border-emerald-200 bg-white/80 p-4 text-sm">
-                    <p className="font-semibold text-emerald-700">
-                      ⚡ Quick start
+                    <p className="flex items-center gap-2 font-semibold text-emerald-700">
+                      <HugeiconsIcon icon={Rocket01Icon} size={18} primaryColor="#047857" />
+                      <span>Quick start</span>
                     </p>
                     <div className="mt-3 space-y-2 font-mono text-[13px] text-slate-700">
                       {QUICK_START.commands.map((cmd) => (
@@ -1454,19 +1726,28 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-center text-xl font-semibold text-[var(--color-accent-primary)]">
-                📚 Repositorios y aprendizaje
-              </h3>
+              <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
+                  <HugeiconsIcon icon={FolderLibraryIcon} size={22} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                  Repositorios y aprendizaje
+                </h3>
+              </div>
               <div className="grid gap-4 md:grid-cols-2">
                 {LEARNING_RESOURCES.map((resource) => (
                   <article
                     key={resource.title}
                     className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5"
                   >
-                    <div className="text-2xl">{resource.icon}</div>
-                    <h4 className="mt-3 text-lg font-semibold text-slate-900">
-                      {resource.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon icon={resource.icon} size={20} primaryColor="var(--color-accent-primary)" />
+                      </span>
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        {resource.title}
+                      </h4>
+                    </div>
                     <p className="mt-1 text-sm text-slate-600">
                       {resource.description}
                     </p>
@@ -1495,19 +1776,28 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-center text-xl font-semibold text-[var(--color-accent-primary)]">
-                🎯 Planes recomendados
-              </h3>
+              <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
+                  <HugeiconsIcon icon={Target02Icon} size={22} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                  Planes recomendados
+                </h3>
+              </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {PLAN_OPTIONS.map((plan) => (
                   <article
                     key={plan.title}
                     className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5"
                   >
-                    <div className="text-2xl">{plan.icon}</div>
-                    <h4 className="mt-3 text-lg font-semibold text-slate-900">
-                      {plan.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon icon={plan.icon} size={20} primaryColor="var(--color-accent-primary)" />
+                      </span>
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        {plan.title}
+                      </h4>
+                    </div>
                     <p className="mt-1 text-sm font-medium text-slate-700">
                       {plan.highlight}
                     </p>
@@ -1536,19 +1826,28 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-center text-xl font-semibold text-[var(--color-accent-primary)]">
-                💻 Herramientas CLI / Terminal
-              </h3>
+              <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
+                  <HugeiconsIcon icon={ComputerTerminal01Icon} size={22} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                  Herramientas CLI / Terminal
+                </h3>
+              </div>
               <div className="grid gap-4 md:grid-cols-2">
                 {CLI_TOOLS.map((tool) => (
                   <article
                     key={tool.title}
                     className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5"
                   >
-                    <div className="text-2xl">{tool.icon}</div>
-                    <h4 className="mt-3 text-lg font-semibold text-slate-900">
-                      {tool.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon icon={tool.icon} size={20} primaryColor="var(--color-accent-primary)" />
+                      </span>
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        {tool.title}
+                      </h4>
+                    </div>
                     <p className="mt-1 text-sm text-slate-600">
                       {tool.description}
                     </p>
@@ -1606,19 +1905,28 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-center text-xl font-semibold text-[var(--color-accent-primary)]">
-                🔧 Instalación y setup
-              </h3>
+              <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
+                  <HugeiconsIcon icon={ToolsIcon} size={22} primaryColor="var(--color-accent-primary)" />
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-accent-primary)]">
+                  Instalación y setup
+                </h3>
+              </div>
               <div className="grid gap-4 md:grid-cols-2">
                 {SETUP_RESOURCES.map((item) => (
                   <article
                     key={item.title}
                     className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5"
                   >
-                    <div className="text-2xl">{item.icon}</div>
-                    <h4 className="mt-3 text-lg font-semibold text-slate-900">
-                      {item.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
+                        <HugeiconsIcon icon={item.icon} size={20} primaryColor="var(--color-accent-primary)" />
+                      </span>
+                      <h4 className="text-lg font-semibold text-slate-900">
+                        {item.title}
+                      </h4>
+                    </div>
                     <p className="mt-1 text-sm text-slate-600">
                       {item.description}
                     </p>
