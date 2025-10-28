@@ -356,6 +356,22 @@
       "title": "Eventos Pasados",
       "description": "Momentos de nuestros encuentros y actividades recientes"
     },
+    "pastPrograms": {
+      "title": "Programas anteriores",
+      "description": "Reviví nuestros talleres y experiencias pasadas para seguir profundizando.",
+      "cards": [
+        {
+          "eyebrow": "Workshop",
+          "title": "Agentic Coding Workshop 2025",
+          "description": "Sesión intensiva donde exploramos la metodología BMAD y el trabajo con agentes especializados para shippear software.",
+          "date": "3 de octubre de 2025",
+          "location": "BAISH x Y-hat · Salas 1109 y 1110",
+          "slug": "agentic-coding-workshop",
+          "cta": "Ver materiales",
+          "link": "/agentic-coding-workshop"
+        }
+      ]
+    },
     "sisterProjects": {
       "title": "Proyectos Hermanos",
       "description": "Iniciativas colaborativas que avanzan la seguridad de IA en América Latina"
@@ -844,10 +860,7 @@
         "name": "Product Manager",
         "role": "Investigative Product Strategist & Market-Savvy PM",
         "description": "Crea PRDs, define estrategia de producto, prioriza features y mantiene alineados a los stakeholders. Paso obligatorio del método.",
-        "artifacts": [
-          "PRD (Product Requirements Document)",
-          "Brownfield PRD"
-        ]
+        "artifacts": ["PRD (Product Requirements Document)", "Brownfield PRD"]
       },
       "architect": {
         "name": "Architect",
@@ -864,20 +877,13 @@
         "name": "UX Expert",
         "role": "User Experience Designer & UI Specialist",
         "description": "Diseño UI/UX, wireframes, prototipos, front-end specifications y prompts listos para v0 o Lovable.",
-        "artifacts": [
-          "Front-end spec",
-          "UI design prompts"
-        ]
+        "artifacts": ["Front-end spec", "UI design prompts"]
       },
       "productOwner": {
         "name": "Product Owner",
         "role": "Technical Product Owner & Process Steward",
         "description": "Gestiona el backlog, refina historias, define acceptance criteria y valida la coherencia entre artefactos. Crítico: el sharding evita la degradación del modelo.",
-        "artifacts": [
-          "Sharded documents",
-          "Epic files",
-          "Story validations"
-        ]
+        "artifacts": ["Sharded documents", "Epic files", "Story validations"]
       },
       "scrumMaster": {
         "name": "Scrum Master",

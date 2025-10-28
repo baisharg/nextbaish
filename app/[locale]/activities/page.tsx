@@ -5,11 +5,27 @@ import Footer from "@/app/components/footer";
 import { TransitionLink } from "@/app/components/transition-link";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
-import { Calendar03Icon, Clock01Icon } from "@hugeicons/core-free-icons";
+import {
+  Calendar03Icon,
+  Clock01Icon,
+  PinLocation01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
+
+type PastProgramCard = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  date: string;
+  location?: string;
+  cta: string;
+  link: string;
+  slug?: string;
+  external?: boolean;
+};
 
 // Lazy load EventsCarousel since it's below the fold
 const EventsCarousel = dynamic(
@@ -31,6 +47,11 @@ export default async function Activities({
   const dict = await getDictionary(currentLocale);
   const t = dict.activities;
   const gallery = t.gallery;
+  const pastPrograms = t.pastPrograms;
+  const pastProgramCards: PastProgramCard[] = Array.isArray(pastPrograms?.cards)
+    ? pastPrograms.cards
+    : [];
+  const pastProgramCount = pastProgramCards.length;
 
   // Gallery images from past BAISH events
   const galleryImages = [
@@ -257,6 +278,81 @@ export default async function Activities({
               </div>
             </section>
           </FadeInSection>
+
+          {/* Past Programs */}
+          {pastProgramCount ? (
+            <FadeInSection variant="slide-up" delay={240} as="section">
+              <section className="space-y-8">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-semibold text-slate-900">
+                    {pastPrograms?.title ?? ""}
+                  </h2>
+                  <p className="text-base text-slate-600">
+                    {pastPrograms?.description ?? ""}
+                  </p>
+                </div>
+                <div className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3`}>
+                  {pastProgramCards.map((program) => {
+                    const programSlug =
+                      program.slug ??
+                      program.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                    const metaItems = [
+                      { icon: "calendar" as const, text: program.date },
+                      ...(program.location
+                        ? [
+                            {
+                              icon: "location" as const,
+                              text: program.location,
+                            },
+                          ]
+                        : []),
+                    ];
+                    return (
+                      <article
+                        key={program.title}
+                        className="card-glass dither-macrogrid"
+                      >
+                        <div className="card-eyebrow">{program.eyebrow}</div>
+                        <AnimatedTitle
+                          text={program.title}
+                          slug={programSlug}
+                          className="card-title"
+                          as="h3"
+                        />
+                        <p className="card-body">{program.description}</p>
+
+                        <div className="card-meta">
+                          {metaItems.map((item, idx) => (
+                            <span key={idx} className="pill">
+                              <HugeiconsIcon
+                                icon={
+                                  item.icon === "calendar"
+                                    ? Calendar03Icon
+                                    : PinLocation01Icon
+                                }
+                                size={16}
+                              />
+                              {item.text}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="card-footer">
+                          <TransitionLink
+                            className="button-primary w-full"
+                            href={`/${currentLocale}${program.link}`}
+                          >
+                            {program.cta}
+                            <span>→</span>
+                          </TransitionLink>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            </FadeInSection>
+          ) : null}
 
           {/* Sister Projects Section */}
           <FadeInSection variant="slide-up" delay={300} as="section">

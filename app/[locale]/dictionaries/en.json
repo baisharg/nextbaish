@@ -356,6 +356,22 @@
       "title": "Past Events",
       "description": "Moments from our recent gatherings and activities"
     },
+    "pastPrograms": {
+      "title": "Past programs",
+      "description": "Replay workshops and flagship experiences we've already hosted.",
+      "cards": [
+        {
+          "eyebrow": "Workshop",
+          "title": "Agentic Coding Workshop 2025",
+          "description": "Hands-on intensive where we explored the BMAD methodology and agent teams to ship production software.",
+          "date": "October 3, 2025",
+          "location": "BAISH x Y-hat · Rooms 1109 & 1110",
+          "slug": "agentic-coding-workshop",
+          "cta": "View materials",
+          "link": "/agentic-coding-workshop"
+        }
+      ]
+    },
     "sisterProjects": {
       "title": "Sister Projects",
       "description": "Collaborative initiatives advancing AI safety across Latin America"
@@ -844,10 +860,7 @@
         "name": "Product Manager",
         "role": "Investigative Product Strategist & Market-Savvy PM",
         "description": "Creates PRDs, defines product strategy, prioritizes features, and keeps stakeholders aligned. Mandatory step in the method.",
-        "artifacts": [
-          "PRD (Product Requirements Document)",
-          "Brownfield PRD"
-        ]
+        "artifacts": ["PRD (Product Requirements Document)", "Brownfield PRD"]
       },
       "architect": {
         "name": "Architect",
@@ -864,20 +877,13 @@
         "name": "UX Expert",
         "role": "User Experience Designer & UI Specialist",
         "description": "UI/UX design, wireframes, prototypes, front-end specifications, and ready-to-use prompts for v0 or Lovable.",
-        "artifacts": [
-          "Front-end spec",
-          "UI design prompts"
-        ]
+        "artifacts": ["Front-end spec", "UI design prompts"]
       },
       "productOwner": {
         "name": "Product Owner",
         "role": "Technical Product Owner & Process Steward",
         "description": "Manages the backlog, refines stories, defines acceptance criteria, and keeps artifacts coherent. Critical: sharding prevents model degradation.",
-        "artifacts": [
-          "Sharded documents",
-          "Epic files",
-          "Story validations"
-        ]
+        "artifacts": ["Sharded documents", "Epic files", "Story validations"]
       },
       "scrumMaster": {
         "name": "Scrum Master",
@@ -1192,11 +1198,7 @@
         "droidCli": {
           "title": "Droid CLI",
           "highlight": "Free: GPT-5-Codex via Factory AI.",
-          "bullets": [
-            "GPT-5-Codex model",
-            "100% free",
-            "Factory AI platform"
-          ],
+          "bullets": ["GPT-5-Codex model", "100% free", "Factory AI platform"],
           "note": "Requires a workaround (details below)."
         }
       },
