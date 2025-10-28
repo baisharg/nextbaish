@@ -22,6 +22,7 @@ interface FadeInSectionProps {
   className?: string;
   as?: React.ElementType;
   startVisible?: boolean; // Start visible for above-the-fold content to improve LCP
+  id?: string;
 }
 
 const variantClasses: Record<
@@ -65,6 +66,7 @@ export function FadeInSection({
   className = "",
   as: Component = "div",
   startVisible = false,
+  id,
 }: FadeInSectionProps) {
   const { ref, isVisible } = useFadeIn({
     threshold,
@@ -80,6 +82,7 @@ export function FadeInSection({
   return (
     <Component
       ref={ref}
+      id={id}
       className={`transition-all ease-out ${durationClass} ${delayClass} ${
         isVisible ? variantClass.visible : variantClass.hidden
       } ${className}`}
