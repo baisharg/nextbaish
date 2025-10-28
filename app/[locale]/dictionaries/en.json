@@ -715,5 +715,628 @@
         "contactLink": "Contact page"
       }
     }
+  },
+  "agenticCodingWorkshop": {
+    "metadata": {
+      "title": "Agentic Coding Workshop — BAISH",
+      "description": "All the materials from the Agentic Coding workshop: BMAD method, agents, workflows, and resources to get started immediately.",
+      "openGraph": {
+        "title": "Agentic Coding Workshop — BAISH",
+        "description": "Complete agentic coding (BMAD) methodology with agents, workflows, and practical resources."
+      },
+      "twitter": {
+        "title": "Agentic Coding Workshop — BAISH",
+        "description": "Complete agentic coding (BMAD) methodology with agents, workflows, and practical resources."
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "problem": "Problem",
+      "solution": "Solution",
+      "agents": "Agents",
+      "planning": "Planning",
+      "development": "Development",
+      "resources": "Resources"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "current": "Agentic Coding Workshop"
+    },
+    "hero": {
+      "title": "Agentic Coding Workshop",
+      "tagline": "Build projects with AI as if you had a full team: BMAD methodology, agents, processes, and tools ready to use.",
+      "eventDetails": "Friday, October 3, 2025 · 4:00 PM · Rooms 1109 & 1110 — BAISH x Y-hat",
+      "note": "This page brings together every material and resource from the workshop.",
+      "whatsapp": "Join the \"Agentic Coding\" WhatsApp group inside the BAISH community to discuss ideas, share projects, and get help with BMAD.",
+      "buttons": {
+        "startNow": "Start now",
+        "baish": "BAISH",
+        "yHat": "Y-hat",
+        "joinWhatsapp": "Join the WhatsApp",
+        "viewResources": "See resources"
+      }
+    },
+    "problem": {
+      "eyebrow": "Context",
+      "title": "The problem with traditional LLM workflows",
+      "description": "Two obstacles make \"give the model everything\" fail: long-context degradation and the absence of real memory over time.",
+      "sourcePrefix": "Source:",
+      "cards": {
+        "contextDegradation": {
+          "title": "Long-context degradation",
+          "description": "The LoCoDiff benchmark (January 2025) shows that even the best available model, Sonnet 4.5, degrades sharply with long contexts.",
+          "highlight": "What happens: accuracy drops from 96% with 2K–21K-token contexts to 64% beyond 60K tokens. When you hand the whole codebase to the model, it drowns in noise.",
+          "details": [
+            "State-of-the-art models still rely on manageable context windows to keep high accuracy.",
+            "Feeding entire files or repositories produces noise, repetition, and inconsistent decisions."
+          ],
+          "sourceLabel": "LoCoDiff Benchmark"
+        },
+        "lackOfLongTermMemory": {
+          "title": "No long-term memory",
+          "description": "A METR study (July 2025) found that experienced developers working on their own projects were 20% slower using AI than working alone.",
+          "highlight": "Why? The LLM restarts from scratch every time: it lacks the tacit context that humans accumulate. Experts predicted they would be 39% faster, but reality was the opposite.",
+          "details": [
+            "Observed time per story: 1.67 h without AI vs. 2.26 h with AI assistance.",
+            "Expectations forecasted 24%–39% faster delivery, exposing the gap between predictions and reality."
+          ],
+          "sourceLabel": "METR AI R&D Study (July 2025)"
+        }
+      }
+    },
+    "solution": {
+      "eyebrow": "BMAD method",
+      "title": "The solution: an agentic team that plans and executes",
+      "description": "BMAD is an AI development method where eight specialized agents work like a real team. They plan the whole project before coding and then execute story by story with continuous validation.",
+      "description2": "Each agent is the same LLM with a specialized prompt and verified, sharded context. No magic memory—just structured documentation within reach.",
+      "calloutTitle": "Why BMAD works",
+      "cards": {
+        "sharding": {
+          "title": "Sharding",
+          "description": "Large documents are split into focused shards. Instead of handing the Developer a 10,000-token PRD, they receive a 400–600-token shard with only what matters for the story.",
+          "outcome": "Result: every agent operates in the 96% accuracy zone (<5K tokens) without extra noise."
+        },
+        "specializedAgents": {
+          "title": "Specialized agents",
+          "description": "Eight agents with concrete roles: Product Manager, Architect, Developer, QA, etc. Each has tailored instructions and checklists, and only queries the context they need.",
+          "outcome": "Result: surgically precise context for every decision without overloading the model."
+        },
+        "structuredDocumentation": {
+          "title": "Structured documentation",
+          "description": "Rigorous planning before coding: complete PRD, defined architecture, and sequential stories that validate each other. That creates the \"memory\" LLMs don't have.",
+          "outcome": "Result: agents work with professional, verifiable information always aligned with the project goal."
+        }
+      },
+      "reasons": {
+        "optimizedContext": {
+          "title": "1. Optimized context",
+          "description": "In the METR study, teams worked with huge codebases in Cursor and ended up 20% slower. BMAD does the opposite: PM handles 2K tokens of requirements, Architecture ~3K tokens, and the Developer a single epic (1.5K tokens). High accuracy, no degradation."
+        },
+        "validationTransparency": {
+          "title": "2. Validation and transparency",
+          "description": "The Product Owner validates every story draft before development, QA reviews the Developer's work, and humans approve each milestone. Artifacts stay human-readable and versioned in the repo."
+        },
+        "advancedElicitation": {
+          "title": "3. Advanced elicitation",
+          "description": "Agents ask questions and iterate on documentation. It's not just generating code—they discover, clarify, and update requirements while keeping the person in the loop."
+        }
+      }
+    },
+    "agentsSection": {
+      "eyebrow": "Agentic team",
+      "title": "The eight BMAD agents",
+      "description": "Each role is the same model with a specialized prompt and sharded context. The outcome: a multidisciplinary team that works like a human crew.",
+      "artifactsLabel": "Artifacts"
+    },
+    "agents": {
+      "businessAnalyst": {
+        "name": "Business Analyst",
+        "role": "Insightful Analyst & Strategic Ideation Partner",
+        "description": "Market research, brainstorming, competitive analysis, project briefs, and brownfield documentation.",
+        "artifacts": [
+          "Project brief",
+          "Market research",
+          "Competitor analysis",
+          "Brainstorming output"
+        ]
+      },
+      "productManager": {
+        "name": "Product Manager",
+        "role": "Investigative Product Strategist & Market-Savvy PM",
+        "description": "Creates PRDs, defines product strategy, prioritizes features, and keeps stakeholders aligned. Mandatory step in the method.",
+        "artifacts": [
+          "PRD (Product Requirements Document)",
+          "Brownfield PRD"
+        ]
+      },
+      "architect": {
+        "name": "Architect",
+        "role": "Holistic System Architect & Full-Stack Technical Leader",
+        "description": "System design, technical architecture, tech selection, API contracts, and infrastructure plans. Mandatory step in the method.",
+        "artifacts": [
+          "Full-stack architecture",
+          "Backend architecture",
+          "Frontend architecture",
+          "Brownfield architecture"
+        ]
+      },
+      "uxExpert": {
+        "name": "UX Expert",
+        "role": "User Experience Designer & UI Specialist",
+        "description": "UI/UX design, wireframes, prototypes, front-end specifications, and ready-to-use prompts for v0 or Lovable.",
+        "artifacts": [
+          "Front-end spec",
+          "UI design prompts"
+        ]
+      },
+      "productOwner": {
+        "name": "Product Owner",
+        "role": "Technical Product Owner & Process Steward",
+        "description": "Manages the backlog, refines stories, defines acceptance criteria, and keeps artifacts coherent. Critical: sharding prevents model degradation.",
+        "artifacts": [
+          "Sharded documents",
+          "Epic files",
+          "Story validations"
+        ]
+      },
+      "scrumMaster": {
+        "name": "Scrum Master",
+        "role": "Technical Scrum Master & Story Preparation Specialist",
+        "description": "Prepares clear stories, manages epics, runs retros, and keeps the agile cadence. Produces drafts the Developer can implement without friction.",
+        "artifacts": [
+          "User story drafts",
+          "Sequential tasks",
+          "Acceptance criteria"
+        ]
+      },
+      "developer": {
+        "name": "Developer",
+        "role": "Expert Senior Software Engineer & Implementation Specialist",
+        "description": "Implements production code, covers tests, refactors, and documents decisions. Works story by story with test coverage.",
+        "artifacts": [
+          "Production code",
+          "Unit tests",
+          "Integration tests",
+          "E2E tests",
+          "Code documentation"
+        ]
+      },
+      "qa": {
+        "name": "QA",
+        "role": "Test Architect with Quality Advisory Authority",
+        "description": "Defines testing strategies, profiles risks, ensures requirement traceability, and issues the final quality decision.",
+        "artifacts": [
+          "QA results & gate decisions",
+          "Risk profiles",
+          "Test plans & design",
+          "Requirements tracing",
+          "NFR assessments"
+        ]
+      }
+    },
+    "commands": {
+      "eyebrow": "Operational flow",
+      "title": "How the commands work",
+      "description": "Agents are invoked from the terminal or IDE with short commands. You always pass context via @filename.md.",
+      "syntax": {
+        "title": "Command syntax",
+        "description": "Pick your tool and follow the same structure: command + action + relevant files.",
+        "blocks": {
+          "claudeOpencode": {
+            "heading": "Claude Code / OpenCode"
+          },
+          "cursorWindsurf": {
+            "heading": "Cursor / Windsurf"
+          }
+        }
+      },
+      "switch": {
+        "title": "Switch agents without noise",
+        "description": "Each agent runs in its own context. To swap cleanly:",
+        "steps": [
+          "Clear the context with /clear (Claude Code) or /new (OpenCode).",
+          "Invoke the agent with its init command (e.g., /po *shard-doc).",
+          "Pass only the relevant files using @filename.md."
+        ],
+        "tip": {
+          "prefix": "Tip:",
+          "beforeDocs": "Keep your documents in",
+          "beforeExample": "and use clear filenames (e.g.,",
+          "afterExample": ") so you shard context precisely."
+        }
+      }
+    },
+    "planning": {
+      "eyebrow": "Phase 1",
+      "title": "Planning (one-time upfront)",
+      "description": "Complete design before writing code. Everything runs from the terminal with BMAD commands.",
+      "steps": {
+        "pmPrdCreation": {
+          "title": "PM: PRD Creation",
+          "summary": "The Product Manager creates the Product Requirements Document, guiding the user section by section.",
+          "bullets": [
+            "Interactive process: the PM asks questions and records answers on the fly.",
+            "Defines features and epics (only story titles at this stage).",
+            "Captures functional and non-functional requirements.",
+            "Prioritizes MVP vs. roadmap and logs key dependencies.",
+            "Each section is reviewed and approved before moving on."
+          ],
+          "callout": {
+            "title": "Important note",
+            "text": "Stories in the PRD stay brief (titles only). Later the Scrum Master expands them with detailed tasks."
+          }
+        },
+        "architectDesign": {
+          "title": "Architect: System Design",
+          "summary": "The Architect reads the PRD and designs the full technical architecture, always in an interactive flow.",
+          "bullets": [
+            "Chooses tech stack for frontend, backend, and database.",
+            "Defines folder structure and code organization.",
+            "Designs APIs and contracts between components.",
+            "Covers scalability, security, observability, and performance.",
+            "Each section is validated with the user before advancing."
+          ]
+        },
+        "poChecklist": {
+          "title": "PO: Master Checklist",
+          "summary": "The Product Owner ensures PRD and architecture are perfectly aligned before sharding.",
+          "bullets": [
+            "Checks coherence between requirements and technical design.",
+            "Confirms the architecture covers every prioritized feature.",
+            "Identifies gaps, contradictions, or risks that must be resolved first."
+          ],
+          "callout": {
+            "title": "If something doesn’t align",
+            "text": "Documents keep iterating until everything makes sense. No moving forward without full validation."
+          }
+        },
+        "poSharding": {
+          "title": "PO: Sharding",
+          "summary": "The Product Owner shards the PRD and architecture into manageable epics and stories (<2K tokens).",
+          "bullets": [
+            "Runs the terminal program that splits the documents automatically.",
+            "Produces small shards inside docs/epics and docs/stories.",
+            "Each file holds focused context and is saved as versionable Markdown.",
+            "Example: a large PRD becomes docs/epics/epic-1-auth.md, docs/epics/epic-2-dashboard.md, etc."
+          ],
+          "callout": {
+            "title": "Outcome",
+            "text": "Prioritized backlog with sharded stories ready for iterative development."
+          }
+        }
+      },
+      "optionalAgentsTitle": "Optional agents when needed",
+      "optionalAgents": [
+        "Business Analyst: greenfield research and initial project brief.",
+        "UX Expert: interface specs and prompts for tools like v0 or Lovable.",
+        "QA: profiles risks and quality criteria before development starts."
+      ],
+      "summaryTitle": "When planning ends you have:",
+      "summaryPoints": [
+        "Full PRD, reviewed and approved.",
+        "Architecture defined and aligned with the PRD.",
+        "Sharded, prioritized story backlog.",
+        "Structured, versioned context for the entire team."
+      ],
+      "summaryNote": "You haven’t written a single line of code yet. That intentional approach prevents weeks of refactors later on."
+    },
+    "development": {
+      "eyebrow": "Phase 2",
+      "title": "Iterative development loop",
+      "description": "Story-by-story implementation with built-in validation. Repeat this loop until the backlog is done.",
+      "steps": {
+        "smReviewNotes": {
+          "title": "SM: Review previous notes",
+          "summary": "The Scrum Master reviews notes from the last story to start with accumulated learning.",
+          "bullets": [
+            "Identifies what worked and what didn’t.",
+            "Recovers important technical decisions.",
+            "Reviews feedback from Developer and QA.",
+            "Documents takeaways for the next story."
+          ],
+          "callouts": [
+            {
+              "title": "Learning loop",
+              "text": "Today’s notes feed tomorrow’s draft. The team improves story after story."
+            }
+          ]
+        },
+        "smDraftNextStory": {
+          "title": "SM: Draft next story",
+          "summary": "The Scrum Master drafts the next story using only the relevant context.",
+          "bullets": [
+            "Reads only the matching epic (not the whole PRD).",
+            "Reviews architecture and PRD just enough.",
+            "Produces very clear sequential tasks.",
+            "Defines specific acceptance criteria.",
+            "Includes enough context without drowning the model."
+          ]
+        },
+        "poValidateDraft": {
+          "title": "PO: Validate story draft",
+          "summary": "The Product Owner validates the draft against the PRD before coding begins.",
+          "bullets": [
+            "Checks that the draft aligns with the original objectives.",
+            "Confirms every requirement is covered.",
+            "Flags gaps or contradictions for immediate correction.",
+            "Can add recommendations for the Scrum Master."
+          ],
+          "callouts": [
+            {
+              "title": "Alignment check",
+              "text": "Ensures the Developer implements exactly what was agreed during planning."
+            }
+          ]
+        },
+        "devImplementation": {
+          "title": "Dev: Implementation",
+          "summary": "The Developer implements the story following architecture, UX, and the testing checklist.",
+          "bullets": [
+            "Ships production-ready code aligned with the architecture.",
+            "Writes unit, integration, and E2E tests as needed.",
+            "Covers error handling and edge cases.",
+            "Can invoke MCPs like Playwright to automate end-to-end tests."
+          ]
+        },
+        "qaReview": {
+          "title": "QA: Test story thoroughly",
+          "summary": "QA acts as the quality gatekeeper before the story advances.",
+          "bullets": [
+            "Runs all tests (unit, integration, E2E).",
+            "Performs manual testing across user flows and edge cases.",
+            "Verifies acceptance criteria are met.",
+            "Profiles risks (security, performance, reliability).",
+            "Issues verdict: PASS (all good) / CONCERNS (review) / FAIL (critical) / WAIVED (explicitly accepted)."
+          ],
+          "callouts": [
+            {
+              "title": "Quality gates",
+              "text": "PASS (all good) • CONCERNS (minor flags) • FAIL (critical issue) • WAIVED (explicitly accepted risk)."
+            },
+            {
+              "title": "Critical check",
+              "text": "QA ensures the code works and meets professional standards before moving forward."
+            }
+          ]
+        },
+        "devFixes": {
+          "title": "Dev: Fix according to QA review",
+          "summary": "The Developer addresses the QA report and brings everything to PASS status.",
+          "bullets": [
+            "Reviews the QA outcome (PASS/CONCERNS/FAIL).",
+            "Implements targeted fixes and improvements.",
+            "Resolves every CONCERN and FAIL logged.",
+            "Reruns tests to confirm nothing regresses."
+          ],
+          "callouts": [
+            {
+              "title": "Iterative",
+              "text": "If QA issues a FAIL, the review repeats until the result is PASS or WAIVED."
+            }
+          ]
+        },
+        "markDone": {
+          "title": "Mark done & next story",
+          "summary": "Close the story and loop back to step one with the next priority.",
+          "bullets": [
+            "Update the backlog and mark the story as done.",
+            "Pick the next story from the prioritized backlog.",
+            "Return to step one: SM reviews the notes that were just written."
+          ],
+          "callouts": [
+            {
+              "title": "Iterative loop",
+              "text": "Story after story, commit after commit, until the project is complete."
+            }
+          ]
+        }
+      },
+      "loopReminder": "Repeat the loop: go back to step one with the next story.",
+      "notesTitle": "Process notes",
+      "notes": [
+        "Integrated validation: PO signs off before coding, QA tests afterward, Developer fixes and documents.",
+        "Quality flexibility: accept CONCERNS for an MVP or require PASS for critical software.",
+        "Continuous learning loop: Developer notes feed the SM in the next iteration."
+      ],
+      "advantagesTitle": "Benefits of the iterative loop",
+      "advantagesPoints": [
+        "You always finish each story with a functional, tested version.",
+        "You can pivot quickly: every cycle delivers independent value.",
+        "Learning accumulates through notes and short retros.",
+        "The person stays in control, approving every key transition."
+      ]
+    },
+    "resources": {
+      "eyebrow": "Resources",
+      "title": "Everything to start today",
+      "description": "Tools, templates, and guides to run BMAD without friction.",
+      "toolingTitle": "Which tool should you use?",
+      "toolOptions": {
+        "claudeCode": {
+          "title": "Claude Code",
+          "highlight": "Best option: Anthropic's official tool with Sonnet 4.5 (top of the benchmark).",
+          "bullets": [
+            "Highest quality",
+            "Seamless integration",
+            "$100/mo (Max Plan)"
+          ]
+        },
+        "openCode": {
+          "title": "OpenCode",
+          "highlight": "Most versatile: sign in with your provider and it uses that plan.",
+          "bullets": [
+            "Login with Anthropic, GitHub Copilot, Z.ai, etc.",
+            "Uses your provider’s plan",
+            "Open source and multi-model"
+          ],
+          "note": "Requires a workaround (details below)."
+        },
+        "cursorWindsurf": {
+          "title": "Cursor / Windsurf",
+          "highlight": "Popular IDEs that support BMAD with @mention syntax.",
+          "bullets": [
+            "Full-featured editors",
+            "Large community",
+            "@agent syntax"
+          ]
+        },
+        "geminiCli": {
+          "title": "Gemini CLI",
+          "highlight": "Free: Gemini 2.5 Pro with official BMAD support.",
+          "bullets": [
+            "Gemini 2.5 Pro",
+            "Free included usage",
+            "Official BMAD support"
+          ]
+        },
+        "droidCli": {
+          "title": "Droid CLI",
+          "highlight": "Free: GPT-5-Codex via Factory AI.",
+          "bullets": [
+            "GPT-5-Codex model",
+            "100% free",
+            "Factory AI platform"
+          ],
+          "note": "Requires a workaround (details below)."
+        }
+      },
+      "quickStart": {
+        "title": "Workshop repo — start now",
+        "description": "Ready-to-go repository with BMAD preinstalled, setup scripts, and configured MCPs.",
+        "bullets": [
+          "BMAD preinstalled and configured",
+          "Setup script for Droid CLI (free)",
+          "Includes MCPs (Sequential Thinking, Playwright)",
+          "BMAD commands preloaded",
+          "Example workflows"
+        ],
+        "linkLabel": "github.com/baisharg/Workshop-Vibe-Coding",
+        "note": "The script installs Droid CLI (free, GPT-5-Codex) and configures all BMAD commands automatically.",
+        "calloutLabel": "Quick start"
+      },
+      "learningTitle": "Repositories and learning",
+      "learning": {
+        "bmadRepository": {
+          "title": "BMAD Repository",
+          "description": "Complete repo with prompts, documentation, and examples.",
+          "bullets": [
+            "Prompts for all eight agents",
+            "Automated setup",
+            "Full documentation",
+            "Project examples"
+          ],
+          "linkLabel": "github.com/bmad-code-org/bmad-method"
+        },
+        "bmadMasterclass": {
+          "title": "BMAD Method Masterclass",
+          "description": "Video tutorial that walks the method end to end.",
+          "bullets": [
+            "Step-by-step setup",
+            "How to use each agent",
+            "Full workflow",
+            "Live examples"
+          ],
+          "linkLabel": "youtu.be/LorEJPrALcg"
+        }
+      },
+      "plansTitle": "Recommended plans",
+      "plans": {
+        "zaiPlan": {
+          "title": "Z.ai Coding Plan",
+          "highlight": "Recommended: affordable choice for students and makers.",
+          "bullets": [
+            "Only $3/mo",
+            "GLM 4.6 model",
+            "Performance close to Sonnet 4",
+            "Ideal for students"
+          ],
+          "linkLabel": "z.ai/subscribe"
+        },
+        "claudeMax": {
+          "title": "Claude Code + Max Plan",
+          "highlight": "For enthusiasts: highest quality for agentic coding.",
+          "bullets": [
+            "Anthropic's official Terminal Agent",
+            "Access to Sonnet 4.5",
+            "Max Plan: $100/mo with higher limits",
+            "Optimized agent experience"
+          ],
+          "linkLabel": "claude.com/product/claude-code"
+        },
+        "githubStudent": {
+          "title": "GitHub Student Pack",
+          "highlight": "Students get Copilot Pro for free.",
+          "bullets": [
+            "Copilot Pro included",
+            "Access to Sonnet 4.5",
+            "Top model on the benchmark",
+            "No cost for students"
+          ],
+          "linkLabel": "education.github.com/pack"
+        }
+      },
+      "cliTitle": "CLI / Terminal tools",
+      "cliInstallLabel": "Installation:",
+      "cliSetupLabel": "BMAD configuration:",
+      "cli": {
+        "openCode": {
+          "title": "OpenCode",
+          "description": "Open-source terminal program. Sign in with your provider and OpenCode uses that plan.",
+          "bullets": [
+            "Login with Anthropic, Copilot, Z.ai, etc.",
+            "Runs in any IDE terminal",
+            "MCP server compatible",
+            "Multi-model and open source"
+          ],
+          "linkLabel": "opencode.ai",
+          "steps": [
+            "Install BMAD and pick the “Claude Code” option.",
+            "Rename the .claude/ directory to .opencode/.",
+            "Move the .md files to the top level (not inside agents/ or tasks/)."
+          ],
+          "note": "Needs a small workaround to reuse the prompts."
+        },
+        "droidCli": {
+          "title": "Droid CLI",
+          "description": "Factory AI client that exposes GPT-5-Codex for free, fully compatible with BMAD.",
+          "bullets": [
+            "GPT-5-Codex model",
+            "Completely free",
+            "Agent-oriented terminal program"
+          ],
+          "linkLabel": "docs.factory.ai/cli",
+          "steps": [
+            "Install BMAD and pick the “Claude Code” option.",
+            "Rename .claude/ to .factory/.",
+            "Move the .md files to the top level of .factory/."
+          ],
+          "note": "Same workaround as OpenCode to reuse the prompts."
+        }
+      },
+      "setupTitle": "Installation & setup",
+      "setup": {
+        "installBmad": {
+          "title": "Install BMAD",
+          "description": "BMAD installs per project at the repo root, keeping everything versioned.",
+          "commandLabel": "At your project root:",
+          "bullets": [
+            "Creates the .bmad-core/ folder with agents and templates.",
+            "Per-project install (not global).",
+            "Everything stays under version control."
+          ]
+        },
+        "recommendedMcps": {
+          "title": "Recommended MCP tools",
+          "description": "Tools that expand what agents can do.",
+          "bullets": [
+            "Playwright: browser automation for E2E testing.",
+            "Sequential Thinking: structured reasoning.",
+            "Explore more MCPs in the Smithery repository."
+          ],
+          "linkLabel": "smithery.ai — MCP tools repository",
+          "note": "Configure MCPs in your IDE and agents will use them when needed."
+        }
+      }
+    }
   }
 }
