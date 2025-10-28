@@ -8,10 +8,12 @@ import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Calendar03Icon,
   GithubIcon,
   InstagramIcon,
   Linkedin01Icon,
   Globe02Icon,
+  GraduationScrollIcon,
 } from "@hugeicons/core-free-icons";
 import { renderWithBioLinks } from "@/app/utils/footnotes";
 
@@ -502,6 +504,74 @@ export default async function AboutPage({
                       </div>
                     </div>
                   </article>
+
+                  {/* Guido Bergman */}
+                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/guido-new.png"
+                          alt="Guido Bergman"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-base font-semibold text-slate-900">
+                          Guido Bergman
+                        </h3>
+                        <p className="text-xs text-slate-600">
+                          {t.team.roles.advisor}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/GuidoBergman"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="LinkedIn"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                        </a>
+                        <a
+                          href="https://calendly.com/gbergman-fi/30min"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Calendly"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Calendar03Icon} size={20} />
+                        </a>
+                        <a
+                          href="https://scholar.google.com/citations?hl=es&authuser=1&user=sNPb8VgAAAAJ"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Google Scholar"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon
+                            icon={GraduationScrollIcon}
+                            size={20}
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </div>
 
@@ -619,6 +689,17 @@ export default async function AboutPage({
                         <p className="text-xs text-slate-600">
                           {t.team.volunteerRoles.programAssistant}
                         </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/G-9k"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
                       </div>
                     </div>
                   </article>
