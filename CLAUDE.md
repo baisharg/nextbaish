@@ -48,7 +48,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
 ### Code Quality
-- `pnpm lint` - Run ESLint on all files (0 errors, 45 warnings)
+- `pnpm lint` - Run ESLint on all files (0 errors, 0 warnings)
 - `pnpm lint:fix` - Auto-fix fixable linting issues
 - `npx tsc --noEmit` - Run TypeScript type checking
 
@@ -987,7 +987,7 @@ No test infrastructure exists yet. When adding coverage:
   - Allows `require()` in config files and scripts
   - Allows console in debug/monitor components
 - Ignores: `node_modules/`, `.next/`, `dist/`, `build/`, `.cache/`, `public/`
-- Current status: 0 errors, 45 warnings
+- Current status: 0 errors, 0 warnings
 
 **.npmrc:**
 ```
