@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
+import { ScrollToButton } from "./scroll-to-button";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale } from "@/app/utils/locale";
@@ -64,9 +65,13 @@ export default function Footer({ locale, t }: FooterProps) {
             >
               {t.nav.resources}
             </TransitionLink>
-            <a className="hover:text-slate-900" href="#get-involved">
+            <ScrollToButton
+              className="hover:text-slate-900"
+              targetId="get-involved"
+              navigateTo={withLocale(locale, "/")}
+            >
               {t.nav.getInvolved}
-            </a>
+            </ScrollToButton>
             <TransitionLink
               className="hover:text-slate-900"
               href={withLocale(locale, "/contact")}
