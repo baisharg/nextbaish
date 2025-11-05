@@ -141,13 +141,11 @@ export default function MobileMenu({
               onClick={onClose}
             >
               <Image
-                src="/images/logos/logo-80.webp"
+                src="/images/logo.svg"
                 alt="BAISH Logo"
-                width={80}
-                height={80}
-                sizes="32px"
+                width={32}
+                height={32}
                 className="object-contain flex-shrink-0"
-                quality={95}
               />
               <span
                 className={`text-lg font-semibold ${

@@ -28,11 +28,10 @@ export default function Footer({ locale, t }: FooterProps) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Image
-                src="/images/logos/logo-80.webp"
+                src="/images/logo.svg"
                 alt="BAISH Logo"
-                width={80}
-                height={80}
-                sizes="32px"
+                width={32}
+                height={32}
                 className="object-contain"
               />
               <p className="text-base font-semibold text-slate-900 font-serif">
