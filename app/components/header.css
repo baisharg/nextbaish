@@ -52,11 +52,12 @@
 }
 
 .logo-container {
-  min-width: 40px;
-  min-height: 40px;
   transform: scale(1);
   transition: transform var(--header-duration) var(--header-easing);
   will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo-container[data-collapsed="true"] {

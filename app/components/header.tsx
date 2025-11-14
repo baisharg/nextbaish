@@ -217,7 +217,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             className="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity"
           >
             <div
-              className="logo-container w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0"
+              className="logo-container w-10 h-10 flex-shrink-0"
               data-collapsed={scrolled || isNarrow || isCramped}
             >
               <Image
@@ -226,7 +226,6 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 width={40}
                 height={40}
                 className="w-full h-full object-contain site-logo"
-                style={{ height: "auto" }}
                 priority
                 fetchPriority="high"
               />
