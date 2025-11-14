@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to kill any running dev server and restart it
-# Usage: pnpm restart:dev
+# Usage: bun restart:dev
 
 echo "🔍 Checking for processes on port 3000..."
 
@@ -20,4 +20,4 @@ else
 fi
 
 echo "🚀 Starting dev server..."
-pnpm dev
+bun dev

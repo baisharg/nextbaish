@@ -9,27 +9,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - uses: oven-sh/setup-bun@v1
         with:
-          version: 10
+          bun-version: latest
       - uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build project
-        run: pnpm build
+        run: bun build
 
       - name: Start server
-        run: pnpm start &
+        run: bun start &
         env:
           PORT: 3000
 
       - name: Wait for server
-        run: pnpm dlx wait-on http://localhost:3000
+        run: bunx wait-on http://localhost:3000
 
       - name: Run Lighthouse CI (Mobile)
         uses: treosh/lighthouse-ci-action@v11

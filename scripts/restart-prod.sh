@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to kill any running server, rebuild, and start production server
-# Usage: pnpm restart:prod
+# Usage: bun restart:prod
 
 echo "🔍 Checking for processes on port 3000..."
 
@@ -20,12 +20,12 @@ else
 fi
 
 echo "🏗️  Building production bundle..."
-pnpm build
+bun build
 
 if [ $? -eq 0 ]; then
   echo "✅ Build successful"
   echo "🚀 Starting production server..."
-  pnpm start
+  bun start
 else
   echo "❌ Build failed. Server not started."
   exit 1

@@ -226,6 +226,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 width={40}
                 height={40}
                 className="w-full h-full object-contain site-logo"
+                style={{ height: "auto" }}
                 priority
                 fetchPriority="high"
               />

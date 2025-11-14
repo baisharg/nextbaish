@@ -50,7 +50,7 @@ See [DESKTOP_OPTIMIZATION_IMPLEMENTATION_SUMMARY.md](./DESKTOP_OPTIMIZATION_IMPL
 ### Prerequisites
 
 - Node.js 20+
-- pnpm (install with `npm install -g pnpm`)
+- Bun 1.0+ (install from [bun.sh](https://bun.sh))
 
 ### Installation
 
@@ -60,35 +60,35 @@ git clone <repository-url>
 cd nextbaish
 
 # Install dependencies
-pnpm install
+bun install
 ```
 
 ### Development
 
 ```bash
 # Start Turbopack dev server at http://localhost:3000
-pnpm dev
+bun dev
 
 # Restart dev server (kills existing, starts fresh)
-pnpm restart:dev
+bun restart:dev
 
 # Build for production
-pnpm build
+bun build
 
 # Start production server
-pnpm start
+bun start
 
 # Restart production server (kills, rebuilds, starts)
-pnpm restart:prod
+bun restart:prod
 
 # Run bundle analysis
-pnpm analyze
+bun analyze
 
 # Lint code
-pnpm lint
+bun lint
 
 # Auto-fix linting issues
-pnpm lint:fix
+bun lint:fix
 ```
 
 The dev server supports hot reload and will be available at [http://localhost:3000](http://localhost:3000).
@@ -214,7 +214,7 @@ Production-ready optimizations:
 - Responsive backdrop blur reduction on desktop
 - Font preconnect and display:swap
 - SWC minification (default)
-- Bundle analysis ready (`pnpm analyze`)
+- Bundle analysis ready (`bun analyze`)
 
 ## 🔧 Configuration
 
@@ -254,10 +254,10 @@ Modern ESLint v9 with TypeScript support and flat config format:
 
 ```bash
 # Run linter
-pnpm lint
+bun lint
 
 # Auto-fix fixable issues
-pnpm lint:fix
+bun lint:fix
 ```
 
 **Configuration:**
@@ -283,7 +283,7 @@ TypeScript strict mode enabled with incremental compilation:
 
 ```bash
 # Type check (no emit)
-npx tsc --noEmit
+bunx tsc --noEmit
 ```
 
 ## 📈 Performance Monitoring
@@ -311,7 +311,7 @@ Production monitoring with Core Web Vitals tracking:
 
 ```bash
 # Generate bundle reports
-pnpm analyze
+bun analyze
 
 # View reports
 open .next/analyze/client.html
@@ -391,10 +391,10 @@ Features automatically enabled on Vercel:
 
 ```bash
 # Build production bundle
-pnpm build
+bun build
 
 # Start production server
-pnpm start
+bun start
 
 # Or use your preferred hosting (Netlify, AWS, etc.)
 ```
@@ -428,8 +428,8 @@ Comprehensive documentation available:
 
 ```bash
 # Run Lighthouse
-pnpm build
-pnpm start
+bun build
+bun start
 
 # Then use Chrome DevTools Lighthouse or:
 # https://pagespeed.web.dev/
@@ -446,7 +446,7 @@ Contributions are welcome! Please:
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
-5. Run `pnpm build` to verify
+5. Run `bun build` to verify
 6. Submit a pull request
 
 Guidelines:
