@@ -1152,11 +1152,11 @@ export default async function AgenticCodingWorkshopPage({
         </nav>
       </div>
 
-      <main className="relative z-10 mx-auto flex max-w-6xl flex-col gap-20 px-6 pb-24 pt-16 sm:px-10">
+      <main className="relative z-10 mx-auto flex max-w-6xl px-6 pb-24 pt-16 sm:px-10">
+        <div className="main-sections">
         <FadeInSection variant="fade" as="section" id="overview" startVisible>
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 shadow-sm sm:px-12">
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative flex flex-col items-start gap-8">
+          <section className="section-container">
+            <div className="flex flex-col items-start gap-8">
               <div className="space-y-4">
                 <div className="text-sm text-slate-600">
                   <TransitionLink
@@ -1499,7 +1499,7 @@ export default async function AgenticCodingWorkshopPage({
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-white p-8 shadow-sm shadow-slate-900/5">
+              <article className="section-container p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
                     <HugeiconsIcon
@@ -1583,7 +1583,7 @@ export default async function AgenticCodingWorkshopPage({
           as="section"
           id="planning"
         >
-          <section className="space-y-10 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+          <section className="section-container space-y-10">
             <div className="space-y-3 text-center">
               <p className="text-sm uppercase tracking-[0.35em] text-[var(--color-accent-tertiary)]">
                 {planningSection.eyebrow}
@@ -1887,7 +1887,7 @@ export default async function AgenticCodingWorkshopPage({
               </p>
             </div>
 
-            <div className="space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-r from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm">
+            <div className="section-container space-y-6">
               <div className="flex items-center justify-center gap-2 text-xl font-semibold text-[var(--color-accent-primary)]">
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30">
                   <HugeiconsIcon
@@ -1904,7 +1904,7 @@ export default async function AgenticCodingWorkshopPage({
                 {toolOptions.map((tool) => (
                   <article
                     key={tool.title}
-                    className="flex h-full flex-col gap-3 rounded-2xl border border-white/60 bg-white/70 p-5 shadow-sm shadow-slate-900/5 backdrop-blur"
+                    className="card-glass flex h-full flex-col gap-3 p-5"
                   >
                     <div className="flex items-center gap-2">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-secondary)]/30 text-[var(--color-accent-primary)]">
@@ -2281,6 +2281,7 @@ export default async function AgenticCodingWorkshopPage({
             </div>
           </section>
         </FadeInSection>
+        </div>
       </main>
 
       <Footer locale={currentLocale} t={dict.footer} />

@@ -109,6 +109,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-tt-hoves), system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgb(30, 41, 59); /* slate-800 */
 }
 
 /* Reduce cumulative layout shift from font loading */
@@ -123,6 +126,75 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
   text-rendering: optimizeSpeed;
   font-synthesis: none;
+}
+
+/* ==========================================================================
+   Typography - Larger, More Readable
+   ========================================================================== */
+
+/* Heading scale - larger, more confident */
+h1 {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+/* Prose variants */
+.prose {
+  font-size: 19px;
+  line-height: 1.75;
+  color: rgb(51, 65, 85); /* slate-700 */
+  max-width: 65ch;
+}
+
+.prose-lg {
+  font-size: 20px;
+  line-height: 1.8;
+  max-width: 65ch;
+}
+
+.prose-xl {
+  font-size: 21px;
+  line-height: 1.8;
+  max-width: 65ch;
+}
+
+/* More generous paragraph spacing */
+.prose p + p,
+.prose-lg p + p,
+.prose-xl p + p {
+  margin-top: 1.5em;
+}
+
+/* Eyebrow labels */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.5rem;
 }
 
 @keyframes fade-in {
@@ -181,223 +253,180 @@ canvas {
 }
 
 /* ==========================================================================
-   Card Glass System - Unified Design System
+   Hybrid Card System - Clean + Gradient Accents + Elevation
    ==========================================================================
 
-   A modular glassmorphism card system for consistent styling.
+   Design Philosophy: Clean editorial foundation with intentional purple
+   gradient accents and material elevation through shadow depth.
 
    USAGE:
-   - Base: <div class="card-glass">...</div>
-     Creates a plain card structure without background
+   - Base: <div class="card">...</div>
+   - Featured: <div class="card card-featured">...</div>
 
-   - Dither variant: <div class="card-glass dither-macrogrid">...</div>
-     Dot matrix pattern background (standard across site)
-
-   BROWSER SUPPORT:
-   - backdrop-filter: Chrome 76+, Safari 9+, Firefox 103+, Edge 79+
-   - Graceful degradation to solid backgrounds on older browsers
-
-   ACCESSIBILITY:
-   - Respects prefers-reduced-transparency
-   - Respects prefers-contrast
-   - Maintains WCAG contrast ratios
    ========================================================================== */
 
-/* Base card structure (no visual treatment) */
+/* Base card - clean white with gradient border on hover */
+.card {
+  position: relative;
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    #ffffff 0%,
+    rgba(244, 242, 255, 0.3) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Gradient border on hover - subtle purple accent */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px; /* Border thickness */
+  background: linear-gradient(135deg,
+    #9275E5 0%,   /* Brand purple */
+    #A8C5FF 50%,  /* Light blue */
+    #C77DDA 100%  /* Purple-pink */
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+  opacity: 0.6;
+}
+
+/* Elevated shadow on hover */
+.card:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 80px rgba(146, 117, 229, 0.025),
+    0 12px 24px rgba(146, 117, 229, 0.12),
+    0 4px 8px rgba(146, 117, 229, 0.06);
+  border-color: rgba(146, 117, 229, 0.2);
+}
+
+/* Featured card variant - higher elevation */
+.card-featured {
+  padding: 40px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Corner accent for featured cards */
+.card-featured::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(
+    135deg,
+    rgba(146, 117, 229, 0.06) 0%,
+    transparent 100%
+  );
+  border-radius: 20px 0 0 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-featured:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 0 80px rgba(146, 117, 229, 0.03),
+    0 16px 32px rgba(146, 117, 229, 0.15),
+    0 6px 12px rgba(146, 117, 229, 0.08);
+  transform: translateY(-6px) scale(1.005);
+}
+
+/* Ensure content appears above gradient border */
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Legacy support - map old .card-glass to new .card */
 .card-glass {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--radius-16);
-  padding: 24px;
-  min-height: 240px;
-  transition: transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
-
-  /* Performance optimizations */
-  contain: layout style paint;
-  transform: translateZ(0);
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    #ffffff 0%,
+    rgba(244, 242, 255, 0.3) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
-/* Focus state for all cards */
-.card-glass:focus-within {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring), var(--shadow-2);
+.card-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, #9275E5 0%, #A8C5FF 50%, #C77DDA 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* Card variant - solid fallback background for older browsers */
-.card-glass.dither-macrogrid {
-  background: rgba(var(--white-rgb), 0.95);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-1);
+.card-glass:hover::before {
+  opacity: 0.6;
 }
 
-/* Progressive enhancement with backdrop-filter support */
-@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+.card-glass:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 80px rgba(146, 117, 229, 0.025),
+    0 12px 24px rgba(146, 117, 229, 0.12),
+    0 4px 8px rgba(146, 117, 229, 0.06);
+  border-color: rgba(146, 117, 229, 0.2);
+}
 
-  /* VARIANT 1: Duotone Dot Layers - Horizontal gradient fade with fine dots */
-  .card-glass.duotone-dots {
-    position: relative;
-    overflow: hidden;
-    background:
-      /* Fine dot pattern */
-      radial-gradient(circle, rgba(100, 100, 100, 0.15) 0.5px, transparent 0.5px) 0 0 / 8px 8px,
-      /* Horizontal duotone gradient */
-      linear-gradient(90deg,
-        rgba(147, 117, 229, 0.08) 0%,
-        rgba(168, 197, 255, 0.06) 50%,
-        rgba(199, 125, 218, 0.08) 100%
-      ),
-      /* Base glass */
-      rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px) saturate(115%);
-    -webkit-backdrop-filter: blur(16px) saturate(115%);
-    border: 1px solid rgba(var(--brand-secondary-rgb), 0.25);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
+.card-glass > * {
+  position: relative;
+  z-index: 1;
+}
 
-  /* VARIANT 2: Edge Glow + Microdots - Subtle microdots with edge highlight */
-  .card-glass.edge-glow-microdots {
-    position: relative;
-    overflow: hidden;
-    background:
-      /* Microdot pattern (very small) */
-      radial-gradient(circle, rgba(90, 90, 90, 0.12) 0.3px, transparent 0.3px) 0 0 / 6px 6px,
-      /* Horizontal gradient */
-      linear-gradient(90deg,
-        rgba(147, 117, 229, 0.06) 0%,
-        rgba(255, 255, 255, 0.05) 50%,
-        rgba(168, 197, 255, 0.06) 100%
-      ),
-      /* Base glass */
-      rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(18px) saturate(110%);
-    -webkit-backdrop-filter: blur(18px) saturate(110%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      0 2px 8px rgba(147, 117, 229, 0.08);
-  }
-
-  /* Edge glow effect with ::before */
-  .card-glass.edge-glow-microdots::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg,
-      rgba(147, 117, 229, 0.15) 0%,
-      transparent 20%,
-      transparent 80%,
-      rgba(168, 197, 255, 0.15) 100%
-    );
-    pointer-events: none;
-    opacity: 0.6;
-  }
-
-  /* VARIANT 3: Ultra-Fine Stipple - Very dense, newspaper-like */
-  .card-glass.ultra-fine {
-    position: relative;
-    overflow: hidden;
-    background:
-      /* Ultra-fine dots (more visible) */
-      radial-gradient(circle, rgba(90, 90, 90, 0.18) 0.6px, transparent 0.6px) 0 0 / 5px 5px,
-      /* Subtle horizontal fade */
-      linear-gradient(90deg,
-        rgba(147, 117, 229, 0.06) 0%,
-        rgba(255, 255, 255, 0.04) 50%,
-        rgba(199, 125, 218, 0.06) 100%
-      ),
-      /* Base */
-      rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(18px) saturate(110%);
-    -webkit-backdrop-filter: blur(18px) saturate(110%);
-    border: 1px solid rgba(var(--brand-secondary-rgb), 0.24);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Corner-to-corner subtle glass gradient overlay */
-  .card-glass.ultra-fine::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(135deg,
-      rgba(147, 117, 229, 0.22) 0%,
-      rgba(168, 197, 255, 0.08) 35%,
-      transparent 50%,
-      rgba(168, 197, 255, 0.08) 65%,
-      rgba(168, 197, 255, 0.18) 100%
-    );
-    pointer-events: none;
-    opacity: 0.85;
-  }
-
-  /* VARIANT 4: Soft Duotone - Larger dots, softer gradient */
-  .card-glass.soft-duotone {
-    position: relative;
-    overflow: hidden;
-    background:
-      /* Soft dots */
-      radial-gradient(circle, rgba(110, 110, 110, 0.13) 1px, transparent 1px) 0 0 / 10px 10px,
-      /* Horizontal gradient */
-      linear-gradient(90deg,
-        rgba(147, 117, 229, 0.1) 0%,
-        rgba(255, 255, 255, 0.05) 40%,
-        rgba(255, 255, 255, 0.05) 60%,
-        rgba(168, 197, 255, 0.1) 100%
-      ),
-      /* Base */
-      rgba(255, 255, 255, 0.87);
-    backdrop-filter: blur(14px) saturate(112%);
-    -webkit-backdrop-filter: blur(14px) saturate(112%);
-    border: 1px solid rgba(var(--brand-secondary-rgb), 0.28);
-    box-shadow: 0 2px 4px rgba(147, 117, 229, 0.06);
-  }
-
-  /* Default: Use ultra-fine as standard */
-  .card-glass.dither-macrogrid {
-    position: relative;
-    overflow: hidden;
-    background:
-      /* Ultra-fine dots */
-      radial-gradient(circle, rgba(90, 90, 90, 0.18) 0.6px, transparent 0.6px) 0 0 / 5px 5px,
-      /* Subtle horizontal fade */
-      linear-gradient(90deg,
-        rgba(147, 117, 229, 0.06) 0%,
-        rgba(255, 255, 255, 0.04) 50%,
-        rgba(199, 125, 218, 0.06) 100%
-      ),
-      /* Base */
-      rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(18px) saturate(110%);
-    -webkit-backdrop-filter: blur(18px) saturate(110%);
-    border: 1px solid rgba(var(--brand-secondary-rgb), 0.24);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Corner-to-corner gradient overlay for standard cards */
-  .card-glass.dither-macrogrid::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(135deg,
-      rgba(147, 117, 229, 0.22) 0%,
-      rgba(168, 197, 255, 0.08) 35%,
-      transparent 50%,
-      rgba(168, 197, 255, 0.08) 65%,
-      rgba(168, 197, 255, 0.18) 100%
-    );
-    pointer-events: none;
-    opacity: 0.85;
-    z-index: 0;
-  }
-
-  /* Ensure card content appears above the gradient overlay */
-  .card-glass.dither-macrogrid > * {
-    position: relative;
-    z-index: 1;
-  }
+/* Remove old glassmorphism variant classes */
+.card-glass.dither-macrogrid,
+.card-glass.duotone-dots,
+.card-glass.edge-glow-microdots,
+.card-glass.ultra-fine,
+.card-glass.soft-duotone {
+  /* Inherit base .card-glass styles */
 }
 
 /* Card typography */
@@ -426,6 +455,109 @@ canvas {
   font-weight: 400;
   color: var(--text);
   margin: 0 0 12px;
+}
+
+/* ==========================================================================
+   Section Spacing - More Breathing Room
+   ========================================================================== */
+
+/* Main container spacing - increased for better readability */
+.main-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 6rem; /* 96px */
+}
+
+@media (min-width: 1024px) {
+  .main-sections {
+    gap: 8rem; /* 128px */
+  }
+}
+
+/* Section internal spacing */
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem; /* 48px */
+}
+
+/* Card grids - more space between cards */
+.card-grid {
+  display: grid;
+  gap: 2rem; /* 32px */
+}
+
+@media (min-width: 640px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Section containers */
+.section-container {
+  background: white;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.section-container-tinted {
+  background: rgba(244, 242, 255, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 24px;
+  padding: 3rem;
+}
+
+.section-open {
+  padding: 3rem 0;
+}
+
+/* ==========================================================================
+   Gradient Accents - Intentional Purple Highlights
+   ========================================================================== */
+
+/* Gradient accent bar (for hero sections) */
+.gradient-accent-bar {
+  width: 5rem; /* 80px */
+  height: 4px;
+  background: linear-gradient(90deg,
+    #9275E5 0%,
+    #7E6AF6 50%,
+    #A8C5FF 100%
+  );
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+}
+
+/* Gradient text highlight */
+.gradient-text {
+  background: linear-gradient(135deg, #9275E5, #A8C5FF);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+/* Gradient edge (vertical accent) */
+.gradient-edge-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg,
+    #9275E5 0%,
+    #A8C5FF 50%,
+    #C77DDA 100%
+  );
+  border-radius: 0 2px 2px 0;
 }
 
 /* Meta pills */
@@ -466,30 +598,39 @@ canvas {
   margin-top: auto;
 }
 
+/* ==========================================================================
+   Buttons - Cleaner with Gradient Backgrounds
+   ========================================================================== */
+
 /* Primary button */
 .button-primary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   justify-content: center;
-  padding: 11px 18px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: var(--brand-600);
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #9275E5, #7E6AF6);
   color: white;
-  text-decoration: none;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 16px;
   font-weight: 600;
-  transition: filter var(--dur) var(--easing), transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
+  line-height: 1.5;
+  text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(109, 91, 245, 0.25);
+  box-shadow: 0 4px 12px rgba(146, 117, 229, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button-primary:hover {
-  filter: brightness(1.08);
+  background: linear-gradient(135deg, #7E6AF6, #6D5BF5);
+  box-shadow: 0 6px 20px rgba(146, 117, 229, 0.35);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(109, 91, 245, 0.35);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(146, 117, 229, 0.3);
 }
 
 .button-primary:focus-visible {
@@ -497,28 +638,29 @@ canvas {
   outline-offset: 2px;
 }
 
-/* Secondary button (light background) */
+/* Secondary button */
 .button-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   justify-content: center;
-  padding: 11px 18px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: var(--color-accent-secondary);
-  color: var(--text-strong);
-  text-decoration: none;
-  font-size: 14px;
-  line-height: 18px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #9275E5;
+  background: white;
+  color: #9275E5;
+  font-size: 16px;
   font-weight: 600;
-  transition: filter var(--dur) var(--easing), transform var(--dur) var(--easing), background-color var(--dur) var(--easing);
+  line-height: 1.5;
+  text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button-secondary:hover {
-  background: var(--color-accent-tertiary);
-  transform: translateY(-1px);
+  background: rgba(146, 117, 229, 0.05);
+  border-color: #7E6AF6;
+  color: #7E6AF6;
 }
 
 .button-secondary:focus-visible {
@@ -606,33 +748,17 @@ canvas {
 }
 
 /* ==========================================================================
-   Card Hover Effects - Subtle Interactivity
+   Card Hover Effects - Material Elevation (defined in card classes above)
    ========================================================================== */
 
-/* Subtle hover effect for all cards */
-.card-glass:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(109, 91, 245, 0.12);
-}
-
-/* Interactive card with cursor tracking (use with interactive-card class) */
-.interactive-card {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s var(--easing), box-shadow 0.3s var(--easing);
-}
-
-.interactive-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(109, 91, 245, 0.15);
-}
+/* Note: Hover effects are now built into .card and .card-glass classes above */
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover,
   .card-glass,
   .card-glass:hover,
-  .interactive-card,
-  .interactive-card:hover,
   .button-primary,
   .button-secondary,
   .button-outline,
@@ -643,19 +769,10 @@ canvas {
 }
 
 
-/* Accessibility: Reduced transparency */
-@media (prefers-reduced-transparency: reduce) {
-  .card-glass.dither-macrogrid {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: var(--surface-card);
-    border: 2px solid var(--border);
-  }
-}
-
 /* Accessibility: High contrast */
 @media (prefers-contrast: more) {
-  .card-glass.dither-macrogrid {
+  .card,
+  .card-glass {
     border: 2px solid var(--brand-600);
     box-shadow: var(--shadow-2);
   }
@@ -843,7 +960,8 @@ span[style*="view-transition-name"] {
  * to maintain scroll stability and prevent layout shifts.
  */
 
-/* Apply content-visibility to glass card components */
+/* Apply content-visibility to card components */
+.card,
 .card-glass {
   content-visibility: auto;
   contain-intrinsic-size: 0 300px;

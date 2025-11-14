@@ -44,7 +44,8 @@ export default async function Resources({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
+      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
+        <div className="main-sections">
         {/* Page Header */}
         <FadeInSection variant="fade" as="section">
           <section className="space-y-6">
@@ -76,9 +77,8 @@ export default async function Resources({
 
         {/* Featured Video */}
         <FadeInSection variant="slide-up" delay={100} as="section">
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-8 shadow-sm sm:px-12">
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-4">
+          <section className="section-container">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <h2 className="flex items-center gap-2 text-2xl font-semibold text-slate-900">
                   <HugeiconsIcon
@@ -244,9 +244,8 @@ export default async function Resources({
 
         {/* External Training Opportunities Timeline */}
         <FadeInSection variant="slide-up" delay={200} as="section">
-          <section className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-6">
+          <section className="section-container space-y-6">
+            <div className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <h2 className="flex items-center gap-2 text-3xl font-semibold text-slate-900">
@@ -267,12 +266,8 @@ export default async function Resources({
               </div>
 
               {/* Newsletter CTA */}
-              <div
-                className="card-glass dither-macrogrid relative overflow-hidden py-4 px-6 shadow-md"
-                style={{ minHeight: "auto" }}
-              >
-                <div className="absolute inset-y-0 right-[-30%] w-2/3 rounded-full bg-[#9275E533] blur-3xl opacity-40" />
-                <div className="relative flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
+              <div className="card-glass py-4 px-6 shadow-md" style={{ minHeight: "auto" }}>
+                <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
                   <div className="flex-1 space-y-1">
                     <h3 className="flex items-center justify-center gap-2 text-lg font-semibold text-slate-900 sm:justify-start">
                       <HugeiconsIcon
@@ -322,6 +317,7 @@ export default async function Resources({
             </div>
           </section>
         </FadeInSection>
+        </div>
       </main>
 
       <Footer locale={currentLocale} t={dict.footer} />

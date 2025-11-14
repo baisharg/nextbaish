@@ -34,87 +34,94 @@ export default async function Home({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
-        {/* Mission Section */}
-        <FadeInSection variant="slide-up" as="section" startVisible={true}>
-          <section
-            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-linear-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-16 sm:px-16"
-            id="about"
-          >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-6 max-w-3xl">
-              <p className="text-sm uppercase tracking-[0.4em] text-(--color-accent-tertiary)">
-                {t.mission.eyebrow}
-              </p>
-              <AnimatedTitle
-                text={t.mission.title}
-                slug="home"
-                className="text-4xl font-semibold text-slate-900 sm:text-5xl"
-                as="h1"
-              />
+      <main className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:px-10">
+        <div className="main-sections">
+          {/* Mission Section */}
+          <FadeInSection variant="slide-up" as="section" startVisible={true}>
+            <section
+              className="relative px-6 py-24 sm:px-16 lg:py-32"
+              id="about"
+            >
+              <div className="max-w-4xl mx-auto">
+                {/* Gradient accent bar */}
+                <div className="gradient-accent-bar" />
 
-              <article className="space-y-6 text-lg text-slate-700">
-                <p>{renderWithFootnotes(t.mission.paragraph1)}</p>
-                <p>{renderWithFootnotes(t.mission.paragraph2)}</p>
-                <p>{t.mission.paragraph3}</p>
-              </article>
+                {/* Eyebrow */}
+                <p className="eyebrow">
+                  {t.mission.eyebrow}
+                </p>
 
-              <div className="flex flex-wrap gap-3">
-                <ScrollToButton targetId="get-involved">
-                  {t.mission.cta}
-                  <span aria-hidden>→</span>
-                </ScrollToButton>
-                <a
-                  className="button-primary"
-                  href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <HugeiconsIcon icon={WhatsappIcon} size={18} />
-                  {t.getInvolved.whatsappCta}
-                </a>
+                {/* Larger headline */}
+                <AnimatedTitle
+                  text={t.mission.title}
+                  slug="home"
+                  className="mb-8"
+                  as="h1"
+                />
+
+                {/* Larger body text */}
+                <article className="prose prose-xl max-w-3xl space-y-6">
+                  <p>{renderWithFootnotes(t.mission.paragraph1)}</p>
+                  <p>{renderWithFootnotes(t.mission.paragraph2)}</p>
+                  <p>{t.mission.paragraph3}</p>
+                </article>
+
+                {/* CTAs with more space */}
+                <div className="flex flex-wrap gap-4 mt-10">
+                  <ScrollToButton targetId="get-involved">
+                    {t.mission.cta}
+                    <span aria-hidden>→</span>
+                  </ScrollToButton>
+                  <a
+                    className="button-primary"
+                    href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <HugeiconsIcon icon={WhatsappIcon} size={18} />
+                    {t.getInvolved.whatsappCta}
+                  </a>
+                </div>
               </div>
-            </div>
-          </section>
-        </FadeInSection>
+            </section>
+          </FadeInSection>
 
-        {/* Events Section */}
-        <FadeInSection variant="slide-up" delay={100} as="section">
-          <section
-            className="relative overflow-hidden space-y-12 rounded-3xl border border-slate-200 bg-linear-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
-            id="events"
-          >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-4 text-center">
-              <p className="text-sm uppercase tracking-[0.4em] text-(--color-accent-tertiary)">
-                {t.events.eyebrow}
-              </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {t.events.title}
-              </h2>
-              <p className="text-base text-slate-600">
-                {t.events.description}
-              </p>
-            </div>
-            <CalendarSection
-              calendarPlaceholder={t.events.calendarPlaceholder}
-              subscribeText={t.events.subscribe}
-            />
-          </section>
-        </FadeInSection>
+          {/* Events Section */}
+          <FadeInSection variant="slide-up" delay={100} as="section">
+            <section
+              className="section-container"
+              id="events"
+            >
+              <div className="space-y-4 text-center mb-12">
+                <p className="eyebrow">
+                  {t.events.eyebrow}
+                </p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.events.title}
+                </h2>
+                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
+                  {t.events.description}
+                </p>
+              </div>
+              <CalendarSection
+                calendarPlaceholder={t.events.calendarPlaceholder}
+                subscribeText={t.events.subscribe}
+              />
+            </section>
+          </FadeInSection>
 
-        {/* Activities Section */}
-        <FadeInSection variant="slide-up" delay={200} as="section">
-          <section className="space-y-8" id="activities">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {t.activities.title}
-              </h2>
-              <p className="text-base text-slate-600">
-                {t.activities.description}
-              </p>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Activities Section */}
+          <FadeInSection variant="slide-up" delay={200} as="section">
+            <section className="section-content" id="activities">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.activities.title}
+                </h2>
+                <p className="text-lg text-slate-700">
+                  {t.activities.description}
+                </p>
+              </div>
+              <div className="card-grid">
               {[
                 {
                   slug: "activity-fundamentals",
@@ -202,16 +209,15 @@ export default async function Home({
           </section>
         </FadeInSection>
 
-        {/* Get Involved Section */}
-        <FadeInSection variant="slide-up" delay={300} as="section">
-          <section
-            className="relative overflow-hidden grid gap-6 rounded-3xl border border-slate-200 bg-linear-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm md:grid-cols-2"
-            id="get-involved"
-          >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <SupascribeSignup t={dict.substack} />
+          {/* Get Involved Section */}
+          <FadeInSection variant="slide-up" delay={300} as="section">
+            <section
+              className="section-container grid gap-6 md:grid-cols-2"
+              id="get-involved"
+            >
+              <SupascribeSignup t={dict.substack} />
 
-            <article className="card-glass dither-macrogrid">
+              <article className="card-glass">
               <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
               <h3 className="card-title">
                 {t.getInvolved.communityTitle}
@@ -248,6 +254,7 @@ export default async function Home({
             </article>
           </section>
         </FadeInSection>
+        </div>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>

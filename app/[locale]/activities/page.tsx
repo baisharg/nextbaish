@@ -85,7 +85,8 @@ export default async function Activities({
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
-        <div className="flex flex-col gap-20 py-16">
+        <div className="py-16">
+          <div className="main-sections">
           {/* Page Header */}
           <FadeInSection variant="fade" as="section">
             <section className="space-y-6">
@@ -126,9 +127,8 @@ export default async function Activities({
 
           {/* Events Calendar Section */}
           <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="relative overflow-hidden space-y-12 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
-              <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-              <div className="relative space-y-4 text-center">
+            <section className="section-container space-y-12">
+              <div className="space-y-4 text-center">
                 <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
                   {dict.home.events.eyebrow}
                 </p>
@@ -240,7 +240,7 @@ export default async function Activities({
                 ].map((activity) => (
                   <article
                     key={activity.title}
-                    className="card-glass dither-macrogrid"
+                    className="card-glass"
                   >
                     <div className="card-eyebrow">{activity.eyebrow}</div>
                     <AnimatedTitle
@@ -310,7 +310,7 @@ export default async function Activities({
                     return (
                       <article
                         key={program.title}
-                        className="card-glass dither-macrogrid"
+                        className="card-glass"
                       >
                         <div className="card-eyebrow">{program.eyebrow}</div>
                         <AnimatedTitle
@@ -366,7 +366,7 @@ export default async function Activities({
                 </p>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <article className="card-glass dither-macrogrid">
+                <article className="card-glass">
                   <div className="card-eyebrow">{dict.home.aisar.eyebrow}</div>
                   <AnimatedTitle
                     text={dict.home.aisar.title}
@@ -400,7 +400,7 @@ export default async function Activities({
                   </div>
                 </article>
 
-                <article className="card-glass dither-macrogrid">
+                <article className="card-glass">
                   <div className="card-eyebrow">{t.lanais.eyebrow}</div>
                   <AnimatedTitle
                     text={t.lanais.title}
@@ -426,7 +426,7 @@ export default async function Activities({
                   </div>
                 </article>
 
-                <article className="card-glass dither-macrogrid">
+                <article className="card-glass">
                   <div className="card-eyebrow">{t.fair.eyebrow}</div>
                   <AnimatedTitle
                     text={t.fair.title}
@@ -454,6 +454,7 @@ export default async function Activities({
               </div>
             </section>
           </FadeInSection>
+          </div>
         </div>
       </div>
 

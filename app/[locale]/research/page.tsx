@@ -65,7 +65,8 @@ export default async function ResearchPage({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
+      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
+        <div className="main-sections">
         {/* Page Header */}
         <FadeInSection variant="fade" as="section">
           <section className="space-y-4">
@@ -151,7 +152,7 @@ export default async function ResearchPage({
 
         {/* Publications */}
         <FadeInSection variant="slide-up" delay={300} as="section">
-          <section className="space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
+          <section className="section-container space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {dict.research.publicationsTitle}
@@ -165,7 +166,7 @@ export default async function ResearchPage({
               {publications.map((publication, index) => (
                 <article
                   key={`${publication.title}-${index}`}
-                  className="card-glass dither-macrogrid p-6"
+                  className="card-glass p-6"
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-2 flex-1">
@@ -215,7 +216,7 @@ export default async function ResearchPage({
               {ongoingProjects.map((project, index) => (
                 <article
                   key={`${project.title}-${index}`}
-                  className="card-glass dither-macrogrid space-y-6 p-6"
+                  className="card-glass space-y-6 p-6"
                 >
                   <div className="space-y-3">
                     <h3 className="text-2xl font-semibold text-slate-900">
@@ -258,6 +259,7 @@ export default async function ResearchPage({
             </div>
           </section>
         </FadeInSection>
+        </div>
       </main>
 
       <Footer locale={currentLocale} t={dict.footer} />

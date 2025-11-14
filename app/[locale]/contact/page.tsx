@@ -40,7 +40,8 @@ export default async function ContactPage({
   return (
     <>
       <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-        <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
+        <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
+          <div className="main-sections">
           {/* Page Header */}
           <FadeInSection variant="fade" as="section">
             <section className="space-y-4">
@@ -70,7 +71,7 @@ export default async function ContactPage({
           <FadeInSection variant="slide-up" delay={100} as="section">
             <section className="grid gap-6 md:grid-cols-3">
               {/* Community Card with Stacked Buttons */}
-              <article className="card-glass dither-macrogrid">
+              <article className="card-glass">
                 <div className="card-eyebrow">
                   {dict.home.getInvolved.communityEyebrow}
                 </div>
@@ -117,7 +118,7 @@ export default async function ContactPage({
               </article>
 
               {/* Location Card */}
-              <article className="card-glass dither-macrogrid">
+              <article className="card-glass">
                 <div className="card-eyebrow">
                   {dict.contact.cards.location.eyebrow}
                 </div>
@@ -137,7 +138,7 @@ export default async function ContactPage({
               </article>
 
               {/* Social Media Card */}
-              <article className="card-glass dither-macrogrid">
+              <article className="card-glass">
                 <div className="card-eyebrow">
                   {dict.contact.cards.social.eyebrow}
                 </div>
@@ -175,11 +176,9 @@ export default async function ContactPage({
 
           {/* Contact Form & Newsletter */}
           <FadeInSection variant="slide-up" delay={200} as="section">
-            <section className="relative overflow-hidden grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] p-8 shadow-sm md:grid-cols-2">
-              <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-
+            <section className="section-container grid gap-6 md:grid-cols-2">
               {/* Contact Form */}
-              <article className="card-glass dither-macrogrid">
+              <article className="card-glass">
                 <div className="card-eyebrow">{dict.contact.form.eyebrow}</div>
                 <h2 className="card-title">{dict.contact.form.title}</h2>
                 <p className="card-body">{dict.contact.form.description}</p>
@@ -266,6 +265,7 @@ export default async function ContactPage({
               resourcesPageLabel={dict.contact.linkText.resourcesPage}
             />
           </FadeInSection>
+          </div>
         </main>
 
         <Footer locale={currentLocale} t={dict.footer} />

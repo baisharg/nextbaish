@@ -24,7 +24,7 @@ export default async function WorkshopPage({
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
-        <div className="flex flex-col gap-20 py-16">
+        <div className="main-sections py-16">
           {/* Breadcrumb */}
           <FadeInSection variant="fade" as="div">
             <div className="text-sm text-slate-600">
@@ -48,9 +48,8 @@ export default async function WorkshopPage({
 
           {/* AIS Research Workshop */}
           <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12">
-              <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-              <div className="relative space-y-8">
+            <section className="section-container">
+              <div className="space-y-8">
                 <div className="space-y-4">
                   <div>
                     <HugeiconsIcon
@@ -113,12 +112,11 @@ export default async function WorkshopPage({
                   </div>
 
                   <div className="lg:col-span-1">
-                    <article className="card-glass dither-macrogrid relative overflow-hidden p-6">
-                      <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-50" />
-                      <h2 className="relative mb-4 text-xl font-semibold text-slate-900">
+                    <article className="card-glass p-6">
+                      <h2 className="mb-4 text-xl font-semibold text-slate-900">
                         {aisWorkshop.nextSession}
                       </h2>
-                      <dl className="relative space-y-3 text-sm">
+                      <dl className="space-y-3 text-sm">
                         <div>
                           <dt className="font-semibold text-slate-900">
                             {common.date}
@@ -148,7 +146,7 @@ export default async function WorkshopPage({
                           </dd>
                         </div>
                       </dl>
-                      <div className="relative mt-6">
+                      <div className="mt-6">
                         <a
                           href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
                           className="button-primary w-full flex items-center justify-center gap-2"

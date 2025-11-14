@@ -30,7 +30,8 @@ export default async function AboutPage({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
+      <main className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:px-10">
+        <div className="main-sections">
         {/* Page Header */}
         <FadeInSection variant="fade" as="section">
           <section className="space-y-4">
@@ -64,11 +65,10 @@ export default async function AboutPage({
         {/* Core Concepts Section */}
         <FadeInSection variant="slide-up" delay={100} as="section">
           <section
-            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            className="section-container"
             id="core-concepts"
           >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative grid gap-12 lg:grid-cols-2">
+            <div className="grid gap-12 lg:grid-cols-2">
               <div className="space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-3xl font-semibold text-slate-900">
@@ -143,11 +143,10 @@ export default async function AboutPage({
         {/* Our Approach Section */}
         <FadeInSection variant="slide-up" delay={200} as="section">
           <section
-            className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            className="section-container"
             id="our-approach"
           >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-8">
+            <div className="space-y-8">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {t.ourApproach.title}
               </h2>
@@ -186,11 +185,10 @@ export default async function AboutPage({
         {/* Cofounders Section */}
         <FadeInSection variant="slide-up" delay={300} as="section">
           <section
-            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            className="section-container space-y-8"
             id="cofounders"
           >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-8">
+            <div className="space-y-8">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {t.team.cofoundersTitle}
               </h2>
@@ -198,9 +196,8 @@ export default async function AboutPage({
               {/* Cofounders Grid */}
               <div className="grid gap-8">
                 {/* Eitan Sprejer */}
-                <article className="card-glass dither-macrogrid relative overflow-hidden p-6">
-                  <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                  <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start">
+                <article className="card-glass">
+                  <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
                     <div className="flex-shrink-0 mx-auto sm:mx-0">
                       <div className="h-[160px] w-[160px]">
                         <Image
@@ -252,9 +249,8 @@ export default async function AboutPage({
                 </article>
 
                 {/* Luca De Leo */}
-                <article className="card-glass dither-macrogrid relative overflow-hidden p-6">
-                  <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                  <div className="relative flex flex-col gap-6 sm:flex-row sm:items-start">
+                <article className="card-glass">
+                  <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
                     <div className="flex-shrink-0 mx-auto sm:mx-0">
                       <div className="h-[160px] w-[160px]">
                         <Image
@@ -340,11 +336,10 @@ export default async function AboutPage({
         {/* Team Section */}
         <FadeInSection variant="slide-up" delay={400} as="section">
           <section
-            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            className="section-container space-y-8"
             id="team"
           >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative space-y-8">
+            <div className="space-y-8">
               <h2 className="text-3xl font-semibold text-slate-900">
                 {t.team.title}
               </h2>
@@ -356,8 +351,7 @@ export default async function AboutPage({
                 </h3>
                 <div className="grid gap-4 md:grid-cols-3">
                   {/* Lucas Vitali */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -412,8 +406,7 @@ export default async function AboutPage({
                   </article>
 
                   {/* Carlos Giudice */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -468,8 +461,7 @@ export default async function AboutPage({
                   </article>
 
                   {/* Sergio Abriola */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -506,8 +498,7 @@ export default async function AboutPage({
                   </article>
 
                   {/* Guido Bergman */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -582,8 +573,7 @@ export default async function AboutPage({
                 </h3>
                 <div className="grid gap-4 md:grid-cols-3">
                   {/* Gaspi Labastie */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -620,8 +610,7 @@ export default async function AboutPage({
                   </article>
 
                   {/* Tobias Bersia */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -667,8 +656,7 @@ export default async function AboutPage({
                   </article>
 
                   {/* Gonzalo Heredia */}
-                  <article className="card-glass dither-macrogrid relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
@@ -712,11 +700,10 @@ export default async function AboutPage({
         {/* Support Section */}
         <FadeInSection variant="slide-up" delay={500} as="section">
           <section
-            className="relative overflow-hidden space-y-8 rounded-3xl border border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FF2a] px-6 py-12 shadow-sm sm:px-12"
+            className="section-container space-y-8"
             id="support"
           >
-            <div className="absolute inset-y-0 right-[-10%] hidden w-1/3 rounded-full bg-[#9275E533] blur-3xl lg:block" />
-            <div className="relative text-center space-y-6">
+            <div className="text-center space-y-6">
               <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
                   {t.support.title}
@@ -728,7 +715,7 @@ export default async function AboutPage({
 
               <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto pt-4">
                 {/* Open Philanthropy */}
-                <article className="card-glass dither-macrogrid relative overflow-hidden p-6 text-left">
+                <article className="card-glass relative overflow-hidden p-6 text-left">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative space-y-3">
                     <h3 className="text-xl font-semibold text-slate-900">
@@ -762,7 +749,7 @@ export default async function AboutPage({
                 </article>
 
                 {/* Kairos Pathfinder */}
-                <article className="card-glass dither-macrogrid relative overflow-hidden p-6 text-left">
+                <article className="card-glass relative overflow-hidden p-6 text-left">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative space-y-3">
                     <div>
@@ -827,6 +814,7 @@ export default async function AboutPage({
             </div>
           </section>
         </FadeInSection>
+        </div>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />
     </div>
