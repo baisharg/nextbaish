@@ -22,6 +22,8 @@ A bilingual AI Safety content hub built with Next.js 15, featuring curated resou
 ## 🚀 Tech Stack
 
 - **Framework:** Next.js 16.0.0 with App Router & Turbopack
+- **Runtime:** Bun (development + production)
+- **Package Manager:** Bun
 - **UI Library:** React 19.2.0
 - **Styling:** Tailwind CSS v4 (via PostCSS)
 - **Language:** TypeScript (strict mode)

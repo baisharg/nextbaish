@@ -994,7 +994,12 @@ No test infrastructure exists yet. When adding coverage:
 legacy-peer-deps=true
 ```
 
-**Note:** Using bun instead of npm/pnpm. The `.npmrc` file has been removed as bun handles peer dependencies automatically.
+**Note:** Using Bun as both package manager and runtime (development + production). The `.npmrc` file has been removed as Bun handles peer dependencies automatically.
+
+**Bun Runtime:**
+- Local development: Bun runtime via `bun --bun next dev`
+- Production: Bun runtime via `bun --bun next build` and `bun --bun next start`
+- Configured in `vercel.json` for Vercel deployments
 
 ## Dependencies
 

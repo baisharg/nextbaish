@@ -1,0 +1,5 @@
+{
+  "buildCommand": "bun --bun next build",
+  "installCommand": "bun install",
+  "devCommand": "bun --bun next dev"
+}
