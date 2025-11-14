@@ -34,22 +34,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Core Commands
 - `bun install` - Install dependencies
-- `bun dev` - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
-- `bun build` - Compile production bundle (run before opening PRs that touch build paths)
-- `bun start` - Run optimized production server from last build
+- `bun run dev` (or `bun dev`) - Start Turbopack dev server at http://localhost:3000 with hot reload (keep this running during development)
+- `bun run build` - Compile production bundle (run before opening PRs that touch build paths)
+- `bun run start` - Run optimized production server from last build
 
 ### Server Management
-- `bun restart:dev` - Kill any running server on port 3000 and restart dev server (useful after config changes)
-- `bun restart:prod` - Kill any running server, rebuild, and start production server
+- `bun run restart:dev` - Kill any running server on port 3000 and restart dev server (useful after config changes)
+- `bun run restart:prod` - Kill any running server, rebuild, and start production server
 
 ### Performance & Optimization
-- `bun analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
-- `bun optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
-- `bun optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
+- `bun run analyze` - Generate bundle analysis reports (requires webpack build, creates `.next/analyze/*.html`)
+- `bun run optimize-logo` - Generate optimized logo variants (WebP, AVIF, PNG in multiple sizes)
+- `bun run optimize-images` - Batch optimize all images to WebP/AVIF with responsive sizes
 
 ### Code Quality
-- `bun lint` - Run ESLint on all files (0 errors, 0 warnings)
-- `bun lint:fix` - Auto-fix fixable linting issues
+- `bun run lint` - Run ESLint on all files (0 errors, 0 warnings)
+- `bun run lint:fix` - Auto-fix fixable linting issues
 - `bunx tsc --noEmit` - Run TypeScript type checking
 
 **Notes:**
@@ -887,7 +887,7 @@ grep -r "functionName" app/
 2. Add translations to `app/[locale]/dictionaries/en.json` and `es.json`
 3. Add link in `app/components/header.tsx` and `mobile-menu.tsx`
 4. Test both `/en/your-page` and `/es/your-page`
-5. Run `bun build` to verify
+5. Run `bun run build` to verify
 
 **🌍 Adding Translations:**
 1. Add key to BOTH `en.json` and `es.json` in same nested location
@@ -900,17 +900,17 @@ grep -r "functionName" app/
 - Use `dynamic(() => import("..."))` for below-fold heavy components
 - Add `loading` prop to dynamic imports for skeleton states
 - Use IntersectionObserver for embeds (see `airtable-embed.tsx`)
-- Run `bun analyze` to check bundle size
+- Run `bun run analyze` to check bundle size
 - Test with Lighthouse after changes
 
 **🧹 Debugging Performance:**
 ```bash
 # Build and analyze bundle
-bun analyze
+bun run analyze
 open .next/analyze/client.html
 
 # Run Lighthouse audit
-bun build && bun start
+bun run build && bun run start
 # Then open Chrome DevTools > Lighthouse
 
 # Check for console errors
@@ -930,7 +930,7 @@ bun add package-name
 
 # If it's a large package, add to optimizePackageImports in next.config.ts
 # Update package.json description if needed
-# Run bun build to verify no issues
+# Run bun run build to verify no issues
 ```
 
 **🎯 Common File Locations:**
@@ -961,7 +961,7 @@ No test infrastructure exists yet. When adding coverage:
 - One concern per commit
 - Reference issue IDs in commit body when relevant
 - PRs should explain motivation, implementation, test evidence, and deployment considerations
-- Execute `bun build` before opening PRs that touch build paths
+- Execute `bun run build` before opening PRs that touch build paths
 
 ## Configuration
 

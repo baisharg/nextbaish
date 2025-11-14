@@ -70,25 +70,25 @@ bun install
 bun dev
 
 # Restart dev server (kills existing, starts fresh)
-bun restart:dev
+bun run restart:dev
 
 # Build for production
-bun build
+bun run build
 
 # Start production server
 bun start
 
 # Restart production server (kills, rebuilds, starts)
-bun restart:prod
+bun run restart:prod
 
 # Run bundle analysis
-bun analyze
+bun run analyze
 
 # Lint code
 bun lint
 
 # Auto-fix linting issues
-bun lint:fix
+bun run lint:fix
 ```
 
 The dev server supports hot reload and will be available at [http://localhost:3000](http://localhost:3000).
@@ -311,7 +311,7 @@ Production monitoring with Core Web Vitals tracking:
 
 ```bash
 # Generate bundle reports
-bun analyze
+bun run analyze
 
 # View reports
 open .next/analyze/client.html
@@ -391,7 +391,7 @@ Features automatically enabled on Vercel:
 
 ```bash
 # Build production bundle
-bun build
+bun run build
 
 # Start production server
 bun start
@@ -428,7 +428,7 @@ Comprehensive documentation available:
 
 ```bash
 # Run Lighthouse
-bun build
+bun run build
 bun start
 
 # Then use Chrome DevTools Lighthouse or:
@@ -446,7 +446,7 @@ Contributions are welcome! Please:
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
-5. Run `bun build` to verify
+5. Run `bun run build` to verify
 6. Submit a pull request
 
 Guidelines:
