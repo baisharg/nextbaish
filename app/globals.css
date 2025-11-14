@@ -593,7 +593,7 @@ canvas {
 /* Card footer */
 .card-footer {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
   margin-top: auto;
 }
@@ -717,7 +717,7 @@ canvas {
   color: var(--brand-600);
   font-weight: 600;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   transition: gap var(--dur) var(--easing);
 }
 
