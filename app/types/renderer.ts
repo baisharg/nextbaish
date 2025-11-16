@@ -95,36 +95,44 @@ export interface Renderer {
  * Detect available renderer capabilities
  */
 export function detectCapabilities(): RendererCapabilities {
-  if (typeof window === "undefined") {
-    return {
-      offscreenCanvas: false,
-      webgl2: false,
-      webgl: false,
-      sharedArrayBuffer: false,
-    };
-  }
+  const isWindow = typeof window !== "undefined";
 
-  // Check OffscreenCanvas support
-  const offscreenCanvas = "OffscreenCanvas" in window;
+  // Worker-safe detection: fall back to OffscreenCanvas probing when window is absent
+  const createProbeCanvas = () => {
+    try {
+      return typeof OffscreenCanvas !== "undefined"
+        ? new OffscreenCanvas(1, 1)
+        : isWindow
+          ? document.createElement("canvas")
+          : null;
+    } catch {
+      return null;
+    }
+  };
 
-  // Check WebGL support
+  const probeCanvas = createProbeCanvas();
+  const offscreenCanvas = Boolean(probeCanvas && typeof OffscreenCanvas !== "undefined");
+
   let webgl = false;
   let webgl2 = false;
-  try {
-    const canvas = document.createElement("canvas");
-    const gl2 = canvas.getContext("webgl2");
-    if (gl2) {
-      webgl2 = true;
-      webgl = true;
-    } else {
-      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      webgl = !!gl;
+  if (probeCanvas) {
+    try {
+      const gl2 = probeCanvas.getContext("webgl2");
+      if (gl2) {
+        webgl2 = true;
+        webgl = true;
+      } else {
+        const gl =
+          probeCanvas.getContext("webgl") ||
+          // @ts-expect-error experimental-webgl exists only in browsers
+          probeCanvas.getContext("experimental-webgl");
+        webgl = Boolean(gl);
+      }
+    } catch {
+      // Ignore context errors
     }
-  } catch {
-    // WebGL not supported
   }
 
-  // Check SharedArrayBuffer support (requires COOP/COEP headers)
   const sharedArrayBuffer = typeof SharedArrayBuffer !== "undefined";
 
   return {

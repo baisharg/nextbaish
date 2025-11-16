@@ -14,6 +14,15 @@ import type { FramePacket } from "../types/renderer";
 
 export type InitMessage = {
   type: "init";
+  canvas: OffscreenCanvas;
+  config: {
+    viewSize: number;
+    blurStdDeviation: number;
+    dpr: number;
+    enableBlur: boolean;
+    offsetXMultiplier?: number;
+    offsetYMultiplier?: number;
+  };
   threads: Array<{
     id: number;
     color: HSL;
@@ -31,7 +40,6 @@ export type InitMessage = {
     driftAmp: number;
     duration: number;
   }>;
-  viewSize: number;
   frameInterval: number;
 };
 

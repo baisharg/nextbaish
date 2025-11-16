@@ -29,10 +29,7 @@ import {
 } from "../utils/thread-utils";
 import "./timeline-threads.css";
 
-// Canvas Renderer imports
-import type { Renderer, FramePacket } from "../types/renderer";
-import type { InitMessage, FrameMessage } from "../workers/animation-types";
-import { createRenderer, logRendererInfo } from "../utils/create-renderer";
+import type { InitMessage } from "../workers/animation-types";
 
 /**
  * --------------------------------------------------------------------------------
@@ -436,7 +433,7 @@ function TimelineThreadsComponent({
   const [threads, setThreads] = useState<ThreadState[]>([]);
   const [performanceProfile, setPerformanceProfile] =
     useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
-  const [parallaxOffset, setParallaxOffset] = useState(0);
+  const parallaxRef = useRef(0);
   const [webglSupported, setWebglSupported] = useState(true);
 
   // Apply override parameters if provided
@@ -448,10 +445,11 @@ function TimelineThreadsComponent({
   const frameInterval = performanceProfile.frameInterval;
   const threadsRef = useRef<ThreadState[]>([]);
 
-  // WebGL renderer refs
+  // Renderer / worker refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationWorkerRef = useRef<Worker | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const tickFnRef = useRef<((now: number) => void) | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -626,7 +624,19 @@ function TimelineThreadsComponent({
     isVisibleRef.current = isVisible;
   }, [isVisible]);
 
-  // Parallax scroll effect
+  // Restart or pause main-thread rAF loop when visibility changes
+  useEffect(() => {
+    if (!shouldAnimate) return;
+    if (isVisible && tickFnRef.current && !rafIdRef.current) {
+      rafIdRef.current = requestAnimationFrame(tickFnRef.current);
+    }
+    if (!isVisible && rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+  }, [isVisible, shouldAnimate]);
+
+  // Parallax scroll effect (imperative to avoid React re-renders)
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
 
@@ -635,17 +645,16 @@ function TimelineThreadsComponent({
     let currentScroll = window.scrollY;
 
     const updateParallax = () => {
-      const offset = -currentScroll * PARALLAX_FACTOR; // Negative for upward movement
-      setParallaxOffset(offset);
+      parallaxRef.current = -currentScroll * PARALLAX_FACTOR;
+      if (canvasRef.current) {
+        canvasRef.current.style.transform = `translateY(${parallaxRef.current}px)`;
+      }
       rafId = 0;
     };
 
     const handleScroll = () => {
       currentScroll = window.scrollY;
-      // Throttle updates with RAF for smooth performance
-      if (!rafId) {
-        rafId = requestAnimationFrame(updateParallax);
-      }
+      if (!rafId) rafId = requestAnimationFrame(updateParallax);
     };
 
     // Initial position
@@ -690,26 +699,18 @@ function TimelineThreadsComponent({
         const highDpr = baseDpr >= 3;
         const enableBlur = effectiveEnableBlur && !isNarrow && !highDpr;
 
-        // Create renderer using factory
-        const result = await createRenderer({
-          canvas,
-          config: {
-            viewSize: VIEWBOX_SIZE,
-            blurStdDeviation,
-            dpr,
-            enableBlur,
-            offsetXMultiplier: overrideParams?.offsetXMultiplier,
-            offsetYMultiplier: overrideParams?.offsetYMultiplier,
-          },
-        });
-
-        if (!mounted) {
-          result.renderer.dispose();
+        if (typeof canvas.transferControlToOffscreen !== "function") {
+          setWebglSupported(false);
           return;
         }
 
-        rendererRef.current = result.renderer;
-        logRendererInfo(result);
+        const offscreen = canvas.transferControlToOffscreen();
+
+        const rect = canvas.getBoundingClientRect();
+        const displayWidth = rect.width || window.innerWidth || 1;
+        const displayHeight = rect.height || window.innerHeight || 1;
+        offscreen.width = Math.max(1, Math.floor(displayWidth * dpr));
+        offscreen.height = Math.max(1, Math.floor(displayHeight * dpr));
 
         // Create animation worker
         let worker: Worker;
@@ -725,18 +726,6 @@ function TimelineThreadsComponent({
         }
 
         animationWorkerRef.current = worker;
-
-        // Handle worker messages
-        worker.onmessage = (event: MessageEvent<FrameMessage>) => {
-          if (!mounted || !rendererRef.current) return;
-
-          if (event.data.type === "frame") {
-            const packet: FramePacket = event.data.packet;
-
-            // Draw frame using renderer
-            rendererRef.current.draw(packet);
-          }
-        };
 
         worker.onerror = (error: ErrorEvent) => {
           console.error("[Timeline] Animation worker error:", {
@@ -768,47 +757,46 @@ function TimelineThreadsComponent({
           duration: thread.duration,
         }));
 
-        // Initialize worker with thread data
+        // Initialize worker with thread data and renderer config
         const initMessage: InitMessage = {
           type: "init",
+          canvas: offscreen,
+          config: {
+            viewSize: VIEWBOX_SIZE,
+            blurStdDeviation,
+            dpr,
+            enableBlur,
+            offsetXMultiplier: overrideParams?.offsetXMultiplier,
+            offsetYMultiplier: overrideParams?.offsetYMultiplier,
+          },
           threads: workerThreads,
-          viewSize: VIEWBOX_SIZE,
           frameInterval,
         };
 
-        worker.postMessage(initMessage);
+        worker.postMessage(initMessage, [offscreen]);
 
         logTimelineDebug("Canvas renderer initialized successfully");
 
-        // Main-thread rAF loop to drive animation timing
-        // (prevents worker timer throttling on mobile)
-        let rafId = 0;
+        // Main-thread rAF loop to drive animation timing (avoid worker timer throttling)
         let lastTick = 0;
-
         const tick = (now: number) => {
           if (!mounted) return;
 
-          // Pause animation when off-screen (battery optimization)
-          // Keep renderer alive to prevent positional jumps on mobile
-          if (isVisibleRef.current) {
-            // Throttle to frameInterval to avoid piling up messages
-            if (now - lastTick >= frameInterval - 1) {
-              if (animationWorkerRef.current) {
-                animationWorkerRef.current.postMessage({ type: "tick", now });
-              }
-              lastTick = now;
-            }
+          if (!isVisibleRef.current) {
+            rafIdRef.current = null;
+            return;
           }
 
-          rafId = requestAnimationFrame(tick);
+          if (now - lastTick >= frameInterval - 1) {
+            animationWorkerRef.current?.postMessage({ type: "tick", now });
+            lastTick = now;
+          }
+
+          rafIdRef.current = requestAnimationFrame(tick);
         };
 
-        rafId = requestAnimationFrame(tick);
-
-        // Store rafId for cleanup
-        return () => {
-          if (rafId) cancelAnimationFrame(rafId);
-        };
+        tickFnRef.current = tick;
+        rafIdRef.current = requestAnimationFrame(tick);
       } catch (error) {
         console.error(
           "[Timeline] Failed to initialize canvas renderer:",
@@ -824,17 +812,17 @@ function TimelineThreadsComponent({
     return () => {
       mounted = false;
 
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+      tickFnRef.current = null;
+
       // Terminate worker
       if (animationWorkerRef.current) {
         animationWorkerRef.current.postMessage({ type: "terminate" });
         animationWorkerRef.current.terminate();
         animationWorkerRef.current = null;
-      }
-
-      // Dispose renderer
-      if (rendererRef.current) {
-        rendererRef.current.dispose();
-        rendererRef.current = null;
       }
 
       logTimelineDebug("Canvas renderer cleaned up");
@@ -868,7 +856,6 @@ function TimelineThreadsComponent({
         className="h-full w-full"
         style={{
           contain: "paint",
-          transform: `translateY(${parallaxOffset}px)`,
           willChange: "transform",
         }}
       />

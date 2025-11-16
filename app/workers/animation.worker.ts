@@ -23,7 +23,8 @@ import {
   directionDuration,
 } from "../utils/thread-utils";
 
-import type { FramePacket, ThreadFrame, ColorStop } from "../types/renderer";
+import type { FramePacket, ThreadFrame, ColorStop, Renderer } from "../types/renderer";
+import { createRenderer } from "../utils/create-renderer";
 
 // ============================================================================
 // TYPES
@@ -337,6 +338,9 @@ let frameInterval = FRAME_INTERVAL;
 let isPaused = false;
 let lastFlipCheck = 0;
 let lastFrameTime = 0;
+let renderer: Renderer | null = null;
+let threadFrames: ThreadFrame[] = [];
+let reusablePacket: FramePacket | null = null;
 
 // ============================================================================
 // ANIMATION LOOP
@@ -369,11 +373,9 @@ function animate(now: number) {
     }
   }
 
-  // Compute animated points for all threads
-  const threadFrames: ThreadFrame[] = [];
-  const transferables: ArrayBuffer[] = [];
-
-  for (const thread of threads) {
+  // Compute animated points for all threads (reuse buffers)
+  for (let i = 0; i < threads.length; i++) {
+    const thread = threads[i];
     const isTransitioning =
       thread.transitionStartTime > 0 &&
       now - thread.transitionStartTime < thread.duration;
@@ -401,37 +403,23 @@ function animate(now: number) {
       transitioningThreadIds.delete(thread.id);
     }
 
-    // Create thread frame (copy points for transfer)
-    const pointsCopy = thread.floatingPoints.slice();
-    transferables.push(pointsCopy.buffer);
-
-    threadFrames.push({
-      points: pointsCopy,
-      width: thread.weight,
-      opacity: thread.opacity,
-      colorStops: thread.gradientStops[thread.direction],
-      gradientMinY: thread.gradientBounds.minY,
-      gradientMaxY: thread.gradientBounds.maxY,
-    });
+    // Update reusable frame entry (no allocations)
+    const frame = threadFrames[i];
+    frame.points = thread.floatingPoints;
+    frame.width = thread.weight;
+    frame.opacity = thread.opacity;
+    frame.colorStops = thread.gradientStops[thread.direction];
+    frame.gradientMinY = thread.gradientBounds.minY;
+    frame.gradientMaxY = thread.gradientBounds.maxY;
   }
 
-  // Create frame packet
-  const packet: FramePacket = {
-    time: now,
-    viewSize,
-    threads: threadFrames,
-    overlayMixMode: "screen",
-    overlayGradient: OVERLAY_GRADIENT,
-  };
+  if (!reusablePacket || !renderer) return;
 
-  // Post frame to main thread with transferables (zero-copy for typed arrays)
-  const message: FrameMessage = {
-    type: "frame",
-    packet,
-  };
-  self.postMessage(message, { transfer: transferables });
+  reusablePacket.time = now;
+  reusablePacket.viewSize = viewSize;
+
+  renderer.draw(reusablePacket);
 }
-
 // ============================================================================
 // MESSAGE HANDLER
 // ============================================================================
@@ -475,10 +463,42 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         };
       });
 
-      viewSize = data.viewSize;
+      viewSize = data.config.viewSize;
       frameInterval = data.frameInterval;
       lastFrameTime = 0;
       transitioningThreadIds.clear();
+
+      // Prepare reusable frame structures
+      threadFrames = threads.map((thread) => ({
+        points: thread.floatingPoints,
+        width: thread.weight,
+        opacity: thread.opacity,
+        colorStops: thread.gradientStops[thread.direction],
+        gradientMinY: thread.gradientBounds.minY,
+        gradientMaxY: thread.gradientBounds.maxY,
+      }));
+
+      reusablePacket = {
+        time: 0,
+        viewSize,
+        threads: threadFrames,
+        overlayMixMode: "screen",
+        overlayGradient: OVERLAY_GRADIENT,
+      };
+
+      // Initialize renderer in-worker using OffscreenCanvas
+      createRenderer({
+        canvas: data.canvas,
+        config: data.config,
+      })
+        .then((result) => {
+          renderer?.dispose();
+          renderer = result.renderer;
+        })
+        .catch((error) => {
+          console.error("[Timeline] Worker renderer init failed", error);
+          renderer = null;
+        });
 
       // Initialize state (main thread will drive frames via "tick" messages)
       lastFlipCheck = performance.now();
@@ -512,6 +532,10 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       threads = [];
       transitioningThreadIds.clear();
       lastFrameTime = 0;
+      renderer?.dispose();
+      renderer = null;
+      reusablePacket = null;
+      threadFrames = [];
       break;
     }
   }

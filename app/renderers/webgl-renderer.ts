@@ -619,11 +619,14 @@ export class WebGLRenderer implements Renderer {
 
     const { dpr } = this.config;
 
-    // For HTMLCanvasElement, get the actual rendered size
+    // Resolve display size in CSS pixels
     let displayWidth = 1000;
     let displayHeight = 1000;
 
-    if ("offsetWidth" in this.canvas && this.canvas.offsetWidth > 0) {
+    if (typeof OffscreenCanvas !== "undefined" && this.canvas instanceof OffscreenCanvas) {
+      displayWidth = Math.max(1, this.canvas.width / dpr);
+      displayHeight = Math.max(1, this.canvas.height / dpr);
+    } else if ("offsetWidth" in this.canvas && this.canvas.offsetWidth > 0) {
       displayWidth = this.canvas.offsetWidth;
       displayHeight = this.canvas.offsetHeight;
     }
