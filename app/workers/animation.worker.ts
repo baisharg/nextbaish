@@ -25,6 +25,14 @@ import {
 
 import type { FramePacket, ThreadFrame, ColorStop, Renderer } from "../types/renderer";
 import { createRenderer } from "../utils/create-renderer";
+import type {
+  InitMessage,
+  PauseMessage,
+  ResumeMessage,
+  TerminateMessage,
+  TickMessage,
+  WorkerMessage,
+} from "./animation-types";
 
 // ============================================================================
 // TYPES
@@ -60,62 +68,6 @@ type WorkerThreadState = {
   // Static gradient bounds (from "down" profile only, used for both directions)
   // Matches SVG implementation which uses same y1/y2 for up and down
   gradientBounds: { minY: number; maxY: number };
-};
-
-// ============================================================================
-// MESSAGE TYPES
-// ============================================================================
-
-export type InitMessage = {
-  type: "init";
-  threads: Array<{
-    id: number;
-    color: HSL;
-    weight: number;
-    opacity: number;
-    profileNeutral: Float32Array;
-    profileUp: Float32Array;
-    profileDown: Float32Array;
-    direction: Direction;
-    swayPhase: number;
-    driftPhase: number;
-    swayFreq: number;
-    driftFreq: number;
-    swayAmp: number;
-    driftAmp: number;
-    duration: number;
-  }>;
-  viewSize: number;
-  frameInterval: number;
-};
-
-export type PauseMessage = {
-  type: "pause";
-};
-
-export type ResumeMessage = {
-  type: "resume";
-};
-
-export type TerminateMessage = {
-  type: "terminate";
-};
-
-export type TickMessage = {
-  type: "tick";
-  now: number;
-};
-
-export type WorkerMessage =
-  | InitMessage
-  | PauseMessage
-  | ResumeMessage
-  | TerminateMessage
-  | TickMessage;
-
-export type FrameMessage = {
-  type: "frame";
-  packet: FramePacket;
 };
 
 // ============================================================================
