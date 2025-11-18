@@ -759,10 +759,17 @@ export default async function AboutPage({
                 <article className="card-glass relative overflow-hidden p-6 text-left">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative space-y-3">
-                    <div>
-                      <h3 className="text-xl font-semibold text-slate-900">
-                        {t.support.kairos.name}
-                      </h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src="/images/logos/kairos.png"
+                          alt="Kairos"
+                          width={180}
+                          height={49}
+                          className="h-8 w-auto"
+                          loading="lazy"
+                        />
+                      </div>
                       <p className="text-sm text-slate-600">
                         {t.support.kairos.program}
                       </p>
