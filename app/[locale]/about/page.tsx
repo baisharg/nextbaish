@@ -714,18 +714,25 @@ export default async function AboutPage({
               </div>
 
               <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto pt-4">
-                {/* Open Philanthropy */}
+                {/* Coefficient Giving */}
                 <article className="card-glass relative overflow-hidden p-6 text-left">
                   <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
                   <div className="relative space-y-3">
-                    <h3 className="text-xl font-semibold text-slate-900">
-                      {t.support.openPhilanthropy.name}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src="/images/logos/coefficient-giving.svg"
+                        alt="Coefficient Giving"
+                        width={140}
+                        height={54}
+                        className="h-8 w-auto"
+                        loading="lazy"
+                      />
+                    </div>
                     <p className="text-base text-slate-700">
-                      {t.support.openPhilanthropy.description}
+                      {t.support.coefficientGiving.description}
                     </p>
                     <a
-                      href="https://www.openphilanthropy.org/"
+                      href="https://coefficientgiving.org/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"

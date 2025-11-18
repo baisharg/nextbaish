@@ -220,9 +220,9 @@
     "support": {
       "title": "Apoyo Externo",
       "description": "BAISH cuenta con el apoyo de:",
-      "openPhilanthropy": {
-        "name": "Open Philanthropy",
-        "description": "La misión de Open Philanthropy es donar de la manera más efectiva posible para ayudar a otros tanto como sea posible."
+      "coefficientGiving": {
+        "name": "Coefficient Giving",
+        "description": "La misión de Coefficient Giving es ayudar a otros tanto como podamos con los recursos disponibles para nosotros."
       },
       "kairos": {
         "name": "Kairos",

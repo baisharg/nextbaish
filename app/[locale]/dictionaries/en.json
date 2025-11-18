@@ -220,9 +220,9 @@
     "support": {
       "title": "Supported By",
       "description": "BAISH is supported by:",
-      "openPhilanthropy": {
-        "name": "Open Philanthropy",
-        "description": "Open Philanthropy's mission is to give as effectively as possible in order to help others as much as possible."
+      "coefficientGiving": {
+        "name": "Coefficient Giving",
+        "description": "Coefficient Giving's mission is to help others as much as we can with the resources available to us."
       },
       "kairos": {
         "name": "Kairos",
