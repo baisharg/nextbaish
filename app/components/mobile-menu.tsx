@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
+import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
@@ -214,13 +215,14 @@ export default function MobileMenu({
           </nav>
 
           <div className="px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))] border-t border-slate-200">
-            <a
+            <ScrollToButton
               className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
-              href="#get-involved"
+              targetId="get-involved"
+              navigateTo={withLocale(locale, "/")}
               onClick={onClose}
             >
               {t.cta}
-            </a>
+            </ScrollToButton>
           </div>
         </div>
       </div>

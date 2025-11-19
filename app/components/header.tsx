@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { TransitionLink } from "./transition-link";
+import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -349,13 +350,14 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                 );
               })}
             </div>
-            <a
+            <ScrollToButton
               className="header-cta hidden sm:inline-flex rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
               data-scrolled={scrolled}
-              href="#get-involved"
+              targetId="get-involved"
+              navigateTo={withLocale(locale, "/")}
             >
               {t.cta}
-            </a>
+            </ScrollToButton>
 
             <button
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 header-menu-btn"
