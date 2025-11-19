@@ -108,7 +108,7 @@ export default function MobileMenu({
 
       {/* Menu Panel */}
       <div
-        className="fixed top-0 right-0 w-full h-screen z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FFE6] shadow-xl overflow-y-auto"
+        className="fixed top-0 right-0 w-full h-[100dvh] z-40 md:hidden rounded-l-3xl border-l border-t border-b border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FFE6] shadow-xl overflow-y-auto"
         style={{
           transform: shouldAnimate ? "translateX(0)" : "translateX(100%)",
           transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -213,7 +213,7 @@ export default function MobileMenu({
             </div>
           </nav>
 
-          <div className="p-4 sm:p-6 border-t border-slate-200">
+          <div className="px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))] border-t border-slate-200">
             <a
               className="flex items-center justify-center w-full rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] transition"
               href="#get-involved"
