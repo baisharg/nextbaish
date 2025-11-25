@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { usePrefersReducedMotion } from "../hooks/use-prefers-reduced-motion";
 import type {
   WorkerThreadData,
   ThreadsGeneratedMessage,
@@ -379,23 +380,6 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
 // --------------------------------------------------------------------------------
 // REACT COMPONENT
 // --------------------------------------------------------------------------------
-
-const usePrefersReducedMotion = () => {
-  const [prefers, setPrefers] = useState(false);
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      typeof window.matchMedia !== "function"
-    )
-      return;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPrefers(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-  return prefers;
-};
 
 type ThreadOverrideParams = {
   threadCount?: number;

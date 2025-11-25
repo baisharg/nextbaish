@@ -1,9 +1,8 @@
 /**
  * Renderer Factory - Creates the appropriate renderer based on capabilities
  *
- * This factory abstracts renderer selection and instantiation, choosing the
- * best available renderer (WebGL > Canvas2D > SVG fallback) based on browser
- * capabilities and user preferences.
+ * This factory abstracts renderer selection and instantiation, choosing
+ * WebGL (WebGL2 preferred) based on browser capabilities.
  */
 
 import type {
@@ -16,7 +15,6 @@ import {
   detectCapabilities,
   chooseBestRenderer,
 } from "../types/renderer";
-import { Canvas2DRenderer } from "../renderers/canvas2d-renderer";
 import { WebGLRenderer } from "../renderers/webgl-renderer";
 
 /**
@@ -138,7 +136,6 @@ function validateRendererChoice(
       }
       return RendererType.WebGL;
 
-    case RendererType.Canvas2D:
     case RendererType.SVG:
       console.warn(
         `[Timeline] ${preferredRenderer} renderer not supported - WebGL only`
@@ -164,10 +161,6 @@ async function instantiateRenderer(
     case RendererType.WebGL2:
     case RendererType.WebGL:
       renderer = new WebGLRenderer();
-      break;
-
-    case RendererType.Canvas2D:
-      renderer = new Canvas2DRenderer();
       break;
 
     case RendererType.SVG:
@@ -199,9 +192,6 @@ export function isRendererSupported(
     case RendererType.WebGL:
       return caps.offscreenCanvas && caps.webgl;
 
-    case RendererType.Canvas2D:
-      return true; // Always supported
-
     case RendererType.SVG:
       return false; // Not implemented yet
 
@@ -220,9 +210,6 @@ export function getRendererDescription(type: RendererType): string {
 
     case RendererType.WebGL:
       return "WebGL (GPU-accelerated with shader-based blur)";
-
-    case RendererType.Canvas2D:
-      return "Canvas2D (GPU-accelerated with CSS filters)";
 
     case RendererType.SVG:
       return "SVG (DOM-based, legacy fallback)";

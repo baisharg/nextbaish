@@ -144,11 +144,10 @@ export function detectCapabilities(): RendererCapabilities {
 }
 
 /**
- * Renderer type enum
+ * Renderer type enum (WebGL only)
  */
 export enum RendererType {
-  SVG = "svg",
-  Canvas2D = "canvas2d",
+  SVG = "svg", // Not implemented - kept for future fallback
   WebGL = "webgl",
   WebGL2 = "webgl2",
 }
