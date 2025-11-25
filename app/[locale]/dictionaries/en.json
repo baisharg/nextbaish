@@ -466,161 +466,120 @@
       "home": "Home",
       "current": "Research"
     },
-    "title": "Our Research",
-    "filterBy": "Filter by:",
-    "filters": {
-      "all": "All",
-      "interpretability": "Interpretability",
-      "alignment": "Alignment",
-      "robustness": "Robustness",
-      "valueLearning": "Value Learning"
-    },
-    "approachTitle": "Research Approach",
-    "focusAreasTitle": "Focus Areas",
-    "focusAreas": {
-      "mechInterp": "Mechanistic Interpretability - Understanding how neural networks process information internally",
-      "alignment": "AI Alignment - Ensuring AI systems act according to human values and intentions",
-      "robustness": "Robustness & Adversarial Testing - Building resilient systems resistant to attacks",
-      "valueLearning": "Value Learning - Teaching AI systems to learn and respect human preferences"
-    },
-    "projectsTitle": "Research Projects",
-    "linkPlaceholder": "Link Placeholder",
-    "publicationsTitle": "Publications",
-    "ongoingTitle": "Ongoing Research",
-    "started": "Started",
-    "expectedCompletion": "Expected Completion",
-    "intro": "Discover how BAISH researchers explore interpretability, alignment, robustness, and value learning to keep frontier AI systems safe.",
-    "overview": {
-      "paragraphs": [
-        "We prototype small collaborative research sprints focused on mechanistic interpretability, evals, and alignment theory that local students can join.",
-        "Our goal is to make Buenos Aires a consistent contributor to global AI safety work and to publish open resources other teams can reuse."
+    "title": "Research at BAISH",
+    "intro": "We help students in Buenos Aires go from curious to published. Join research sprints, workshops, and a community of aspiring AI safety researchers.",
+    "ctaPrograms": "Join a Program",
+    "ctaLearnMore": "Learn More",
+    "pathway": {
+      "title": "Your Research Journey",
+      "subtitle": "From first steps to published researcher — here's how it works",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Learn",
+          "program": "AI Safety Fundamentals",
+          "description": "Build foundations through our 13-week course covering alignment, interpretability, and AI governance.",
+          "duration": "13 weeks"
+        },
+        {
+          "number": "02",
+          "title": "Practice",
+          "program": "AIS Research Workshop",
+          "description": "Replicate recent AI safety papers through hands-on programming. Develop the technical skills to conduct independent research.",
+          "duration": "Ongoing"
+        },
+        {
+          "number": "03",
+          "title": "Research",
+          "program": "Research Sprints",
+          "description": "Contribute original work in collaborative sprints. Past participants have placed in Apart Research competitions.",
+          "duration": "2-4 weeks"
+        },
+        {
+          "number": "04",
+          "title": "Launch",
+          "program": "AISAR & Careers",
+          "description": "Advance to full-time research through AISAR scholarships ($600/mo), grad school, or industry positions.",
+          "duration": "6 months+"
+        }
       ]
     },
-    "publicationsIntro": "Selected write-ups, preprints, and workshop submissions from the BAISH network.",
-    "publications": [
-      {
-        "title": "Tracing Gradient Circuits in Sparse Autoencoders",
-        "authors": "Eitan Braun, Luca Sambucci",
-        "venue": "NeurIPS AI Safety Workshop · 2024",
-        "links": [
-          {
-            "label": "Paper",
-            "url": "#"
-          },
-          {
-            "label": "Slides",
-            "url": "#"
-          }
-        ]
-      },
-      {
-        "title": "Alignment Case Studies for Spanish-Speaking Teams",
-        "authors": "Martina Lopez, Tomas Villar",
-        "venue": "BAISH Research Notes · 2025",
-        "links": [
-          {
-            "label": "Read",
-            "url": "#"
-          }
-        ]
-      },
-      {
-        "title": "Learning from Mechanistic Feature Drift",
-        "authors": "Ana Paredes, Facundo Ibarra",
-        "venue": "BAIR Interpretability Sprint · 2025",
-        "links": [
-          {
-            "label": "Summary",
-            "url": "#"
-          },
-          {
-            "label": "Repo",
-            "url": "#"
-          },
-          {
-            "label": "Video",
-            "url": "#"
-          }
-        ]
-      }
-    ],
-    "ongoingDescription": "Snapshot of workstreams that are currently recruiting collaborators or mentors.",
-    "ongoingProjects": [
-      {
-        "title": "Circuit Breakers for Speculative Decoding",
-        "researchers": "Eitan Braun, Sofia Molina",
-        "completion": "45% complete",
-        "description": "Testing how speculative decoding changes failure modes in multilingual assistants and building mitigations.",
-        "started": "January 2025",
-        "expectedCompletion": "May 2025"
-      },
-      {
-        "title": "Human Feedback Benchmarks in Spanish",
-        "researchers": "Juan Perez, Camila Torres",
-        "completion": "30% complete",
-        "description": "Collecting RLHF-style preference data in Spanish to evaluate open frontier models on culturally-relevant prompts.",
-        "started": "November 2024",
-        "expectedCompletion": "June 2025"
-      },
-      {
-        "title": "Agentic Eval Harness for Open Models",
-        "researchers": "Maria Fuentes, Diego Catalan",
-        "completion": "70% complete",
-        "description": "Building a lightweight harness to test auto-GPT style agents for tool misuse and goal drift.",
-        "started": "August 2024",
-        "expectedCompletion": "March 2025"
-      }
-    ],
-    "projects": [
-      {
-        "title": "Mechanistic Feature Cartography",
-        "year": "2025",
-        "researchers": "Eitan Braun, Azul Fernandez",
-        "abstract": "Mapping neuron circuits in Llama 3 70B to build Spanish-language interpretability demos.",
-        "category": "interpretability",
-        "tag": "Interpretability"
-      },
-      {
-        "title": "Speculative Decoding Safety",
-        "year": "2025",
-        "researchers": "Luca Sambucci, Florencia Neme",
-        "abstract": "Evaluating failure modes in speculative decoding pipelines for alignment-sensitive deployments.",
-        "category": "alignment",
-        "tag": "Alignment"
-      },
-      {
-        "title": "Robust Benchmark Translation",
-        "year": "2024",
-        "researchers": "Martina Lopez, Diego Catalan",
-        "abstract": "Porting adversarial QA datasets into Spanish to stress-test bilingual assistants.",
-        "category": "robustness",
-        "tag": "Robustness"
-      },
-      {
-        "title": "Interpretability Tooling Sprint",
-        "year": "2024",
-        "researchers": "Agustin Rivas, Tomas Villar",
-        "abstract": "Building lightweight tools that visualize transformer attention heads for local researchers.",
-        "category": "interpretability",
-        "tag": "Interpretability"
-      },
-      {
-        "title": "Value Learning Case Library",
-        "year": "2023",
-        "researchers": "Tamara Ponce, Ivan Mazzino",
-        "abstract": "Documenting concrete alignment scenarios for Latin American policy teams.",
-        "category": "value-learning",
-        "tag": "Value Learning"
-      },
-      {
-        "title": "Alignment Reading Reports",
-        "year": "2022",
-        "researchers": "Community Fellows",
-        "abstract": "Short technical summaries from the BAISH reading group covering new governance and safety papers.",
-        "category": "alignment",
-        "tag": "Alignment"
-      }
-    ]
+    "focusAreas": {
+      "title": "What You Could Work On",
+      "subtitle": "Current research directions in our community",
+      "areas": [
+        {
+          "title": "Mechanistic Interpretability",
+          "description": "Understanding how neural networks process information internally. What circuits implement specific behaviors? How can we reverse-engineer model cognition?",
+          "icon": "microscope"
+        },
+        {
+          "title": "LLM Evaluations",
+          "description": "Building benchmarks and testing methodologies for frontier models. How do we measure alignment? What capabilities emerge at scale?",
+          "icon": "chart"
+        },
+        {
+          "title": "Alignment Theory",
+          "description": "Fundamental questions about making AI systems beneficial. How do we specify human values? What oversight mechanisms work?",
+          "icon": "compass"
+        }
+      ]
+    },
+    "publications": {
+      "title": "Community Publications",
+      "subtitle": "Work by researchers connected to BAISH",
+      "items": [
+        {
+          "title": "Gradient Tracing for Sparse Autoencoders",
+          "authors": "Eitan Sprejer",
+          "venue": "NeurIPS Workshop on Attributing Model Behavior at Scale · 2024",
+          "description": "Analyzing feature attribution in sparse autoencoders through gradient-based circuit tracing.",
+          "links": [
+            {
+              "label": "Paper",
+              "url": "https://openreview.net/forum?id=YOUR_PAPER_ID"
+            }
+          ]
+        }
+      ],
+      "note": "Our community is young — we're building our publication track record through programs like AISAR and Apart Research sprints."
+    },
+    "opportunities": {
+      "title": "Current Opportunities",
+      "subtitle": "Ways to get involved in AI safety research right now",
+      "items": [
+        {
+          "title": "AIS Research Workshop",
+          "type": "Weekly Workshop",
+          "description": "Replicate AI safety papers and build technical skills. Every Tuesday at 2:30 PM.",
+          "commitment": "5 hrs/week",
+          "cta": "Join Workshop",
+          "link": "/activities#ais-workshop"
+        },
+        {
+          "title": "AISAR Scholarships",
+          "type": "Research Fellowship",
+          "description": "6-month part-time program for advanced students. $600/month stipend + compute budget.",
+          "commitment": "20 hrs/week",
+          "cta": "Learn More",
+          "link": "https://aisar.ar"
+        },
+        {
+          "title": "Paper Reading Club",
+          "type": "Community",
+          "description": "Full paper presentations followed by discussion. Recordings on YouTube.",
+          "commitment": "2 hrs/session",
+          "cta": "Join Club",
+          "link": "/activities#paper-reading"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to start your research journey?",
+      "description": "Book a call with one of our co-founders to discuss your interests and find the right path.",
+      "bookWithEitan": "Book with Eitan",
+      "bookWithLuca": "Book with Luca"
+    }
   },
   "resources": {
     "breadcrumb": {

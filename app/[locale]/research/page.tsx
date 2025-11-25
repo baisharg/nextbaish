@@ -6,41 +6,36 @@ import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
-import ResearchFilters from "@/app/components/research-filters";
 
-type ProjectCategory =
-  | "all"
-  | "interpretability"
-  | "alignment"
-  | "robustness"
-  | "value-learning";
-
-interface Project {
-  id: number;
+type PathwayStep = {
+  number: string;
   title: string;
-  year: string;
-  researchers: string;
-  abstract: string;
-  category: Exclude<ProjectCategory, "all">;
-  tag: string;
-}
+  program: string;
+  description: string;
+  duration: string;
+};
 
-type DictionaryProject = Omit<Project, "id">;
+type FocusArea = {
+  title: string;
+  description: string;
+  icon: string;
+};
 
 type Publication = {
   title: string;
   authors: string;
   venue: string;
+  description: string;
   links: { label: string; url: string }[];
 };
 
-type OngoingProject = {
+type Opportunity = {
   title: string;
-  researchers: string;
-  completion: string;
+  type: string;
   description: string;
-  started: string;
-  expectedCompletion: string;
+  commitment: string;
+  cta: string;
+  link: string;
 };
 
 export default async function ResearchPage({
@@ -51,214 +46,306 @@ export default async function ResearchPage({
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
+  const t = dict.research;
 
-  const projects: Project[] = (
-    (dict.research.projects ?? []) as DictionaryProject[]
-  ).map((project, index) => ({
-    ...project,
-    id: index + 1,
-  }));
-  const publications = (dict.research.publications ?? []) as Publication[];
-  const ongoingProjects = (dict.research.ongoingProjects ??
-    []) as OngoingProject[];
-  const overviewParagraphs = dict.research.overview?.paragraphs ?? [];
+  const pathwaySteps = t.pathway.steps as PathwayStep[];
+  const focusAreas = t.focusAreas.areas as FocusArea[];
+  const publications = t.publications.items as Publication[];
+  const opportunities = t.opportunities.items as Opportunity[];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
-        <div className="main-sections">
-        {/* Page Header */}
-        <FadeInSection variant="fade" as="section">
-          <section className="space-y-4">
-            <div className="text-sm text-slate-600">
-              <Link
-                href={withLocale(currentLocale, "/")}
-                className="hover:text-slate-900"
-              >
-                {dict.research.breadcrumb.home}
-              </Link>
-              {" / "}
-              <span>{dict.research.breadcrumb.current}</span>
-            </div>
-            <AnimatedTitle
-              text={dict.research.title}
-              slug="research"
-              className="text-4xl font-semibold text-slate-900 sm:text-5xl"
-              as="h1"
-            />
-            <p className="text-lg text-slate-600">{dict.research.intro}</p>
-          </section>
-        </FadeInSection>
+        <div className="main-sections w-full">
+          {/* Page Header */}
+          <FadeInSection variant="fade" as="section" startVisible>
+            <section className="space-y-6">
+              <div className="text-sm text-slate-600">
+                <Link
+                  href={withLocale(currentLocale, "/")}
+                  className="hover:text-slate-900 transition"
+                >
+                  {t.breadcrumb.home}
+                </Link>
+                {" / "}
+                <span>{t.breadcrumb.current}</span>
+              </div>
+              <div className="space-y-4 max-w-3xl">
+                <AnimatedTitle
+                  text={t.title}
+                  slug="research"
+                  className="text-4xl font-semibold text-slate-900 sm:text-5xl"
+                  as="h1"
+                />
+                <p className="text-xl text-slate-600 leading-relaxed">
+                  {t.intro}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href={withLocale(currentLocale, "/activities")}
+                  className="button-primary"
+                >
+                  {t.ctaPrograms}
+                </Link>
+                <a href="#pathway" className="button-secondary">
+                  {t.ctaLearnMore}
+                </a>
+              </div>
+            </section>
+          </FadeInSection>
 
-        {/* Research Overview */}
-        <FadeInSection variant="slide-up" delay={100} as="section">
-          <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="grid gap-12 md:grid-cols-2">
-              <div className="space-y-6">
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {dict.research.approachTitle}
-                </h2>
-                <div className="space-y-4 text-base text-slate-700">
-                  {overviewParagraphs.map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
+          {/* Research Pathway */}
+          <FadeInSection variant="slide-up" delay={100} as="section">
+            <section
+              id="pathway"
+              className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12"
+            >
+              <div className="space-y-8">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-semibold text-slate-900">
+                    {t.pathway.title}
+                  </h2>
+                  <p className="text-lg text-slate-600">
+                    {t.pathway.subtitle}
+                  </p>
+                </div>
+
+                {/* Pathway Steps */}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {pathwaySteps.map((step, index) => (
+                    <div
+                      key={step.number}
+                      className="relative flex flex-col"
+                    >
+                      {/* Connector line for larger screens */}
+                      {index < pathwaySteps.length - 1 && (
+                        <div className="hidden lg:block absolute top-8 left-[calc(100%+0.5rem)] w-[calc(100%-1rem)] h-0.5 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] opacity-30" />
+                      )}
+
+                      <div className="flex flex-col h-full rounded-2xl border border-slate-200 bg-slate-50/50 p-6 transition hover:border-[var(--color-accent-primary)]/30 hover:shadow-md">
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-sm font-bold text-white">
+                            {step.number}
+                          </span>
+                          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            {step.duration}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-semibold text-slate-900 mb-1">
+                          {step.title}
+                        </h3>
+                        <p className="text-sm font-medium text-[var(--color-accent-primary)] mb-3">
+                          {step.program}
+                        </p>
+                        <p className="text-sm text-slate-600 flex-grow">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-              <div className="space-y-6">
+            </section>
+          </FadeInSection>
+
+          {/* Focus Areas */}
+          <FadeInSection variant="slide-up" delay={200} as="section">
+            <section className="space-y-8">
+              <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
-                  {dict.research.focusAreasTitle}
+                  {t.focusAreas.title}
                 </h2>
-                <ul className="space-y-3 text-base text-slate-700">
-                  <li className="flex gap-3">
-                    <span className="text-[var(--color-accent-primary)]">
-                      •
-                    </span>
-                    <span>{dict.research.focusAreas.mechInterp}</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--color-accent-primary)]">
-                      •
-                    </span>
-                    <span>{dict.research.focusAreas.alignment}</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--color-accent-primary)]">
-                      •
-                    </span>
-                    <span>{dict.research.focusAreas.robustness}</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--color-accent-primary)]">
-                      •
-                    </span>
-                    <span>{dict.research.focusAreas.valueLearning}</span>
-                  </li>
-                </ul>
+                <p className="text-lg text-slate-600">
+                  {t.focusAreas.subtitle}
+                </p>
               </div>
-            </div>
-          </section>
-        </FadeInSection>
 
-        {/* Research Projects */}
-        <FadeInSection variant="slide-up" delay={200} as="section">
-          <ResearchFilters
-            projects={projects}
-            filterLabels={dict.research.filters}
-            filterByLabel={dict.research.filterBy}
-            linkPlaceholder={dict.research.linkPlaceholder}
-            projectsTitle={dict.research.projectsTitle}
-          />
-        </FadeInSection>
-
-        {/* Publications */}
-        <FadeInSection variant="slide-up" delay={300} as="section">
-          <section className="section-container space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {dict.research.publicationsTitle}
-              </h2>
-              <p className="text-base text-slate-600">
-                {dict.research.publicationsIntro}
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {publications.map((publication, index) => (
-                <article
-                  key={`${publication.title}-${index}`}
-                  className="card-glass p-6"
-                >
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div className="space-y-2 flex-1">
-                      <h3 className="text-xl font-semibold text-slate-900">
-                        {publication.title}
-                      </h3>
-                      <p className="text-sm text-slate-600">
-                        {publication.authors}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        {publication.venue}
-                      </p>
-                    </div>
-                    {publication.links.length > 0 && (
-                      <div className="flex gap-3 flex-shrink-0">
-                        {publication.links.map((link) => (
-                          <a
-                            key={`${publication.title}-${link.label}`}
-                            href={link.url}
-                            className="button-secondary"
-                          >
-                            {link.label}
-                          </a>
-                        ))}
+              <div className="grid gap-6 md:grid-cols-3">
+                {focusAreas.map((area) => (
+                  <article
+                    key={area.title}
+                    className="card-glass group"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]">
+                        {area.icon === "microscope" && (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                          </svg>
+                        )}
+                        {area.icon === "chart" && (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                          </svg>
+                        )}
+                        {area.icon === "compass" && (
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                          </svg>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        </FadeInSection>
+                      <h3 className="text-xl font-semibold text-slate-900">
+                        {area.title}
+                      </h3>
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        {area.description}
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </FadeInSection>
 
-        {/* Ongoing Research */}
-        <FadeInSection variant="slide-up" delay={400} as="section">
-          <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {dict.research.ongoingTitle}
-              </h2>
-              <p className="text-base text-slate-600">
-                {dict.research.ongoingDescription}
+          {/* Community Publications */}
+          <FadeInSection variant="slide-up" delay={300} as="section">
+            <section className="section-container space-y-8">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.publications.title}
+                </h2>
+                <p className="text-lg text-slate-600">
+                  {t.publications.subtitle}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {publications.map((pub) => (
+                  <article
+                    key={pub.title}
+                    className="card-glass"
+                  >
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-2 flex-1">
+                        <h3 className="text-xl font-semibold text-slate-900">
+                          {pub.title}
+                        </h3>
+                        <p className="text-sm text-slate-600">
+                          {pub.authors}
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          {pub.venue}
+                        </p>
+                        <p className="text-sm text-slate-600 mt-2">
+                          {pub.description}
+                        </p>
+                      </div>
+                      {pub.links.length > 0 && (
+                        <div className="flex gap-3 flex-shrink-0">
+                          {pub.links.map((link) => (
+                            <a
+                              key={`${pub.title}-${link.label}`}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="button-secondary"
+                            >
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Note about growing publications */}
+              <p className="text-sm text-slate-500 italic text-center">
+                {t.publications.note}
               </p>
-            </div>
+            </section>
+          </FadeInSection>
 
-            <div className="space-y-8">
-              {ongoingProjects.map((project, index) => (
-                <article
-                  key={`${project.title}-${index}`}
-                  className="card-glass space-y-6 p-6"
-                >
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-semibold text-slate-900">
-                      {project.title}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-4 text-sm">
-                      <span className="text-slate-600">
-                        <span className="font-medium">
-                          {project.researchers}
-                        </span>
-                      </span>
-                      <span className="rounded-full bg-[var(--color-accent-primary)] px-3 py-1 text-xs font-semibold text-white">
-                        {project.completion}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-base text-slate-700">
-                    {project.description}
+          {/* Current Opportunities */}
+          <FadeInSection variant="slide-up" delay={400} as="section">
+            <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
+              <div className="space-y-8">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-semibold text-slate-900">
+                    {t.opportunities.title}
+                  </h2>
+                  <p className="text-lg text-slate-600">
+                    {t.opportunities.subtitle}
                   </p>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-xl border border-slate-200 bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                        {dict.research.started}
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-slate-900">
-                        {project.started}
-                      </p>
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
-                        {dict.research.expectedCompletion}
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-slate-900">
-                        {project.expectedCompletion}
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        </FadeInSection>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-3">
+                  {opportunities.map((opp) => (
+                    <article
+                      key={opp.title}
+                      className="flex flex-col rounded-2xl border border-slate-200 bg-slate-50/50 p-6 transition hover:border-[var(--color-accent-primary)]/30 hover:shadow-md"
+                    >
+                      <div className="flex-grow space-y-3">
+                        <span className="inline-block rounded-full bg-[var(--color-accent-primary)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-accent-primary)]">
+                          {opp.type}
+                        </span>
+                        <h3 className="text-xl font-semibold text-slate-900">
+                          {opp.title}
+                        </h3>
+                        <p className="text-sm text-slate-600">
+                          {opp.description}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {opp.commitment}
+                        </p>
+                      </div>
+                      <div className="mt-6">
+                        {opp.link.startsWith("http") ? (
+                          <a
+                            href={opp.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button-primary w-full text-center"
+                          >
+                            {opp.cta}
+                          </a>
+                        ) : (
+                          <Link
+                            href={withLocale(currentLocale, opp.link)}
+                            className="button-primary w-full text-center block"
+                          >
+                            {opp.cta}
+                          </Link>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </FadeInSection>
+
+          {/* CTA Section */}
+          <FadeInSection variant="slide-up" delay={500} as="section">
+            <section className="rounded-2xl bg-gradient-to-br from-[var(--color-accent-primary)]/5 to-[var(--color-accent-secondary)]/5 border border-slate-200 p-8 text-center">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-2">
+                {t.cta.title}
+              </h2>
+              <p className="text-base text-slate-600 mb-6 max-w-xl mx-auto">
+                {t.cta.description}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="https://calendly.com/eitusprejer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button-primary inline-flex items-center justify-center gap-2"
+                >
+                  {t.cta.bookWithEitan}
+                </a>
+                <a
+                  href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button-primary inline-flex items-center justify-center gap-2"
+                >
+                  {t.cta.bookWithLuca}
+                </a>
+              </div>
+            </section>
+          </FadeInSection>
         </div>
       </main>
 
