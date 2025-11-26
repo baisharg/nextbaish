@@ -53,137 +53,17 @@ export default async function AboutPage({
                 as="h1"
               />
               <a
-                href="#cofounders"
-                className="button-primary whitespace-nowrap"
+                href="#our-approach"
+                className="button-secondary whitespace-nowrap"
               >
-                {t.team.meetTheTeam}
+                {t.ourApproach.title}
               </a>
             </div>
           </section>
         </FadeInSection>
 
-        {/* Core Concepts Section */}
+        {/* Cofounders Section - Lead with People */}
         <FadeInSection variant="slide-up" delay={100} as="section">
-          <section
-            className="section-container"
-            id="core-concepts"
-          >
-            <div className="grid gap-12 lg:grid-cols-2">
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {t.coreConcepts.whatIsAiSafety.title}
-                  </h2>
-                  <p className="text-lg text-slate-700">
-                    {t.coreConcepts.whatIsAiSafety.content}
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {t.coreConcepts.whyItMatters.title}
-                  </h2>
-                  <p className="text-lg text-slate-700">
-                    {t.coreConcepts.whyItMatters.content}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.coreConcepts.risks.title}
-                </h2>
-                <ul className="space-y-6">
-                  <li className="space-y-2">
-                    <strong className="text-lg text-slate-900">
-                      {t.coreConcepts.risks.alignment.title}
-                    </strong>
-                    <p className="text-base text-slate-700">
-                      {t.coreConcepts.risks.alignment.description}
-                    </p>
-                  </li>
-                  <li className="space-y-2">
-                    <strong className="text-lg text-slate-900">
-                      {t.coreConcepts.risks.interpretability.title}
-                    </strong>
-                    <p className="text-base text-slate-700">
-                      {t.coreConcepts.risks.interpretability.description}
-                    </p>
-                  </li>
-                  <li className="space-y-2">
-                    <strong className="text-lg text-slate-900">
-                      {t.coreConcepts.risks.robustness.title}
-                    </strong>
-                    <p className="text-base text-slate-700">
-                      {t.coreConcepts.risks.robustness.description}
-                    </p>
-                  </li>
-                  <li className="space-y-2">
-                    <strong className="text-lg text-slate-900">
-                      {t.coreConcepts.risks.powerSeeking.title}
-                    </strong>
-                    <p className="text-base text-slate-700">
-                      {t.coreConcepts.risks.powerSeeking.description}
-                    </p>
-                  </li>
-                  <li className="space-y-2">
-                    <strong className="text-lg text-slate-900">
-                      {t.coreConcepts.risks.coordination.title}
-                    </strong>
-                    <p className="text-base text-slate-700">
-                      {t.coreConcepts.risks.coordination.description}
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-        </FadeInSection>
-
-        {/* Our Approach Section */}
-        <FadeInSection variant="slide-up" delay={200} as="section">
-          <section
-            className="section-container"
-            id="our-approach"
-          >
-            <div className="space-y-8">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {t.ourApproach.title}
-              </h2>
-              <div className="grid gap-12 lg:grid-cols-2">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {t.ourApproach.focusAreas.title}
-                  </h3>
-                  <p className="text-base text-slate-700">
-                    {t.ourApproach.focusAreas.intro}
-                  </p>
-                  <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
-                    {t.ourApproach.focusAreas.items.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {t.ourApproach.contribution.title}
-                  </h3>
-                  <p className="text-base text-slate-700">
-                    {t.ourApproach.contribution.intro}
-                  </p>
-                  <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
-                    {t.ourApproach.contribution.items.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeInSection>
-
-        {/* Cofounders Section */}
-        <FadeInSection variant="slide-up" delay={300} as="section">
           <section
             className="section-container space-y-8"
             id="cofounders"
@@ -334,7 +214,7 @@ export default async function AboutPage({
         </FadeInSection>
 
         {/* Team Section */}
-        <FadeInSection variant="slide-up" delay={400} as="section">
+        <FadeInSection variant="slide-up" delay={200} as="section">
           <section
             className="section-container space-y-8"
             id="team"
@@ -697,8 +577,50 @@ export default async function AboutPage({
           </section>
         </FadeInSection>
 
+        {/* Our Approach Section */}
+        <FadeInSection variant="slide-up" delay={300} as="section">
+          <section
+            className="section-container"
+            id="our-approach"
+          >
+            <div className="space-y-8">
+              <h2 className="text-3xl font-semibold text-slate-900">
+                {t.ourApproach.title}
+              </h2>
+              <div className="grid gap-12 lg:grid-cols-2">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    {t.ourApproach.focusAreas.title}
+                  </h3>
+                  <p className="text-base text-slate-700">
+                    {t.ourApproach.focusAreas.intro}
+                  </p>
+                  <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
+                    {t.ourApproach.focusAreas.items.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    {t.ourApproach.contribution.title}
+                  </h3>
+                  <p className="text-base text-slate-700">
+                    {t.ourApproach.contribution.intro}
+                  </p>
+                  <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
+                    {t.ourApproach.contribution.items.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </FadeInSection>
+
         {/* Support Section */}
-        <FadeInSection variant="slide-up" delay={500} as="section">
+        <FadeInSection variant="slide-up" delay={400} as="section">
           <section
             className="section-container space-y-8"
             id="support"

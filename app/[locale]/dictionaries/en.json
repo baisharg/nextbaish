@@ -46,12 +46,48 @@
       "home": "Home"
     },
     "mission": {
-      "eyebrow": "Mission",
-      "title": "Ensuring AI Benefits Humanity",
+      "eyebrow": "Buenos Aires AI Safety Hub",
+      "title": "From Curious to Contributing",
+      "tagline": "We help students become AI safety researchers — from first paper to published research.",
       "paragraph1": "As artificial intelligence models advance in capabilities{footnote1}, we expect them to have an increasingly profound impact on our society{footnote2}. It is essential that this impact is positive, and that the decisions made by these systems are transparent, reliable, and accountable{footnote3} to the people affected by them.",
       "paragraph2": "We believe that reducing the risks associated with advanced AI models{footnote4} is one of the most important challenges of our time. We also believe it is an open and exciting problem{footnote5}, with ample opportunities for more researchers to advance in this field{footnote6}.",
       "paragraph3": "BAISH's mission is to support students in entering this field and conducting research on this topic.",
       "cta": "Get Involved"
+    },
+    "gettingStarted": {
+      "eyebrow": "Your Path",
+      "title": "Getting Started with BAISH",
+      "description": "Clear steps to go from curious to contributing.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Join our community",
+          "description": "Connect with 200+ members on WhatsApp and Telegram. Get updates on events and opportunities.",
+          "cta": "Join WhatsApp",
+          "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+        },
+        {
+          "number": "02",
+          "title": "Learn the fundamentals",
+          "description": "Take our AI Safety Fundamentals course — a 13-week inverted classroom covering core alignment concepts.",
+          "cta": "View Course",
+          "link": "/activities/fundamentals"
+        },
+        {
+          "number": "03",
+          "title": "Build technical skills",
+          "description": "Join the AIS Research Workshop to replicate papers and develop research skills hands-on.",
+          "cta": "Join Workshop",
+          "link": "/activities/workshop"
+        },
+        {
+          "number": "04",
+          "title": "Contribute to research",
+          "description": "Apply to AISAR for a 6-month research fellowship with mentorship, stipend, and compute access.",
+          "cta": "Learn About AISAR",
+          "link": "https://aisar.ar"
+        }
+      ]
     },
     "events": {
       "eyebrow": "Upcoming Events",
@@ -89,6 +125,32 @@
       "joinNow": "Join now",
       "joinTelegram": "Join Telegram",
       "learnMore": "Learn more"
+    },
+    "successStories": {
+      "eyebrow": "Impact",
+      "title": "Where Our Community Goes",
+      "description": "BAISH alumni have gone on to research positions, fellowships, and published work.",
+      "stats": [
+        { "number": "3+", "label": "Published papers" },
+        { "number": "10+", "label": "Research fellowships" },
+        { "number": "200+", "label": "Community members" }
+      ],
+      "stories": [
+        {
+          "name": "Guido Bergman",
+          "role": "AISAR → Algoverse & AI Evals",
+          "quote": "BAISH gave me the foundation and connections to transition into AI safety research professionally.",
+          "link": "https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203"
+        },
+        {
+          "name": "Ana & Vicky",
+          "role": "BAISH → ML4Good Camp",
+          "quote": "From local meetups to international research collaborations.",
+          "link": null
+        }
+      ],
+      "cta": "See our research",
+      "ctaLink": "/research"
     },
     "aisar": {
       "eyebrow": "Sister Project",
@@ -213,7 +275,7 @@
         "programAssistant": "Program Assistant"
       },
       "bios": {
-        "eitan": "Eitan is a full-time AI Safety researcher through the {aisarLink} program and the {apartLabLink}. He has first authored AI Safety {eitanPaperLink} accepted to NeurIPS workshops and co-authored {eitanArxivPaperLink}. He holds a bachelor's + master's degree in Physics from the University of Buenos Aires. He has served as a teaching assistant at {ml4gLink} camps on two occasions and has been a facilitator for the {aisesLink} from the Center for AI Safety. He is currently a facilitator for {blueDotAgiLink}.",
+        "eitan": "Eitan is a full-time AI Safety researcher through the {aisarLink} program and the {apartLabLink}. He has co-authored {eitanPaperLink} accepted to NeurIPS workshops, {eitanArxivPaperLink}, and {eitanCoTPaperLink}. He holds a bachelor's + master's degree in Physics from the University of Buenos Aires. He has served as a teaching assistant at {ml4gLink} camps on two occasions and has been a facilitator for the {aisesLink} from the Center for AI Safety. He is currently a facilitator for {blueDotAgiLink}.",
         "luca": "Luca has been involved in AI Safety since 2016. After dropping out of a master's in Computer Science at the University of Buenos Aires, he received grants from {acxLink} and the {ltffLink} to upskill for AI Safety research. He has worked in operations at {nonlinearLink} and achieved first place in two separate {apartResearchLink} sprints and one second place. He currently does part-time operations for the {aiSpeciesLink} YouTube channel, which has garnered over 14 million views raising awareness about AI Safety. He is currently a facilitator for {blueDotAgiLink}."
       }
     },
@@ -530,19 +592,43 @@
       "subtitle": "Work by researchers connected to BAISH",
       "items": [
         {
-          "title": "Gradient Tracing for Sparse Autoencoders",
-          "authors": "Eitan Sprejer",
-          "venue": "NeurIPS Workshop on Attributing Model Behavior at Scale · 2024",
-          "description": "Analyzing feature attribution in sparse autoencoders through gradient-based circuit tracing.",
+          "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
+          "authors": "Austin Meek, Eitan Sprejer, Iván Arcuschin, Austin J. Brockmeier, Steven Basart",
+          "venue": "arXiv · 2025",
+          "description": "Investigating how well chain-of-thought reasoning can be monitored for safety through faithfulness and verbosity metrics.",
           "links": [
             {
-              "label": "Paper",
-              "url": "https://openreview.net/forum?id=YOUR_PAPER_ID"
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2510.27378"
+            }
+          ]
+        },
+        {
+          "title": "AI Debaters are More Persuasive when Arguing in Alignment with Their Own Beliefs",
+          "authors": "María Victoria Carro, Denise Mester, Facundo Nieto, Oscar Stanchi, Guido Bergman, Mario Leiva, Eitan Sprejer, Luca Forziati Gangi, et al.",
+          "venue": "arXiv · 2025",
+          "description": "Studying how AI systems' internal beliefs affect their persuasiveness in debate scenarios — implications for AI safety and deception.",
+          "links": [
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2510.13912"
+            }
+          ]
+        },
+        {
+          "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
+          "authors": "Fernando Avalos, Eitan Sprejer, et al.",
+          "venue": "NeurIPS Workshop · 2024",
+          "description": "A multi-judge approach to better approximate human preferences in AI systems, improving alignment evaluation.",
+          "links": [
+            {
+              "label": "OpenReview",
+              "url": "https://openreview.net/forum?id=F8cIIwrgCZ"
             }
           ]
         }
       ],
-      "note": "Our community is young — we're building our publication track record through programs like AISAR and Apart Research sprints."
+      "note": "Our community continues to grow — we're building our publication track record through programs like AISAR and Apart Research sprints."
     },
     "opportunities": {
       "title": "Current Opportunities",
@@ -573,6 +659,15 @@
           "link": "/activities#paper-reading"
         }
       ]
+    },
+"expressInterest": {
+      "eyebrow": "Get Involved",
+      "title": "Express Interest in Research",
+      "description": "Want to contribute to AI safety research? Let us know your background and interests, and we'll connect you with relevant projects and collaborators.",
+      "formLabel": "Use our contact form to tell us about your background and research interests.",
+      "cta": "Contact Us",
+      "link": "/contact",
+      "note": "We review messages regularly and reach out when there's a good fit."
     },
     "cta": {
       "title": "Ready to start your research journey?",
@@ -632,6 +727,11 @@
             "title": "AI Digest",
             "description": "Interactive explainers of AI capabilities and trends",
             "url": "https://theaidigest.org/"
+          },
+          "agenticCoding": {
+            "title": "Agentic Coding Workshop",
+            "description": "BMAD methodology, agents, workflows, and tools for AI-assisted development",
+            "url": "/agentic-coding-workshop"
           }
         }
       },

@@ -237,6 +237,38 @@ export default async function Resources({
                     </p>
                   </div>
                 </a>
+
+                {/* Agentic Coding Workshop */}
+                <Link
+                  href={withLocale(
+                    currentLocale,
+                    dict.resources.sections.selfStudy.relatedResources
+                      .agenticCoding.url
+                  )}
+                  className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[var(--color-accent-primary)] hover:shadow-md"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-semibold text-slate-900">
+                        {
+                          dict.resources.sections.selfStudy.relatedResources
+                            .agenticCoding.title
+                        }
+                      </h4>
+                      <HugeiconsIcon
+                        icon={ArrowRight01Icon}
+                        size={16}
+                        className="text-slate-400"
+                      />
+                    </div>
+                    <p className="text-sm text-slate-600">
+                      {
+                        dict.resources.sections.selfStudy.relatedResources
+                          .agenticCoding.description
+                      }
+                    </p>
+                  </div>
+                </Link>
               </div>
             </div>
           </section>

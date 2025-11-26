@@ -31,11 +31,15 @@ export const BIO_LINKS: Record<string, { href: string; text: string }> = {
   aisesLink: { href: "https://www.aisafetybook.com/virtual-course", text: "AISES course" },
   eitanPaperLink: {
     href: "https://openreview.net/forum?id=F8cIIwrgCZ#discussion",
-    text: "papers",
+    text: "research",
   },
   eitanArxivPaperLink: {
     href: "https://arxiv.org/abs/2510.13912",
-    text: 'the paper "Strategic Deception in AI Systems"',
+    text: "AI persuasion research",
+  },
+  eitanCoTPaperLink: {
+    href: "https://arxiv.org/abs/2510.27378",
+    text: "chain-of-thought monitorability research",
   },
 };
 

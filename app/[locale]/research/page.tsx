@@ -317,8 +317,41 @@ export default async function ResearchPage({
             </section>
           </FadeInSection>
 
-          {/* CTA Section */}
+          {/* Express Interest Section */}
           <FadeInSection variant="slide-up" delay={500} as="section">
+            <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="grid gap-8 md:grid-cols-2 items-center">
+                <div className="space-y-4">
+                  <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-primary)]">
+                    {t.expressInterest.eyebrow}
+                  </p>
+                  <h2 className="text-2xl font-semibold text-slate-900">
+                    {t.expressInterest.title}
+                  </h2>
+                  <p className="text-base text-slate-600">
+                    {t.expressInterest.description}
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-sm text-slate-600">
+                    {t.expressInterest.formLabel}
+                  </p>
+                  <Link
+                    href={withLocale(currentLocale, t.expressInterest.link)}
+                    className="button-primary w-full text-center block"
+                  >
+                    {t.expressInterest.cta}
+                  </Link>
+                  <p className="text-xs text-slate-500 text-center">
+                    {t.expressInterest.note}
+                  </p>
+                </div>
+              </div>
+            </section>
+          </FadeInSection>
+
+          {/* CTA Section */}
+          <FadeInSection variant="slide-up" delay={600} as="section">
             <section className="rounded-2xl bg-gradient-to-br from-[var(--color-accent-primary)]/5 to-[var(--color-accent-secondary)]/5 border border-slate-200 p-8 text-center">
               <h2 className="text-2xl font-semibold text-slate-900 mb-2">
                 {t.cta.title}
