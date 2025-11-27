@@ -868,6 +868,13 @@ canvas {
   view-transition-name: site-logo;
 }
 
+/* Exclude background canvas from view transitions to prevent rendering inconsistencies */
+.timeline-background {
+  view-transition-name: none;
+  background-color: #f5f5f5; /* Ensure consistent background for screen blend mode */
+  isolation: isolate; /* Create new stacking context to prevent blend mode interference */
+}
+
 /* Header element transition names */
 /* Per-letter title transitions for smooth morphing */
 .title-word-first-0 {

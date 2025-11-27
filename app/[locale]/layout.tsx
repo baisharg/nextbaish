@@ -155,7 +155,7 @@ export default async function LocaleLayout({
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
               <TimelineThreads
-                className="fixed inset-0 -z-10"
+                className="timeline-background fixed inset-0 -z-10"
                 style={TIMELINE_STYLE}
               />
               <Header locale={currentLocale} t={dict.header} />

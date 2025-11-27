@@ -23,7 +23,8 @@ export default function TimelineThreadsLoader(props: TimelineThreadsLoaderProps)
         className={props.className}
         style={{
           ...props.style,
-          backgroundColor: "#f5f5f5",
+          background: "linear-gradient(to bottom, #e8e1fc 0%, #ebe5f9 42%, #dad4e8 75%, #d0cad9 100%)",
+          opacity: 0.32,
         }}
       />
     );
