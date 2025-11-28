@@ -199,9 +199,9 @@
   "about": {
     "breadcrumb": {
       "home": "Inicio",
-      "current": "Seguridad en IA"
+      "current": "Equipo"
     },
-    "title": "Entendiendo la Seguridad en IA",
+    "title": "Nuestro Equipo",
     "coreConcepts": {
       "whatIsAiSafety": {
         "title": "¿Que es la Seguridad en IA?",
@@ -630,37 +630,7 @@
       ],
       "note": "Nuestra comunidad sigue creciendo — estamos construyendo nuestro historial de publicaciones a través de programas como AISAR y sprints de Apart Research."
     },
-    "opportunities": {
-      "title": "Oportunidades Actuales",
-      "subtitle": "Formas de involucrarte en investigación de seguridad en IA ahora mismo",
-      "items": [
-        {
-          "title": "AIS Research Workshop",
-          "type": "Taller Semanal",
-          "description": "Replicá papers de seguridad en IA y desarrollá habilidades técnicas. Todos los martes a las 14:30.",
-          "commitment": "5 hrs/semana",
-          "cta": "Sumate al Taller",
-          "link": "/activities#ais-workshop"
-        },
-        {
-          "title": "Becas AISAR",
-          "type": "Fellowship de Investigación",
-          "description": "Programa part-time de 6 meses para estudiantes avanzados. Estipendio de $600/mes + presupuesto de cómputo.",
-          "commitment": "20 hrs/semana",
-          "cta": "Conocé Más",
-          "link": "https://aisar.ar"
-        },
-        {
-          "title": "Club del Paper",
-          "type": "Comunidad",
-          "description": "Presentaciones completas de papers seguidas de discusión. Grabaciones en YouTube.",
-          "commitment": "2 hrs/sesión",
-          "cta": "Sumate al Club",
-          "link": "/activities#paper-reading"
-        }
-      ]
-    },
-"expressInterest": {
+    "expressInterest": {
       "eyebrow": "Participá",
       "title": "Expresá tu Interés en Investigación",
       "description": "¿Querés contribuir a investigación en AI safety? Contanos tu background e intereses, y te conectamos con proyectos y colaboradores relevantes.",

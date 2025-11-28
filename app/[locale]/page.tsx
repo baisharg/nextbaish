@@ -3,12 +3,22 @@ import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
-import { ScrollToButton } from "@/app/components/scroll-to-button";
+import { HeroTimeline } from "@/app/components/hero-timeline";
 import { getDictionary } from "./dictionaries";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Calendar03Icon, Clock01Icon, TelegramIcon, WhatsappIcon } from "@hugeicons/core-free-icons";
+import {
+  Calendar03Icon,
+  Clock01Icon,
+  TelegramIcon,
+  WhatsappIcon,
+  UserGroupIcon,
+  Book02Icon,
+  Wrench01Icon,
+  MicroscopeIcon,
+} from "@hugeicons/core-free-icons";
+
 
 // Lazy load below-the-fold components for better initial load
 const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
@@ -38,15 +48,10 @@ export default async function Home({
           {/* Hero Section - Lead with Value Prop */}
           <FadeInSection variant="slide-up" as="section" startVisible={true}>
             <section
-              className="relative px-6 py-20 sm:px-16 lg:py-28"
+              className="relative px-6 py-16 sm:px-16 lg:py-20"
               id="about"
             >
               <div className="max-w-4xl mx-auto text-center">
-                {/* Eyebrow */}
-                <p className="eyebrow">
-                  {t.mission.eyebrow}
-                </p>
-
                 {/* Larger headline */}
                 <AnimatedTitle
                   text={t.mission.title}
@@ -56,87 +61,52 @@ export default async function Home({
                 />
 
                 {/* Punchy tagline */}
-                <p className="text-xl sm:text-2xl text-slate-600 max-w-2xl mx-auto mb-10">
+                <p className="text-xl sm:text-2xl text-slate-600 max-w-2xl mx-auto">
                   {t.mission.tagline}
                 </p>
 
-                {/* CTAs */}
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <ScrollToButton targetId="getting-started">
-                    {t.mission.cta}
-                    <span aria-hidden>→</span>
-                  </ScrollToButton>
-                  <a
-                    className="button-primary"
-                    href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <HugeiconsIcon icon={WhatsappIcon} size={18} />
-                    {t.getInvolved.whatsappCta}
-                  </a>
-                </div>
-              </div>
-            </section>
-          </FadeInSection>
-
-          {/* Getting Started Pathway */}
-          <FadeInSection variant="slide-up" delay={50} as="section">
-            <section className="section-container" id="getting-started">
-              <div className="space-y-4 text-center mb-10">
-                <p className="eyebrow">{t.gettingStarted.eyebrow}</p>
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.gettingStarted.title}
-                </h2>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                  {t.gettingStarted.description}
-                </p>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {(t.gettingStarted.steps as Array<{number: string; title: string; description: string; cta: string; link: string}>).map((step) => (
-                  <article
-                    key={step.number}
-                    className="card-glass relative group"
-                  >
-                    <span className="absolute top-4 right-4 text-4xl font-bold text-[var(--color-accent-primary)]/10 group-hover:text-[var(--color-accent-primary)]/20 transition">
-                      {step.number}
-                    </span>
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold text-slate-900">
-                        {step.title}
-                      </h3>
-                      <p className="text-sm text-slate-600 leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-slate-100">
-                      {step.link.startsWith("http") ? (
-                        <a
-                          href={step.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="link-arrow text-sm"
-                        >
-                          {step.cta} <span>→</span>
-                        </a>
-                      ) : (
-                        <TransitionLink
-                          href={`/${currentLocale}${step.link}`}
-                          className="link-arrow text-sm"
-                        >
-                          {step.cta} <span>→</span>
-                        </TransitionLink>
-                      )}
-                    </div>
-                  </article>
-                ))}
+                {/* Timeline integrated into hero */}
+                <HeroTimeline
+                  steps={[
+                    {
+                      icon: UserGroupIcon,
+                      shortLabel: "Join",
+                      fullTitle: "Join our community",
+                      description: "Connect with 200+ members on WhatsApp and Telegram",
+                      link: "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
+                      isExternal: true,
+                    },
+                    {
+                      icon: Book02Icon,
+                      shortLabel: "Learn",
+                      fullTitle: "Learn the fundamentals",
+                      description: "13-week AI Safety Fundamentals course",
+                      link: "/activities/fundamentals",
+                    },
+                    {
+                      icon: Wrench01Icon,
+                      shortLabel: "Build",
+                      fullTitle: "Build technical skills",
+                      description: "Weekly workshop replicating AI safety papers",
+                      link: "/activities/workshop",
+                    },
+                    {
+                      icon: MicroscopeIcon,
+                      shortLabel: "Research",
+                      fullTitle: "Contribute to research",
+                      description: "6-month fellowship with mentorship & stipend",
+                      link: "https://scholarship.aisafety.ar/",
+                      isExternal: true,
+                    },
+                  ]}
+                  locale={currentLocale}
+                />
               </div>
             </section>
           </FadeInSection>
 
           {/* Events Section */}
-          <FadeInSection variant="slide-up" delay={100} as="section">
+          <FadeInSection variant="slide-up" delay={50} as="section">
             <section
               className="section-container"
               id="events"
@@ -160,7 +130,7 @@ export default async function Home({
           </FadeInSection>
 
           {/* Activities Section */}
-          <FadeInSection variant="slide-up" delay={200} as="section">
+          <FadeInSection variant="slide-up" delay={100} as="section">
             <section className="section-content" id="activities">
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold text-slate-900">
@@ -258,74 +228,8 @@ export default async function Home({
           </section>
         </FadeInSection>
 
-          {/* Success Stories / Impact Section */}
-          <FadeInSection variant="slide-up" delay={250} as="section">
-            <section className="section-container" id="impact">
-              <div className="space-y-4 text-center mb-10">
-                <p className="eyebrow">{t.successStories.eyebrow}</p>
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.successStories.title}
-                </h2>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                  {t.successStories.description}
-                </p>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mb-10">
-                {(t.successStories.stats as Array<{number: string; label: string}>).map((stat) => (
-                  <div key={stat.label} className="text-center p-4 rounded-xl bg-white/50 border border-slate-200">
-                    <div className="text-3xl font-bold text-[var(--color-accent-primary)]">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm text-slate-600">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Story Cards */}
-              <div className="grid gap-4 md:grid-cols-2 mb-8">
-                {(t.successStories.stories as Array<{name: string; role: string; quote: string; link: string | null}>).map((story) => (
-                  <article key={story.name} className="card-glass">
-                    <blockquote className="text-slate-700 italic mb-4">
-                      "{story.quote}"
-                    </blockquote>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-semibold text-slate-900">{story.name}</div>
-                        <div className="text-sm text-[var(--color-accent-primary)]">{story.role}</div>
-                      </div>
-                      {story.link && (
-                        <a
-                          href={story.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-slate-400 hover:text-[var(--color-accent-primary)] transition"
-                        >
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              {/* CTA to Research page */}
-              <div className="text-center">
-                <TransitionLink
-                  href={`/${currentLocale}${t.successStories.ctaLink}`}
-                  className="link-arrow"
-                >
-                  {t.successStories.cta} <span>→</span>
-                </TransitionLink>
-              </div>
-            </section>
-          </FadeInSection>
-
           {/* Get Involved Section */}
-          <FadeInSection variant="slide-up" delay={350} as="section">
+          <FadeInSection variant="slide-up" delay={150} as="section">
             <section
               className="section-container grid gap-6 md:grid-cols-2"
               id="get-involved"

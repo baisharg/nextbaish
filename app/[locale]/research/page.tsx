@@ -29,15 +29,6 @@ type Publication = {
   links: { label: string; url: string }[];
 };
 
-type Opportunity = {
-  title: string;
-  type: string;
-  description: string;
-  commitment: string;
-  cta: string;
-  link: string;
-};
-
 export default async function ResearchPage({
   params,
 }: {
@@ -51,7 +42,6 @@ export default async function ResearchPage({
   const pathwaySteps = t.pathway.steps as PathwayStep[];
   const focusAreas = t.focusAreas.areas as FocusArea[];
   const publications = t.publications.items as Publication[];
-  const opportunities = t.opportunities.items as Opportunity[];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -88,9 +78,6 @@ export default async function ResearchPage({
                 >
                   {t.ctaPrograms}
                 </Link>
-                <a href="#pathway" className="button-secondary">
-                  {t.ctaLearnMore}
-                </a>
               </div>
             </section>
           </FadeInSection>
@@ -258,67 +245,8 @@ export default async function ResearchPage({
             </section>
           </FadeInSection>
 
-          {/* Current Opportunities */}
-          <FadeInSection variant="slide-up" delay={400} as="section">
-            <section className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12">
-              <div className="space-y-8">
-                <div className="space-y-2">
-                  <h2 className="text-3xl font-semibold text-slate-900">
-                    {t.opportunities.title}
-                  </h2>
-                  <p className="text-lg text-slate-600">
-                    {t.opportunities.subtitle}
-                  </p>
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-3">
-                  {opportunities.map((opp) => (
-                    <article
-                      key={opp.title}
-                      className="flex flex-col rounded-2xl border border-slate-200 bg-slate-50/50 p-6 transition hover:border-[var(--color-accent-primary)]/30 hover:shadow-md"
-                    >
-                      <div className="flex-grow space-y-3">
-                        <span className="inline-block rounded-full bg-[var(--color-accent-primary)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-accent-primary)]">
-                          {opp.type}
-                        </span>
-                        <h3 className="text-xl font-semibold text-slate-900">
-                          {opp.title}
-                        </h3>
-                        <p className="text-sm text-slate-600">
-                          {opp.description}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {opp.commitment}
-                        </p>
-                      </div>
-                      <div className="mt-6">
-                        {opp.link.startsWith("http") ? (
-                          <a
-                            href={opp.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="button-primary w-full text-center"
-                          >
-                            {opp.cta}
-                          </a>
-                        ) : (
-                          <Link
-                            href={withLocale(currentLocale, opp.link)}
-                            className="button-primary w-full text-center block"
-                          >
-                            {opp.cta}
-                          </Link>
-                        )}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            </section>
-          </FadeInSection>
-
           {/* Express Interest Section */}
-          <FadeInSection variant="slide-up" delay={500} as="section">
+          <FadeInSection variant="slide-up" delay={400} as="section">
             <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
               <div className="grid gap-8 md:grid-cols-2 items-center">
                 <div className="space-y-4">
@@ -351,7 +279,7 @@ export default async function ResearchPage({
           </FadeInSection>
 
           {/* CTA Section */}
-          <FadeInSection variant="slide-up" delay={600} as="section">
+          <FadeInSection variant="slide-up" delay={500} as="section">
             <section className="rounded-2xl bg-gradient-to-br from-[var(--color-accent-primary)]/5 to-[var(--color-accent-secondary)]/5 border border-slate-200 p-8 text-center">
               <h2 className="text-2xl font-semibold text-slate-900 mb-2">
                 {t.cta.title}

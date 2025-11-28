@@ -199,9 +199,9 @@
   "about": {
     "breadcrumb": {
       "home": "Home",
-      "current": "About AI Safety"
+      "current": "Team"
     },
-    "title": "Understanding AI Safety",
+    "title": "Our Team",
     "coreConcepts": {
       "whatIsAiSafety": {
         "title": "What is AI Safety?",
@@ -630,37 +630,7 @@
       ],
       "note": "Our community continues to grow — we're building our publication track record through programs like AISAR and Apart Research sprints."
     },
-    "opportunities": {
-      "title": "Current Opportunities",
-      "subtitle": "Ways to get involved in AI safety research right now",
-      "items": [
-        {
-          "title": "AIS Research Workshop",
-          "type": "Weekly Workshop",
-          "description": "Replicate AI safety papers and build technical skills. Every Tuesday at 2:30 PM.",
-          "commitment": "5 hrs/week",
-          "cta": "Join Workshop",
-          "link": "/activities#ais-workshop"
-        },
-        {
-          "title": "AISAR Scholarships",
-          "type": "Research Fellowship",
-          "description": "6-month part-time program for advanced students. $600/month stipend + compute budget.",
-          "commitment": "20 hrs/week",
-          "cta": "Learn More",
-          "link": "https://aisar.ar"
-        },
-        {
-          "title": "Paper Reading Club",
-          "type": "Community",
-          "description": "Full paper presentations followed by discussion. Recordings on YouTube.",
-          "commitment": "2 hrs/session",
-          "cta": "Join Club",
-          "link": "/activities#paper-reading"
-        }
-      ]
-    },
-"expressInterest": {
+    "expressInterest": {
       "eyebrow": "Get Involved",
       "title": "Express Interest in Research",
       "description": "Want to contribute to AI safety research? Let us know your background and interests, and we'll connect you with relevant projects and collaborators.",
