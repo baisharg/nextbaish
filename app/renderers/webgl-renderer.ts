@@ -391,6 +391,14 @@ export class WebGLRenderer implements Renderer {
   private gradientRgbScratch = new Float32Array(15);
   private gradientPosScratch = new Float32Array(5);
 
+  // Pooled vertex scratch buffer (grows as needed, reused across frames)
+  // Avoids ~1800 Float32Array allocations/second (30 threads × 60fps)
+  private vertexScratchBuffer: Float32Array = new Float32Array(65536); // 64KB initial
+  private vertexScratchLength: number = 0;
+
+  // Pooled curve data buffer for Bezier tessellation (grows as needed)
+  private curveScratchBuffer: Float32Array = new Float32Array(4096);
+
   // Blur weights and offsets (precomputed)
   private blurWeights: [number, number, number] = [1, 0, 0];
   private blurOffsets: [number, number] = [1, 2];
@@ -1391,7 +1399,8 @@ export class WebGLRenderer implements Renderer {
       thread;
 
     // Build vertex data with line expansion (convert line to triangles)
-    const vertices = this.buildLineVertices(
+    // Uses pooled scratch buffer to avoid per-frame allocations
+    const vertexFloatCount = this.buildLineVertices(
       points,
       width,
       viewSize,
@@ -1402,9 +1411,12 @@ export class WebGLRenderer implements Renderer {
       targetH,
     );
 
-    if (vertices.length === 0) return;
+    if (vertexFloatCount === 0) return;
 
-    const vertexCount = this.uploadLineGeometry(new Float32Array(vertices));
+    // Upload from pooled scratch buffer (no allocation)
+    const vertexCount = this.uploadLineGeometry(
+      this.vertexScratchBuffer.subarray(0, vertexFloatCount),
+    );
     if (vertexCount === 0) return;
 
     if (this.applyGradientUniforms(colorStops) === 0) return;
@@ -1414,6 +1426,11 @@ export class WebGLRenderer implements Renderer {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, vertexCount);
   }
 
+  /**
+   * Builds line vertices directly into pooled scratch buffer.
+   * Returns the number of floats written (vertexCount * 3).
+   * PERF: Eliminates per-frame array allocations (~1800/sec).
+   */
   private buildLineVertices(
     points: Float32Array,
     width: number,
@@ -1423,86 +1440,89 @@ export class WebGLRenderer implements Renderer {
     gradientMaxY: number,
     targetW?: number,
     targetH?: number,
-  ): number[] {
-    // Build smooth Bezier curves matching SVG implementation
-    const vertices: number[] = [];
+  ): number {
     const n = points.length >>> 1;
-    if (n === 0) return vertices;
+    if (n === 0) return 0;
 
     // Use target dimensions if provided (for blur FBO), otherwise use canvas dimensions
     const canvasWidth = targetW ?? (this.canvas?.width || viewSize * dpr);
     const canvasHeight = targetH ?? (this.canvas?.height || viewSize * dpr);
 
     // Scale normalized coordinates [0,1] to canvas pixel dimensions
-    // Match SVG behavior: use the reference viewSize for both axes to maintain aspect ratio
     const scale = viewSize * dpr;
     const scaleX = scale;
     const scaleY = scale;
 
     // Apply configurable positioning offsets
-    const offsetXMultiplier = this.config?.offsetXMultiplier ?? 0.5; // default: center horizontally
-    const offsetYMultiplier = this.config?.offsetYMultiplier ?? -0.35; // default: 0.0 (centered, prevents gap when scrolling)
+    const offsetXMultiplier = this.config?.offsetXMultiplier ?? 0.5;
+    const offsetYMultiplier = this.config?.offsetYMultiplier ?? -0.35;
     const offsetX = (canvasWidth - scale) * offsetXMultiplier;
     const offsetY = (canvasHeight - scale) * offsetYMultiplier;
 
-    // Scale up thread width for better visibility and contrast against background
-    const WIDTH_SCALE = 2.4; // Increased from 2.0 for thicker, more prominent threads
+    // Scale up thread width for better visibility
+    const WIDTH_SCALE = 2.4;
     const halfWidth = (width * dpr * WIDTH_SCALE) / 2;
 
-    // Use static gradient bounds (matches SVG gradientUnits="userSpaceOnUse")
-    // Expand bounds by halfStroke so edges can reach deepest gradient stops
+    // Gradient normalization
     const gradientMargin = halfWidth / scaleY;
     const adjustedMinY = gradientMinY - gradientMargin;
     const adjustedMaxY = gradientMaxY + gradientMargin;
     const yRange = adjustedMaxY - adjustedMinY;
-    const normalizeGradPos = (y: number) => {
-      if (yRange <= 0) return 0;
-      const pos = (y - adjustedMinY) / yRange;
-      return Math.max(0, Math.min(1, pos)); // Clamp to [0,1]
-    };
+    const yRangeInv = yRange > 0 ? 1 / yRange : 0;
 
-    // Generate smooth curve points using cubic Bezier interpolation
-    const curvePoints: {
-      x: number;
-      y: number;
-      gradPos: number;
-      normY: number;
-    }[] = [];
+    // Estimate max floats needed: (n-1) segments × 8 subdivisions × 6 verts × 3 floats
+    const segmentsPerCurve = 8;
+    const maxCurvePoints = 1 + (n - 1) * segmentsPerCurve;
+    const maxFloats = (maxCurvePoints - 1) * 6 * 3;
 
-    // First point (with centering offset)
+    // Grow scratch buffer if needed (rare after warmup)
+    if (maxFloats > this.vertexScratchBuffer.length) {
+      const newSize = Math.max(maxFloats, this.vertexScratchBuffer.length * 2);
+      this.vertexScratchBuffer = new Float32Array(newSize);
+    }
+
+    // Grow curve scratch buffer if needed
+    const curveFloats = maxCurvePoints * 3;
+    if (curveFloats > this.curveScratchBuffer.length) {
+      const newSize = Math.max(curveFloats, this.curveScratchBuffer.length * 2);
+      this.curveScratchBuffer = new Float32Array(newSize);
+    }
+
+    // Build curve points inline using pooled buffer (avoid object allocations)
+    // Store as flat array: [x, y, normY, x, y, normY, ...]
+    const curveData = this.curveScratchBuffer;
+    let curveIdx = 0;
+
+    // First point
     const firstNormY = points[1];
-    curvePoints.push({
-      x: points[0] * scaleX + offsetX,
-      y: firstNormY * scaleY + offsetY,
-      gradPos: normalizeGradPos(firstNormY),
-      normY: firstNormY,
-    });
+    curveData[curveIdx++] = points[0] * scaleX + offsetX;
+    curveData[curveIdx++] = firstNormY * scaleY + offsetY;
+    curveData[curveIdx++] = firstNormY;
 
-    // Generate Bezier curves between points (matching SVG implementation)
+    // Generate Bezier curves between points
     let prevPrevX = points[0] * scaleX + offsetX;
     let prevPrevY = points[1] * scaleY + offsetY;
     let prevX = prevPrevX;
     let prevY = prevPrevY;
 
-    const segmentsPerCurve = 8; // Subdivide each curve for smoothness
-
     for (let i = 1; i < n; i++) {
       const currX = points[i * 2] * scaleX + offsetX;
       const currY = points[i * 2 + 1] * scaleY + offsetY;
       const currNormY = points[i * 2 + 1];
+      const prevNormY = points[(i - 1) * 2 + 1];
 
       const nextIdx = i < n - 1 ? i + 1 : i;
       const nextX = points[nextIdx * 2] * scaleX + offsetX;
       const nextY = points[nextIdx * 2 + 1] * scaleY + offsetY;
 
-      // Calculate control points (same as SVG)
+      // Control points
       const cp1x = prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR;
       const cp1y = prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR;
       const cp2x = currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR;
       const cp2y = currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR;
 
       // Tessellate cubic Bezier curve
-      for (let t = 0; t <= segmentsPerCurve; t++) {
+      for (let t = 1; t <= segmentsPerCurve; t++) {
         const u = t / segmentsPerCurve;
         const u2 = u * u;
         const u3 = u2 * u;
@@ -1510,21 +1530,11 @@ export class WebGLRenderer implements Renderer {
         const omu2 = omu * omu;
         const omu3 = omu2 * omu;
 
-        // Cubic Bezier formula
-        const x =
+        curveData[curveIdx++] =
           omu3 * prevX + 3 * omu2 * u * cp1x + 3 * omu * u2 * cp2x + u3 * currX;
-        const y =
+        curveData[curveIdx++] =
           omu3 * prevY + 3 * omu2 * u * cp1y + 3 * omu * u2 * cp2y + u3 * currY;
-
-        // Interpolate gradient position (normalized to thread's vertical span)
-        const prevNormY = points[(i - 1) * 2 + 1];
-        const interpNormY = prevNormY + (currNormY - prevNormY) * u;
-        const gradPos = normalizeGradPos(interpNormY);
-
-        if (t > 0) {
-          // Skip first point (already added)
-          curvePoints.push({ x, y, gradPos, normY: interpNormY });
-        }
+        curveData[curveIdx++] = prevNormY + (currNormY - prevNormY) * u;
       }
 
       prevPrevX = prevX;
@@ -1533,51 +1543,66 @@ export class WebGLRenderer implements Renderer {
       prevY = currY;
     }
 
-    // Now expand the curve into triangles
-    for (let i = 0; i < curvePoints.length - 1; i++) {
-      const p0 = curvePoints[i];
-      const p1 = curvePoints[i + 1];
+    const curvePointCount = curveIdx / 3;
+
+    // Expand curve into triangles, writing directly to scratch buffer
+    let writeIdx = 0;
+    const buf = this.vertexScratchBuffer;
+
+    for (let i = 0; i < curvePointCount - 1; i++) {
+      const i0 = i * 3;
+      const i1 = (i + 1) * 3;
+
+      const p0x = curveData[i0];
+      const p0y = curveData[i0 + 1];
+      const p0normY = curveData[i0 + 2];
+      const p1x = curveData[i1];
+      const p1y = curveData[i1 + 1];
+      const p1normY = curveData[i1 + 2];
 
       // Calculate perpendicular
-      const dx = p1.x - p0.x;
-      const dy = p1.y - p0.y;
+      const dx = p1x - p0x;
+      const dy = p1y - p0y;
       const len = Math.sqrt(dx * dx + dy * dy);
       if (len === 0) continue;
 
-      const nx = (-dy / len) * halfWidth;
-      const ny = (dx / len) * halfWidth;
+      const invLen = 1 / len;
+      const nx = -dy * invLen * halfWidth;
+      const ny = dx * invLen * halfWidth;
 
       const nyNorm = ny / scaleY;
-      const p0UpperGrad = normalizeGradPos(p0.normY + nyNorm);
-      const p0LowerGrad = normalizeGradPos(p0.normY - nyNorm);
-      const p1UpperGrad = normalizeGradPos(p1.normY + nyNorm);
-      const p1LowerGrad = normalizeGradPos(p1.normY - nyNorm);
 
-      // Two triangles per segment
-      vertices.push(
-        p0.x + nx,
-        p0.y + ny,
-        p0UpperGrad,
-        p0.x - nx,
-        p0.y - ny,
-        p0LowerGrad,
-        p1.x + nx,
-        p1.y + ny,
-        p1UpperGrad,
+      // Gradient positions (inline clamp)
+      const p0Upper = Math.max(0, Math.min(1, (p0normY + nyNorm - adjustedMinY) * yRangeInv));
+      const p0Lower = Math.max(0, Math.min(1, (p0normY - nyNorm - adjustedMinY) * yRangeInv));
+      const p1Upper = Math.max(0, Math.min(1, (p1normY + nyNorm - adjustedMinY) * yRangeInv));
+      const p1Lower = Math.max(0, Math.min(1, (p1normY - nyNorm - adjustedMinY) * yRangeInv));
 
-        p0.x - nx,
-        p0.y - ny,
-        p0LowerGrad,
-        p1.x - nx,
-        p1.y - ny,
-        p1LowerGrad,
-        p1.x + nx,
-        p1.y + ny,
-        p1UpperGrad,
-      );
+      // Triangle 1
+      buf[writeIdx++] = p0x + nx;
+      buf[writeIdx++] = p0y + ny;
+      buf[writeIdx++] = p0Upper;
+      buf[writeIdx++] = p0x - nx;
+      buf[writeIdx++] = p0y - ny;
+      buf[writeIdx++] = p0Lower;
+      buf[writeIdx++] = p1x + nx;
+      buf[writeIdx++] = p1y + ny;
+      buf[writeIdx++] = p1Upper;
+
+      // Triangle 2
+      buf[writeIdx++] = p0x - nx;
+      buf[writeIdx++] = p0y - ny;
+      buf[writeIdx++] = p0Lower;
+      buf[writeIdx++] = p1x - nx;
+      buf[writeIdx++] = p1y - ny;
+      buf[writeIdx++] = p1Lower;
+      buf[writeIdx++] = p1x + nx;
+      buf[writeIdx++] = p1y + ny;
+      buf[writeIdx++] = p1Upper;
     }
 
-    return vertices;
+    this.vertexScratchLength = writeIdx;
+    return writeIdx;
   }
 
   dispose(): void {

@@ -15,11 +15,7 @@ import {
   THREAD_COUNT,
   VIEWBOX_SIZE,
   FRAME_INTERVAL,
-  BEZIER_CONTROL_FACTOR,
-  SEGMENT_FACTORS,
   GOLDEN_RATIO_SEED,
-  adjustColor,
-  hslToString,
   createSeededRandom,
   chooseColor,
   createPathProfile,
@@ -28,26 +24,11 @@ import {
   clamp,
   getUpFraction,
 } from "../utils/thread-utils";
-import "./timeline-threads.css";
 
 import type { InitMessage } from "../workers/animation-types";
 
-/**
- * --------------------------------------------------------------------------------
- * PERF CONSTANTS / PRECOMPUTATION (module scope)
- * --------------------------------------------------------------------------------
- * We precompute the segment phase offsets once (hot-path math), and keep small,
- * reusable string buffers and typed arrays in thread state to avoid per-frame GC.
- */
-const SEG_LEN = SEGMENT_FACTORS.length;
-// Phase offsets used every frame in sin/cos; precompute once.
-const SIN_OFFSETS = new Float32Array(SEG_LEN);
-const COS_OFFSETS = new Float32Array(SEG_LEN);
-for (let i = 0; i < SEG_LEN; i++) {
-  const s = SEGMENT_FACTORS[i];
-  SIN_OFFSETS[i] = s * Math.PI;
-  COS_OFFSETS[i] = s * Math.PI * 0.5;
-}
+// Note: SIN_OFFSETS/COS_OFFSETS computation moved to animation.worker.ts
+// Animation computations run entirely in the web worker now.
 
 const logTimelineDebug = (...message: unknown[]) => {
   if (process.env.NODE_ENV !== "production") {
@@ -150,6 +131,10 @@ const computePerformanceProfile = (): PerformanceProfile => {
 // TYPES
 // --------------------------------------------------------------------------------
 
+/**
+ * Simplified ThreadState - only contains data needed to pass to animation worker.
+ * All rendering (gradients, paths, animation) happens in the worker via WebGL.
+ */
 type ThreadState = {
   id: number;
   color: HSL;
@@ -157,12 +142,7 @@ type ThreadState = {
   opacity: number;
   profile: PathProfile;
   direction: Direction;
-  path: string;
-  pathBuffer: string[];
-
-  // Timing / motion
   duration: number;
-  lastFlipAt: number;
   swayPhase: number;
   driftPhase: number;
   swayFreq: number;
@@ -170,135 +150,24 @@ type ThreadState = {
   swayAmp: number;
   driftAmp: number;
   targetDirection: Direction;
-  transitionStartTime: number;
-
-  // Scratch/derived for perf:
-  // - floatingPoints: final per-frame coordinates (drift + sway applied)
-  // - bounds for gradient (y1/y2 in absolute SVG coords)
-  // All arrays are sized to the path's point count and reused each frame.
-  floatingPoints: Float32Array;
-  y1: number;
-  y2: number;
-
-  // Precomputed gradient stop strings to avoid recomputing hsl every render
-  gradUp0: string;
-  gradUp50: string;
-  gradUp100: string;
-  gradDown0: string;
-  gradDown30: string;
-  gradDown60: string;
 };
 
-// --------------------------------------------------------------------------------
-// GEOMETRY → STRING (reuses numbers, avoids temporary arrays)
-// --------------------------------------------------------------------------------
-
-const formatCoord = (value: number): string => {
-  // PERF: Reduced to 1 decimal place (0.1 SVG unit ≈ 0.1px, imperceptible)
-  const scaled = Math.round(value * 10);
-
-  // PERF: Early return for zero (common case)
-  if (scaled === 0) return "0";
-
-  const sign = scaled < 0 ? "-" : "";
-  const absScaled = Math.abs(scaled);
-  // PERF: Use bitwise OR for integer division (faster than Math.floor for positive numbers)
-  const integer = (absScaled / 10) | 0;
-  const fraction = absScaled % 10;
-
-  if (fraction === 0) {
-    return `${sign}${integer}`;
-  }
-
-  // No padding needed for single digit
-  return `${sign}${integer}.${fraction}`;
-};
-
-/**
- * Builds a cubic Bezier path string from normalized points in [0..1] space,
- * scaled to the SVG viewBox. Reuses an optional buffer to avoid per-frame allocations.
- * Optimized: reuses coordinates from previous iteration (50% fewer array reads).
- */
-const buildCubicBezierPath = (
-  points: Float32Array,
-  buffer?: string[],
-): string => {
-  const n = points.length >>> 1; // number of (x,y) points
-  if (n === 0) return "";
-
-  const out = buffer ?? [];
-  out.length = 0;
-
-  const x0 = points[0] * VIEWBOX_SIZE;
-  const y0 = points[1] * VIEWBOX_SIZE;
-  out.push(`M ${formatCoord(x0)} ${formatCoord(y0)}`);
-
-  // PERF: Reuse prev coordinates from previous iteration instead of re-reading
-  let prevPrevX = x0;
-  let prevPrevY = y0;
-  let prevX = x0;
-  let prevY = y0;
-
-  for (let i = 1; i < n; i++) {
-    const currIdx = i << 1;
-    const currX = points[currIdx] * VIEWBOX_SIZE;
-    const currY = points[currIdx + 1] * VIEWBOX_SIZE;
-
-    const nextIdx = i < n - 1 ? (i + 1) << 1 : currIdx;
-    const nextX = points[nextIdx] * VIEWBOX_SIZE;
-    const nextY = points[nextIdx + 1] * VIEWBOX_SIZE;
-
-    const cp1x = prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR;
-    const cp1y = prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR;
-    const cp2x = currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR;
-    const cp2y = currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR;
-
-    out.push(
-      `C ${formatCoord(cp1x)} ${formatCoord(cp1y)} ${formatCoord(cp2x)} ${formatCoord(cp2y)} ${formatCoord(currX)} ${formatCoord(currY)}`,
-    );
-
-    // Shift coordinates for next iteration
-    prevPrevX = prevX;
-    prevPrevY = prevY;
-    prevX = currX;
-    prevY = currY;
-  }
-
-  return out.join(" ");
-};
-
-// Factory (main-thread) — unchanged visuals; we add scratch + gradient bounds/stops.
+// Factory (main-thread fallback) — creates minimal thread state for worker handoff.
 const createThread = (id: number, totalThreads: number): ThreadState => {
   const rng = createSeededRandom(GOLDEN_RATIO_SEED ^ (id + 1));
   const profile = createPathProfile(id, rng, totalThreads);
   const upFraction = getUpFraction(totalThreads);
   const direction: Direction = rng() < upFraction ? "up" : "down";
-  const pathBuffer: string[] = [];
-
-  // Gradient y-bounds (from BOTH up and down profiles)
-  let minY = Infinity;
-  let maxY = -Infinity;
-  for (const path of [profile.up, profile.down]) {
-    for (let i = 0; i < path.length; i += 2) {
-      const y = path[i + 1];
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
-    }
-  }
-
   const color = chooseColor(rng);
 
   return {
     id,
     color,
-    weight: randomInRangeWith(rng, 1.6, 2.4), // Doubled for better visibility
-    opacity: clamp(0.7 + id / (totalThreads * 2.5), 0.8, 1.0), // Further increased for better visibility
+    weight: randomInRangeWith(rng, 1.6, 2.4),
+    opacity: clamp(0.7 + id / (totalThreads * 2.5), 0.8, 1.0),
     profile,
     direction,
-    pathBuffer,
-    path: buildCubicBezierPath(profile[direction], pathBuffer),
     duration: directionDurationSeeded(direction, rng),
-    lastFlipAt: 0,
     swayPhase: randomInRangeWith(rng, 0, Math.PI * 2),
     driftPhase: randomInRangeWith(rng, 0, Math.PI * 2),
     swayFreq: randomInRangeWith(rng, 0.0008, 0.0015),
@@ -306,23 +175,10 @@ const createThread = (id: number, totalThreads: number): ThreadState => {
     swayAmp: randomInRangeWith(rng, 0.00375, 0.00875),
     driftAmp: randomInRangeWith(rng, 0.003, 0.007),
     targetDirection: direction,
-    transitionStartTime: 0,
-
-    // Scratch buffers + gradient bounds/stops:
-    floatingPoints: new Float32Array(profile.down.length),
-    y1: minY * VIEWBOX_SIZE,
-    y2: maxY * VIEWBOX_SIZE,
-
-    gradUp0: hslToString(adjustColor(color, { h: -18, s: 0, l: 10 })),
-    gradUp50: hslToString(adjustColor(color, { h: 4, s: 0, l: 0 })),
-    gradUp100: hslToString(adjustColor(color, { h: 24, s: -3, l: -12 })),
-    gradDown0: hslToString(color),
-    gradDown30: hslToString(adjustColor(color, { s: -10, l: -5 })),
-    gradDown60: hslToString(adjustColor(color, { s: -40, l: -25 })),
   };
 };
 
-// Worker → ThreadState (keeps visuals; adds scratch + gradient precompute)
+// Worker → ThreadState (minimal conversion for worker handoff)
 const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
   const profile: PathProfile = {
     neutral: data.profileNeutral,
@@ -330,31 +186,14 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
     down: data.profileDown,
   };
 
-  // Gradient y-bounds from BOTH up and down profiles
-  let minY = Infinity;
-  let maxY = -Infinity;
-  for (const path of [profile.up, profile.down]) {
-    for (let i = 0; i < path.length; i += 2) {
-      const y = path[i + 1];
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
-    }
-  }
-
-  const color = data.color;
-  const pathBuffer: string[] = [];
-
   return {
     id: data.id,
-    color,
+    color: data.color,
     weight: data.weight,
     opacity: data.opacity,
     profile,
     direction: data.direction,
-    pathBuffer,
-    path: buildCubicBezierPath(profile[data.direction], pathBuffer),
     duration: data.duration,
-    lastFlipAt: 0,
     swayPhase: data.swayPhase,
     driftPhase: data.driftPhase,
     swayFreq: data.swayFreq,
@@ -362,18 +201,6 @@ const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
     swayAmp: data.swayAmp,
     driftAmp: data.driftAmp,
     targetDirection: data.direction,
-    transitionStartTime: 0,
-
-    floatingPoints: new Float32Array(profile.down.length),
-    y1: minY * VIEWBOX_SIZE,
-    y2: maxY * VIEWBOX_SIZE,
-
-    gradUp0: hslToString(adjustColor(color, { h: -18, s: 0, l: 10 })),
-    gradUp50: hslToString(adjustColor(color, { h: 4, s: 0, l: 0 })),
-    gradUp100: hslToString(adjustColor(color, { h: 24, s: -3, l: -12 })),
-    gradDown0: hslToString(color),
-    gradDown30: hslToString(adjustColor(color, { s: -10, l: -5 })),
-    gradDown60: hslToString(adjustColor(color, { s: -40, l: -25 })),
   };
 };
 
@@ -482,20 +309,10 @@ function TimelineThreadsComponent({
   }, []);
 
   const syncThreads = (incoming: ThreadState[]) => {
-    const normalized = incoming.map((thread) => {
-      const pathBuffer = thread.pathBuffer ?? [];
-      const path = buildCubicBezierPath(
-        thread.profile[thread.direction],
-        pathBuffer,
-      );
-      return {
-        ...thread,
-        pathBuffer,
-        path,
-        targetDirection: thread.targetDirection ?? thread.direction,
-        transitionStartTime: 0,
-      };
-    });
+    const normalized = incoming.map((thread) => ({
+      ...thread,
+      targetDirection: thread.targetDirection ?? thread.direction,
+    }));
     threadsRef.current = normalized.map((t) => ({ ...t }));
     setThreads(normalized);
   };
@@ -829,11 +646,20 @@ function TimelineThreadsComponent({
     );
   }
 
+  // Extra height buffer to prevent blank gap at bottom during parallax scroll.
+  // Parallax moves canvas UP by (scrollY * 0.02), so we need extra height at bottom.
+  // 10vh covers typical scroll depths (10vh / 0.02 = 500vh of page scroll).
+  const parallaxBuffer = "10vh";
+
   return (
     <div
       ref={containerRef}
-      className={`pointer-events-none ${className ?? "absolute inset-0"}`}
-      style={{ ...style, contain: "layout style paint" }}
+      className={`pointer-events-none ${className ?? "absolute inset-x-0 top-0"}`}
+      style={{
+        ...style,
+        height: `calc(100% + ${parallaxBuffer})`,
+        contain: "layout style paint",
+      }}
     >
       <canvas
         ref={canvasRef}

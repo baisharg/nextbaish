@@ -276,213 +276,160 @@ export default async function ResearchPage({
             </section>
           </FadeInSection>
 
-          {/* Research Pathway - Enhanced Visual Design */}
+          {/* Research Pathway - Horizontal Stepper */}
           <FadeInSection variant="slide-up" delay={100} as="section">
             <section
               id="pathway"
-              className="rounded-3xl border border-slate-200 bg-white px-6 py-12 shadow-sm sm:px-12 overflow-hidden"
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-6 shadow-sm sm:px-8"
             >
-              <div className="space-y-8">
-                <div className="space-y-2">
-                  <h2 className="text-3xl font-semibold text-slate-900">
+              <div className="space-y-4">
+                <div className="text-center sm:text-left">
+                  <h2 className="text-xl font-semibold text-slate-900">
                     {t.pathway.title}
                   </h2>
-                  <p className="text-lg text-slate-600">{t.pathway.subtitle}</p>
+                  <p className="text-sm text-slate-500">{t.pathway.subtitle}</p>
                 </div>
 
-                {/* Pathway Steps with Animated Connector */}
-                <div className="relative">
-                  {/* Animated gradient connector line - desktop only */}
-                  <div className="hidden lg:block absolute top-[52px] left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-1 bg-slate-200 rounded-full overflow-hidden">
-                    <div
-                      className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-tertiary)] rounded-full animate-[timeline-draw_1.2s_ease-out_forwards]"
-                      style={{
-                        transformOrigin: "left",
-                        transform: "scaleX(0)",
-                        animationDelay: "0.3s",
-                      }}
-                    />
-                    <div
-                      className="absolute -top-1 -bottom-1 inset-x-0 bg-gradient-to-r from-[var(--color-accent-primary)]/40 via-[var(--color-accent-secondary)]/40 to-[var(--color-accent-tertiary)]/40 rounded-full blur-sm animate-[timeline-draw_1.2s_ease-out_forwards]"
-                      style={{
-                        transformOrigin: "left",
-                        transform: "scaleX(0)",
-                        animationDelay: "0.3s",
-                      }}
-                    />
-                  </div>
+                {/* Horizontal Stepper - Desktop */}
+                <div className="hidden md:block relative py-2">
+                  {/* Connecting line */}
+                  <div className="absolute top-[28px] left-[12.5%] right-[12.5%] h-0.5 bg-slate-200" />
+                  <div className="absolute top-[28px] left-[12.5%] w-[50%] h-0.5 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)]" />
 
-                  {/* Steps Grid */}
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  <div className="flex items-start justify-between">
                     {pathwaySteps.map((step, index) => {
                       const IconComponent = pathwayIcons[step.icon];
                       const isExternal = step.external;
+                      const isHighlighted = step.number === "03";
+                      const isPast = index < 2;
                       const href = isExternal
                         ? step.link
                         : withLocale(currentLocale, step.link);
 
-                      const CardContent = (
-                        <div
-                          className="relative flex flex-col h-full rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/80 p-6 transition-all duration-300 hover:border-[var(--color-accent-primary)]/40 hover:shadow-lg hover:shadow-[var(--color-accent-primary)]/10 hover:-translate-y-1 group cursor-pointer"
-                          style={{ animationDelay: `${0.4 + index * 0.15}s` }}
-                        >
-                          {/* Step Node with Icon */}
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="relative">
-                              <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-gradient-to-br from-white to-slate-50 border-[3px] border-[var(--color-accent-primary)] shadow-lg shadow-[var(--color-accent-primary)]/20 transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-[var(--color-accent-primary)] group-hover:to-[var(--brand-600)] group-hover:border-transparent group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[var(--color-accent-primary)]/30">
-                                <IconComponent className="h-7 w-7 text-[var(--color-accent-primary)] transition-colors duration-300 group-hover:text-white" />
-                              </div>
-                              {/* Animated ring on hover */}
-                              <div className="absolute inset-0 rounded-full border-2 border-[var(--color-accent-primary)] opacity-0 scale-75 transition-all duration-400 group-hover:opacity-30 group-hover:scale-[1.4]" />
+                      const StepContent = (
+                        <div className="relative flex flex-col items-center group cursor-pointer">
+                          {/* "You're here" badge */}
+                          {isHighlighted && (
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-[var(--color-accent-primary)] text-white rounded-full whitespace-nowrap shadow-sm">
+                              You&apos;re here
                             </div>
-                            <div className="flex flex-col">
-                              <span className="text-2xl font-bold text-[var(--color-accent-primary)] leading-none">
-                                {step.number}
-                              </span>
-                              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-1">
-                                {step.duration}
-                              </span>
-                            </div>
+                          )}
+
+                          {/* Step circle */}
+                          <div
+                            className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 ease-out ${
+                              isHighlighted
+                                ? "bg-[var(--color-accent-primary)] text-white ring-4 ring-[var(--color-accent-primary)]/20 scale-110 group-hover:scale-[1.15] group-hover:shadow-lg group-hover:shadow-[var(--color-accent-primary)]/30"
+                                : isPast
+                                ? "bg-[var(--color-accent-primary)]/80 text-white group-hover:bg-[var(--color-accent-primary)] group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[var(--color-accent-primary)]/25"
+                                : "bg-white border-2 border-slate-300 text-slate-400 group-hover:border-[var(--color-accent-primary)] group-hover:text-[var(--color-accent-primary)] group-hover:scale-110 group-hover:shadow-md group-hover:bg-[var(--color-accent-primary)]/5"
+                            }`}
+                          >
+                            <IconComponent className="h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
                           </div>
 
-                          <h3 className="text-xl font-semibold text-slate-900 mb-1 transition-colors group-hover:text-[var(--color-accent-primary)]">
-                            {step.title}
-                          </h3>
-                          <p className="text-sm font-medium text-[var(--color-accent-primary)] mb-3 flex items-center gap-1">
-                            {step.program}
-                            {isExternal && (
-                              <ExternalLinkIcon className="h-3.5 w-3.5 opacity-60" />
-                            )}
-                          </p>
-                          <p className="text-sm text-slate-600 flex-grow">
-                            {step.description}
-                          </p>
-
-                          {/* Arrow indicator */}
-                          <div className="mt-4 flex items-center text-sm font-medium text-[var(--color-accent-primary)] opacity-0 translate-x-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1">
-                            <span className="mr-1">
-                              {isExternal ? "Visit" : "Learn more"}
-                            </span>
-                            <ArrowRightIcon className="h-4 w-4" />
+                          {/* Labels */}
+                          <div className="mt-2 text-center transition-transform duration-300 group-hover:-translate-y-0.5">
+                            <div className={`text-xs font-bold transition-colors duration-300 ${
+                              isHighlighted ? "text-[var(--color-accent-primary)]" : isPast ? "text-slate-700 group-hover:text-[var(--color-accent-primary)]" : "text-slate-500 group-hover:text-[var(--color-accent-primary)]"
+                            }`}>
+                              {step.number}
+                            </div>
+                            <div className={`text-sm font-semibold transition-colors duration-300 ${
+                              isHighlighted ? "text-[var(--color-accent-primary)]" : "text-slate-700 group-hover:text-[var(--color-accent-primary)]"
+                            }`}>
+                              {step.title}
+                            </div>
+                            <div className="text-[10px] text-slate-400 transition-colors duration-300 group-hover:text-[var(--color-accent-primary)]/60">
+                              {step.program}
+                              {isExternal && " ↗"}
+                            </div>
                           </div>
                         </div>
                       );
 
                       return isExternal ? (
-                        <a
-                          key={step.number}
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block"
-                        >
-                          {CardContent}
+                        <a key={step.number} href={href} target="_blank" rel="noopener noreferrer" className="flex-1 flex justify-center">
+                          {StepContent}
                         </a>
                       ) : (
-                        <Link key={step.number} href={href} className="block">
-                          {CardContent}
+                        <Link key={step.number} href={href} className="flex-1 flex justify-center">
+                          {StepContent}
                         </Link>
                       );
                     })}
                   </div>
                 </div>
-              </div>
-            </section>
-          </FadeInSection>
 
-          {/* Focus Areas - Enhanced with Distinct Tints */}
-          <FadeInSection variant="slide-up" delay={200} as="section">
-            <section className="space-y-8">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.focusAreas.title}
-                </h2>
-                <p className="text-lg text-slate-600">
-                  {t.focusAreas.subtitle}
-                </p>
-              </div>
+                {/* Mobile Grid */}
+                <div className="md:hidden grid grid-cols-2 gap-3">
+                  {pathwaySteps.map((step, index) => {
+                    const IconComponent = pathwayIcons[step.icon];
+                    const isExternal = step.external;
+                    const isHighlighted = step.number === "03";
+                    const isPast = index < 2;
+                    const href = isExternal
+                      ? step.link
+                      : withLocale(currentLocale, step.link);
 
-              <div className="grid gap-6 md:grid-cols-3">
-                {focusAreas.map((area) => {
-                  const tint =
-                    focusAreaTints[area.icon] || focusAreaTints.compass;
-
-                  return (
-                    <article
-                      key={area.title}
-                      className={`relative card-glass group overflow-hidden ${tint.border}`}
-                    >
-                      {/* Subtle gradient background tint */}
+                    const MobileCard = (
                       <div
-                        className={`absolute inset-0 bg-gradient-to-br ${tint.bg} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
-                      />
-
-                      <div className="relative space-y-4">
+                        className={`relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 ease-out group cursor-pointer active:scale-[0.98] ${
+                          isHighlighted
+                            ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 ring-1 ring-[var(--color-accent-primary)]/20 hover:shadow-md hover:shadow-[var(--color-accent-primary)]/15 hover:-translate-y-0.5"
+                            : "border-slate-200 bg-white hover:border-[var(--color-accent-primary)]/40 hover:shadow-md hover:-translate-y-0.5 hover:bg-[var(--color-accent-primary)]/[0.02]"
+                        }`}
+                      >
+                        {/* Step circle */}
                         <div
-                          className={`flex h-12 w-12 items-center justify-center rounded-xl ${tint.iconBg} transition-transform duration-300 group-hover:scale-110`}
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+                            isHighlighted
+                              ? "bg-[var(--color-accent-primary)] text-white group-hover:scale-110 group-hover:shadow-md group-hover:shadow-[var(--color-accent-primary)]/30"
+                              : isPast
+                              ? "bg-[var(--color-accent-primary)]/80 text-white group-hover:bg-[var(--color-accent-primary)] group-hover:scale-110"
+                              : "bg-slate-100 text-slate-400 group-hover:bg-[var(--color-accent-primary)] group-hover:text-white group-hover:scale-110"
+                          }`}
                         >
-                          {area.icon === "microscope" && (
-                            <svg
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={1.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"
-                              />
-                            </svg>
-                          )}
-                          {area.icon === "chart" && (
-                            <svg
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={1.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
-                              />
-                            </svg>
-                          )}
-                          {area.icon === "compass" && (
-                            <svg
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={1.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
-                              />
-                            </svg>
-                          )}
+                          <IconComponent className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                         </div>
-                        <h3 className="text-xl font-semibold text-slate-900">
-                          {area.title}
-                        </h3>
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          {area.description}
-                        </p>
+
+                        {/* Labels */}
+                        <div className="min-w-0 flex-1">
+                          <div className={`text-[10px] font-bold uppercase tracking-wider transition-colors duration-300 ${
+                            isHighlighted ? "text-[var(--color-accent-primary)]" : isPast ? "text-slate-600 group-hover:text-[var(--color-accent-primary)]" : "text-slate-400 group-hover:text-[var(--color-accent-primary)]"
+                          }`}>
+                            {isHighlighted ? "You're here" : `Step ${step.number}`}
+                          </div>
+                          <div className={`text-sm font-semibold truncate transition-colors duration-300 ${
+                            isHighlighted ? "text-[var(--color-accent-primary)]" : "text-slate-800 group-hover:text-[var(--color-accent-primary)]"
+                          }`}>
+                            {step.title}
+                          </div>
+                        </div>
+
+                        {isExternal && (
+                          <ExternalLinkIcon className="h-3.5 w-3.5 text-slate-400 shrink-0 transition-all duration-300 group-hover:text-[var(--color-accent-primary)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        )}
                       </div>
-                    </article>
-                  );
-                })}
+                    );
+
+                    return isExternal ? (
+                      <a key={step.number} href={href} target="_blank" rel="noopener noreferrer">
+                        {MobileCard}
+                      </a>
+                    ) : (
+                      <Link key={step.number} href={href}>
+                        {MobileCard}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             </section>
           </FadeInSection>
 
           {/* Community Publications - Enhanced with Venue Badges */}
-          <FadeInSection variant="slide-up" delay={300} as="section">
+          <FadeInSection variant="slide-up" delay={200} as="section">
             <section id="publications" className="section-container space-y-8 scroll-mt-24">
               <div className="space-y-2">
                 <h2 className="text-3xl font-semibold text-slate-900">
@@ -570,6 +517,97 @@ export default async function ResearchPage({
               <p className="text-sm text-slate-500 italic text-center">
                 {t.publications.note}
               </p>
+            </section>
+          </FadeInSection>
+
+          {/* Focus Areas - Enhanced with Distinct Tints */}
+          <FadeInSection variant="slide-up" delay={300} as="section">
+            <section className="space-y-8">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.focusAreas.title}
+                </h2>
+                <p className="text-lg text-slate-600">
+                  {t.focusAreas.subtitle}
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                {focusAreas.map((area) => {
+                  const tint =
+                    focusAreaTints[area.icon] || focusAreaTints.compass;
+
+                  return (
+                    <article
+                      key={area.title}
+                      className={`relative card-glass group overflow-hidden ${tint.border}`}
+                    >
+                      {/* Subtle gradient background tint */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${tint.bg} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+                      />
+
+                      <div className="relative space-y-4">
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-xl ${tint.iconBg} transition-transform duration-300 group-hover:scale-110`}
+                        >
+                          {area.icon === "microscope" && (
+                            <svg
+                              className="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"
+                              />
+                            </svg>
+                          )}
+                          {area.icon === "chart" && (
+                            <svg
+                              className="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+                              />
+                            </svg>
+                          )}
+                          {area.icon === "compass" && (
+                            <svg
+                              className="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                        <h3 className="text-xl font-semibold text-slate-900">
+                          {area.title}
+                        </h3>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          {area.description}
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </section>
           </FadeInSection>
 

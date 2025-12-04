@@ -639,13 +639,13 @@
         },
         {
           "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
-          "authors": "Fernando Avalos, Eitan Sprejer, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
+          "authors": "Eitan Sprejer, Fernando Avalos, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
           "venue": "NeurIPS Workshop · Sep 2025",
           "description": "A multi-judge approach to better approximate human preferences in AI systems, improving alignment evaluation.",
           "links": [
             {
-              "label": "OpenReview",
-              "url": "https://openreview.net/forum?id=F8cIIwrgCZ"
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2510.25884"
             }
           ]
         },
