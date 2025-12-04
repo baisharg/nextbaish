@@ -155,6 +155,7 @@ const BAISH_MEMBERS = [
   "Eitan Sprejer",
   "Luca De Leo",
   "Lucas Vitali",
+  "Joaquín Machulsky",
 ];
 
 // Function to highlight BAISH members in author lists
