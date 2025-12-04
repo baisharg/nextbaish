@@ -531,6 +531,7 @@
     "title": "Research at BAISH",
     "intro": "We help students in Buenos Aires go from curious to published. Join research sprints, workshops, and a community of aspiring AI safety researchers.",
     "ctaPrograms": "Join a Program",
+    "ctaPublications": "View Publications",
     "ctaLearnMore": "Learn More",
     "pathway": {
       "title": "Your Research Journey",
@@ -541,28 +542,37 @@
           "title": "Learn",
           "program": "AI Safety Fundamentals",
           "description": "Build foundations through our 13-week course covering alignment, interpretability, and AI governance.",
-          "duration": "13 weeks"
+          "duration": "13 weeks",
+          "link": "/activities/fundamentals",
+          "icon": "book"
         },
         {
           "number": "02",
           "title": "Practice",
           "program": "AIS Research Workshop",
           "description": "Replicate recent AI safety papers through hands-on programming. Develop the technical skills to conduct independent research.",
-          "duration": "Ongoing"
+          "duration": "Ongoing",
+          "link": "/activities/workshop",
+          "icon": "code"
         },
         {
           "number": "03",
           "title": "Research",
           "program": "Research Sprints",
           "description": "Contribute original work in collaborative sprints. Past participants have placed in Apart Research competitions.",
-          "duration": "2-4 weeks"
+          "duration": "2-4 weeks",
+          "link": "/contact",
+          "icon": "lightbulb"
         },
         {
           "number": "04",
           "title": "Launch",
           "program": "AISAR & Careers",
-          "description": "Advance to full-time research through AISAR scholarships ($600/mo), grad school, or industry positions.",
-          "duration": "6 months+"
+          "description": "Advance to full-time research through AISAR scholarships, independent projects, or industry positions.",
+          "duration": "6 months+",
+          "link": "https://scholarship.aisafety.ar/",
+          "icon": "rocket",
+          "external": true
         }
       ]
     },
@@ -592,9 +602,21 @@
       "subtitle": "Work by researchers connected to BAISH",
       "items": [
         {
+          "title": "Table Top Agents",
+          "authors": "Luca De Leo",
+          "venue": "Apart Research Hackathon · Nov 2025",
+          "description": "AI-powered framework that accelerates AI governance scenario exploration through autonomous agent tabletop exercises, compressing preparation cycles from years to minutes.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/table-top-agents-i2zx"
+            }
+          ]
+        },
+        {
           "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
           "authors": "Austin Meek, Eitan Sprejer, Iván Arcuschin, Austin J. Brockmeier, Steven Basart",
-          "venue": "arXiv · 2025",
+          "venue": "arXiv · Oct 2025",
           "description": "Investigating how well chain-of-thought reasoning can be monitored for safety through faithfulness and verbosity metrics.",
           "links": [
             {
@@ -606,7 +628,7 @@
         {
           "title": "AI Debaters are More Persuasive when Arguing in Alignment with Their Own Beliefs",
           "authors": "María Victoria Carro, Denise Mester, Facundo Nieto, Oscar Stanchi, Guido Bergman, Mario Leiva, Eitan Sprejer, Luca Forziati Gangi, et al.",
-          "venue": "arXiv · 2025",
+          "venue": "arXiv · Oct 2025",
           "description": "Studying how AI systems' internal beliefs affect their persuasiveness in debate scenarios — implications for AI safety and deception.",
           "links": [
             {
@@ -617,13 +639,39 @@
         },
         {
           "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
-          "authors": "Fernando Avalos, Eitan Sprejer, et al.",
-          "venue": "NeurIPS Workshop · 2024",
+          "authors": "Fernando Avalos, Eitan Sprejer, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
+          "venue": "NeurIPS Workshop · Sep 2025",
           "description": "A multi-judge approach to better approximate human preferences in AI systems, improving alignment evaluation.",
           "links": [
             {
               "label": "OpenReview",
               "url": "https://openreview.net/forum?id=F8cIIwrgCZ"
+            }
+          ]
+        },
+        {
+          "title": "RobustCBRN Eval: A Practical Benchmark Robustification Toolkit",
+          "authors": "Luca De Leo, James Sykes, Balázs László, Ewura Ama Etruwaa Sam",
+          "venue": "Apart Research Hackathon · Sep 2025",
+          "award": "2nd Place",
+          "description": "A pipeline addressing CBRN evaluation vulnerabilities through consensus detection, verified cloze scoring, and statistical evaluation with bootstrap confidence intervals.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/robustcbrn-eval-a-practical-benchmark-robustification-toolkit-6m2t"
+            }
+          ]
+        },
+        {
+          "title": "Four Paths to Failure: Red Teaming ASI Governance",
+          "authors": "Luca De Leo, Zoé Roy-Stang, Heramb Podar, Damin Curtis, Vishakha Agrawal, Ben Smyth",
+          "venue": "Apart Research Hackathon · Jun 2025",
+          "award": "1st Place",
+          "description": "Stress-tested A Narrow Path Phase 0 ASI moratorium, identifying four circumvention routes and proposing ten mutually reinforcing policy amendments.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/four-paths-to-failure-red-teaming-asi-governance-se53"
             }
           ]
         }
@@ -643,7 +691,9 @@
       "title": "Ready to start your research journey?",
       "description": "Book a call with one of our co-founders to discuss your interests and find the right path.",
       "bookWithEitan": "Book with Eitan",
-      "bookWithLuca": "Book with Luca"
+      "bookWithLuca": "Book with Luca",
+      "eitanSpecialty": "Interpretability & Evaluations",
+      "lucaSpecialty": "Operations & Strategy"
     }
   },
   "resources": {

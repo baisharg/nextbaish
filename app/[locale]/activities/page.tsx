@@ -240,7 +240,8 @@ export default async function Activities({
                 ].map((activity) => (
                   <article
                     key={activity.title}
-                    className="card-glass"
+                    id={activity.route}
+                    className="card-glass scroll-mt-24"
                   >
                     <div className="card-eyebrow">{activity.eyebrow}</div>
                     <AnimatedTitle

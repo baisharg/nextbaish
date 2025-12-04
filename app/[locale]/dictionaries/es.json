@@ -531,6 +531,7 @@
     "title": "Investigación en BAISH",
     "intro": "Ayudamos a estudiantes en Buenos Aires a pasar de curiosos a publicados. Sumate a sprints de investigación, talleres y una comunidad de aspirantes a investigadores en seguridad de IA.",
     "ctaPrograms": "Sumate a un Programa",
+    "ctaPublications": "Ver Publicaciones",
     "ctaLearnMore": "Conocé Más",
     "pathway": {
       "title": "Tu Camino en Investigación",
@@ -541,28 +542,37 @@
           "title": "Aprender",
           "program": "AI Safety Fundamentals",
           "description": "Construí bases sólidas a través de nuestro curso de 13 semanas sobre alineamiento, interpretabilidad y gobernanza de IA.",
-          "duration": "13 semanas"
+          "duration": "13 semanas",
+          "link": "/activities/fundamentals",
+          "icon": "book"
         },
         {
           "number": "02",
           "title": "Practicar",
           "program": "AIS Research Workshop",
           "description": "Replicá papers recientes de seguridad en IA programando. Desarrollá las habilidades técnicas para investigar de forma independiente.",
-          "duration": "Continuo"
+          "duration": "Continuo",
+          "link": "/activities/workshop",
+          "icon": "code"
         },
         {
           "number": "03",
           "title": "Investigar",
           "program": "Sprints de Investigación",
           "description": "Contribuí trabajo original en sprints colaborativos. Participantes anteriores han logrado puestos en competencias de Apart Research.",
-          "duration": "2-4 semanas"
+          "duration": "2-4 semanas",
+          "link": "/contact",
+          "icon": "lightbulb"
         },
         {
           "number": "04",
           "title": "Lanzarte",
           "program": "AISAR y Carreras",
-          "description": "Avanzá a investigación full-time a través de becas AISAR ($600/mes), posgrados o posiciones en la industria.",
-          "duration": "6 meses+"
+          "description": "Avanzá a investigación full-time a través de becas AISAR, proyectos independientes o posiciones en la industria.",
+          "duration": "6 meses+",
+          "link": "https://scholarship.aisafety.ar/",
+          "icon": "rocket",
+          "external": true
         }
       ]
     },
@@ -592,9 +602,21 @@
       "subtitle": "Trabajo de investigadores conectados a BAISH",
       "items": [
         {
+          "title": "Table Top Agents",
+          "authors": "Luca De Leo",
+          "venue": "Apart Research Hackathon · Nov 2025",
+          "description": "Framework con IA que acelera la exploración de escenarios de gobernanza de IA mediante ejercicios de simulación con agentes autónomos, comprimiendo ciclos de preparación de años a minutos.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/table-top-agents-i2zx"
+            }
+          ]
+        },
+        {
           "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
           "authors": "Austin Meek, Eitan Sprejer, Iván Arcuschin, Austin J. Brockmeier, Steven Basart",
-          "venue": "arXiv · 2025",
+          "venue": "arXiv · Oct 2025",
           "description": "Investigación sobre qué tan bien se puede monitorear el razonamiento chain-of-thought para seguridad a través de métricas de fidelidad y verbosidad.",
           "links": [
             {
@@ -606,7 +628,7 @@
         {
           "title": "AI Debaters are More Persuasive when Arguing in Alignment with Their Own Beliefs",
           "authors": "María Victoria Carro, Denise Mester, Facundo Nieto, Oscar Stanchi, Guido Bergman, Mario Leiva, Eitan Sprejer, Luca Forziati Gangi, et al.",
-          "venue": "arXiv · 2025",
+          "venue": "arXiv · Oct 2025",
           "description": "Estudiando cómo las creencias internas de sistemas de IA afectan su persuasión en escenarios de debate — implicaciones para seguridad y engaño.",
           "links": [
             {
@@ -617,13 +639,39 @@
         },
         {
           "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
-          "authors": "Fernando Avalos, Eitan Sprejer, et al.",
-          "venue": "NeurIPS Workshop · 2024",
+          "authors": "Fernando Avalos, Eitan Sprejer, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
+          "venue": "NeurIPS Workshop · Sep 2025",
           "description": "Un enfoque multi-juez para aproximar mejor las preferencias humanas en sistemas de IA, mejorando la evaluación de alineamiento.",
           "links": [
             {
               "label": "OpenReview",
               "url": "https://openreview.net/forum?id=F8cIIwrgCZ"
+            }
+          ]
+        },
+        {
+          "title": "RobustCBRN Eval: A Practical Benchmark Robustification Toolkit",
+          "authors": "Luca De Leo, James Sykes, Balázs László, Ewura Ama Etruwaa Sam",
+          "venue": "Apart Research Hackathon · Sep 2025",
+          "award": "2do Puesto",
+          "description": "Pipeline que aborda vulnerabilidades en evaluaciones CBRN mediante detección de consenso, scoring cloze verificado y evaluación estadística con intervalos de confianza bootstrap.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/robustcbrn-eval-a-practical-benchmark-robustification-toolkit-6m2t"
+            }
+          ]
+        },
+        {
+          "title": "Four Paths to Failure: Red Teaming ASI Governance",
+          "authors": "Luca De Leo, Zoé Roy-Stang, Heramb Podar, Damin Curtis, Vishakha Agrawal, Ben Smyth",
+          "venue": "Apart Research Hackathon · Jun 2025",
+          "award": "1er Puesto",
+          "description": "Análisis de estrés de la moratoria Phase 0 de A Narrow Path para ASI, identificando cuatro rutas de evasión y proponiendo diez enmiendas de política.",
+          "links": [
+            {
+              "label": "Apart",
+              "url": "https://apartresearch.com/project/four-paths-to-failure-red-teaming-asi-governance-se53"
             }
           ]
         }
@@ -643,7 +691,9 @@
       "title": "¿Listo para empezar tu camino en investigación?",
       "description": "Agendá una llamada con uno de nuestros co-fundadores para discutir tus intereses y encontrar el camino correcto.",
       "bookWithEitan": "Agendar con Eitan",
-      "bookWithLuca": "Agendar con Luca"
+      "bookWithLuca": "Agendar con Luca",
+      "eitanSpecialty": "Interpretabilidad y Evaluaciones",
+      "lucaSpecialty": "Operaciones y Estrategia"
     }
   },
   "resources": {
