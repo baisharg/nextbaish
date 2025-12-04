@@ -55,7 +55,12 @@ export default function Footer({ locale, t }: FooterProps) {
             >
               {t.nav.activities}
             </TransitionLink>
-            {/* Research link hidden for now */}
+            <TransitionLink
+              className="hover:text-slate-900"
+              href={withLocale(locale, "/research")}
+            >
+              {t.nav.research}
+            </TransitionLink>
             <TransitionLink
               className="hover:text-slate-900"
               href={withLocale(locale, "/resources")}
