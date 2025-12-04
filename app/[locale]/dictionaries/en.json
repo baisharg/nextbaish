@@ -602,18 +602,6 @@
       "subtitle": "Work by researchers connected to BAISH",
       "items": [
         {
-          "title": "Explorando AI Safety via Debate: un estudio sobre capacidades asimétricas y jueces débiles en el entorno MNIST",
-          "authors": "Joaquín Machulsky",
-          "venue": "Master's Thesis · 2025",
-          "description": "Master's thesis exploring AI safety through debate mechanisms, studying asymmetric capabilities and weak judges in the MNIST environment. Features an interactive demo.",
-          "links": [
-            {
-              "label": "Website",
-              "url": "https://aisafety.joaquinmachulsky.com/"
-            }
-          ]
-        },
-        {
           "title": "Table Top Agents",
           "authors": "Luca De Leo",
           "venue": "Apart Research Hackathon · Nov 2025",
@@ -622,6 +610,18 @@
             {
               "label": "Apart",
               "url": "https://apartresearch.com/project/table-top-agents-i2zx"
+            }
+          ]
+        },
+        {
+          "title": "Explorando AI Safety via Debate: un estudio sobre capacidades asimétricas y jueces débiles en el entorno MNIST",
+          "authors": "Joaquín Machulsky",
+          "venue": "Master's Thesis · Oct 2025",
+          "description": "Master's thesis exploring AI safety through debate mechanisms, studying asymmetric capabilities and weak judges in the MNIST environment. Features an interactive demo.",
+          "links": [
+            {
+              "label": "Website",
+              "url": "https://aisafety.joaquinmachulsky.com/"
             }
           ]
         },
