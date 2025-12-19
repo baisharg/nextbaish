@@ -1,12 +1,32 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
 import { HeroTimeline } from "@/app/components/hero-timeline";
+import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.home[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "",
+    locale: currentLocale,
+  });
+}
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
@@ -43,6 +63,11 @@ export default async function Home({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <OrganizationJsonLd />
+      <BreadcrumbJsonLd
+        items={[{ name: t.breadcrumb.home, url: "" }]}
+        locale={currentLocale}
+      />
       <main className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:px-10">
         <div className="main-sections">
           {/* Hero Section - Lead with Value Prop */}

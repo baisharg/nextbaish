@@ -9,6 +9,7 @@ import TimelineThreads from "../components/timeline-threads-loader";
 import { DeferredAnalytics } from "../components/deferred-analytics";
 import { PerformanceMonitor } from "../components/performance-monitor";
 import { LanguageProvider } from "../contexts/language-context";
+import { WebSiteJsonLd } from "../components/json-ld";
 import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
 import Head from "../head";
@@ -152,6 +153,7 @@ export default async function LocaleLayout({
         <body
           className={`${ttHovesPro.variable} ${signifier.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
         >
+          <WebSiteJsonLd />
           <Suspense fallback={null}>
             <LanguageProvider initialLanguage={currentLocale} dictionary={dict}>
               <TimelineThreads

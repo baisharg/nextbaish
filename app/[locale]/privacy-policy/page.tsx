@@ -1,10 +1,30 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
 import { AnimatedTitle } from "@/app/components/animated-title";
+import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { FadeInSection } from "@/app/components/fade-in-section";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.privacyPolicy[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/privacy-policy",
+    locale: currentLocale,
+  });
+}
 
 export default async function PrivacyPolicy({
   params,
@@ -18,6 +38,13 @@ export default async function PrivacyPolicy({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <BreadcrumbJsonLd
+        items={[
+          { name: t.breadcrumb.home, url: "" },
+          { name: t.breadcrumb.current, url: "/privacy-policy" },
+        ]}
+        locale={currentLocale}
+      />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 py-16 sm:px-10">
         {/* Page Header */}
         <FadeInSection variant="fade" as="section">

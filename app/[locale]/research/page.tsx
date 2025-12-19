@@ -1,12 +1,32 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
+import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.research[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/research",
+    locale: currentLocale,
+  });
+}
 
 type PathwayStep = {
   number: string;
@@ -234,6 +254,13 @@ export default async function ResearchPage({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <BreadcrumbJsonLd
+        items={[
+          { name: t.breadcrumb.home, url: "" },
+          { name: t.breadcrumb.current, url: "/research" },
+        ]}
+        locale={currentLocale}
+      />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
         <div className="main-sections w-full">
           {/* Page Header */}

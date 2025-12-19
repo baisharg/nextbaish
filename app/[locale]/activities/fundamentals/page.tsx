@@ -1,12 +1,32 @@
+import type { Metadata } from "next";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import Footer from "@/app/components/footer";
 import { TransitionLink } from "@/app/components/transition-link";
+import { BreadcrumbJsonLd, CourseJsonLd } from "@/app/components/json-ld";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { Book02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { getDictionary } from "../../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT["activities/fundamentals"][currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/activities/fundamentals",
+    locale: currentLocale,
+  });
+}
 
 export default async function FundamentalsPage({
   params,
@@ -22,6 +42,19 @@ export default async function FundamentalsPage({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <BreadcrumbJsonLd
+        items={[
+          { name: t.breadcrumb.home, url: "" },
+          { name: t.breadcrumb.current, url: "/activities" },
+          { name: agiSafety.title, url: "/activities/fundamentals" },
+        ]}
+        locale={currentLocale}
+      />
+      <CourseJsonLd
+        name={agiSafety.title}
+        description={agiSafety.description}
+        duration="13 weeks"
+      />
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
         <div className="main-sections py-16">

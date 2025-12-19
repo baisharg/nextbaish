@@ -1,12 +1,32 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
+import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.contact[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/contact",
+    locale: currentLocale,
+  });
+}
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   TelegramIcon,
@@ -37,8 +57,26 @@ export default async function ContactPage({
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
 
+  // Prepare FAQ data for schema (strip template variables)
+  const faqItems = (
+    dict.contact.faq.items as Array<{ question: string; answer: string }>
+  ).map((faq) => ({
+    question: faq.question,
+    answer: faq.answer
+      .replace("{resourcesLink}", "our resources page")
+      .replace("{email}", "our email"),
+  }));
+
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: dict.contact.breadcrumb.home, url: "" },
+          { name: dict.contact.breadcrumb.current, url: "/contact" },
+        ]}
+        locale={currentLocale}
+      />
+      <FAQJsonLd faqs={faqItems} />
       <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
         <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
           <div className="main-sections">

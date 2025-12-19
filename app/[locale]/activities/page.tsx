@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import CalendarSection from "@/app/components/calendar-section";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import Footer from "@/app/components/footer";
 import { TransitionLink } from "@/app/components/transition-link";
+import {
+  BreadcrumbJsonLd,
+  ActivitiesEventsJsonLd,
+} from "@/app/components/json-ld";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import {
@@ -14,6 +19,24 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.activities[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/activities",
+    locale: currentLocale,
+  });
+}
 
 type PastProgramCard = {
   eyebrow: string;
@@ -83,6 +106,14 @@ export default async function Activities({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <BreadcrumbJsonLd
+        items={[
+          { name: t.breadcrumb.home, url: "" },
+          { name: t.breadcrumb.current, url: "/activities" },
+        ]}
+        locale={currentLocale}
+      />
+      <ActivitiesEventsJsonLd locale={currentLocale} />
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
         <div className="py-16">

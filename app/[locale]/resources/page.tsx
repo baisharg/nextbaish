@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
+import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -14,7 +16,25 @@ import {
   Mail01Icon,
 } from "@hugeicons/core-free-icons";
 import { getDictionary } from "../dictionaries";
+import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { isAppLocale, type AppLocale } from "@/i18n.config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const content = SEO_CONTENT.resources[currentLocale];
+
+  return generatePageMetadata({
+    title: content.title,
+    description: content.description,
+    path: "/resources",
+    locale: currentLocale,
+  });
+}
 
 type SelfStudyResourceItem = {
   name: string;
@@ -44,6 +64,13 @@ export default async function Resources({
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
+      <BreadcrumbJsonLd
+        items={[
+          { name: dict.resources.breadcrumb.home, url: "" },
+          { name: dict.resources.breadcrumb.current, url: "/resources" },
+        ]}
+        locale={currentLocale}
+      />
       <main className="relative z-10 mx-auto flex min-h-screen max-w-6xl px-6 py-16 sm:px-10">
         <div className="main-sections">
         {/* Page Header */}
