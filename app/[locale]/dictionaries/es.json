@@ -45,6 +45,12 @@
     "breadcrumb": {
       "home": "Inicio"
     },
+    "survey": {
+      "badge": "Retrospectiva 2024",
+      "title": "Ayudanos a mejorar BAISH",
+      "description": "Contanos tu experiencia — solo toma 3 minutos",
+      "cta": "Completar Encuesta"
+    },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
       "title": "De Curioso a Investigador",

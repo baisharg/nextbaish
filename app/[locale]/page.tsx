@@ -38,6 +38,7 @@ import {
   Wrench01Icon,
   MicroscopeIcon,
 } from "@hugeicons/core-free-icons";
+import { SurveyBanner } from "@/app/components/survey-banner";
 
 
 // Lazy load below-the-fold components for better initial load
@@ -89,6 +90,15 @@ export default async function Home({
                 <p className="text-xl sm:text-2xl text-slate-600 max-w-2xl mx-auto">
                   {t.mission.tagline}
                 </p>
+
+                {/* End of Year Survey Banner */}
+                <SurveyBanner
+                  badge={t.survey.badge}
+                  title={t.survey.title}
+                  description={t.survey.description}
+                  cta={t.survey.cta}
+                  surveyUrl="https://airtable.com/app2EMVZr0HLk1gWt/pagfT7OhW7JngooTa/form"
+                />
 
                 {/* Timeline integrated into hero */}
                 <HeroTimeline

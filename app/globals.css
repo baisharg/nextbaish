@@ -1330,3 +1330,276 @@ section {
 main {
   contain: layout;
 }
+
+/* ==========================================================================
+   Survey Banner - Luminous Ribbon Announcement
+   ========================================================================== */
+
+.survey-banner {
+  position: relative;
+  display: block;
+  margin-top: 2.5rem;
+  padding: 3px; /* Border thickness via padding */
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    #9275E5 0%,
+    #C77DDA 25%,
+    #A8C5FF 50%,
+    #9275E5 75%,
+    #C77DDA 100%
+  );
+  background-size: 300% 300%;
+  animation: survey-gradient-shift 4s ease-in-out infinite;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(146, 117, 229, 0.25),
+    0 0 40px rgba(146, 117, 229, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.survey-banner:hover {
+  box-shadow:
+    0 8px 32px rgba(146, 117, 229, 0.35),
+    0 0 60px rgba(146, 117, 229, 0.2);
+  transform: translateY(-2px) scale(1.005);
+}
+
+.survey-banner:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+}
+
+@keyframes survey-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Inner content area */
+.survey-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(250, 249, 255, 0.95) 100%
+  );
+  border-radius: 13px;
+  flex-wrap: wrap;
+}
+
+/* Animated glow behind */
+.survey-glow {
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(
+    135deg,
+    rgba(146, 117, 229, 0.4) 0%,
+    rgba(199, 125, 218, 0.4) 50%,
+    rgba(168, 197, 255, 0.4) 100%
+  );
+  filter: blur(20px);
+  opacity: 0.6;
+  animation: survey-glow-pulse 3s ease-in-out infinite;
+  border-radius: 20px;
+  z-index: 0;
+}
+
+@keyframes survey-glow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+
+/* Shimmer effect */
+.survey-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  z-index: 3;
+  pointer-events: none;
+  animation: survey-shimmer 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes survey-shimmer {
+  0% { left: -100%; }
+  30%, 100% { left: 150%; }
+}
+
+/* Left section: Icon + Badge */
+.survey-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.survey-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #9275E5, #7E6AF6);
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(146, 117, 229, 0.3);
+  animation: survey-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes survey-icon-pulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(146, 117, 229, 0.3); }
+  50% { box-shadow: 0 4px 20px rgba(146, 117, 229, 0.5); }
+}
+
+.survey-badge {
+  display: inline-flex;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, rgba(146, 117, 229, 0.12), rgba(199, 125, 218, 0.12));
+  border: 1px solid rgba(146, 117, 229, 0.25);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7E6AF6;
+}
+
+/* Center section: Title + Description */
+.survey-center {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.survey-title {
+  font-family: var(--font-signifier), Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+
+.survey-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* Right section: CTA */
+.survey-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #9275E5, #7E6AF6);
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(146, 117, 229, 0.25);
+  transition: all 0.3s ease;
+}
+
+.survey-banner:hover .survey-cta {
+  background: linear-gradient(135deg, #7E6AF6, #6D5BF5);
+  box-shadow: 0 6px 20px rgba(146, 117, 229, 0.4);
+  transform: translateX(2px);
+}
+
+.survey-arrow {
+  transition: transform 0.3s ease;
+}
+
+.survey-banner:hover .survey-arrow {
+  transform: translateX(4px);
+}
+
+/* Mobile: Stack layout */
+@media (max-width: 640px) {
+  .survey-banner {
+    margin-top: 2rem;
+  }
+
+  .survey-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .survey-left {
+    width: 100%;
+  }
+
+  .survey-center {
+    width: 100%;
+  }
+
+  .survey-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 900px) {
+  .survey-content {
+    flex-wrap: wrap;
+  }
+
+  .survey-center {
+    flex-basis: 100%;
+    order: 3;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .survey-banner {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .survey-glow {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .survey-shimmer {
+    animation: none;
+    display: none;
+  }
+
+  .survey-icon-wrap {
+    animation: none;
+  }
+
+  .survey-cta,
+  .survey-arrow,
+  .survey-banner:hover .survey-cta,
+  .survey-banner:hover .survey-arrow {
+    transition: none;
+    transform: none;
+  }
+}
