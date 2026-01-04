@@ -16,6 +16,14 @@ import "./header.css";
 // Lazy load mobile menu to reduce initial bundle size
 const MobileMenu = dynamic(() => import("./mobile-menu"), {
   ssr: false,
+  loading: () => (
+    <div className="fixed inset-0 z-40 md:hidden flex items-center justify-center bg-slate-900/10 backdrop-blur-sm">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-2 border-[var(--color-accent-primary)] border-t-transparent rounded-full animate-spin" />
+        <span className="text-sm text-slate-600 font-medium">Loading...</span>
+      </div>
+    </div>
+  ),
 });
 
 const LANGUAGES = [

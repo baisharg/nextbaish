@@ -38,13 +38,17 @@ import {
   Wrench01Icon,
   MicroscopeIcon,
 } from "@hugeicons/core-free-icons";
-import { SurveyBanner } from "@/app/components/survey-banner";
 
 
 // Lazy load below-the-fold components for better initial load
 const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
   loading: () => (
-    <div className="flex h-[450px] w-full items-center justify-center rounded-xl bg-slate-50 animate-pulse" />
+    <div className="calendar-skeleton flex h-[450px] w-full items-center justify-center rounded-xl bg-slate-50/50 border border-slate-200/50">
+      <div className="text-center space-y-3">
+        <div className="w-8 h-8 mx-auto rounded-full bg-slate-200 animate-pulse" />
+        <p className="text-sm text-slate-400">Loading events...</p>
+      </div>
+    </div>
   ),
 });
 
@@ -91,47 +95,68 @@ export default async function Home({
                   {t.mission.tagline}
                 </p>
 
-                {/* End of Year Survey Banner */}
-                <SurveyBanner
-                  badge={t.survey.badge}
-                  title={t.survey.title}
-                  description={t.survey.description}
-                  cta={t.survey.cta}
-                  surveyUrl="https://airtable.com/app2EMVZr0HLk1gWt/pagfT7OhW7JngooTa/form"
-                />
+                {/* Social Proof Stats - Above the fold */}
+                <div className="mt-10 flex flex-wrap justify-center gap-8 text-center">
+                  <div className="social-proof-stat">
+                    <span className="stat-number">120+</span>
+                    <span className="stat-label">{t.hero.communityMembers}</span>
+                  </div>
+                  <div className="social-proof-stat">
+                    <span className="stat-number">3</span>
+                    <span className="stat-label">{t.hero.weeklyPrograms}</span>
+                  </div>
+                  <div className="social-proof-stat">
+                    <span className="stat-number">3+</span>
+                    <span className="stat-label">{t.hero.publishedPapers}</span>
+                  </div>
+                </div>
 
-                {/* Timeline integrated into hero */}
+                {/* Mobile-only CTA - visible below 640px */}
+                <a
+                  href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-hero-cta sm:hidden mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white shadow-lg"
+                >
+                  <HugeiconsIcon icon={WhatsappIcon} size={20} />
+                  {t.hero.mobileCta}
+                </a>
+
+                {/* Timeline integrated into hero - BAISH-specific journey */}
                 <HeroTimeline
                   steps={[
                     {
                       icon: UserGroupIcon,
-                      shortLabel: "Join",
-                      fullTitle: "Join our community",
-                      description: "Connect with 200+ members on WhatsApp and Telegram",
+                      shortLabel: t.timeline?.connect || "Connect",
+                      fullTitle: t.timeline?.connectTitle || "Join our community",
+                      description: t.timeline?.connectDesc || "200+ members on WhatsApp & Telegram",
+                      badge: "120+",
                       link: "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
                       isExternal: true,
                     },
                     {
                       icon: Book02Icon,
-                      shortLabel: "Learn",
-                      fullTitle: "Learn the fundamentals",
-                      description: "13-week AI Safety Fundamentals course",
+                      shortLabel: t.timeline?.foundations || "Foundations",
+                      fullTitle: t.timeline?.foundationsTitle || "AI Safety Fundamentals",
+                      description: t.timeline?.foundationsDesc || "13-week inverted classroom course",
+                      badge: "13 weeks",
                       link: "/activities/fundamentals",
                     },
                     {
                       icon: Wrench01Icon,
-                      shortLabel: "Build",
-                      fullTitle: "Build technical skills",
-                      description: "Weekly workshop replicating AI safety papers",
+                      shortLabel: t.timeline?.replicate || "Replicate",
+                      fullTitle: t.timeline?.replicateTitle || "Paper replication workshop",
+                      description: t.timeline?.replicateDesc || "Weekly hands-on technical practice",
+                      badge: "Weekly",
                       link: "/activities/workshop",
                     },
                     {
                       icon: MicroscopeIcon,
-                      shortLabel: "Research",
-                      fullTitle: "Contribute to research",
-                      description: "6-month fellowship with mentorship & stipend",
-                      link: "https://scholarship.aisafety.ar/",
-                      isExternal: true,
+                      shortLabel: t.timeline?.publish || "Publish",
+                      fullTitle: t.timeline?.publishTitle || "Research fellowship",
+                      description: t.timeline?.publishDesc || "6-month program with mentorship & stipend",
+                      badge: "6 months",
+                      link: "/research",
                     },
                   ]}
                   locale={currentLocale}
@@ -140,8 +165,65 @@ export default async function Home({
             </section>
           </FadeInSection>
 
-          {/* Events Section */}
+          {/* Get Involved Section - MOVED UP for conversion */}
           <FadeInSection variant="slide-up" delay={50} as="section">
+            <section
+              className="section-container"
+              id="get-involved"
+            >
+              <div className="space-y-4 text-center mb-10">
+                <p className="eyebrow">{t.getInvolved.eyebrow || "Get Started"}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.getInvolved.sectionTitle || "Join Our Community"}
+                </h2>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  {t.getInvolved.sectionDescription || "Connect with researchers, stay updated, and start your journey"}
+                </p>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                <SupascribeSignup t={dict.substack} />
+
+                <article className="card-glass card-refined">
+                  <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
+                  <h3 className="card-title">
+                    {t.getInvolved.communityTitle}
+                  </h3>
+                  <p className="card-body">
+                    {t.getInvolved.communityDescription}
+                  </p>
+                  <div className="flex flex-col gap-3 mt-auto">
+                    <a
+                      className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                      href="https://t.me/+zhSGhXrn56g1YjVh"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon icon={TelegramIcon} size={20} />
+                        <span className="font-semibold">{t.getInvolved.telegramCta}</span>
+                      </div>
+                      <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
+                    </a>
+                    <a
+                      className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                      href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon icon={WhatsappIcon} size={20} />
+                        <span className="font-semibold">{t.getInvolved.whatsappCta}</span>
+                      </div>
+                      <span className="text-xs opacity-90">{t.getInvolved.whatsappMembers}</span>
+                    </a>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </FadeInSection>
+
+          {/* Events Section */}
+          <FadeInSection variant="slide-up" delay={100} as="section">
             <section
               className="section-container"
               id="events"
@@ -164,150 +246,108 @@ export default async function Home({
             </section>
           </FadeInSection>
 
-          {/* Activities Section */}
-          <FadeInSection variant="slide-up" delay={100} as="section">
+          {/* Activities Section - with visual grouping */}
+          <FadeInSection variant="slide-up" delay={150} as="section">
             <section className="section-content" id="activities">
-              <div className="space-y-4">
+              <div className="space-y-4 text-center mb-10">
+                <p className="eyebrow">{t.activities.eyebrow || "Programs"}</p>
                 <h2 className="text-3xl font-semibold text-slate-900">
                   {t.activities.title}
                 </h2>
-                <p className="text-lg text-slate-700">
+                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
                   {t.activities.description}
                 </p>
               </div>
-              <div className="card-grid">
-              {[
-                {
-                  slug: "activity-fundamentals",
-                  route: "fundamentals",
-                  eyebrow: t.activities.items.fundamentals.eyebrow,
-                  title: t.activities.items.fundamentals.title,
-                  description: t.activities.items.fundamentals.description,
-                  metaItems: [
-                    { icon: "calendar", text: t.activities.items.fundamentals.schedule },
-                    { icon: "clock", text: t.activities.items.fundamentals.duration },
-                  ],
-                },
-                {
-                  slug: "activity-workshop",
-                  route: "workshop",
-                  eyebrow: t.activities.items.workshop.eyebrow,
-                  title: t.activities.items.workshop.title,
-                  description: t.activities.items.workshop.description,
-                  metaItems: [
-                    { icon: "calendar", text: t.activities.items.workshop.schedule },
-                    { icon: "clock", text: t.activities.items.workshop.duration },
-                  ],
-                },
-                {
-                  slug: "activity-reading",
-                  route: "reading",
-                  eyebrow: t.activities.items.reading.eyebrow,
-                  title: t.activities.items.reading.title,
-                  description: t.activities.items.reading.description,
-                  metaItems: [
-                    { icon: "calendar", text: t.activities.items.reading.schedule },
-                    { icon: "clock", text: t.activities.items.reading.duration },
-                  ],
-                },
-              ].map((activity) => (
-                <article
-                  key={activity.title}
-                  className="card-glass dither-macrogrid"
-                >
-                  <div className="card-eyebrow">{activity.eyebrow}</div>
-                  <AnimatedTitle
-                    text={activity.title}
-                    slug={activity.slug}
-                    className="card-title"
-                    as="h3"
-                  />
-                  <p className="card-body">{activity.description}</p>
-
-                  <div className="card-meta">
-                    {activity.metaItems.map((item, idx) => (
-                      <span key={idx} className="pill">
-                        {item.icon === "calendar" ? (
-                          <HugeiconsIcon icon={Calendar03Icon} size={16} />
-                        ) : (
-                          <HugeiconsIcon icon={Clock01Icon} size={16} />
-                        )}
-                        {item.text}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="card-footer">
-                    {activity.route === "reading" && (
-                      <a
-                        className="button-primary"
-                        href="https://t.me/+zhSGhXrn56g1YjVh"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <HugeiconsIcon icon={TelegramIcon} size={18} />
-                        {t.activities.joinTelegram}
-                      </a>
-                    )}
-                    <TransitionLink
-                      className="link-arrow"
-                      href={`/${currentLocale}/activities/${activity.route}`}
+              {/* Visual grouping container for program cards */}
+              <div className="programs-container">
+                <div className="card-grid">
+                  {[
+                    {
+                      slug: "activity-fundamentals",
+                      route: "fundamentals",
+                      eyebrow: t.activities.items.fundamentals.eyebrow,
+                      title: t.activities.items.fundamentals.title,
+                      description: t.activities.items.fundamentals.description,
+                      metaItems: [
+                        { icon: "calendar", text: t.activities.items.fundamentals.schedule },
+                        { icon: "clock", text: t.activities.items.fundamentals.duration },
+                      ],
+                    },
+                    {
+                      slug: "activity-workshop",
+                      route: "workshop",
+                      eyebrow: t.activities.items.workshop.eyebrow,
+                      title: t.activities.items.workshop.title,
+                      description: t.activities.items.workshop.description,
+                      metaItems: [
+                        { icon: "calendar", text: t.activities.items.workshop.schedule },
+                        { icon: "clock", text: t.activities.items.workshop.duration },
+                      ],
+                    },
+                    {
+                      slug: "activity-reading",
+                      route: "reading",
+                      eyebrow: t.activities.items.reading.eyebrow,
+                      title: t.activities.items.reading.title,
+                      description: t.activities.items.reading.description,
+                      metaItems: [
+                        { icon: "calendar", text: t.activities.items.reading.schedule },
+                        { icon: "clock", text: t.activities.items.reading.duration },
+                      ],
+                    },
+                  ].map((activity) => (
+                    <article
+                      key={activity.title}
+                      className="card-glass card-refined"
                     >
-                      {t.activities.learnMore}
-                      <span>→</span>
-                    </TransitionLink>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        </FadeInSection>
+                      <div className="card-eyebrow">{activity.eyebrow}</div>
+                      <AnimatedTitle
+                        text={activity.title}
+                        slug={activity.slug}
+                        className="card-title"
+                        as="h3"
+                      />
+                      <p className="card-body">{activity.description}</p>
 
-          {/* Get Involved Section */}
-          <FadeInSection variant="slide-up" delay={150} as="section">
-            <section
-              className="section-container grid gap-6 md:grid-cols-2"
-              id="get-involved"
-            >
-              <SupascribeSignup t={dict.substack} />
+                      <div className="card-meta">
+                        {activity.metaItems.map((item, idx) => (
+                          <span key={idx} className="pill">
+                            {item.icon === "calendar" ? (
+                              <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                            ) : (
+                              <HugeiconsIcon icon={Clock01Icon} size={16} />
+                            )}
+                            {item.text}
+                          </span>
+                        ))}
+                      </div>
 
-              <article className="card-glass">
-              <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
-              <h3 className="card-title">
-                {t.getInvolved.communityTitle}
-              </h3>
-              <p className="card-body">
-                {t.getInvolved.communityDescription}
-              </p>
-              <div className="flex flex-col gap-3 mt-auto">
-                <a
-                  className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                  href="https://t.me/+zhSGhXrn56g1YjVh"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <div className="flex items-center gap-2">
-                    <HugeiconsIcon icon={TelegramIcon} size={20} />
-                    <span className="font-semibold">{t.getInvolved.telegramCta}</span>
-                  </div>
-                  <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
-                </a>
-                <a
-                  className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                  href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <div className="flex items-center gap-2">
-                    <HugeiconsIcon icon={WhatsappIcon} size={20} />
-                    <span className="font-semibold">{t.getInvolved.whatsappCta}</span>
-                  </div>
-                  <span className="text-xs opacity-90">{t.getInvolved.whatsappMembers}</span>
-                </a>
+                      <div className="card-footer">
+                        {activity.route === "reading" && (
+                          <a
+                            className="button-primary"
+                            href="https://t.me/+zhSGhXrn56g1YjVh"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <HugeiconsIcon icon={TelegramIcon} size={18} />
+                            {t.activities.joinTelegram}
+                          </a>
+                        )}
+                        <TransitionLink
+                          className="link-arrow"
+                          href={`/${currentLocale}/activities/${activity.route}`}
+                        >
+                          {t.activities.learnMore}
+                          <span>→</span>
+                        </TransitionLink>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
-            </article>
-          </section>
-        </FadeInSection>
+            </section>
+          </FadeInSection>
         </div>
       </main>
       <Footer locale={currentLocale} t={dict.footer} />

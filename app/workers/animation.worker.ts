@@ -26,11 +26,6 @@ import {
 import type { FramePacket, ThreadFrame, ColorStop, Renderer } from "../types/renderer";
 import { createRenderer } from "../utils/create-renderer";
 import type {
-  InitMessage,
-  PauseMessage,
-  ResumeMessage,
-  TerminateMessage,
-  TickMessage,
   WorkerMessage,
 } from "./animation-types";
 

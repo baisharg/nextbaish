@@ -45,11 +45,25 @@
     "breadcrumb": {
       "home": "Home"
     },
-    "survey": {
-      "badge": "2025 Retrospective",
-      "title": "Help shape BAISH's future",
-      "description": "Share your experience with us — takes 10 minutes",
-      "cta": "Take the Survey"
+    "hero": {
+      "communityMembers": "Community Members",
+      "weeklyPrograms": "Weekly Programs",
+      "publishedPapers": "Published Papers",
+      "mobileCta": "Join the Community"
+    },
+    "timeline": {
+      "connect": "Connect",
+      "connectTitle": "Join our community",
+      "connectDesc": "120+ members on WhatsApp & Telegram",
+      "foundations": "Foundations",
+      "foundationsTitle": "AI Safety Fundamentals",
+      "foundationsDesc": "13-week inverted classroom course",
+      "replicate": "Replicate",
+      "replicateTitle": "Paper replication workshop",
+      "replicateDesc": "Weekly hands-on technical practice",
+      "publish": "Publish",
+      "publishTitle": "Research fellowship",
+      "publishDesc": "6-month program with mentorship & stipend"
     },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
@@ -103,6 +117,7 @@
       "subscribe": "Subscribe to Calendar"
     },
     "activities": {
+      "eyebrow": "Programs",
       "title": "Our Programs",
       "description": "Explore recurring programs designed to grow the AI safety community.",
       "items": {
@@ -193,9 +208,12 @@
       "learnMore": "Learn more"
     },
     "getInvolved": {
+      "eyebrow": "Get Started",
+      "sectionTitle": "Join Our Community",
+      "sectionDescription": "Connect with researchers, stay updated, and start your AI safety journey",
       "communityEyebrow": "Community",
-      "communityTitle": "Join our Community",
-      "communityDescription": "Connect with fellow students interested in AI safety.",
+      "communityTitle": "Chat Groups",
+      "communityDescription": "Connect with 200+ students and researchers interested in AI safety.",
       "telegramCta": "AI Safety Argentina",
       "telegramMembers": "190+ members",
       "whatsappCta": "BAISH Community",

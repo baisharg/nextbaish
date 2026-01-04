@@ -45,11 +45,25 @@
     "breadcrumb": {
       "home": "Inicio"
     },
-    "survey": {
-      "badge": "Retrospectiva 2025",
-      "title": "Ayudanos a mejorar BAISH",
-      "description": "Contanos tu experiencia — toma 10 minutos",
-      "cta": "Completar Encuesta"
+    "hero": {
+      "communityMembers": "Miembros de la Comunidad",
+      "weeklyPrograms": "Programas Semanales",
+      "publishedPapers": "Papers Publicados",
+      "mobileCta": "Sumate a la Comunidad"
+    },
+    "timeline": {
+      "connect": "Conectar",
+      "connectTitle": "Unite a la comunidad",
+      "connectDesc": "120+ miembros en WhatsApp y Telegram",
+      "foundations": "Fundamentos",
+      "foundationsTitle": "AI Safety Fundamentals",
+      "foundationsDesc": "Curso de 13 semanas con aula invertida",
+      "replicate": "Replicar",
+      "replicateTitle": "Taller de replicación",
+      "replicateDesc": "Práctica técnica semanal",
+      "publish": "Publicar",
+      "publishTitle": "Beca de investigación",
+      "publishDesc": "Programa de 6 meses con mentoría y estipendio"
     },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
@@ -103,6 +117,7 @@
       "subscribe": "Suscribite al calendario"
     },
     "activities": {
+      "eyebrow": "Programas",
       "title": "Nuestros Programas",
       "description": "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA.",
       "items": {
@@ -193,9 +208,12 @@
       "learnMore": "Ver más"
     },
     "getInvolved": {
+      "eyebrow": "Empezá",
+      "sectionTitle": "Unite a la Comunidad",
+      "sectionDescription": "Conectá con investigadores, mantenete al día y empezá tu camino en AI safety",
       "communityEyebrow": "Comunidad",
-      "communityTitle": "Sumate a nuestra comunidad",
-      "communityDescription": "Conéctate con estudiantes interesados en la seguridad de IA.",
+      "communityTitle": "Grupos de Chat",
+      "communityDescription": "Conectá con 200+ estudiantes e investigadores interesados en AI safety.",
       "telegramCta": "AI Safety Argentina",
       "telegramMembers": "190+ miembros",
       "whatsappCta": "Comunidad BAISH",

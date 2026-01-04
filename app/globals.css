@@ -187,14 +187,194 @@ h4 {
   margin-top: 1.5em;
 }
 
-/* Eyebrow labels */
+/* Eyebrow labels - using darker purple for WCAG AA contrast */
 .eyebrow {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent-primary);
+  color: #5B4BC7; /* Darker jacaranda purple - 4.9:1 contrast ratio */
   margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   Social Proof Stats - Above the fold credibility
+   ========================================================================== */
+.social-proof-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-number {
+  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-tertiary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+}
+
+/* Mobile Hero CTA - Jacaranda-inspired gradient */
+.mobile-hero-cta {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary) 0%,
+    #8B6BD8 50%,
+    var(--color-accent-tertiary) 100%
+  );
+  box-shadow:
+    0 4px 14px rgba(146, 117, 229, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-hero-cta:hover,
+.mobile-hero-cta:focus {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(146, 117, 229, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-hero-cta:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Jacaranda-Inspired Decorative Elements
+   ========================================================================== */
+
+/* Subtle bloom pattern for section headers */
+.jacaranda-bloom {
+  position: relative;
+}
+
+.jacaranda-bloom::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 60px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(146, 117, 229, 0.12) 0%,
+    rgba(199, 125, 218, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+/* Decorative accent line with gradient */
+.jacaranda-accent-line {
+  width: 60px;
+  height: 3px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-accent-primary) 20%,
+    var(--color-accent-tertiary) 80%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Hero Section - Strong Visual Hierarchy
+   ========================================================================== */
+
+/* Hero title gets the most visual weight */
+section#about h1 {
+  position: relative;
+  animation: hero-title-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes hero-title-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tagline enters slightly after */
+section#about p.text-xl,
+section#about p.sm\:text-2xl {
+  animation: hero-tagline-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+@keyframes hero-tagline-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Social proof stats staggered entrance */
+.social-proof-stat {
+  animation: stat-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.social-proof-stat:nth-child(1) { animation-delay: 0.25s; }
+.social-proof-stat:nth-child(2) { animation-delay: 0.35s; }
+.social-proof-stat:nth-child(3) { animation-delay: 0.45s; }
+
+@keyframes stat-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile CTA enters after stats */
+.mobile-hero-cta {
+  animation: cta-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+@keyframes cta-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  section#about h1,
+  section#about p.text-xl,
+  section#about p.sm\:text-2xl,
+  .social-proof-stat,
+  .mobile-hero-cta {
+    animation: none;
+  }
 }
 
 @keyframes fade-in {
@@ -429,24 +609,98 @@ canvas {
   /* Inherit base .card-glass styles */
 }
 
-/* Card typography */
+/* ==========================================================================
+   Card Refined - Simplified elegant hover
+   ========================================================================== */
+.card-refined {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease;
+}
+
+.card-refined::before {
+  display: none; /* Remove gradient border effect */
+}
+
+.card-refined:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border-color: var(--color-accent-primary);
+}
+
+.card-refined:focus-within {
+  border-color: var(--color-accent-primary);
+  box-shadow:
+    0 0 0 3px rgba(146, 117, 229, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Programs Container - Visual grouping for activity cards
+   ========================================================================== */
+.programs-container {
+  position: relative;
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(146, 117, 229, 0.03) 0%,
+    rgba(168, 197, 255, 0.02) 50%,
+    rgba(199, 125, 218, 0.03) 100%
+  );
+  border-radius: 24px;
+  border: 1px solid rgba(146, 117, 229, 0.08);
+}
+
+.programs-container::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 2rem;
+  right: 2rem;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-accent-primary) 20%,
+    var(--color-accent-tertiary) 80%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .programs-container {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .programs-container::before {
+    left: 1rem;
+    right: 1rem;
+  }
+}
+
+/* Card typography - improved contrast and hierarchy */
 .card-eyebrow {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 16px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--brand-500);
+  letter-spacing: 0.06em;
+  color: #5B4BC7; /* Darker jacaranda purple - 4.9:1 contrast ratio */
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .card-title {
   font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
-  font-size: 20px;
-  line-height: 26px;
+  font-size: clamp(1.375rem, 2vw, 1.5rem); /* 22-24px, 1.5x body text */
+  line-height: 1.3;
   font-weight: 600;
   color: var(--text-strong);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 
 .card-body {
@@ -506,6 +760,11 @@ canvas {
   border-radius: 24px;
   padding: 3rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+
+.section-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .section-container-tinted {
@@ -983,8 +1242,20 @@ canvas {
   transition: color 0.3s ease;
 }
 
-.timeline-step:hover .timeline-label {
+.timeline-step:hover .timeline-label,
+.timeline-step:focus-within .timeline-label {
   color: var(--color-accent-primary);
+}
+
+/* Timeline badge - shows context like "200+" or "13 weeks" */
+.timeline-badge {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  opacity: 0.85;
 }
 
 /* Tooltip that appears on hover */
@@ -1023,7 +1294,10 @@ canvas {
   filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.05));
 }
 
-.timeline-step:hover .timeline-tooltip {
+/* Keyboard + mouse accessible - show tooltip on hover AND focus */
+.timeline-step:hover .timeline-tooltip,
+.timeline-step:focus-within .timeline-tooltip,
+.timeline-step:focus .timeline-tooltip {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
@@ -1061,9 +1335,26 @@ canvas {
 
   .timeline-label {
     font-size: 16px;
+    margin-bottom: 0.25rem;
   }
 
+  /* Mobile: show description inline instead of as tooltip */
   .timeline-tooltip {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    font-size: 13px;
+    color: var(--text-dim);
+    max-width: none;
+    pointer-events: auto;
+  }
+
+  .timeline-tooltip::before {
     display: none;
   }
 }

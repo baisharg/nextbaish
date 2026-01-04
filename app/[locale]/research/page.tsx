@@ -145,7 +145,7 @@ function ExternalLinkIcon({ className }: { className?: string }) {
   );
 }
 
-function ArrowRightIcon({ className }: { className?: string }) {
+function _ArrowRightIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
