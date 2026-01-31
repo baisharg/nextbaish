@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "settings": {
-        "preset": "mobile"
+        "formFactor": "mobile"
       }
     },
     "assert": {
