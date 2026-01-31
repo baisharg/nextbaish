@@ -3,6 +3,7 @@ import type { ReactNode, CSSProperties } from "react";
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import { Source_Serif_4 } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import TimelineThreads from "../components/timeline-threads-loader";
 // import TimelineThreads from "../components/timeline-threads-with-controls"; // Uncomment for testing
@@ -17,41 +18,12 @@ import Header from "../components/header";
 import RUMMonitor from "../components/rum-monitor";
 import "../globals.css";
 
-const signifier = localFont({
-  src: [
-    {
-      path: "../../public/fonts/signifier/Signifier-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/signifier/Signifier-Italic.woff2",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../../public/fonts/signifier/Signifier-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/signifier/Signifier-MediumItalic.woff2",
-      weight: "500",
-      style: "italic",
-    },
-    {
-      path: "../../public/fonts/signifier/Signifier-Bold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/signifier/Signifier-BoldItalic.woff2",
-      weight: "600",
-      style: "italic",
-    },
-  ],
-  variable: "--font-signifier",
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-source-serif",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   preload: true, // Preload since it's used for all headings (LCP element)
   fallback: ["Georgia", "Times New Roman", "serif"],
 });
@@ -151,7 +123,7 @@ export default async function LocaleLayout({
       <html lang={currentLocale}>
         <Head />
         <body
-          className={`${ttHovesPro.variable} ${signifier.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
+          className={`${ttHovesPro.variable} ${sourceSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}
         >
           <WebSiteJsonLd />
           <Suspense fallback={null}>

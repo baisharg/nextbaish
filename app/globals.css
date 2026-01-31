@@ -92,7 +92,7 @@ html {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-tt-hoves);
-  --font-serif: var(--font-signifier);
+  --font-serif: var(--font-source-serif);
   --font-display: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -123,7 +123,7 @@ body {
 
 /* Ensure critical text is immediately visible */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
+  font-family: var(--font-source-serif), Georgia, "Times New Roman", serif;
   text-rendering: optimizeSpeed;
   font-synthesis: none;
 }
@@ -207,7 +207,7 @@ h4 {
 }
 
 .stat-number {
-  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
+  font-family: var(--font-source-serif), Georgia, "Times New Roman", serif;
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 600;
   line-height: 1;
@@ -695,7 +695,7 @@ canvas {
 }
 
 .card-title {
-  font-family: var(--font-signifier), Georgia, "Times New Roman", serif;
+  font-family: var(--font-source-serif), Georgia, "Times New Roman", serif;
   font-size: clamp(1.375rem, 2vw, 1.5rem); /* 22-24px, 1.5x body text */
   line-height: 1.3;
   font-weight: 600;
@@ -1782,7 +1782,7 @@ main {
 }
 
 .survey-title {
-  font-family: var(--font-signifier), Georgia, serif;
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--text-strong);

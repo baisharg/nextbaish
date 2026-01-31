@@ -35,7 +35,7 @@ A bilingual AI Safety content hub built with Next.js 16, featuring curated resou
 | Animations | View Transitions API (next-view-transitions) |
 | Analytics | Vercel Analytics & Speed Insights |
 | Code Quality | ESLint v9 (flat config) + React Compiler |
-| Fonts | Signifier, TT Hoves Pro |
+| Fonts | Source Serif 4 (Google Fonts), TT Hoves Pro |
 | Deployment | Vercel (configured via vercel.json) |
 
 ## Getting Started
@@ -196,7 +196,7 @@ public/
 │   ├── events/                  # Event gallery images
 │   └── team/                    # Team member photos
 ├── icons/                       # github.svg, linkedin.svg
-├── fonts/                       # Signifier, TT Hoves Pro
+├── fonts/                       # TT Hoves Pro
 └── (favicons, site.webmanifest)
 
 scripts/
