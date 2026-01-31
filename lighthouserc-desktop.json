@@ -14,7 +14,8 @@
       "assertions": {
         "categories:performance": ["warn", { "minScore": 0.85 }],
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
-        "time-to-interactive": ["warn", { "maxNumericValue": 4000 }]
+        "first-contentful-paint": ["warn", { "maxNumericValue": 2000 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }]
       }
     }
   }

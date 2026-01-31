@@ -39,6 +39,7 @@ jobs:
           configPath: "./lighthouserc.json"
           uploadArtifacts: true
           temporaryPublicStorage: true
+          artifactName: lighthouse-results-mobile
 
       - name: Run Lighthouse CI (Desktop)
         uses: treosh/lighthouse-ci-action@v11
@@ -49,3 +50,4 @@ jobs:
           configPath: "./lighthouserc-desktop.json"
           uploadArtifacts: true
           temporaryPublicStorage: true
+          artifactName: lighthouse-results-desktop
