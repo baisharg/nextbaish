@@ -8,6 +8,7 @@ import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 
@@ -198,7 +199,7 @@ export default async function ContactPage({
                     Instagram
                   </a>
                   <a
-                    href="https://www.linkedin.com/company/baish-arg"
+                    href={ORGANIZATION_LINKEDIN_URL}
                     className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
                     target="_blank"
                     rel="noopener noreferrer"

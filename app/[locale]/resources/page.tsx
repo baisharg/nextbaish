@@ -8,6 +8,7 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
+import { LazyYouTubeEmbed } from "@/app/components/lazy-youtube-embed";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Video01Icon,
@@ -123,13 +124,9 @@ export default async function Resources({
                 className="relative w-full overflow-hidden rounded-xl"
                 style={{ paddingBottom: "56.25%" }}
               >
-                <iframe
-                  className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube.com/embed/oAJUuY6gAnY"
+                <LazyYouTubeEmbed
+                  videoId="oAJUuY6gAnY"
                   title="Why experts fear superintelligent AI – and what we can do about it"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  style={{ border: 0 }}
                 />
               </div>
             </div>

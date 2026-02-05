@@ -16,7 +16,23 @@ const routes = [
   "/contact",
   "/privacy-policy",
   "/agentic-coding-workshop",
-];
+] as const;
+
+type SiteRoute = (typeof routes)[number];
+
+const ROUTE_LAST_MODIFIED: Record<SiteRoute, string> = {
+  "": "2026-01-04",
+  "/about": "2025-12-19",
+  "/activities": "2025-12-19",
+  "/activities/fundamentals": "2025-12-19",
+  "/activities/workshop": "2025-12-19",
+  "/activities/reading": "2025-12-19",
+  "/research": "2026-01-04",
+  "/resources": "2025-12-19",
+  "/contact": "2025-12-19",
+  "/privacy-policy": "2025-12-19",
+  "/agentic-coding-workshop": "2025-11-14",
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
@@ -36,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
       entries.push({
         url,
-        lastModified: new Date(),
+        lastModified: new Date(ROUTE_LAST_MODIFIED[route]),
         changeFrequency: getChangeFrequency(route),
         priority: getPriority(route),
         alternates: {

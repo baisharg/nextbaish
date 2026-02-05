@@ -15,7 +15,6 @@ import { i18n, isAppLocale, type AppLocale } from "../../i18n.config";
 import { getDictionary } from "./dictionaries";
 import Head from "../head";
 import Header from "../components/header";
-import RUMMonitor from "../components/rum-monitor";
 import "../globals.css";
 
 const sourceSerif = Source_Serif_4({
@@ -136,7 +135,6 @@ export default async function LocaleLayout({
               {children}
               <DeferredAnalytics />
               <PerformanceMonitor />
-              <RUMMonitor />
               {/* {process.env.NODE_ENV === "development" && <LCPDebugger />} */}
             </LanguageProvider>
           </Suspense>

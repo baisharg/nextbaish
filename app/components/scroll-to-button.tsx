@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
+const MAX_SCROLL_ATTEMPTS = 30;
+const SCROLL_RETRY_MS = 50;
+
 interface ScrollToButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   targetId: string;
   children: React.ReactNode;
@@ -19,23 +22,34 @@ export function ScrollToButton({
 }: ScrollToButtonProps) {
   const router = useRouter();
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const performScroll = () => {
-      const element = document.getElementById(targetId);
-      element?.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
+  const scrollToTarget = (attempt = 0) => {
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
 
+    if (attempt >= MAX_SCROLL_ATTEMPTS) {
+      return;
+    }
+
+    window.setTimeout(() => scrollToTarget(attempt + 1), SCROLL_RETRY_MS);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     // Call the custom onClick handler if provided
     onClick?.(e);
+    if (e.defaultPrevented) return;
 
     if (navigateTo) {
-      // Navigate to the page first, then scroll after navigation
-      router.push(navigateTo);
-      // Small delay to allow DOM to render before scrolling
-      setTimeout(performScroll, 100);
+      const destination = navigateTo.includes("#")
+        ? navigateTo
+        : `${navigateTo}#${targetId}`;
+      router.push(destination);
+      window.setTimeout(() => scrollToTarget(), 0);
     } else {
       // Just scroll on current page
-      performScroll();
+      scrollToTarget();
     }
   };
 
