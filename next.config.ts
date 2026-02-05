@@ -4,6 +4,7 @@ const bundleAnalyzer = require("@next/bundle-analyzer");
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
+const projectRoot = process.cwd();
 
 const nextConfig: NextConfig = {
   // Production optimizations
@@ -44,6 +45,11 @@ const nextConfig: NextConfig = {
   // Security & performance
   poweredByHeader: false,
   compress: true,
+  outputFileTracingRoot: projectRoot,
+
+  turbopack: {
+    root: projectRoot,
+  },
 
   // Experimental features for better performance
   experimental: {

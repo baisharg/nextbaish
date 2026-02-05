@@ -1,4 +1,5 @@
 import type { AppLocale } from "@/i18n.config";
+import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 
 const BASE_URL = "https://baish.com.ar";
 
@@ -140,12 +141,12 @@ export function OrganizationJsonLd() {
     name: "BAISH - Buenos Aires AI Safety Hub",
     alternateName: "BAISH",
     url: BASE_URL,
-    logo: `${BASE_URL}/images/logos/baish-logo-192.png`,
+    logo: `${BASE_URL}/images/logos/logo-192.png`,
     description:
       "Supporting students in Buenos Aires to enter AI safety research through courses, workshops, and community.",
     sameAs: [
       "https://t.me/+zhSGhXrn56g1YjVh",
-      "https://www.linkedin.com/company/baish-ai-safety",
+      ORGANIZATION_LINKEDIN_URL,
       "https://www.youtube.com/@BAISHaiSafety",
     ],
     contactPoint: {

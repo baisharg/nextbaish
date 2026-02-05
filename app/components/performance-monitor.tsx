@@ -1,61 +1,81 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { onLCP, onCLS, onTTFB, onINP } from 'web-vitals'
+import { useEffect } from "react";
+import { onCLS, onINP, onLCP, onTTFB, type Metric } from "web-vitals";
 
-interface Metric {
-  name: string
-  value: number
-  id: string
-  navigationType: string
-}
+type VercelAnalyticsClient = (
+  eventName: "beforeSend" | "event" | "pageview",
+  payload?: Record<string, unknown>,
+) => void;
+
+const ANALYTICS_RETRY_MS = 150;
+const MAX_VA_RETRIES = 3;
 
 export function PerformanceMonitor() {
   useEffect(() => {
-    const sendToAnalytics = (metric: Metric) => {
-      const isDesktop = window.innerWidth >= 1024
-      const device = isDesktop ? 'desktop' : 'mobile'
+    const sentMetricIds = new Set<string>();
+    const isDev = process.env.NODE_ENV === "development";
 
-      // Log to console in development
-      if (process.env.NODE_ENV === 'development') {
-        const value = Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value)
-        console.log(`[RUM] ${metric.name} (${device}):`, value, 'ms')
+    const getVercelAnalyticsClient = (): VercelAnalyticsClient | undefined => {
+      const candidate = (window as typeof window & { va?: unknown }).va;
+      return typeof candidate === "function" ? candidate : undefined;
+    };
 
-        // Color-coded warnings
-        if (metric.name === 'LCP') {
-          if (metric.value > 2500) {
-            console.warn(`⚠️ LCP is slow: ${metric.value}ms (target: <2500ms)`)
-          } else {
-            console.log(`✅ LCP is good: ${metric.value}ms`)
-          }
+    const sendToVercel = (payload: Record<string, unknown>) => {
+      const trySend = (attempt: number) => {
+        const analyticsClient = getVercelAnalyticsClient();
+        if (analyticsClient) {
+          analyticsClient("event", payload);
+          return;
         }
+
+        if (attempt < MAX_VA_RETRIES) {
+          window.setTimeout(() => trySend(attempt + 1), ANALYTICS_RETRY_MS);
+        }
+      };
+
+      trySend(0);
+    };
+
+    const sendMetric = (metric: Metric) => {
+      const dedupeKey = `${metric.name}:${metric.id}`;
+      if (sentMetricIds.has(dedupeKey)) {
+        return;
+      }
+      sentMetricIds.add(dedupeKey);
+
+      const payload = {
+        metric: metric.name,
+        value:
+          metric.name === "CLS"
+            ? Number(metric.value.toFixed(4))
+            : Math.round(metric.value),
+        rawValue: metric.value,
+        id: metric.id,
+        rating: metric.rating,
+        delta: metric.delta,
+        navigationType: metric.navigationType,
+        device: window.innerWidth >= 1024 ? "desktop" : "mobile",
+        page: window.location.pathname,
+        timestamp: Date.now(),
+      };
+
+      if (isDev) {
+        console.warn(
+          `[RUM] ${metric.name} (${payload.device}):`,
+          payload.rawValue,
+          metric.rating ? `[${metric.rating}]` : "",
+        );
       }
 
-      // Send to analytics in production
-      if (process.env.NODE_ENV === 'production') {
-        // Option 1: Send to Vercel Analytics (if enabled)
-        // Option 2: Send to custom endpoint
-        fetch('/api/analytics/web-vitals', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            metric: metric.name,
-            value: metric.value,
-            id: metric.id,
-            device,
-            page: window.location.pathname,
-            timestamp: Date.now(),
-          }),
-        }).catch(console.error)
-      }
-    }
+      sendToVercel(payload);
+    };
 
-    // Register observers for all Core Web Vitals
-    onLCP(sendToAnalytics)
-    onCLS(sendToAnalytics)
-    onTTFB(sendToAnalytics)
-    onINP(sendToAnalytics) // INP replaces FID in web-vitals v4+
-  }, [])
+    onLCP(sendMetric);
+    onCLS(sendMetric);
+    onTTFB(sendMetric);
+    onINP(sendMetric);
+  }, []);
 
-  return null
+  return null;
 }

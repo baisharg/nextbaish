@@ -69,6 +69,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const [isCramped, setIsCramped] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -368,6 +369,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             </ScrollToButton>
 
             <button
+              ref={mobileMenuButtonRef}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 header-menu-btn"
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu}
@@ -411,6 +413,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
           pathname={pathname}
           isOpen={mobileMenuOpen}
           onClose={closeMobileMenu}
+          triggerRef={mobileMenuButtonRef}
         />
       )}
     </header>

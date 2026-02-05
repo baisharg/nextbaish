@@ -3,7 +3,7 @@ import { i18n, type AppLocale } from "@/i18n.config";
 
 const BASE_URL = "https://baish.com.ar";
 const SITE_NAME = "BAISH";
-const DEFAULT_OG_IMAGE = "/images/og-default.png"; // TODO: Create this image
+const DEFAULT_OG_IMAGE = "/images/og-default.png";
 
 export interface PageSEOConfig {
   title: string;

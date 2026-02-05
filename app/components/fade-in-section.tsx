@@ -76,16 +76,23 @@ export function FadeInSection({
   });
 
   const variantClass = variantClasses[variant];
-  const durationClass = `duration-${duration}`;
-  const delayClass = delay > 0 ? `delay-${delay}` : "";
+  const safeDuration = Number.isFinite(duration)
+    ? Math.min(Math.max(duration, 0), 2000)
+    : 400;
+  const safeDelay =
+    delay > 0 && Number.isFinite(delay) ? Math.min(delay, 2000) : 0;
 
   return (
     <Component
       ref={ref}
       id={id}
-      className={`transition-all ease-out ${durationClass} ${delayClass} ${
+      className={`transition-all ease-out ${
         isVisible ? variantClass.visible : variantClass.hidden
       } ${className}`}
+      style={{
+        transitionDuration: `${safeDuration}ms`,
+        transitionDelay: safeDelay > 0 ? `${safeDelay}ms` : "0ms",
+      }}
     >
       {children}
     </Component>

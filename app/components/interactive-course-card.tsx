@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, MouseEvent } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { BookOpen01Icon, GraduationScrollIcon, ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 
@@ -24,21 +24,43 @@ export function InteractiveCourseCard({
   accentColor,
 }: InteractiveCourseCardProps) {
   const cardRef = useRef<HTMLAnchorElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const frameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
+  const commitPointerPosition = () => {
+    frameRef.current = null;
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.setProperty("--glow-x", `${pointerRef.current.x}px`);
+    card.style.setProperty("--glow-y", `${pointerRef.current.y}px`);
+  };
 
   const handleMouseMove = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    pointerRef.current.x = e.clientX - rect.left;
+    pointerRef.current.y = e.clientY - rect.top;
 
-    setMousePosition({ x, y });
+    if (frameRef.current === null) {
+      frameRef.current = requestAnimationFrame(commitPointerPosition);
+    }
   };
 
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  const handleMouseLeave = () => {
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+  };
 
   const IconSVG = icon === "book" ? (
     <HugeiconsIcon icon={BookOpen01Icon} size={24} className="text-[#9275E5]" />
@@ -52,38 +74,31 @@ export function InteractiveCourseCard({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block overflow-hidden rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 transition-all duration-300 hover:border-transparent hover:shadow-2xl"
+      className="group relative block overflow-hidden rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:shadow-2xl [--glow-x:150px] [--glow-y:150px]"
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{
-        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-      }}
     >
       {/* Cursor glow effect */}
-      {isHovered && (
-        <div
-          className="pointer-events-none absolute z-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: mousePosition.x - 150,
-            top: mousePosition.y - 150,
-            background: `radial-gradient(circle, ${accentColor}40 0%, ${accentColor}20 40%, transparent 70%)`,
-            filter: 'blur(20px)',
-          }}
-        />
-      )}
+      <div
+        className="pointer-events-none absolute z-0 h-[300px] w-[300px] rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          left: "calc(var(--glow-x) - 150px)",
+          top: "calc(var(--glow-y) - 150px)",
+          background: `radial-gradient(circle, ${accentColor}40 0%, ${accentColor}20 40%, transparent 70%)`,
+          filter: "blur(20px)",
+        }}
+      />
 
       {/* Border glow */}
       <div
         className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background: `linear-gradient(135deg, ${accentColor}30, ${accentColor}10, transparent)`,
-          padding: '1px',
-          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-          WebkitMaskComposite: 'xor',
-          maskComposite: 'exclude',
+          padding: "1px",
+          WebkitMask:
+            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
         }}
       />
 

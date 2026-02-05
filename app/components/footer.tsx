@@ -4,6 +4,7 @@ import { ScrollToButton } from "./scroll-to-button";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale } from "@/app/utils/locale";
+import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   InstagramIcon,
@@ -94,7 +95,7 @@ export default function Footer({ locale, t }: FooterProps) {
               <HugeiconsIcon icon={InstagramIcon} size={20} />
             </a>
             <a
-              href="https://www.linkedin.com/company/baish-arg"
+              href={ORGANIZATION_LINKEDIN_URL}
               aria-label="LinkedIn"
               className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
               target="_blank"
