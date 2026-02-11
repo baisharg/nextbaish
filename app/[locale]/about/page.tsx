@@ -459,11 +459,20 @@ export default async function AboutPage({
                     </div>
                   </article>
 
-                  {/* Rocio Monges — no photo yet */}
+                  {/* Rocio Monges */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
-                        <span className="text-2xl font-semibold text-white">RM</span>
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/rocio-monges.jpg"
+                          alt="Rocio Monges"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
