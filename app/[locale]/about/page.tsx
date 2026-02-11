@@ -236,6 +236,31 @@ export default async function AboutPage({
 
                 {/* Carlos — small card */}
                 <div className="grid gap-4 md:grid-cols-3">
+                  {/* Nicolas Spinelli — no photo yet */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">NS</span>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Nicolas Spinelli
+                        </h4>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/nicospinelli"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+
                   {/* Carlos Giudice */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
@@ -496,27 +521,16 @@ export default async function AboutPage({
                     </div>
                   </article>
 
-                  {/* Nicolas Spinelli — no photo yet */}
+                  {/* Malena Cocozzella — no photo yet */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
-                        <span className="text-2xl font-semibold text-white">NS</span>
+                        <span className="text-2xl font-semibold text-white">MC</span>
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
-                          Nicolas Spinelli
+                          Malena Cocozzella
                         </h4>
-                      </div>
-                      <div className="flex gap-2">
-                        <a
-                          href="https://github.com/nicospinelli"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="GitHub"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
-                        </a>
                       </div>
                     </div>
                   </article>
@@ -623,20 +637,6 @@ export default async function AboutPage({
                             size={20}
                           />
                         </a>
-                      </div>
-                    </div>
-                  </article>
-
-                  {/* Malena Cocozzella — no photo yet */}
-                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
-                        <span className="text-2xl font-semibold text-white">MC</span>
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-base font-semibold text-slate-900">
-                          Malena Cocozzella
-                        </h4>
                       </div>
                     </div>
                   </article>
