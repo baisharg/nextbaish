@@ -282,21 +282,14 @@
       }
     },
     "team": {
-      "title": "Equipo Principal",
+      "title": "Nuestro Equipo",
       "meetTheTeam": "Conoce al Equipo",
       "cofoundersTitle": "Fundadores",
-      "leadershiptTitle": "Liderazgo",
+      "leadershipTitle": "Liderazgo",
+      "staffTitle": "Staff",
+      "advisorsTitle": "Advisors",
       "roles": {
-        "coDirector": "Co-director Fundador",
-        "commDirector": "Director de Comunicación",
-        "headOfStrategy": "Director de Estrategia",
-        "advisor": "Advisor"
-      },
-      "volunteersTitle": "Voluntarios",
-      "volunteerRoles": {
-        "asfFacilitator": "Facilitador de AI Safety Fundamentals",
-        "aisWorkshopFacilitator": "Facilitador del AIS Workshop",
-        "programAssistant": "Asistente de Programas"
+        "coDirector": "Co-director Fundador"
       },
       "bios": {
         "eitan": "Eitan es investigador de Seguridad en IA a tiempo completo a través del programa {aisarLink} y la {apartLabLink}. Ha sido coautor de {eitanPaperLink} aceptados en workshops de NeurIPS, {eitanArxivPaperLink}, y {eitanCoTPaperLink}. Es Licenciado en Física en la Universidad de Buenos Aires. Ha sido asistente de enseñanza en los campamentos de {ml4gLink} en dos ocasiones y ha sido facilitador del {aisesLink} del Center for AI Safety. Actualmente es facilitador del {blueDotAgiLink}.",

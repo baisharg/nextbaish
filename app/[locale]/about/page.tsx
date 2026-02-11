@@ -90,159 +90,8 @@ export default async function AboutPage({
           </section>
         </FadeInSection>
 
-        {/* Cofounders Section - Lead with People */}
-        <FadeInSection variant="slide-up" delay={100} as="section">
-          <section
-            className="section-container space-y-8"
-            id="cofounders"
-          >
-            <div className="space-y-8">
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {t.team.cofoundersTitle}
-              </h2>
-
-              {/* Cofounders Grid */}
-              <div className="grid gap-8">
-                {/* Eitan Sprejer */}
-                <article className="card-glass">
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                    <div className="flex-shrink-0 mx-auto sm:mx-0">
-                      <div className="h-[160px] w-[160px]">
-                        <Image
-                          src="/images/team/eitan-new.png"
-                          alt="Eitan Sprejer"
-                          width={500}
-                          height={500}
-                          sizes="160px"
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          quality={90}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-4 flex-1">
-                      <div>
-                        <h3 className="text-2xl font-semibold text-slate-900">
-                          Eitan Sprejer
-                        </h3>
-                        <p className="text-sm text-slate-600">
-                          {t.team.roles.coDirector}
-                        </p>
-                      </div>
-                      <p className="text-sm leading-relaxed text-slate-700">
-                        {renderWithBioLinks(t.team.bios.eitan)}
-                      </p>
-                      <div className="flex gap-3">
-                        <a
-                          href="https://github.com/Eitan-Sprejer"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="GitHub"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
-                        </a>
-                        <a
-                          href="https://www.linkedin.com/in/eitan-sprejer-574380204/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="LinkedIn"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-
-                {/* Luca De Leo */}
-                <article className="card-glass">
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                    <div className="flex-shrink-0 mx-auto sm:mx-0">
-                      <div className="h-[160px] w-[160px]">
-                        <Image
-                          src="/images/team/luca-new.png"
-                          alt="Luca De Leo"
-                          width={500}
-                          height={500}
-                          sizes="160px"
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          quality={90}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-4 flex-1">
-                      <div>
-                        <h3 className="text-2xl font-semibold text-slate-900">
-                          Luca De Leo
-                        </h3>
-                        <p className="text-sm text-slate-600">
-                          {t.team.roles.coDirector}
-                        </p>
-                      </div>
-                      <p className="text-sm leading-relaxed text-slate-700">
-                        {renderWithBioLinks(t.team.bios.luca)}
-                      </p>
-                      <div className="flex gap-3">
-                        <a
-                          href="https://github.com/lucadeleo"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="GitHub"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
-                        </a>
-                        <a
-                          href="https://www.linkedin.com/in/luca-de-leo/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="LinkedIn"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              {/* Book a Call CTA */}
-              <div className="mt-8 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 text-center">
-                <h3 className="text-2xl font-semibold text-slate-900 mb-2">
-                  {callToAction.title}
-                </h3>
-                <p className="text-base text-slate-600 mb-6">
-                  {callToAction.description}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    href="https://calendly.com/eitusprejer"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-primary inline-flex items-center justify-center gap-2"
-                  >
-                    {callToAction.bookWithEitan}
-                  </a>
-                  <a
-                    href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-primary inline-flex items-center justify-center gap-2"
-                  >
-                    {callToAction.bookWithLuca}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeInSection>
-
         {/* Team Section */}
-        <FadeInSection variant="slide-up" delay={200} as="section">
+        <FadeInSection variant="slide-up" delay={100} as="section">
           <section
             className="section-container space-y-8"
             id="team"
@@ -255,7 +104,196 @@ export default async function AboutPage({
               {/* Leadership Section */}
               <div className="space-y-6">
                 <h3 className="text-2xl font-semibold text-slate-900">
-                  {t.team.leadershiptTitle}
+                  {t.team.leadershipTitle}
+                </h3>
+
+                {/* Eitan & Luca — large cards with bios */}
+                <div className="grid gap-8">
+                  {/* Eitan Sprejer */}
+                  <article className="card-glass">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+                      <div className="flex-shrink-0 mx-auto sm:mx-0">
+                        <div className="h-[160px] w-[160px]">
+                          <Image
+                            src="/images/team/eitan-new.png"
+                            alt="Eitan Sprejer"
+                            width={500}
+                            height={500}
+                            sizes="160px"
+                            className="h-full w-full object-contain"
+                            loading="lazy"
+                            quality={90}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-4 flex-1">
+                        <h4 className="text-2xl font-semibold text-slate-900">
+                          Eitan Sprejer
+                        </h4>
+                        <p className="text-sm leading-relaxed text-slate-700">
+                          {renderWithBioLinks(t.team.bios.eitan)}
+                        </p>
+                        <div className="flex gap-3">
+                          <a
+                            href="https://github.com/Eitan-Sprejer"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={GithubIcon} size={20} />
+                          </a>
+                          <a
+                            href="https://www.linkedin.com/in/eitan-sprejer-574380204/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Luca De Leo */}
+                  <article className="card-glass">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+                      <div className="flex-shrink-0 mx-auto sm:mx-0">
+                        <div className="h-[160px] w-[160px]">
+                          <Image
+                            src="/images/team/luca-new.png"
+                            alt="Luca De Leo"
+                            width={500}
+                            height={500}
+                            sizes="160px"
+                            className="h-full w-full object-contain"
+                            loading="lazy"
+                            quality={90}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-4 flex-1">
+                        <h4 className="text-2xl font-semibold text-slate-900">
+                          Luca De Leo
+                        </h4>
+                        <p className="text-sm leading-relaxed text-slate-700">
+                          {renderWithBioLinks(t.team.bios.luca)}
+                        </p>
+                        <div className="flex gap-3">
+                          <a
+                            href="https://github.com/lucadeleo"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={GithubIcon} size={20} />
+                          </a>
+                          <a
+                            href="https://www.linkedin.com/in/luca-de-leo/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+
+                {/* Book a Call CTA */}
+                <div className="mt-8 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 text-center">
+                  <h4 className="text-2xl font-semibold text-slate-900 mb-2">
+                    {callToAction.title}
+                  </h4>
+                  <p className="text-base text-slate-600 mb-6">
+                    {callToAction.description}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a
+                      href="https://calendly.com/eitusprejer"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button-primary inline-flex items-center justify-center gap-2"
+                    >
+                      {callToAction.bookWithEitan}
+                    </a>
+                    <a
+                      href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button-primary inline-flex items-center justify-center gap-2"
+                    >
+                      {callToAction.bookWithLuca}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Carlos — small card */}
+                <div className="grid gap-4 md:grid-cols-3">
+                  {/* Carlos Giudice */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/carlos-new.png"
+                          alt="Carlos Giudice"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Carlos Giudice
+                        </h4>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/CatOfTheCannals"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/in/carlos-giudice-5237b4144/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="LinkedIn"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                        </a>
+                        <a
+                          href="https://carlosgiudice.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Website"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Globe02Icon} size={20} />
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              {/* Staff Section */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-semibold text-slate-900">
+                  {t.team.staffTitle}
                 </h3>
                 <div className="grid gap-4 md:grid-cols-3">
                   {/* Lucas Vitali */}
@@ -274,12 +312,9 @@ export default async function AboutPage({
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-base font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Lucas Vitali
-                        </h3>
-                        <p className="text-xs text-slate-600">
-                          {t.team.roles.commDirector}
-                        </p>
+                        </h4>
                       </div>
                       <div className="flex gap-2">
                         <a
@@ -313,13 +348,13 @@ export default async function AboutPage({
                     </div>
                   </article>
 
-                  {/* Carlos Giudice */}
+                  {/* Gaspar Labastie */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
-                          src="/images/team/carlos-new.png"
-                          alt="Carlos Giudice"
+                          src="/images/team/gaspar-new.png"
+                          alt="Gaspar Labastie"
                           width={500}
                           height={500}
                           sizes="120px"
@@ -329,16 +364,47 @@ export default async function AboutPage({
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-base font-semibold text-slate-900">
-                          Carlos Giudice
-                        </h3>
-                        <p className="text-xs text-slate-600">
-                          {t.team.roles.advisor}
-                        </p>
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Gaspar Labastie
+                        </h4>
                       </div>
                       <div className="flex gap-2">
                         <a
-                          href="https://github.com/CatOfTheCannals"
+                          href="https://www.linkedin.com/in/gaspar-labastie/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="LinkedIn"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Tobias Bersia */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/tobias-new.png"
+                          alt="Tobias Bersia"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Tobias Bersia
+                        </h4>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/BerTobi"
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label="GitHub"
@@ -347,7 +413,7 @@ export default async function AboutPage({
                           <HugeiconsIcon icon={GithubIcon} size={20} />
                         </a>
                         <a
-                          href="https://www.linkedin.com/in/carlos-giudice-5237b4144/"
+                          href="https://www.linkedin.com/in/tobias-bersia-70a448132/"
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label="LinkedIn"
@@ -355,19 +421,94 @@ export default async function AboutPage({
                         >
                           <HugeiconsIcon icon={Linkedin01Icon} size={20} />
                         </a>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Gonzalo Heredia */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/gonzalo-new.png"
+                          alt="Gonzalo Heredia"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Gonzalo Heredia
+                        </h4>
+                      </div>
+                      <div className="flex gap-2">
                         <a
-                          href="https://carlosgiudice.com/"
+                          href="https://github.com/G-9k"
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label="Website"
+                          aria-label="GitHub"
                           className="text-slate-700 transition hover:opacity-70"
                         >
-                          <HugeiconsIcon icon={Globe02Icon} size={20} />
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
                         </a>
                       </div>
                     </div>
                   </article>
 
+                  {/* Rocio Monges — no photo yet */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">RM</span>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Rocio Monges
+                        </h4>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Augusto Esquivel Masciotta — no photo yet */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">AE</span>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Augusto Esquivel Masciotta
+                        </h4>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Nicolas Spinelli — no photo yet */}
+                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+                    <div className="relative flex flex-col items-center space-y-2">
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">NS</span>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-slate-900">
+                          Nicolas Spinelli
+                        </h4>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              {/* Advisors Section */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-semibold text-slate-900">
+                  {t.team.advisorsTitle}
+                </h3>
+                <div className="grid gap-4 md:grid-cols-3">
                   {/* Sergio Abriola */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
@@ -384,12 +525,9 @@ export default async function AboutPage({
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-base font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Sergio Abriola, PhD
-                        </h3>
-                        <p className="text-xs text-slate-600">
-                          {t.team.roles.advisor}
-                        </p>
+                        </h4>
                       </div>
                       <div className="flex gap-2">
                         <a
@@ -421,12 +559,9 @@ export default async function AboutPage({
                         />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-base font-semibold text-slate-900">
+                        <h4 className="text-base font-semibold text-slate-900">
                           Guido Bergman
-                        </h3>
-                        <p className="text-xs text-slate-600">
-                          {t.team.roles.advisor}
-                        </p>
+                        </h4>
                       </div>
                       <div className="flex gap-2">
                         <a
@@ -471,131 +606,31 @@ export default async function AboutPage({
                       </div>
                     </div>
                   </article>
-                </div>
-              </div>
 
-              {/* Volunteers Section */}
-              <div className="space-y-6">
-                <h3 className="text-2xl font-semibold text-slate-900">
-                  {t.team.volunteersTitle}
-                </h3>
-                <div className="grid gap-4 md:grid-cols-3">
-                  {/* Gaspi Labastie */}
+                  {/* Malena Cocozzella — no photo yet */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px]">
-                        <Image
-                          src="/images/team/gaspar-new.png"
-                          alt="Gaspar Labastie"
-                          width={500}
-                          height={500}
-                          sizes="120px"
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          quality={90}
-                        />
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">MC</span>
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
-                          Gaspar Labastie
+                          Malena Cocozzella
                         </h4>
-                        <p className="text-xs text-slate-600">
-                          {t.team.volunteerRoles.asfFacilitator}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <a
-                          href="https://www.linkedin.com/in/gaspar-labastie/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="LinkedIn"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-                        </a>
                       </div>
                     </div>
                   </article>
 
-                  {/* Tobias Bersia */}
+                  {/* Nicolas Martorell — no photo yet */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px]">
-                        <Image
-                          src="/images/team/tobias-new.png"
-                          alt="Tobias Bersia"
-                          width={500}
-                          height={500}
-                          sizes="120px"
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          quality={90}
-                        />
+                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
+                        <span className="text-2xl font-semibold text-white">NM</span>
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
-                          Tobias Bersia
+                          Nicolas Martorell
                         </h4>
-                        <p className="text-xs text-slate-600">
-                          {t.team.volunteerRoles.aisWorkshopFacilitator}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <a
-                          href="https://github.com/BerTobi"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="GitHub"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
-                        </a>
-                        <a
-                          href="https://www.linkedin.com/in/tobias-bersia-70a448132/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="LinkedIn"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-
-                  {/* Gonzalo Heredia */}
-                  <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
-                    <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px]">
-                        <Image
-                          src="/images/team/gonzalo-new.png"
-                          alt="Gonzalo Heredia"
-                          width={500}
-                          height={500}
-                          sizes="120px"
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          quality={90}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-base font-semibold text-slate-900">
-                          Gonzalo Heredia
-                        </h4>
-                        <p className="text-xs text-slate-600">
-                          {t.team.volunteerRoles.programAssistant}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <a
-                          href="https://github.com/G-9k"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="GitHub"
-                          className="text-slate-700 transition hover:opacity-70"
-                        >
-                          <HugeiconsIcon icon={GithubIcon} size={20} />
-                        </a>
                       </div>
                     </div>
                   </article>
