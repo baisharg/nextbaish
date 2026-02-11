@@ -5,7 +5,6 @@ import Image from "next/image";
 import { TransitionLink } from "./transition-link";
 import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
@@ -35,7 +34,6 @@ export default function MobileMenu({
   onClose,
   triggerRef,
 }: MobileMenuProps) {
-  const router = useRouter();
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -125,11 +123,6 @@ export default function MobileMenu({
       previousFocusedRef.current = null;
     }
   }, [isOpen, onClose, triggerRef]);
-
-  // Touch-based prefetching for language toggle on mobile
-  const handleLanguageTouch = (href: string) => {
-    router.prefetch(href);
-  };
 
   // Trigger animation after mount for smooth slide-in
   useEffect(() => {
@@ -274,10 +267,6 @@ export default function MobileMenu({
                     <TransitionLink
                       key={lang.code}
                       href={langHref}
-                      prefetch={false}
-                      onTouchStart={() =>
-                        !active && handleLanguageTouch(langHref)
-                      }
                       className={`flex-1 rounded-lg px-4 py-3 text-center text-base font-medium transition ${
                         active
                           ? "pointer-events-none bg-[var(--color-accent-primary)] text-white shadow-sm"

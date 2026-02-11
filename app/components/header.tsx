@@ -4,13 +4,14 @@ import Image from "next/image";
 import { TransitionLink } from "./transition-link";
 import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale, buildLangSwitchHref } from "@/app/utils/locale";
 import { useIsomorphicLayoutEffect } from "@/app/hooks/use-isomorphic-layout-effect";
 import { usePrefersReducedMotion } from "@/app/hooks/use-prefers-reduced-motion";
+import { usePrefetchAlternateLocale } from "@/app/hooks/use-prefetch-alternate-locale";
 import "./header.css";
 
 // Lazy load mobile menu to reduce initial bundle size
@@ -59,7 +60,6 @@ const rafThrottle = <T extends (...args: unknown[]) => void>(
 
 const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const pathname = usePathname() ?? "/";
-  const router = useRouter();
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
@@ -73,7 +73,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  usePrefetchAlternateLocale(locale, pathname);
 
   // Handle scroll state with hysteresis
   useEffect(() => {
@@ -176,32 +176,6 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
-
-  // Hover-based prefetching for language toggle
-  // Only prefetches after 200ms hover to avoid accidental hovers
-  const handleLanguageHover = (href: string) => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    hoverTimeoutRef.current = setTimeout(() => {
-      router.prefetch(href);
-    }, 200);
-  };
-
-  const handleLanguageHoverEnd = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-  };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
@@ -343,11 +317,6 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                   <TransitionLink
                     key={lang.code}
                     href={langHref}
-                    prefetch={false}
-                    onMouseEnter={() =>
-                      !active && handleLanguageHover(langHref)
-                    }
-                    onMouseLeave={handleLanguageHoverEnd}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       active
                         ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
