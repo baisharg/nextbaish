@@ -498,6 +498,17 @@ export default async function AboutPage({
                           Nicolas Spinelli
                         </h4>
                       </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/nicospinelli"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                      </div>
                     </div>
                   </article>
                 </div>
@@ -621,16 +632,45 @@ export default async function AboutPage({
                     </div>
                   </article>
 
-                  {/* Nicolas Martorell — no photo yet */}
+                  {/* Nicolas Martorell */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
-                      <div className="h-[120px] w-[120px] rounded-full bg-[var(--color-accent-primary)] flex items-center justify-center">
-                        <span className="text-2xl font-semibold text-white">NM</span>
+                      <div className="h-[120px] w-[120px]">
+                        <Image
+                          src="/images/team/nicolas-martorell.png"
+                          alt="Nicolas Martorell"
+                          width={500}
+                          height={500}
+                          sizes="120px"
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          quality={90}
+                        />
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
                           Nicolas Martorell
                         </h4>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="https://github.com/mneuronico"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={GithubIcon} size={20} />
+                        </a>
+                        <a
+                          href="https://mneuronico.github.io/xplora/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Website"
+                          className="text-slate-700 transition hover:opacity-70"
+                        >
+                          <HugeiconsIcon icon={Globe02Icon} size={20} />
+                        </a>
                       </div>
                     </div>
                   </article>
