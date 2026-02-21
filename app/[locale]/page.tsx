@@ -243,7 +243,7 @@ export default async function Home({
                   {/* CTA */}
                   <div className="flex flex-col items-center gap-3">
                     <a
-                      href="https://safetytalent.org"
+                      href="https://safetytalent.org/org/baish/join?token=d6866489-865f-472b-9d80-d70205c11ffc"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="astn-cta inline-flex items-center gap-2 rounded-full bg-[#E07A5F] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#E07A5F]/25 transition-all hover:bg-[#D06A4F] hover:shadow-xl hover:shadow-[#E07A5F]/30 hover:-translate-y-0.5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#E07A5F]"
