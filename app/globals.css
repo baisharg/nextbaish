@@ -1894,3 +1894,89 @@ main {
     transform: none;
   }
 }
+
+/* ==========================================================================
+   ASTN Promo Section - Levitating Dark Card
+   ========================================================================== */
+
+/* Levitate animation */
+@keyframes astn-levitate {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Animated gradient border glow */
+@keyframes astn-glow-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.astn-promo {
+  position: relative;
+  background: white;
+  border: 1px solid rgba(224, 122, 95, 0.15);
+  animation: astn-levitate 6s ease-in-out infinite;
+  box-shadow:
+    0 20px 60px rgba(224, 122, 95, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Gradient glow behind the card */
+.astn-promo::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #E07A5F, #F4A68B, #E07A5F, #C86A4F);
+  background-size: 300% 300%;
+  animation: astn-glow-shift 4s ease-in-out infinite;
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0.3;
+}
+
+/* Feature card title - override global h3 serif styles */
+.astn-feature h3 {
+  font-family: var(--font-tt-hoves), system-ui, -apple-system, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+}
+
+/* Feature mini-cards hover */
+.astn-feature {
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.astn-feature:hover {
+  background-color: rgba(224, 122, 95, 0.08);
+  border-color: rgba(224, 122, 95, 0.2);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .astn-promo {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Reduced motion - disable levitate and glow */
+@media (prefers-reduced-motion: reduce) {
+  .astn-promo {
+    animation: none;
+    transform: none;
+  }
+
+  .astn-promo::after {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .astn-feature {
+    transition: none;
+  }
+
+  .astn-cta {
+    transition: none;
+    transform: none;
+  }
+}

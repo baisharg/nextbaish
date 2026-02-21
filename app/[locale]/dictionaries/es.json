@@ -218,6 +218,28 @@
       "telegramMembers": "190+ miembros",
       "whatsappCta": "Comunidad BAISH",
       "whatsappMembers": "140+ miembros"
+    },
+    "astn": {
+      "eyebrow": "Un Proyecto de BAISH",
+      "badge": "Alpha",
+      "title": "AI Safety Talent Network",
+      "description": "Tu centro de comando profesional para AI safety. Subí tu CV para empezar al instante y dejá que nuestro agente de IA construya un perfil completo a través de conversación.",
+      "features": {
+        "matching": {
+          "title": "Notificaciones Inteligentes",
+          "description": "Recibí alertas cuando nuevos roles, becas o programas coincidan con tu perfil — para que no pierdas ninguna oportunidad"
+        },
+        "actions": {
+          "title": "De CV a Perfil en Segundos",
+          "description": "Subí tu CV y obtené un perfil instantáneo — nuestra IA extrae tus habilidades, experiencia e intereses automáticamente"
+        },
+        "profile": {
+          "title": "Enriquecimiento Agentic",
+          "description": "Un agente de IA conversa con vos para descubrir objetivos, preferencias y contexto que ningún CV captura — construyendo un perfil más completo con el tiempo"
+        }
+      },
+      "cta": "Explorá ASTN",
+      "domain": "safetytalent.org"
     }
   },
   "about": {
