@@ -97,7 +97,7 @@ export default async function Home({
                 </p>
 
                 {/* Social Proof Stats - Above the fold */}
-                <div className="mt-10 flex flex-wrap justify-center gap-8 text-center">
+                <div className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-8 text-center">
                   <div className="social-proof-stat">
                     <span className="stat-number">120+</span>
                     <span className="stat-label">{t.hero.communityMembers}</span>

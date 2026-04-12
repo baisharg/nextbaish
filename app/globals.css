@@ -1307,7 +1307,9 @@ canvas {
 @media (max-width: 640px) {
   .hero-timeline {
     margin-top: 3rem;
-    max-width: 400px;
+    max-width: 100%;
+    padding: 0 1rem;
+    overflow: hidden;
   }
 
   .timeline-track {
@@ -1316,7 +1318,7 @@ canvas {
 
   .timeline-steps {
     grid-template-columns: 1fr 1fr;
-    gap: 2.5rem 2rem;
+    gap: 2rem 1.25rem;
   }
 
   .timeline-step {
@@ -1348,10 +1350,19 @@ canvas {
     border: none;
     box-shadow: none;
     padding: 0;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.4;
     color: var(--text-dim);
-    max-width: none;
+    max-width: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
     pointer-events: auto;
+  }
+
+  .timeline-content {
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .timeline-tooltip::before {
