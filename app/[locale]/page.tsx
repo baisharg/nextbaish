@@ -37,6 +37,7 @@ import {
   Book02Icon,
   Wrench01Icon,
   MicroscopeIcon,
+  TickDouble02Icon,
 } from "@hugeicons/core-free-icons";
 
 
@@ -161,6 +162,66 @@ export default async function Home({
                   ]}
                   locale={currentLocale}
                 />
+              </div>
+            </section>
+          </FadeInSection>
+
+          <FadeInSection variant="slide-up" delay={50}>
+            <section className="section-open" id="course">
+              <div className="relative rounded-3xl border-2 border-[var(--color-accent-primary)]/20 bg-gradient-to-br from-[var(--color-accent-primary)]/[0.06] via-white to-[var(--color-accent-secondary)]/[0.06] p-8 sm:p-12 overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-tertiary)] to-[var(--color-accent-secondary)]" />
+
+                <div className="relative z-10 max-w-3xl mx-auto text-center">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-primary)]">
+                      {t.courseSpotlight.eyebrow}
+                    </span>
+                    <span className="inline-flex items-center rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+                      {t.courseSpotlight.badge}
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-slate-900 mb-1 tracking-tight">
+                    {t.courseSpotlight.title}
+                  </h2>
+                  <p className="text-lg text-[var(--color-accent-primary)] font-medium mb-4">
+                    {t.courseSpotlight.subtitle}
+                  </p>
+
+                  <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 leading-relaxed">
+                    {t.courseSpotlight.description}
+                  </p>
+
+                  <div className="flex flex-wrap justify-center gap-3 mb-10">
+                    <span className="pill">
+                      <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                      {t.courseSpotlight.details.duration}
+                    </span>
+                    <span className="pill">
+                      <HugeiconsIcon icon={Book02Icon} size={16} />
+                      {t.courseSpotlight.details.format}
+                    </span>
+                    <span className="pill">
+                      <HugeiconsIcon icon={TickDouble02Icon} size={16} />
+                      {t.courseSpotlight.details.cost}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-3">
+                    <a
+                      href={t.courseSpotlight.applyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button-primary inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold"
+                    >
+                      {t.courseSpotlight.cta}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                    <span className="text-sm font-medium text-[var(--color-accent-primary)]">
+                      {t.courseSpotlight.deadline}
+                    </span>
+                  </div>
+                </div>
               </div>
             </section>
           </FadeInSection>

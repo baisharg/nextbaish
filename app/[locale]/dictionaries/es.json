@@ -219,6 +219,21 @@
       "whatsappCta": "Comunidad BAISH",
       "whatsappMembers": "140+ miembros"
     },
+    "courseSpotlight": {
+      "eyebrow": "BlueDot Impact × BAISH",
+      "badge": "Aplicá antes del 19/4",
+      "title": "Curso Técnico de AI Safety",
+      "subtitle": "Abril–Junio 2026",
+      "description": "Entendé las técnicas actuales de seguridad, mapeá las brechas e identificá dónde podés contribuir — todo en 30 horas. Presencial en la Facultad de Exactas y Naturales, UBA. Gratuito.",
+      "details": {
+        "duration": "6 sesiones semanales",
+        "format": "Presencial · En español",
+        "cost": "Gratuito"
+      },
+      "cta": "Aplicar Ahora",
+      "applyUrl": "https://safetytalent.org/org/baish/apply/ps7f9f08q1b8bmb90zfavg9hv584jzzn",
+      "deadline": "Fecha límite: 19 de abril, 23:59"
+    },
     "astn": {
       "eyebrow": "Un Proyecto de BAISH",
       "badge": "Alpha",
