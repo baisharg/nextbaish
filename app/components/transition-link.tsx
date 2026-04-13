@@ -8,17 +8,6 @@ type TransitionLinkProps = ComponentProps<typeof Link> & {
   prefetch?: boolean;
 };
 
-/**
- * TransitionLink - Drop-in replacement for Next.js Link with View Transitions
- *
- * Uses the View Transitions API via next-view-transitions library
- * to create smooth page transitions.
- * Gracefully falls back to instant navigation in unsupported browsers.
- *
- * @example
- * <TransitionLink href="/about">About</TransitionLink>
- * <TransitionLink href="/es" prefetch={false}>Español</TransitionLink>
- */
 export function TransitionLink({
   href,
   children,

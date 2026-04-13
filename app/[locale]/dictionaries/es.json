@@ -49,7 +49,8 @@
       "communityMembers": "Miembros de la Comunidad",
       "weeklyPrograms": "Programas Semanales",
       "publishedPapers": "Papers Publicados",
-      "mobileCta": "Sumate a la Comunidad"
+      "primaryCta": "Empezá a aprender",
+      "secondaryCta": "Sumate a eventos"
     },
     "timeline": {
       "connect": "Conectar",

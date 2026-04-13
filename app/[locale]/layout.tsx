@@ -119,7 +119,7 @@ export default async function LocaleLayout({
 
   return (
     <ViewTransitions>
-      <html lang={currentLocale}>
+      <html lang={currentLocale} suppressHydrationWarning>
         <Head />
         <body
           className={`${ttHovesPro.variable} ${sourceSerif.variable} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-[#f5f5f5] text-slate-900 overflow-x-hidden`}

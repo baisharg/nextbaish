@@ -224,32 +224,6 @@ h4 {
   letter-spacing: 0.01em;
 }
 
-/* Mobile Hero CTA - Jacaranda-inspired gradient */
-.mobile-hero-cta {
-  background: linear-gradient(
-    135deg,
-    var(--color-accent-primary) 0%,
-    #8B6BD8 50%,
-    var(--color-accent-tertiary) 100%
-  );
-  box-shadow:
-    0 4px 14px rgba(146, 117, 229, 0.35),
-    0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.mobile-hero-cta:hover,
-.mobile-hero-cta:focus {
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 24px rgba(146, 117, 229, 0.45),
-    0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.mobile-hero-cta:active {
-  transform: translateY(0);
-}
-
 /* ==========================================================================
    Jacaranda-Inspired Decorative Elements
    ========================================================================== */
@@ -350,29 +324,12 @@ section#about p.sm\:text-2xl {
   }
 }
 
-/* Mobile CTA enters after stats */
-.mobile-hero-cta {
-  animation: cta-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-}
-
-@keyframes cta-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   section#about h1,
   section#about p.text-xl,
   section#about p.sm\:text-2xl,
-  .social-proof-stat,
-  .mobile-hero-cta {
+  .social-proof-stat {
     animation: none;
   }
 }

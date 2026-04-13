@@ -96,6 +96,22 @@ export default async function Home({
                   {t.mission.tagline}
                 </p>
 
+                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                  <TransitionLink
+                    href={`/${currentLocale}/resources`}
+                    className="button-primary inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-semibold"
+                  >
+                    {t.hero.primaryCta}
+                    <span aria-hidden="true">→</span>
+                  </TransitionLink>
+                  <TransitionLink
+                    href={`/${currentLocale}/activities`}
+                    className="button-secondary inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-semibold"
+                  >
+                    {t.hero.secondaryCta}
+                  </TransitionLink>
+                </div>
+
                 {/* Social Proof Stats - Above the fold */}
                 <div className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-8 text-center">
                   <div className="social-proof-stat">
@@ -111,17 +127,6 @@ export default async function Home({
                     <span className="stat-label">{t.hero.publishedPapers}</span>
                   </div>
                 </div>
-
-                {/* Mobile-only CTA - visible below 640px */}
-                <a
-                  href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mobile-hero-cta sm:hidden mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white shadow-lg"
-                >
-                  <HugeiconsIcon icon={WhatsappIcon} size={20} />
-                  {t.hero.mobileCta}
-                </a>
 
                 {/* Timeline integrated into hero - BAISH-specific journey */}
                 <HeroTimeline
