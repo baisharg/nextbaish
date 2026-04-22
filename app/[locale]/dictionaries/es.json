@@ -418,7 +418,7 @@
       "nextSession": "Proxima Sesion",
       "date": "Consultar calendario",
       "time": "14:30 - 17:00",
-      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "location": "Consultá el Telegram para la ubicación",
       "topic": "A definir semanalmente",
       "joinTelegram": "Sumate a Telegram para actualizaciones",
       "joinWhatsapp": "Sumate al WhatsApp",
@@ -449,7 +449,7 @@
       "accessList": "Ver grabaciones en YouTube",
       "date": "Consultar calendario",
       "time": "15:00 - 17:00",
-      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "location": "Consultá el Telegram para la ubicación",
       "youtubeChannel": "Canal de YouTube",
       "telegramGroup": "Grupo de Telegram"
     },
@@ -523,11 +523,6 @@
         "title": "Telegram",
         "description": "Sumate a nuestro canal de comunidad para discusiones y actualizaciones:"
       },
-      "location": {
-        "eyebrow": "Visitanos",
-        "title": "Ubicacion",
-        "description": "Estamos ubicados en el Departamento de Ciencias de la Computación:"
-      },
       "social": {
         "eyebrow": "Social",
         "title": "Redes Sociales",
@@ -556,8 +551,8 @@
       "title": "Preguntas Frecuentes",
       "items": [
         {
-          "question": "¿Necesito ser estudiante de la UBA para participar?",
-          "answer": "¡No! Si bien estamos basados en la UBA, nuestras actividades están abiertas a todos los interesados en la seguridad de la IA, independientemente de su afiliación universitaria."
+          "question": "¿Necesito ser estudiante universitario para participar?",
+          "answer": "¡No! Nuestras actividades están abiertas a todos los interesados en la seguridad de la IA, sin importar afiliación universitaria o formación previa."
         },
         {
           "question": "¿Qué formación necesito para unirme a sus actividades?",

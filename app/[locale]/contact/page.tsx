@@ -108,7 +108,7 @@ export default async function ContactPage({
 
           {/* Contact Info Cards */}
           <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="grid gap-6 md:grid-cols-3">
+            <section className="grid gap-6 md:grid-cols-2">
               {/* Community Card with Stacked Buttons */}
               <article className="card-glass">
                 <div className="card-eyebrow">
@@ -154,26 +154,6 @@ export default async function ContactPage({
                     </span>
                   </a>
                 </div>
-              </article>
-
-              {/* Location Card */}
-              <article className="card-glass">
-                <div className="card-eyebrow">
-                  {dict.contact.cards.location.eyebrow}
-                </div>
-                <h3 className="card-title">
-                  {dict.contact.cards.location.title}
-                </h3>
-                <p className="card-body">
-                  {dict.contact.cards.location.description}
-                </p>
-                <address className="mt-auto text-sm text-slate-700 not-italic">
-                  Pabellon 0+inf, Ciudad Universitaria
-                  <br />
-                  C1428EGA Buenos Aires
-                  <br />
-                  Argentina
-                </address>
               </article>
 
               {/* Social Media Card */}
