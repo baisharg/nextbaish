@@ -219,7 +219,7 @@ export function EventJsonLd({
   name,
   description,
   startDate,
-  location = "Pabellon 0+inf, Ciudad Universitaria, Buenos Aires",
+  location = "Buenos Aires, Argentina",
 }: {
   name: string;
   description: string;

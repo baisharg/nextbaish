@@ -418,7 +418,7 @@
       "nextSession": "Next Session",
       "date": "Check calendar",
       "time": "2:30 PM - 5:00 PM",
-      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "location": "See Telegram for location",
       "topic": "To be defined weekly",
       "joinTelegram": "Join Telegram for Updates",
       "joinWhatsapp": "Join WhatsApp",
@@ -449,7 +449,7 @@
       "accessList": "Watch recordings on YouTube",
       "date": "Check calendar",
       "time": "3:00 PM - 5:00 PM",
-      "location": "Pabellon 0+inf, Ciudad Universitaria",
+      "location": "See Telegram for location",
       "youtubeChannel": "YouTube Channel",
       "telegramGroup": "Telegram Group"
     },
@@ -522,11 +522,6 @@
       "telegram": {
         "title": "Telegram",
         "description": "Join our community channel for discussions and updates:"
-      },
-      "location": {
-        "eyebrow": "Visit Us",
-        "title": "Location",
-        "description": "We're based at the Department of Computer Science:"
       },
       "social": {
         "eyebrow": "Social",
