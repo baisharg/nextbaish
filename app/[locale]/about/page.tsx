@@ -484,13 +484,13 @@ export default async function AboutPage({
                     </div>
                   </article>
 
-                  {/* Rocio Monges */}
+                  {/* Rocio Monjes */}
                   <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
                     <div className="relative flex flex-col items-center space-y-2">
                       <div className="h-[120px] w-[120px]">
                         <Image
-                          src="/images/team/rocio-monges.jpg"
-                          alt="Rocio Monges"
+                          src="/images/team/rocio-monjes.jpg"
+                          alt="Rocio Monjes"
                           width={500}
                           height={500}
                           sizes="120px"
@@ -501,7 +501,7 @@ export default async function AboutPage({
                       </div>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold text-slate-900">
-                          Rocio Monges
+                          Rocio Monjes
                         </h4>
                       </div>
                     </div>
