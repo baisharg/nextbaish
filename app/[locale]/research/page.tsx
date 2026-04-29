@@ -174,7 +174,6 @@ const pathwayIcons = {
 const BAISH_MEMBERS = [
   "Eitan Sprejer",
   "Luca De Leo",
-  "Lucas Vitali",
   "Joaquín Machulsky",
 ];
 
