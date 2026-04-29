@@ -196,6 +196,15 @@ export default async function AboutPage({
                             >
                               <HugeiconsIcon icon={Linkedin01Icon} size={20} />
                             </a>
+                            <a
+                              href="https://lvca.dev"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label="Website"
+                              className="text-slate-700 transition hover:opacity-70"
+                            >
+                              <HugeiconsIcon icon={Globe02Icon} size={20} />
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -220,7 +229,7 @@ export default async function AboutPage({
                         {callToAction.bookWithEitan}
                       </a>
                       <a
-                        href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
+                        href="https://lvca.dev/meet"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button-primary inline-flex items-center justify-center gap-2"

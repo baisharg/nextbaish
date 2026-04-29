@@ -731,7 +731,7 @@ export default async function ResearchPage({
                     {t.cta.lucaSpecialty}
                   </p>
                   <a
-                    href="https://calendar.notion.so/meet/ldeleo/gcge74os2"
+                    href="https://lvca.dev/meet"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="button-primary inline-flex items-center justify-center gap-2 w-full"
