@@ -30,6 +30,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
   GithubIcon,
+  InstagramIcon,
   Linkedin01Icon,
   Globe02Icon,
   GraduationScrollIcon,
@@ -458,6 +459,26 @@ export default async function AboutPage({
                           <h4 className="text-base font-semibold text-slate-900">
                             Rocio Monjes
                           </h4>
+                        </div>
+                        <div className="flex gap-2">
+                          <a
+                            href="https://www.linkedin.com/in/rocio-pilar-monjes-/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={Linkedin01Icon} size={20} />
+                          </a>
+                          <a
+                            href="https://www.instagram.com/originaluniverse.326/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            className="text-slate-700 transition hover:opacity-70"
+                          >
+                            <HugeiconsIcon icon={InstagramIcon} size={20} />
+                          </a>
                         </div>
                       </div>
                     </article>
