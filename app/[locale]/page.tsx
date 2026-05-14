@@ -5,6 +5,7 @@ import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
 import { HeroTimeline } from "@/app/components/hero-timeline";
+import { AstnPromo } from "@/app/components/astn-promo";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
@@ -233,97 +234,7 @@ export default async function Home({
 
           {/* ASTN Promo Section - Launch Your Career */}
           <FadeInSection variant="slide-up" delay={50} as="section">
-            <section className="section-open" id="astn">
-              <div className="astn-promo relative rounded-3xl p-8 sm:p-12 overflow-hidden">
-                <div className="relative z-10 max-w-3xl mx-auto text-center">
-                  {/* Eyebrow + Badge */}
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-xs font-semibold uppercase tracking-widest text-[#E07A5F]">
-                      {t.astn.eyebrow}
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-[#E07A5F]/10 border border-[#E07A5F]/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#E07A5F]">
-                      {t.astn.badge}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
-                    {t.astn.title}
-                  </h2>
-
-                  {/* Description */}
-                  <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-10 leading-relaxed">
-                    {t.astn.description}
-                  </p>
-
-                  {/* Feature mini-cards */}
-                  <div className="grid gap-4 sm:grid-cols-3 mb-10">
-                    {/* Smart Matching */}
-                    <div className="astn-feature rounded-2xl border border-[#E07A5F]/12 bg-[#E07A5F]/[0.04] p-5 text-left">
-                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#E07A5F]/10">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E07A5F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10" />
-                          <circle cx="12" cy="12" r="6" />
-                          <circle cx="12" cy="12" r="2" />
-                        </svg>
-                      </div>
-                      <p className="text-[15px] font-semibold text-slate-900 mb-1">
-                        {t.astn.features.matching.title}
-                      </p>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {t.astn.features.matching.description}
-                      </p>
-                    </div>
-
-                    {/* Career Actions */}
-                    <div className="astn-feature rounded-2xl border border-[#E07A5F]/12 bg-[#E07A5F]/[0.04] p-5 text-left">
-                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#E07A5F]/10">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E07A5F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                        </svg>
-                      </div>
-                      <p className="text-[15px] font-semibold text-slate-900 mb-1">
-                        {t.astn.features.actions.title}
-                      </p>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {t.astn.features.actions.description}
-                      </p>
-                    </div>
-
-                    {/* AI Profile Building */}
-                    <div className="astn-feature rounded-2xl border border-[#E07A5F]/12 bg-[#E07A5F]/[0.04] p-5 text-left">
-                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#E07A5F]/10">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E07A5F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                        </svg>
-                      </div>
-                      <p className="text-[15px] font-semibold text-slate-900 mb-1">
-                        {t.astn.features.profile.title}
-                      </p>
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {t.astn.features.profile.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* CTA */}
-                  <div className="flex flex-col items-center gap-3">
-                    <a
-                      href="https://safetytalent.org/org/baish/join?token=d6866489-865f-472b-9d80-d70205c11ffc"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="astn-cta inline-flex items-center gap-2 rounded-full bg-[#E07A5F] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#E07A5F]/25 transition-all hover:bg-[#D06A4F] hover:shadow-xl hover:shadow-[#E07A5F]/30 hover:-translate-y-0.5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#E07A5F]"
-                    >
-                      {t.astn.cta}
-                      <span aria-hidden="true">→</span>
-                    </a>
-                    <span className="text-xs text-slate-400">
-                      {t.astn.domain}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <AstnPromo t={t.astn} />
           </FadeInSection>
 
           {/* Get Involved Section - MOVED UP for conversion */}

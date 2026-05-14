@@ -175,12 +175,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Learning Resources",
       description:
-        "Curated AI safety learning materials. Courses, papers, videos, and guides organized by difficulty level and topic.",
+        "Readings, courses, and talks on AI safety — the ones we'd actually recommend to someone trying to figure out what they think. Covers alignment, interpretability, and governance.",
     },
     es: {
       title: "Recursos de Aprendizaje",
       description:
-        "Materiales de aprendizaje curados sobre seguridad de IA. Cursos, papers, videos y guías organizados por nivel de dificultad y tema.",
+        "Lecturas, cursos y charlas sobre seguridad en IA — las que de verdad le recomendaríamos a alguien que está tratando de pensar qué cree. Cubre alineamiento, interpretabilidad y gobernanza.",
     },
   },
   contact: {

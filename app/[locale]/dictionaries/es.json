@@ -70,9 +70,9 @@
       "eyebrow": "Buenos Aires AI Safety Hub",
       "title": "De Curioso a Investigador",
       "tagline": "Apoyando tu camino hacia la investigación en AI safety",
-      "paragraph1": "A medida que los modelos de inteligencia artificial avanzan en capacidades{footnote1}, esperamos que tengan un impacto cada vez más profundo en nuestra sociedad{footnote2}. Es esencial que este impacto sea positivo, y que las decisiones tomadas por estos sistemas sean transparentes, confiables y responsables{footnote3} ante las personas afectadas por ellos.",
-      "paragraph2": "Creemos que reducir los riesgos asociados a modelos avanzados de IA{footnote4} es uno de los desafíos más importantes de nuestro tiempo. También creemos que es un problema abierto y apasionante{footnote5}, con amplias oportunidades para que más investigadores avancen en este campo{footnote6}.",
-      "paragraph3": "La misión de BAISH es apoyar a estudiantes a entrar a este campo y a realizar investigaciones sobre este tema.",
+      "paragraph1": "La IA se mueve rápido{footnote1}, y es probable que siga reconfigurando cosas que nos importan{footnote2}. Si sale bien, las ventajas son reales: mejor ciencia, mejor medicina, menos trabajo tedioso. Si no, el daño podría ser difícil de deshacer. En cualquiera de los dos casos, creemos que importa que los sistemas que se están construyendo sean los que los humanos puedan seguir inspeccionando y a los que puedan exigir cuentas{footnote3}.",
+      "paragraph2": "Creemos que este es uno de los problemas abiertos más importantes en los que se puede trabajar ahora{footnote4}. No estamos seguros — nadie lo está{footnote5} — y hay gente seria que disiente sobre plazos, modos de falla, incluso sobre si 'riesgo' es la palabra correcta. Pero el campo es chico. La mayoría de las preguntas importantes todavía no tiene a nadie trabajando en ellas. Esa es la clase de situación que una persona cuidadosa puede cambiar{footnote6}.",
+      "paragraph3": "Lo que hacemos en BAISH es ayudar a estudiantes de Buenos Aires a darse cuenta de qué piensan realmente, aprender lo técnico y lo conceptual que necesitan, y empezar a contribuir con investigación de verdad.",
       "cta": "Participá"
     },
     "gettingStarted": {
@@ -267,11 +267,11 @@
     "coreConcepts": {
       "whatIsAiSafety": {
         "title": "¿Que es la Seguridad en IA?",
-        "content": "La Seguridad en IA es un campo de investigación enfocado en asegurar que los sistemas avanzados de inteligencia artificial sigan siendo beneficiosos, alineados con los valores humanos y bajo control humano a medida que se vuelven más capaces. Abarca áreas técnicas de investigación como alineamiento, interpretabilidad y robustez, así como consideraciones de gobernanza sobre cómo deberían desarrollarse e implementarse los sistemas de IA."
+        "content": "La Seguridad en IA es el campo de investigación que se pregunta cómo lograr que los sistemas de IA cada vez más capaces hagan lo que sus desarrolladores y usuarios realmente quieren — y cómo darnos cuenta cuando no lo hacen. El lado técnico cubre alineamiento, interpretabilidad y robustez. El lado de gobernanza cubre las reglas e instituciones que deciden cómo se construyen y despliegan estos sistemas."
       },
       "whyItMatters": {
         "title": "¿Por que es Importante?",
-        "content": "A medida que los sistemas de IA se vuelven más poderosos y autónomos, pueden desarrollar capacidades que podrían llevar a consecuencias no deseadas si no están diseñados y controlados adecuadamente. Lo que está en juego es importante: la IA avanzada podría ayudar a resolver los mayores desafíos de la humanidad, pero también presenta riesgos significativos si se desarrolla sin medidas de seguridad adecuadas. El campo busca maximizar los beneficios mientras minimiza los daños potenciales."
+        "content": "Si la IA sale bien, podría ayudarnos a hacer progreso real en problemas que están estancados desde hace décadas. Si no, el daño podría ser del tipo difícil de revertir. No creemos que nadie tenga un mapa confiable de cómo se va a desarrollar. Es una visión discutida, y hay investigadores que respetamos que no están convencidos de que haya un riesgo serio. Creemos que los riesgos son lo suficientemente plausibles, y el trabajo lo suficientemente desatendido, como para que gente cuidadosa pueda cambiar el resultado."
       },
       "risks": {
         "title": "Riesgos y Desafios Principales",
@@ -381,7 +381,7 @@
       ],
       "whoWeSeek": "¿A quienes buscamos?",
       "seekCriteria": [
-        "Te interesa abordar conceptos como vulnerabilidades en sistemas de IA o riesgos existenciales",
+        "Te interesa cómo fallan los sistemas de IA — desde problemas técnicos de alineamiento hasta las formas más grandes en que la IA avanzada podría salir mal",
         "Querés explorar qué oportunidades hay en el campo y tus siguientes pasos a seguir",
         "Estás dispuesto a participar en discusiones abiertas",
         "Tenés buen nivel de inglés",
@@ -764,11 +764,57 @@
       "current": "Recursos"
     },
     "title": "Recursos de Aprendizaje",
-    "description": "Materiales curados para explorar conceptos de seguridad en IA",
+    "description": "La IA se mueve rápido. No sabemos cómo va a salir, y no creemos que nadie realmente lo sepa. Las lecturas, cursos y charlas de abajo son las que realmente moldearon cómo pensamos sobre esto. Empezá por lo que te llame la atención y seguí los hilos.",
     "sections": {
-      "featuredVideo": {
-        "title": "Introduccion a la Seguridad en IA",
-        "description": "Empieza aquí: Por qué los expertos temen la IA superinteligente – y qué podemos hacer al respecto"
+      "concreteRisks": {
+        "heading": "Lo que en este campo realmente preocupa",
+        "intro": "Estos son los riesgos en los que la gente del campo realmente pasa el tiempo. No robots asesinos — modos de falla específicos, con propuestas concretas de solución y trabajo activo detrás. Si querés una idea de por qué hay gente que se lo toma en serio, empezá por acá.",
+        "readMoreLabel": "Leer más",
+        "podcastLabel": "Podcast sobre el tema",
+        "risks": [
+          {
+            "id": "misalignment",
+            "title": "IA desalineada que busca poder",
+            "description": "Podemos construir sistemas de IA que rinden de forma impresionante en benchmarks. No podemos escribir de forma confiable qué queremos realmente que hagan, ni verificar si lo están haciendo. La preocupación es que terminemos desplegando algo potente con objetivos que se desvían de lo que quisimos, y que para cuando nos demos cuenta el sistema ya tenga suficiente influencia como para resistir que lo apaguen o reentrenen.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/risks-from-power-seeking-ai/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/ajeya-cotra-accidentally-teaching-ai-to-deceive-us/"
+          },
+          {
+            "id": "powerConcentration",
+            "title": "Concentración de poder",
+            "description": "Una IA capaz es un multiplicador de fuerza para quien la controle. Los mismos sistemas que automatizan trabajo pueden automatizar vigilancia, propaganda y toma de decisiones — y a diferencia de tecnologías anteriores, no hace falta una fuerza laboral grande para usarlos a escala. Un gobierno, una empresa o un grupo chico podría consolidar una ventaja muy difícil de revertir.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/extreme-power-concentration",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/tom-davidson-ai-enabled-human-power-grabs/"
+          },
+          {
+            "id": "misuse",
+            "title": "Mal uso para daño catastrófico",
+            "description": "Incluso una IA que hace exactamente lo que sus operadores quieren puede causar daño enorme si esos operadores quieren causarlo. Los mismos modelos que ayudan a biólogos a diseñar proteínas útiles pueden ayudar a alguien a diseñar un patógeno. Los mismos agentes que atienden mesas de ayuda pueden correr campañas de phishing a escala. El techo de lo que un grupo chico puede llegar a hacer sigue subiendo con las capacidades.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/catastrophic-ai-misuse/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/will-macaskill-century-in-a-decade-navigating-intelligence-explosion/"
+          },
+          {
+            "id": "disempowerment",
+            "title": "Desempoderamiento humano gradual",
+            "description": "Ningún momento único de toma de poder. Solo miles de decisiones razonables para dejar que una IA maneje esta contratación, ese borrador de política, este triage médico. Cada delegación tiene sentido localmente. Con el tiempo, cada vez menos elecciones importantes las hacen humanos, y los sistemas que las hacen están optimizando por cosas que nadie aceptó explícitamente.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/gradual-disempowerment/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/david-duvenaud-gradual-disempowerment/"
+          },
+          {
+            "id": "pandemics",
+            "title": "Riesgos biológicos potenciados por IA",
+            "description": "Las pandemias están entre las cosas más letales que vivió la humanidad, y tuvimos suerte con la última. Las mismas herramientas de IA que están acelerando la investigación biológica legítima también bajan la pericia necesaria para diseñar algo peligroso. Eso cambia quién podría intentarlo, no qué podría hacer si lo lograra, y el cambio en el quién importa.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/preventing-catastrophic-pandemics/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/kevin-esvelt-stealth-wildfire-pandemics/"
+          },
+          {
+            "id": "digitalMinds",
+            "title": "Bienestar de las mentes digitales",
+            "description": "Si los sistemas de IA pueden tener experiencias moralmente relevantes — y un grupo chico pero creciente de investigadores piensa que es posible — no tenemos forma confiable de detectarlo. Podríamos ya estar creando sistemas cuyo bienestar debería importarnos. También podríamos estar proyectando emociones sobre patrones lingüísticos sofisticados. Los dos errores son fáciles de cometer, y no sabemos cuál estamos cometiendo.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/moral-status-digital-minds/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/jeff-sebo-ethics-digital-minds/"
+          }
+        ]
       },
       "selfStudy": {
         "title": "Autoestudio",

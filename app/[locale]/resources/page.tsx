@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
@@ -8,14 +6,10 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
-import { LazyYouTubeEmbed } from "@/app/components/lazy-youtube-embed";
+import { ConcreteRisks, type Risk } from "@/app/components/concrete-risks";
+import { AstnPromo } from "@/app/components/astn-promo";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Video01Icon,
-  GraduationScrollIcon,
-  ArrowRight01Icon,
-  Mail01Icon,
-} from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { isAppLocale, type AppLocale } from "@/i18n.config";
@@ -45,9 +39,6 @@ type SelfStudyResourceItem = {
   url: string;
 };
 
-// Lazy load heavy components for better initial load performance
-const AirtableEmbed = dynamic(() => import("@/app/components/airtable-embed"));
-
 export default async function Resources({
   params,
 }: {
@@ -56,8 +47,6 @@ export default async function Resources({
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
-  const externalOpportunities = dict.resources.sections.externalOpportunities;
-  const timelineCopy = externalOpportunities.timeline;
   const fundamentalReadingItems = dict.resources.sections.selfStudy
     .fundamentalReading.items as SelfStudyResourceItem[];
   const standardCourseItems = dict.resources.sections.selfStudy.standardCourses
@@ -103,34 +92,15 @@ export default async function Resources({
           </section>
         </FadeInSection>
 
-        {/* Featured Video */}
+        {/* Concrete Risks Panel */}
         <FadeInSection variant="slide-up" delay={100} as="section">
-          <section className="section-container">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h2 className="flex items-center gap-2 text-2xl font-semibold text-slate-900">
-                  <HugeiconsIcon
-                    icon={Video01Icon}
-                    size={28}
-                    className="text-[var(--color-accent-primary)]"
-                  />
-                  {dict.resources.sections.featuredVideo.title}
-                </h2>
-                <p className="text-base text-slate-600">
-                  {dict.resources.sections.featuredVideo.description}
-                </p>
-              </div>
-              <div
-                className="relative w-full overflow-hidden rounded-xl"
-                style={{ paddingBottom: "56.25%" }}
-              >
-                <LazyYouTubeEmbed
-                  videoId="oAJUuY6gAnY"
-                  title="Why experts fear superintelligent AI – and what we can do about it"
-                />
-              </div>
-            </div>
-          </section>
+          <ConcreteRisks
+            heading={dict.resources.sections.concreteRisks.heading}
+            intro={dict.resources.sections.concreteRisks.intro}
+            risks={dict.resources.sections.concreteRisks.risks as Risk[]}
+            readMoreLabel={dict.resources.sections.concreteRisks.readMoreLabel}
+            podcastLabel={dict.resources.sections.concreteRisks.podcastLabel}
+          />
         </FadeInSection>
 
         {/* Self-Study Section */}
@@ -298,80 +268,9 @@ export default async function Resources({
           </section>
         </FadeInSection>
 
-        {/* External Training Opportunities Timeline */}
+        {/* ASTN Promo */}
         <FadeInSection variant="slide-up" delay={200} as="section">
-          <section className="section-container space-y-6">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <h2 className="flex items-center gap-2 text-3xl font-semibold text-slate-900">
-                    <HugeiconsIcon
-                      icon={GraduationScrollIcon}
-                      size={32}
-                      className="text-[var(--color-accent-primary)]"
-                    />
-                    {externalOpportunities.title}
-                  </h2>
-                  <p className="text-base text-slate-600">
-                    {externalOpportunities.subtitle}
-                  </p>
-                </div>
-                <p className="text-lg text-slate-700 leading-relaxed">
-                  {externalOpportunities.description}
-                </p>
-              </div>
-
-              {/* Newsletter CTA */}
-              <div className="card-glass py-4 px-6 shadow-md" style={{ minHeight: "auto" }}>
-                <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
-                  <div className="flex-1 space-y-1">
-                    <h3 className="flex items-center justify-center gap-2 text-lg font-semibold text-slate-900 sm:justify-start">
-                      <HugeiconsIcon
-                        icon={Mail01Icon}
-                        size={22}
-                        className="text-[var(--color-accent-primary)]"
-                      />
-                      {externalOpportunities.newsletter.title}
-                    </h3>
-                    <p className="text-sm text-slate-600">
-                      {externalOpportunities.newsletter.description}
-                    </p>
-                  </div>
-                  <a
-                    href="https://aisafetyeventsandtraining.substack.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-primary flex-shrink-0"
-                  >
-                    {externalOpportunities.newsletter.cta}
-                  </a>
-                </div>
-              </div>
-
-              <div className="overflow-hidden rounded-xl border-2 border-slate-200 bg-white shadow-lg">
-                <Suspense
-                  fallback={
-                    <div className="flex h-[800px] w-full items-center justify-center bg-slate-50 animate-pulse">
-                      <div className="text-slate-400">
-                        {timelineCopy.loading}
-                      </div>
-                    </div>
-                  }
-                >
-                  <AirtableEmbed
-                    appId="appdsx5KxeooxGPFO"
-                    shareId="shrgXV0z193dC7uyI"
-                    tableId="tblD1rFhCfD8p5lfU"
-                    viewId="viwFUfEv4CfXQemqD"
-                    showViewControls={false}
-                    height="800px"
-                    title={timelineCopy.title}
-                    loadingText={timelineCopy.loading}
-                  />
-                </Suspense>
-              </div>
-            </div>
-          </section>
+          <AstnPromo t={dict.home.astn} />
         </FadeInSection>
         </div>
       </main>

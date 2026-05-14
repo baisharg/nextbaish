@@ -70,9 +70,9 @@
       "eyebrow": "Buenos Aires AI Safety Hub",
       "title": "From Curious to Contributing",
       "tagline": "Supporting your path into AI safety research",
-      "paragraph1": "As artificial intelligence models advance in capabilities{footnote1}, we expect them to have an increasingly profound impact on our society{footnote2}. It is essential that this impact is positive, and that the decisions made by these systems are transparent, reliable, and accountable{footnote3} to the people affected by them.",
-      "paragraph2": "We believe that reducing the risks associated with advanced AI models{footnote4} is one of the most important challenges of our time. We also believe it is an open and exciting problem{footnote5}, with ample opportunities for more researchers to advance in this field{footnote6}.",
-      "paragraph3": "BAISH's mission is to support students in entering this field and conducting research on this topic.",
+      "paragraph1": "AI is moving fast{footnote1}, and it's likely to keep reshaping the things we care about{footnote2}. If it works out, the upside is real: better science, better medicine, less drudgery. If it doesn't, the damage could be hard to undo. Either way, we think it matters that the systems being built are ones humans can still inspect and hold accountable{footnote3}.",
+      "paragraph2": "We think this is one of the most important open problems anyone could work on right now{footnote4}. We're not certain — nobody is{footnote5} — and serious people disagree about timelines, failure modes, even whether 'risk' is the right framing. But the field is small. Most of the important questions don't have anyone working on them yet. That's the kind of situation a careful person can actually change{footnote6}.",
+      "paragraph3": "What we do at BAISH is help students in Buenos Aires figure out what they actually think, learn the technical and conceptual stuff they need, and start contributing real research.",
       "cta": "Get Involved"
     },
     "gettingStarted": {
@@ -267,11 +267,11 @@
     "coreConcepts": {
       "whatIsAiSafety": {
         "title": "What is AI Safety?",
-        "content": "AI Safety is a research field focused on ensuring that advanced artificial intelligence systems remain beneficial, aligned with human values, and under human control as they become more capable. It encompasses technical research areas like alignment, interpretability, and robustness, as well as governance considerations about how AI systems should be developed and deployed."
+        "content": "AI Safety is the research field that asks how to keep increasingly capable AI systems doing what their developers and users actually want — and how to catch it when they don't. The technical side covers alignment, interpretability, and robustness. The governance side covers the rules and institutions that decide how these systems get built and deployed."
       },
       "whyItMatters": {
         "title": "Why It Matters",
-        "content": "As AI systems become more powerful and autonomous, they may develop capabilities that could lead to unintended consequences if not properly designed and controlled. The stakes are high: advanced AI could help solve humanity's greatest challenges, but also poses significant risks if developed without adequate safety measures. The field aims to maximize the benefits while minimizing potential harms."
+        "content": "If AI works out, it could help us make real progress on problems that have been stuck for decades. If it doesn't, the harm could be the kind that's very hard to reverse. We don't think anyone has a reliable map of how this plays out. It's a contested view, and there are researchers we respect who aren't convinced there's a serious risk at all. We think the risks are plausible enough, and the work neglected enough, that careful people can change the outcome."
       },
       "risks": {
         "title": "Key Risks & Challenges",
@@ -381,7 +381,7 @@
       ],
       "whoWeSeek": "Who We're Looking For",
       "seekCriteria": [
-        "You're interested in addressing concepts like vulnerabilities in AI systems or existential risks",
+        "You're interested in how AI systems fail — from technical alignment issues to the bigger ways advanced AI could go wrong",
         "You want to explore what opportunities exist in the field and your next steps",
         "You're willing to participate in open discussions",
         "You have a good level of English",
@@ -764,11 +764,57 @@
       "current": "Resources"
     },
     "title": "Learning Resources",
-    "description": "Curated materials for exploring AI safety concepts",
+    "description": "AI is moving fast. We don't know how it'll play out, and we don't think anyone really does. The readings, courses, and talks below are the ones that actually shaped how we think about this. Start wherever something looks interesting and follow the threads.",
     "sections": {
-      "featuredVideo": {
-        "title": "Introduction to AI Safety",
-        "description": "Start here: Why experts fear superintelligent AI – and what we can do about it"
+      "concreteRisks": {
+        "heading": "What people in this field actually worry about",
+        "intro": "These are the risks researchers in the field actually spend their time on. Not killer robots — specific failure modes with proposed solutions and active work behind them. If you want a sense of why people take this seriously, this is where to start.",
+        "readMoreLabel": "Read more",
+        "podcastLabel": "Podcast on this issue",
+        "risks": [
+          {
+            "id": "misalignment",
+            "title": "Misaligned, power-seeking AI",
+            "description": "We can build AI systems that perform impressively on benchmarks. We can't reliably write down what we actually want them to do, and we can't reliably check whether they're doing it. The worry is that we deploy something powerful with goals that drift from what we meant, and by the time we notice, the system has enough influence to resist being shut down or retrained.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/risks-from-power-seeking-ai/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/ajeya-cotra-accidentally-teaching-ai-to-deceive-us/"
+          },
+          {
+            "id": "powerConcentration",
+            "title": "Concentration of power",
+            "description": "Capable AI is a force multiplier for whoever owns it. The same systems that automate work can automate surveillance, propaganda, and decision-making — and unlike past technologies, you don't need a large workforce to wield them at scale. A government, a company, or a small group could lock in an advantage that's very hard to roll back.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/extreme-power-concentration",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/tom-davidson-ai-enabled-human-power-grabs/"
+          },
+          {
+            "id": "misuse",
+            "title": "Misuse for catastrophic harm",
+            "description": "Even AI that does exactly what its operators want can cause enormous damage if those operators want to cause damage. The same models that help biologists design useful proteins can help someone design a pathogen. The same agents handling helpdesk work can run phishing campaigns at scale. The ceiling on what a small group can pull off keeps rising along with capabilities.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/catastrophic-ai-misuse/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/will-macaskill-century-in-a-decade-navigating-intelligence-explosion/"
+          },
+          {
+            "id": "disempowerment",
+            "title": "Gradual human disempowerment",
+            "description": "No single moment of takeover. Just thousands of reasonable-looking decisions to let an AI handle this hiring call, that policy draft, this medical triage. Each delegation makes sense locally. Over time, fewer and fewer important choices are actually being made by humans, and the systems making them are optimizing for things nobody ever explicitly signed off on.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/gradual-disempowerment/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/david-duvenaud-gradual-disempowerment/"
+          },
+          {
+            "id": "pandemics",
+            "title": "AI-enabled biological risks",
+            "description": "Pandemics are among the deadliest things humans have lived through, and we got lucky on the last one. AI tools that speed up legitimate biology research also lower the expertise it takes to design something dangerous. That changes who could attempt this, not what it would do if they succeeded, and the change in who matters.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/preventing-catastrophic-pandemics/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/kevin-esvelt-stealth-wildfire-pandemics/"
+          },
+          {
+            "id": "digitalMinds",
+            "title": "Welfare of digital minds",
+            "description": "If AI systems can have experiences that matter morally — and a small but growing group of researchers thinks they might — we have no reliable way to detect it. We could already be creating systems whose welfare we should care about. We could also be projecting feelings onto sophisticated language patterns. Both mistakes are easy to make, and we don't know which one we're making.",
+            "readMoreUrl": "https://80000hours.org/problem-profiles/moral-status-digital-minds/",
+            "podcastUrl": "https://80000hours.org/podcast/episodes/jeff-sebo-ethics-digital-minds/"
+          }
+        ]
       },
       "selfStudy": {
         "title": "Self-study",
