@@ -6,6 +6,7 @@ import es from "../[locale]/dictionaries/es.json";
 import sitemap from "../sitemap";
 import { SEO_CONTENT } from "../utils/seo";
 import {
+  COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_IDS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
@@ -61,7 +62,7 @@ describe("BAISH course opportunities", () => {
     ]);
   });
 
-  test("supports both expression-of-interest and applications-open status labels", () => {
+  test("supports separate status and CTA labels for EOI vs applications", () => {
     expect(COURSE_OPPORTUNITY_STATUS_LABELS.en.eoi_open).toBe(
       "Expression of interest open",
     );
@@ -72,6 +73,10 @@ describe("BAISH course opportunities", () => {
     expect(COURSE_OPPORTUNITY_STATUS_LABELS.es.applications_open).toBe(
       "Inscripciones abiertas",
     );
+    expect(COURSE_OPPORTUNITY_CTA_LABELS.en.eoi_open).toBe("Express interest");
+    expect(COURSE_OPPORTUNITY_CTA_LABELS.es.eoi_open).toBe("Expresá interés");
+    expect(COURSE_OPPORTUNITY_CTA_LABELS.en.applications_open).toBe("Apply");
+    expect(COURSE_OPPORTUNITY_CTA_LABELS.es.applications_open).toBe("Inscribite");
   });
 
   test("keeps dictionaries, SEO, structured data, and sitemap aligned to current courses", () => {
@@ -112,12 +117,10 @@ describe("BAISH course opportunities", () => {
     );
 
     expect(en.home.courseSpotlight.title).toBe("Technical AI Safety Course");
-    expect(en.home.courseSpotlight.badge).toBe("Expression of interest open");
     expect(en.home.courseSpotlight.applyUrl).toBe(
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
     expect(es.home.courseSpotlight.title).toBe("Technical AI Safety Course");
-    expect(es.home.courseSpotlight.badge).toBe("EOI abierta");
     expect(es.home.courseSpotlight.applyUrl).toBe(
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );

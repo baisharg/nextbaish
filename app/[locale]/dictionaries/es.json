@@ -47,10 +47,10 @@
     },
     "hero": {
       "communityMembers": "Miembros de la Comunidad",
-      "weeklyPrograms": "Programas Semanales",
+      "weeklyPrograms": "Cursos abiertos",
       "publishedPapers": "Papers Publicados",
-      "primaryCta": "Empezá a aprender",
-      "secondaryCta": "Sumate a eventos"
+      "primaryCta": "Ver cursos abiertos",
+      "secondaryCta": "Sumate a la comunidad"
     },
     "timeline": {
       "connect": "Conectar",
@@ -61,8 +61,8 @@
       "foundationsDesc": "Bases técnicas para contribuir a seguridad en IA",
       "replicate": "Replicar",
       "replicateTitle": "Technical AI Safety Project",
-      "replicateDesc": "Sprint práctico de proyectos hacia una contribución concreta en seguridad en IA",
-      "publish": "Gobernar",
+      "replicateDesc": "Curso práctico basado en proyectos para hacer una contribución concreta en seguridad en IA",
+      "publish": "Gobernanza",
       "publishTitle": "Frontier AI Governance",
       "publishDesc": "Bases de gobernanza para riesgos de IA de frontera"
     },
@@ -90,30 +90,30 @@
         {
           "number": "02",
           "title": "Aprendé seguridad técnica de IA",
-          "description": "Inscribite o expresá interés en Technical AI Safety Course — un curso de BlueDot Impact facilitado presencialmente por BAISH.",
-          "cta": "Inscribite / expresá interés",
+          "description": "Ver detalles de Technical AI Safety Course — un curso de BlueDot Impact facilitado presencialmente por BAISH.",
+          "cta": "Ver curso",
           "link": "/activities#technical-ai-safety-course"
         },
         {
           "number": "03",
           "title": "Desarrollá habilidades técnicas",
-          "description": "Inscribite o expresá interés en Technical AI Safety Project para desarrollar una contribución concreta de investigación o ingeniería en seguridad en IA.",
-          "cta": "Inscribite / expresá interés",
+          "description": "Ver detalles de Technical AI Safety Project para desarrollar una contribución concreta de investigación o ingeniería en seguridad en IA.",
+          "cta": "Ver curso",
           "link": "/activities#technical-ai-safety-project"
         },
         {
           "number": "04",
           "title": "Estudiá gobernanza de IA de frontera",
-          "description": "Inscribite o expresá interés en Frontier AI Governance para explorar coordinación, gobernanza de compute, accountability y evaluación de riesgos en sistemas de IA de frontera.",
-          "cta": "Inscribite / expresá interés",
+          "description": "Ver detalles de Frontier AI Governance para explorar coordinación, gobernanza de compute, accountability y evaluación de riesgos en sistemas de IA de frontera.",
+          "cta": "Ver curso",
           "link": "/activities#frontier-ai-governance"
         }
       ]
     },
     "events": {
       "eyebrow": "Proximos Eventos",
-      "title": "Sumate a nuestros cursos y meetups",
-      "description": "Mantenete al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
+      "title": "Cursos y oportunidades abiertas",
+      "description": "Las expresiones de interés e inscripciones activas aparecen acá automáticamente desde Safety Talent.",
       "calendarPlaceholder": "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida.",
       "subscribe": "Suscribite al calendario"
     },
@@ -144,7 +144,7 @@
       "joinNow": "Inscribite",
       "joinTelegram": "Sumate al Telegram",
       "learnMore": "Ver más",
-      "applyNow": "Inscribite / expresá interés"
+      "applyNow": "Inscribite"
     },
     "successStories": {
       "eyebrow": "Impacto",
@@ -238,7 +238,7 @@
         "format": "Presencial · facilitado por BAISH",
         "cost": "Gratuito"
       },
-      "cta": "Inscribite / expresá interés",
+      "cta": "Inscribite",
       "applyUrl": "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
       "deadline": "Expresión de interés abierta"
     },
@@ -398,7 +398,7 @@
       "duration": "30 horas",
       "fellowshipPeriod": "Cronograma anunciado por BAISH",
       "viewCurriculum": "Ver más en BlueDot",
-      "applyNow": "Inscribite / expresá interés"
+      "applyNow": "Inscribite"
     },
     "aisWorkshop": {
       "title": "Technical AI Safety Project",
@@ -426,7 +426,7 @@
       "topic": "Proyecto técnico de seguridad en IA",
       "joinTelegram": "Sumate a Telegram para actualizaciones",
       "joinWhatsapp": "Sumate al WhatsApp",
-      "applyNow": "Inscribite / expresá interés",
+      "applyNow": "Expresá interés",
       "learnMore": "Ver más en BlueDot"
     },
     "paperReading": {
@@ -584,7 +584,7 @@
       "current": "Investigación"
     },
     "title": "Investigación en BAISH",
-    "intro": "Ayudamos a estudiantes en Buenos Aires a pasar de curiosos a publicados. Sumate a sprints de investigación, talleres y una comunidad de aspirantes a investigadores en seguridad de IA.",
+    "intro": "Ayudamos a estudiantes en Buenos Aires a pasar de curiosos a publicados. Sumate a proyectos de investigación, talleres y una comunidad de aspirantes a investigadores en seguridad de IA.",
     "ctaPrograms": "Sumate a un Programa",
     "ctaPublications": "Ver Publicaciones",
     "ctaLearnMore": "Conocé Más",
@@ -613,8 +613,8 @@
         {
           "number": "03",
           "title": "Investigar",
-          "program": "Sprints de Investigación",
-          "description": "Contribuí trabajo original en sprints colaborativos. Participantes anteriores han logrado puestos en competencias de Apart Research.",
+          "program": "Proyectos de investigación",
+          "description": "Contribuí trabajo original en proyectos colaborativos. Participantes anteriores han logrado puestos en competencias de Apart Research.",
           "duration": "2-4 semanas",
           "link": "/contact",
           "icon": "lightbulb"
@@ -743,7 +743,7 @@
           ]
         }
       ],
-      "note": "Nuestra comunidad sigue creciendo — estamos construyendo nuestro historial de publicaciones a través de programas como AISAR y sprints de Apart Research."
+      "note": "Nuestra comunidad sigue creciendo — estamos construyendo nuestro historial de publicaciones a través de programas como AISAR y proyectos y competencias de Apart Research."
     },
     "expressInterest": {
       "eyebrow": "Participá",

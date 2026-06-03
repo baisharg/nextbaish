@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AnimatedTitle } from "@/app/components/animated-title";
-import CalendarSection from "@/app/components/calendar-section";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import Footer from "@/app/components/footer";
 import { TransitionLink } from "@/app/components/transition-link";
@@ -20,6 +19,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
 import {
+  COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
 } from "@/app/data/course-opportunities";
@@ -81,6 +81,7 @@ export default async function Activities({
   const pastProgramCount = pastProgramCards.length;
   const courseOpportunities = await getCourseOpportunities();
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
+  const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
 
   // Gallery images from past BAISH events
   const galleryImages = [
@@ -147,61 +148,12 @@ export default async function Activities({
                 <p className="text-lg text-slate-700 max-w-3xl">
                   {t.description}
                 </p>
-                <div className="pt-2">
-                  <a
-                    href="https://www.google.com/calendar/render?cid=http%3A%2F%2Fapi.lu.ma%2Fics%2Fget%3Fentity%3Dcalendar%26id%3Dcal-0oFAsTn5vpwcAwb"
-                    className="button-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <HugeiconsIcon icon={Calendar03Icon} size={18} />
-                    {t.subscribeCalendar}
-                  </a>
-                </div>
               </div>
             </section>
           </FadeInSection>
 
-          {/* Events Calendar Section */}
-          <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="section-container space-y-12">
-              <div className="space-y-4 text-center">
-                <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
-                  {dict.home.events.eyebrow}
-                </p>
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {dict.home.events.title}
-                </h2>
-              </div>
-              <CalendarSection
-                calendarPlaceholder={dict.home.events.calendarPlaceholder}
-                subscribeText={dict.home.events.subscribe}
-              />
-            </section>
-          </FadeInSection>
         </div>
       </div>
-
-      {/* Past Events Carousel - Full Width */}
-      <FadeInSection variant="fade" delay={150}>
-        <section className="relative bg-white pt-8 pb-16 mb-20 shadow-sm">
-          <div className="mx-auto max-w-6xl px-6 sm:px-10">
-            <div className="space-y-4 text-center mb-12">
-              <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
-                {gallery.eyebrow}
-              </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
-                {gallery.title}
-              </h2>
-              <p className="text-base text-slate-700 max-w-2xl mx-auto">
-                {gallery.description}
-              </p>
-            </div>
-          </div>
-
-          <EventsCarousel images={galleryImages} />
-        </section>
-      </FadeInSection>
 
       {/* Program Cards */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
@@ -253,7 +205,7 @@ export default async function Activities({
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {dict.home.activities.applyNow}
+                          {courseCtaLabels[opportunity.status]}
                         </a>
                         <a
                           className="link-arrow"
@@ -271,6 +223,28 @@ export default async function Activities({
               </div>
             </section>
           </FadeInSection>
+
+
+      {/* Past Events Carousel - Full Width */}
+      <FadeInSection variant="fade" delay={150}>
+        <section className="relative bg-white pt-8 pb-16 mb-20 shadow-sm">
+          <div className="mx-auto max-w-6xl px-6 sm:px-10">
+            <div className="space-y-4 text-center mb-12">
+              <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-accent-tertiary)]">
+                {gallery.eyebrow}
+              </p>
+              <h2 className="text-3xl font-semibold text-slate-900">
+                {gallery.title}
+              </h2>
+              <p className="text-base text-slate-700 max-w-2xl mx-auto">
+                {gallery.description}
+              </p>
+            </div>
+          </div>
+
+          <EventsCarousel images={galleryImages} />
+        </section>
+      </FadeInSection>
 
           {/* Past Programs */}
           {pastProgramCount ? (
