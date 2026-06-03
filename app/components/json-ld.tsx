@@ -143,7 +143,7 @@ export function OrganizationJsonLd() {
     url: BASE_URL,
     logo: `${BASE_URL}/images/logos/logo-192.png`,
     description:
-      "Supporting students in Buenos Aires to enter AI safety research through courses, workshops, and community.",
+      "Supporting students in Buenos Aires to enter AI safety research through courses, research, and community.",
     sameAs: [
       "https://t.me/+zhSGhXrn56g1YjVh",
       ORGANIZATION_LINKEDIN_URL,
@@ -174,7 +174,7 @@ export function WebSiteJsonLd() {
     name: "BAISH - Buenos Aires AI Safety Hub",
     url: BASE_URL,
     description:
-      "Supporting your path into AI safety research. Community, courses, and workshops in Buenos Aires.",
+      "Supporting your path into AI safety research. Community, courses, and research in Buenos Aires.",
     inLanguage: ["en", "es"],
     publisher: {
       "@type": "Organization",
@@ -310,7 +310,7 @@ export function CourseJsonLd({
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "onsite",
-      courseWorkload: duration || "13 weeks",
+      courseWorkload: duration || "30 hours",
       ...(instructor && {
         instructor: {
           "@type": "Person",
@@ -329,37 +329,25 @@ export function CourseJsonLd({
 export function ActivitiesEventsJsonLd({ locale }: { locale: AppLocale }) {
   const events = [
     {
-      name:
-        locale === "es"
-          ? "AI Safety Fundamentals"
-          : "AI Safety Fundamentals Course",
+      name: "Technical AI Safety Course",
       description:
         locale === "es"
-          ? "Curso de 13 semanas sobre conceptos de alineamiento de IA"
-          : "13-week course covering AI alignment concepts",
-      schedule: "Fridays 2:30 PM",
+          ? "Curso técnico de seguridad en IA facilitado por BAISH"
+          : "Technical AI safety course facilitated by BAISH",
     },
     {
-      name:
-        locale === "es"
-          ? "Taller de Investigación en Seguridad de IA"
-          : "AIS Research Workshop",
+      name: "Technical AI Safety Project",
       description:
         locale === "es"
-          ? "Taller técnico para replicar papers de seguridad en IA"
-          : "Technical workshop to replicate AI safety papers",
-      schedule: "Tuesdays 2:30 PM",
+          ? "Curso basado en proyectos para contribuir a seguridad en IA"
+          : "Project-based course for contributing to AI safety",
     },
     {
-      name:
-        locale === "es"
-          ? "Club de Presentación de Papers"
-          : "Paper Presentations Club",
+      name: "Frontier AI Governance",
       description:
         locale === "es"
-          ? "Presentaciones de papers por miembros de la comunidad"
-          : "Paper presentations by community members",
-      schedule: "Alternate Thursdays 3:00 PM",
+          ? "Curso de gobernanza de sistemas de IA de frontera"
+          : "Course on governance of frontier AI systems",
     },
   ];
 

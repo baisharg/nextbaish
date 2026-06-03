@@ -6,10 +6,14 @@ import { TransitionLink } from "@/app/components/transition-link";
 import { BreadcrumbJsonLd, CourseJsonLd } from "@/app/components/json-ld";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
-import { AiChemistry01Icon, WhatsappIcon } from "@hugeicons/core-free-icons";
+import { AiChemistry01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { getDictionary } from "../../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+import {
+  COURSE_OPPORTUNITY_STATUS_LABELS,
+  getCourseOpportunities,
+} from "@/app/data/course-opportunities";
 
 export async function generateMetadata({
   params,
@@ -35,10 +39,22 @@ export default async function WorkshopPage({
 }) {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
+  const [dict, courseOpportunities] = await Promise.all([
+    getDictionary(currentLocale),
+    getCourseOpportunities(),
+  ]);
   const t = dict.activities;
   const aisWorkshop = t.aisWorkshop;
   const common = t.common;
+  const technicalAiSafetyProject = courseOpportunities.find(
+    (opportunity) => opportunity.id === "technical-ai-safety-project",
+  );
+
+  if (!technicalAiSafetyProject) {
+    throw new Error("Technical AI Safety Project opportunity is missing");
+  }
+
+  const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -53,7 +69,7 @@ export default async function WorkshopPage({
       <CourseJsonLd
         name={aisWorkshop.title}
         description={aisWorkshop.description}
-        duration="Ongoing weekly"
+        duration={aisWorkshop.time}
       />
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
@@ -79,9 +95,8 @@ export default async function WorkshopPage({
             </div>
           </FadeInSection>
 
-          {/* AIS Research Workshop */}
-          <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="section-container">
+          {/* Technical AI Safety Project */}
+          <section className="section-container">
               <div className="space-y-8">
                 <div className="space-y-4">
                   <div>
@@ -99,7 +114,7 @@ export default async function WorkshopPage({
                       as="h1"
                     />
                     <span className="inline-flex rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-700">
-                      {aisWorkshop.schedule}
+                      {courseStatusLabels[technicalAiSafetyProject.status]}
                     </span>
                   </div>
                 </div>
@@ -179,23 +194,31 @@ export default async function WorkshopPage({
                           </dd>
                         </div>
                       </dl>
-                      <div className="mt-6">
+                      <div className="mt-6 flex flex-col gap-3">
                         <a
-                          href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+                          href={technicalAiSafetyProject.applyUrl}
                           className="button-primary w-full flex items-center justify-center gap-2"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <HugeiconsIcon icon={WhatsappIcon} size={20} />
-                          {aisWorkshop.joinWhatsapp}
+                          {aisWorkshop.applyNow}
+                          <span aria-hidden="true">→</span>
+                        </a>
+                        <a
+                          href={technicalAiSafetyProject.learnMoreUrl}
+                          className="link-arrow justify-center"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {aisWorkshop.learnMore}
+                          <span aria-hidden="true">→</span>
                         </a>
                       </div>
                     </article>
                   </div>
                 </div>
               </div>
-            </section>
-          </FadeInSection>
+          </section>
         </div>
       </div>
 

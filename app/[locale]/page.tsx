@@ -8,6 +8,10 @@ import { HeroTimeline } from "@/app/components/hero-timeline";
 import { AstnPromo } from "@/app/components/astn-promo";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
+import {
+  COURSE_OPPORTUNITY_STATUS_LABELS,
+  getCourseOpportunities,
+} from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -67,6 +71,8 @@ export default async function Home({
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
   const t = dict.home;
+  const courseOpportunities = await getCourseOpportunities();
+  const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -144,26 +150,32 @@ export default async function Home({
                     {
                       icon: Book02Icon,
                       shortLabel: t.timeline?.foundations || "Foundations",
-                      fullTitle: t.timeline?.foundationsTitle || "AI Safety Fundamentals",
-                      description: t.timeline?.foundationsDesc || "13-week inverted classroom course",
-                      badge: "13 weeks",
-                      link: "/activities/fundamentals",
+                      fullTitle: t.timeline?.foundationsTitle || "Technical AI Safety Course",
+                      description:
+                        t.timeline?.foundationsDesc ||
+                        "Technical foundations for contributing to AI safety",
+                      badge: t.activities.items["technical-ai-safety-course"].duration,
+                      link: "/activities#technical-ai-safety-course",
                     },
                     {
                       icon: Wrench01Icon,
                       shortLabel: t.timeline?.replicate || "Replicate",
-                      fullTitle: t.timeline?.replicateTitle || "Paper replication workshop",
-                      description: t.timeline?.replicateDesc || "Weekly hands-on technical practice",
-                      badge: "Weekly",
-                      link: "/activities/workshop",
+                      fullTitle: t.timeline?.replicateTitle || "Technical AI Safety Project",
+                      description:
+                        t.timeline?.replicateDesc ||
+                        "Hands-on project sprint toward a concrete AI safety contribution",
+                      badge: t.activities.items["technical-ai-safety-project"].duration,
+                      link: "/activities#technical-ai-safety-project",
                     },
                     {
                       icon: MicroscopeIcon,
-                      shortLabel: t.timeline?.publish || "Publish",
-                      fullTitle: t.timeline?.publishTitle || "Research fellowship",
-                      description: t.timeline?.publishDesc || "6-month program with mentorship & stipend",
-                      badge: "6 months",
-                      link: "/research",
+                      shortLabel: t.timeline?.publish || "Govern",
+                      fullTitle: t.timeline?.publishTitle || "Frontier AI Governance",
+                      description:
+                        t.timeline?.publishDesc ||
+                        "Governance foundations for frontier AI risks",
+                      badge: t.activities.items["frontier-ai-governance"].duration,
+                      link: "/activities#frontier-ai-governance",
                     },
                   ]}
                   locale={currentLocale}
@@ -333,89 +345,56 @@ export default async function Home({
               {/* Visual grouping container for program cards */}
               <div className="programs-container">
                 <div className="card-grid">
-                  {[
-                    {
-                      slug: "activity-fundamentals",
-                      route: "fundamentals",
-                      eyebrow: t.activities.items.fundamentals.eyebrow,
-                      title: t.activities.items.fundamentals.title,
-                      description: t.activities.items.fundamentals.description,
-                      metaItems: [
-                        { icon: "calendar", text: t.activities.items.fundamentals.schedule },
-                        { icon: "clock", text: t.activities.items.fundamentals.duration },
-                      ],
-                    },
-                    {
-                      slug: "activity-workshop",
-                      route: "workshop",
-                      eyebrow: t.activities.items.workshop.eyebrow,
-                      title: t.activities.items.workshop.title,
-                      description: t.activities.items.workshop.description,
-                      metaItems: [
-                        { icon: "calendar", text: t.activities.items.workshop.schedule },
-                        { icon: "clock", text: t.activities.items.workshop.duration },
-                      ],
-                    },
-                    {
-                      slug: "activity-reading",
-                      route: "reading",
-                      eyebrow: t.activities.items.reading.eyebrow,
-                      title: t.activities.items.reading.title,
-                      description: t.activities.items.reading.description,
-                      metaItems: [
-                        { icon: "calendar", text: t.activities.items.reading.schedule },
-                        { icon: "clock", text: t.activities.items.reading.duration },
-                      ],
-                    },
-                  ].map((activity) => (
-                    <article
-                      key={activity.title}
-                      className="card-glass card-refined"
-                    >
-                      <div className="card-eyebrow">{activity.eyebrow}</div>
-                      <AnimatedTitle
-                        text={activity.title}
-                        slug={activity.slug}
-                        className="card-title"
-                        as="h3"
-                      />
-                      <p className="card-body">{activity.description}</p>
+                  {courseOpportunities.map((opportunity) => {
+                    const activity = t.activities.items[opportunity.id];
 
-                      <div className="card-meta">
-                        {activity.metaItems.map((item, idx) => (
-                          <span key={idx} className="pill">
-                            {item.icon === "calendar" ? (
-                              <HugeiconsIcon icon={Calendar03Icon} size={16} />
-                            ) : (
-                              <HugeiconsIcon icon={Clock01Icon} size={16} />
-                            )}
-                            {item.text}
+                    return (
+                      <article
+                        key={opportunity.id}
+                        className="card-glass card-refined"
+                      >
+                        <div className="card-eyebrow">{activity.eyebrow}</div>
+                        <AnimatedTitle
+                          text={activity.title}
+                          slug={`activity-${opportunity.id}`}
+                          className="card-title"
+                          as="h3"
+                        />
+                        <p className="card-body">{activity.description}</p>
+
+                        <div className="card-meta">
+                          <span className="pill">
+                            <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                            {courseStatusLabels[opportunity.status]}
                           </span>
-                        ))}
-                      </div>
+                          <span className="pill">
+                            <HugeiconsIcon icon={Clock01Icon} size={16} />
+                            {activity.duration}
+                          </span>
+                        </div>
 
-                      <div className="card-footer">
-                        {activity.route === "reading" && (
+                        <div className="card-footer">
                           <a
                             className="button-primary"
-                            href="https://t.me/+zhSGhXrn56g1YjVh"
+                            href={opportunity.applyUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <HugeiconsIcon icon={TelegramIcon} size={18} />
-                            {t.activities.joinTelegram}
+                            {t.activities.applyNow}
                           </a>
-                        )}
-                        <TransitionLink
-                          className="link-arrow"
-                          href={`/${currentLocale}/activities/${activity.route}`}
-                        >
-                          {t.activities.learnMore}
-                          <span>→</span>
-                        </TransitionLink>
-                      </div>
-                    </article>
-                  ))}
+                          <a
+                            className="link-arrow"
+                            href={opportunity.learnMoreUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {t.activities.learnMore}
+                            <span>→</span>
+                          </a>
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
             </section>

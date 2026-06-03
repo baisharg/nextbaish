@@ -21,11 +21,11 @@ const routes = [
 type SiteRoute = (typeof routes)[number];
 
 const ROUTE_LAST_MODIFIED: Record<SiteRoute, string> = {
-  "": "2026-01-04",
-  "/about": "2025-12-19",
-  "/activities": "2025-12-19",
-  "/activities/fundamentals": "2025-12-19",
-  "/activities/workshop": "2025-12-19",
+  "": "2026-06-03",
+  "/about": "2026-06-03",
+  "/activities": "2026-06-03",
+  "/activities/fundamentals": "2026-06-03",
+  "/activities/workshop": "2026-06-03",
   "/activities/reading": "2025-12-19",
   "/research": "2026-01-04",
   "/resources": "2025-12-19",

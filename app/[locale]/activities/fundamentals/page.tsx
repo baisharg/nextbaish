@@ -10,6 +10,10 @@ import { Book02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { getDictionary } from "../../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+import {
+  COURSE_OPPORTUNITY_STATUS_LABELS,
+  getCourseOpportunities,
+} from "@/app/data/course-opportunities";
 
 export async function generateMetadata({
   params,
@@ -35,10 +39,22 @@ export default async function FundamentalsPage({
 }) {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
+  const [dict, courseOpportunities] = await Promise.all([
+    getDictionary(currentLocale),
+    getCourseOpportunities(),
+  ]);
   const t = dict.activities;
   const agiSafety = t.agiSafety;
   const common = t.common;
+  const technicalAiSafetyCourse = courseOpportunities.find(
+    (opportunity) => opportunity.id === "technical-ai-safety-course",
+  );
+
+  if (!technicalAiSafetyCourse) {
+    throw new Error("Technical AI Safety Course opportunity is missing");
+  }
+
+  const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -53,7 +69,7 @@ export default async function FundamentalsPage({
       <CourseJsonLd
         name={agiSafety.title}
         description={agiSafety.description}
-        duration="13 weeks"
+        duration={agiSafety.duration}
       />
       {/* Constrained Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
@@ -79,7 +95,7 @@ export default async function FundamentalsPage({
             </div>
           </FadeInSection>
 
-          {/* AI Safety Fundamentals */}
+          {/* Technical AI Safety Course */}
           <FadeInSection variant="slide-up" delay={100} as="section">
             <section className="section-container">
               <div className="space-y-8">
@@ -99,7 +115,7 @@ export default async function FundamentalsPage({
                       as="h1"
                     />
                     <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-green-700">
-                      {agiSafety.status}
+                      {courseStatusLabels[technicalAiSafetyCourse.status]}
                     </span>
                   </div>
                 </div>
@@ -167,14 +183,24 @@ export default async function FundamentalsPage({
                           </dd>
                         </div>
                       </dl>
-                      <div className="mt-6">
+                      <div className="mt-6 flex flex-col gap-3">
                         <a
-                          href="https://course.aisafetyfundamentals.com/alignment"
-                          className="button-primary w-full"
+                          href={technicalAiSafetyCourse.applyUrl}
+                          className="button-primary w-full flex items-center justify-center gap-2"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {agiSafety.applyNow}
+                          <span aria-hidden="true">→</span>
+                        </a>
+                        <a
+                          href={technicalAiSafetyCourse.learnMoreUrl}
+                          className="link-arrow justify-center"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           {agiSafety.viewCurriculum}
+                          <span aria-hidden="true">→</span>
                         </a>
                       </div>
                     </article>

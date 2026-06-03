@@ -57,14 +57,14 @@
       "connectTitle": "Unite a la comunidad",
       "connectDesc": "120+ miembros en WhatsApp y Telegram",
       "foundations": "Fundamentos",
-      "foundationsTitle": "AI Safety Fundamentals",
-      "foundationsDesc": "Curso de 13 semanas con aula invertida",
+      "foundationsTitle": "Technical AI Safety Course",
+      "foundationsDesc": "Bases técnicas para contribuir a seguridad en IA",
       "replicate": "Replicar",
-      "replicateTitle": "Taller de replicación",
-      "replicateDesc": "Práctica técnica semanal",
-      "publish": "Publicar",
-      "publishTitle": "Beca de investigación",
-      "publishDesc": "Programa de 6 meses con mentoría y estipendio"
+      "replicateTitle": "Technical AI Safety Project",
+      "replicateDesc": "Sprint práctico de proyectos hacia una contribución concreta en seguridad en IA",
+      "publish": "Gobernar",
+      "publishTitle": "Frontier AI Governance",
+      "publishDesc": "Bases de gobernanza para riesgos de IA de frontera"
     },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
@@ -89,30 +89,30 @@
         },
         {
           "number": "02",
-          "title": "Aprendé los fundamentos",
-          "description": "Cursá AI Safety Fundamentals — 13 semanas de clase invertida cubriendo conceptos clave de alineamiento.",
-          "cta": "Ver Curso",
-          "link": "/activities/fundamentals"
+          "title": "Aprendé seguridad técnica de IA",
+          "description": "Inscribite o expresá interés en Technical AI Safety Course — un curso de BlueDot Impact facilitado presencialmente por BAISH.",
+          "cta": "Inscribite / expresá interés",
+          "link": "/activities#technical-ai-safety-course"
         },
         {
           "number": "03",
           "title": "Desarrollá habilidades técnicas",
-          "description": "Unite al AIS Research Workshop para replicar papers y desarrollar habilidades de investigación hands-on.",
-          "cta": "Unirse al Workshop",
-          "link": "/activities/workshop"
+          "description": "Inscribite o expresá interés en Technical AI Safety Project para desarrollar una contribución concreta de investigación o ingeniería en seguridad en IA.",
+          "cta": "Inscribite / expresá interés",
+          "link": "/activities#technical-ai-safety-project"
         },
         {
           "number": "04",
-          "title": "Contribuí a la investigación",
-          "description": "Aplicá a AISAR para una fellowship de 6 meses con mentoría, estipendio y acceso a cómputo.",
-          "cta": "Conocé AISAR",
-          "link": "https://aisar.ar"
+          "title": "Estudiá gobernanza de IA de frontera",
+          "description": "Inscribite o expresá interés en Frontier AI Governance para explorar coordinación, gobernanza de compute, accountability y evaluación de riesgos en sistemas de IA de frontera.",
+          "cta": "Inscribite / expresá interés",
+          "link": "/activities#frontier-ai-governance"
         }
       ]
     },
     "events": {
       "eyebrow": "Proximos Eventos",
-      "title": "Sumate a nuestros talleres y encuentros comunitarios",
+      "title": "Sumate a nuestros cursos y meetups",
       "description": "Mantenete al día con discusiones sobre seguridad en IA, sprints de investigación y espacios colaborativos.",
       "calendarPlaceholder": "El calendario se carga al acercarse a la vista para mantener la carga inicial rápida.",
       "subscribe": "Suscribite al calendario"
@@ -120,42 +120,49 @@
     "activities": {
       "eyebrow": "Programas",
       "title": "Nuestros Programas",
-      "description": "Explora los programas recurrentes diseñados para crecer la comunidad de seguridad en IA.",
+      "description": "Explorá los cursos de BAISH actualmente abiertos para inscripciones o expresiones de interés.",
       "items": {
-        "fundamentals": {
+        "technical-ai-safety-course": {
           "eyebrow": "Curso",
-          "title": "AI Safety Fundamentals",
-          "description": "Curso de aula invertida con discusiones semanales sobre alineamiento de IA y mini-proyecto final.",
-          "schedule": "Viernes · 14:30",
-          "duration": "13 semanas"
+          "title": "Technical AI Safety Course",
+          "description": "Curso técnico de seguridad en IA de BlueDot Impact, facilitado presencialmente por BAISH. Construí las bases para entender técnicas actuales de seguridad y dónde podés contribuir.",
+          "duration": "30 horas"
         },
-        "workshop": {
-          "eyebrow": "Taller",
-          "title": "AIS Research Workshop",
-          "description": "Taller técnico para replicar investigaciones recientes de AI Safety mediante programación.",
-          "schedule": "Martes · 14:30",
-          "duration": "2.5 hrs"
+        "technical-ai-safety-project": {
+          "eyebrow": "Curso de proyectos",
+          "title": "Technical AI Safety Project",
+          "description": "Sprint de proyectos para hacer una primera contribución concreta a investigación o ingeniería de seguridad en IA, facilitado presencialmente por BAISH.",
+          "duration": "5 semanas · 30 horas"
         },
-        "reading": {
-          "eyebrow": "Grupo de Lectura",
-          "title": "Club del Paper",
-          "description": "Presentaciones completas de papers por miembros de la comunidad con grabaciones en YouTube.",
-          "schedule": "Jueves alternos · 15h",
-          "duration": "2 hrs"
+        "frontier-ai-governance": {
+          "eyebrow": "Curso de gobernanza",
+          "title": "Frontier AI Governance",
+          "description": "Explorá desafíos de gobernanza de sistemas de IA de frontera: coordinación, gobernanza de compute, accountability y evaluación de riesgos.",
+          "duration": "Fechas a definir"
         }
       },
       "joinNow": "Inscribite",
       "joinTelegram": "Sumate al Telegram",
-      "learnMore": "Ver más"
+      "learnMore": "Ver más",
+      "applyNow": "Inscribite / expresá interés"
     },
     "successStories": {
       "eyebrow": "Impacto",
       "title": "A Dónde Llega Nuestra Comunidad",
       "description": "Ex-alumnos de BAISH han accedido a posiciones de investigación, fellowships y publicaciones.",
       "stats": [
-        { "number": "3+", "label": "Papers publicados" },
-        { "number": "10+", "label": "Fellowships de investigación" },
-        { "number": "200+", "label": "Miembros de la comunidad" }
+        {
+          "number": "3+",
+          "label": "Papers publicados"
+        },
+        {
+          "number": "10+",
+          "label": "Fellowships de investigación"
+        },
+        {
+          "number": "200+",
+          "label": "Miembros de la comunidad"
+        }
       ],
       "stories": [
         {
@@ -222,18 +229,18 @@
     },
     "courseSpotlight": {
       "eyebrow": "BlueDot Impact × BAISH",
-      "badge": "Aplicá antes del 22/4",
-      "title": "Curso Técnico de AI Safety",
-      "subtitle": "Abril–Junio 2026",
-      "description": "Entendé las técnicas actuales de seguridad, mapeá las brechas e identificá dónde podés contribuir — todo en 30 horas. Presencial. Gratuito.",
+      "badge": "EOI abierta",
+      "title": "Technical AI Safety Course",
+      "subtitle": "Oportunidad actual de BAISH",
+      "description": "Curso técnico de seguridad en IA de BlueDot Impact, facilitado presencialmente por BAISH. Construí las bases para entender técnicas actuales de seguridad y dónde podés contribuir.",
       "details": {
-        "duration": "6 sesiones semanales",
-        "format": "Presencial · En español",
+        "duration": "30 horas",
+        "format": "Presencial · facilitado por BAISH",
         "cost": "Gratuito"
       },
-      "cta": "Aplicar Ahora",
-      "applyUrl": "https://safetytalent.org/org/baish/apply/ps7f9f08q1b8bmb90zfavg9hv584jzzn",
-      "deadline": "Fecha límite: 22 de abril, 23:59"
+      "cta": "Inscribite / expresá interés",
+      "applyUrl": "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+      "deadline": "Expresión de interés abierta"
     },
     "astn": {
       "eyebrow": "Un Proyecto de BAISH",
@@ -363,21 +370,20 @@
       "current": "Programas"
     },
     "title": "Nuestros Programas",
-    "description": "Sumate a nuestra comunidad y participá en investigación y aprendizaje de seguridad en IA",
+    "description": "Explorá los cursos de BAISH actualmente abiertos para inscripciones o expresiones de interés.",
     "subscribeCalendar": "Suscribite al calendario de eventos",
     "agiSafety": {
-      "title": "AI Safety Fundamentals",
-      "status": "Actualmente activo",
-      "description": "La actividad consiste en discutir y dar seguimiento de forma presencial a los contenidos del curso de BlueDot: AI Alignment, los cuales deben ser completados de forma asíncrona.",
-      "overview": "El curso (extra-oficial) tiene la modalidad de aula invertida. Cada semana, los participantes tendrán que venir con el contenido leído/visto (2-3hs), y los Viernes de 14:30 a 17:00 nos encontraremos presencialmente.",
+      "title": "Technical AI Safety Course",
+      "status": "EOI abierta",
+      "description": "Curso técnico de seguridad en IA de BlueDot Impact, facilitado presencialmente por BAISH para estudiantes en Buenos Aires.",
+      "overview": "Curso de 30 horas para entender el trabajo técnico actual en seguridad en IA, mapear problemas abiertos y encontrar dónde podés contribuir.",
       "whatToExpect": "Modalidad del Curso",
       "expectations": [
-        "13 encuentros en total: 9 conceptuales + 4 de proyecto",
-        "Encuentros conceptuales: Discusiones sobre contenidos con dinámicas pre-armadas",
-        "Encuentros de proyecto: Mini-proyecto personal con mentoría",
-        "2-3 horas semanales de contenido asíncrono",
-        "2.5 horas semanales presenciales (Viernes 14:30-17:00)",
-        "Certificado de compleción (requiere 7/9 encuentros + proyecto final)"
+        "30 horas de contenido técnico de seguridad en IA de BlueDot",
+        "Sesiones presenciales facilitadas por BAISH",
+        "Preparación asincrónica entre sesiones",
+        "Discusión de técnicas actuales de seguridad y problemas abiertos",
+        "Participación gratuita"
       ],
       "whoWeSeek": "¿A quienes buscamos?",
       "seekCriteria": [
@@ -385,20 +391,20 @@
         "Querés explorar qué oportunidades hay en el campo y tus siguientes pasos a seguir",
         "Estás dispuesto a participar en discusiones abiertas",
         "Tenés buen nivel de inglés",
-        "Podes dedicarte a hacer el curso presencialmente (2.5 horas semanales aproximadamente)",
-        "Podes dedicarte a realizar las actividades asincrónicas y revisar el material (3 horas semanales aproximadamente)"
+        "Podés comprometerte con la carga del curso",
+        "Podés dedicarte a realizar actividades asincrónicas y revisar material"
       ],
       "programDetails": "Detalles del Programa",
-      "duration": "13 semanas",
-      "fellowshipPeriod": "Viernes 14:30-17:00",
-      "viewCurriculum": "Ver curriculo",
-      "applyNow": "Aplicá ahora"
+      "duration": "30 horas",
+      "fellowshipPeriod": "Cronograma anunciado por BAISH",
+      "viewCurriculum": "Ver más en BlueDot",
+      "applyNow": "Inscribite / expresá interés"
     },
     "aisWorkshop": {
-      "title": "AIS Research Workshop",
-      "schedule": "Todos los martes @ 14:30",
-      "description": "La actividad consiste en discutir y replicar (programando) investigaciones recientes sobre AI Safety de forma presencial para adquirir las habilidades técnicas necesarias para poder investigar de forma independiente.",
-      "overview": "Este taller se llevará a cabo los martes de 14:30 a 17:00 y está diseñado para estudiantes que quieren desarrollar habilidades técnicas prácticas en seguridad de IA.",
+      "title": "Technical AI Safety Project",
+      "schedule": "EOI abierta",
+      "description": "Curso técnico basado en proyectos para hacer contribuciones concretas a investigación o ingeniería de seguridad en IA.",
+      "overview": "Curso de proyectos de 5 semanas y 30 horas para convertir contexto técnico en una contribución concreta de investigación o ingeniería en seguridad en IA.",
       "whoWeSeek": "¿A quienes buscamos?",
       "seekCriteria": [
         "Podes dedicarte al menos 5 horas semanales (2 hrs presenciales + 3 hrs asincrónicas)",
@@ -407,22 +413,21 @@
         "Te interesa adquirir habilidades técnicas sobre ML y Safety",
         "Querés adentrarte en el campo y dar los primeros pasos como investigador"
       ],
-      "formatTitle": "Formato del Taller",
+      "formatTitle": "Formato del proyecto",
       "format": [
-        "Sesiones presenciales de 2.5 horas los martes",
-        "Discusión de papers recientes de AI Safety",
-        "Implementación práctica programando los métodos discutidos",
-        "Trabajo asincrónico para familiarizarse con el material (3 hrs/semana)",
-        "Mentoría para desarrollar habilidades de investigación independiente"
+        "Sesiones presenciales de proyecto con facilitadores de BAISH",
+        "Trabajo técnico hands-on orientado a una contribución de investigación o ingeniería en seguridad en IA",
+        "Requiere haber hecho el Technical AI Safety Course o tener contexto equivalente"
       ],
-      "nextSession": "Proxima Sesion",
-      "date": "Consultar calendario",
-      "time": "14:30 - 17:00",
-      "location": "Consultá el Telegram para la ubicación",
-      "topic": "A definir semanalmente",
+      "nextSession": "Detalles del programa",
+      "date": "Inscripciones / EOI",
+      "time": "5 semanas · 30 horas",
+      "location": "Presencial en Buenos Aires",
+      "topic": "Proyecto técnico de seguridad en IA",
       "joinTelegram": "Sumate a Telegram para actualizaciones",
       "joinWhatsapp": "Sumate al WhatsApp",
-      "applyNow": "Aplicá ahora"
+      "applyNow": "Inscribite / expresá interés",
+      "learnMore": "Ver más en BlueDot"
     },
     "paperReading": {
       "title": "Club del Paper",
@@ -590,19 +595,19 @@
         {
           "number": "01",
           "title": "Aprender",
-          "program": "AI Safety Fundamentals",
-          "description": "Construí bases sólidas a través de nuestro curso de 13 semanas sobre alineamiento, interpretabilidad y gobernanza de IA.",
-          "duration": "13 semanas",
-          "link": "/activities/fundamentals",
+          "program": "Technical AI Safety Course",
+          "description": "Construí bases sólidas con Technical AI Safety Course de BlueDot Impact, facilitado presencialmente por BAISH.",
+          "duration": "30 horas",
+          "link": "/activities#technical-ai-safety-course",
           "icon": "book"
         },
         {
           "number": "02",
           "title": "Practicar",
-          "program": "AIS Research Workshop",
-          "description": "Replicá papers recientes de seguridad en IA programando. Desarrollá las habilidades técnicas para investigar de forma independiente.",
-          "duration": "Continuo",
-          "link": "/activities/workshop",
+          "program": "Technical AI Safety Project",
+          "description": "Curso técnico basado en proyectos para hacer contribuciones concretas a investigación o ingeniería de seguridad en IA.",
+          "duration": "5 semanas · 30 horas",
+          "link": "/activities#technical-ai-safety-project",
           "icon": "code"
         },
         {
@@ -1047,7 +1052,10 @@
         "name": "Product Manager",
         "role": "Investigative Product Strategist & Market-Savvy PM",
         "description": "Crea PRDs, define estrategia de producto, prioriza features y mantiene alineados a los stakeholders. Paso obligatorio del método.",
-        "artifacts": ["PRD (Product Requirements Document)", "Brownfield PRD"]
+        "artifacts": [
+          "PRD (Product Requirements Document)",
+          "Brownfield PRD"
+        ]
       },
       "architect": {
         "name": "Architect",
@@ -1064,13 +1072,20 @@
         "name": "UX Expert",
         "role": "User Experience Designer & UI Specialist",
         "description": "Diseño UI/UX, wireframes, prototipos, front-end specifications y prompts listos para v0 o Lovable.",
-        "artifacts": ["Front-end spec", "UI design prompts"]
+        "artifacts": [
+          "Front-end spec",
+          "UI design prompts"
+        ]
       },
       "productOwner": {
         "name": "Product Owner",
         "role": "Technical Product Owner & Process Steward",
         "description": "Gestiona el backlog, refina historias, define acceptance criteria y valida la coherencia entre artefactos. Crítico: el sharding evita la degradación del modelo.",
-        "artifacts": ["Sharded documents", "Epic files", "Story validations"]
+        "artifacts": [
+          "Sharded documents",
+          "Epic files",
+          "Story validations"
+        ]
       },
       "scrumMaster": {
         "name": "Scrum Master",

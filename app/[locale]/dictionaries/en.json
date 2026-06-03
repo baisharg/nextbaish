@@ -57,14 +57,14 @@
       "connectTitle": "Join our community",
       "connectDesc": "120+ members on WhatsApp & Telegram",
       "foundations": "Foundations",
-      "foundationsTitle": "AI Safety Fundamentals",
-      "foundationsDesc": "13-week inverted classroom course",
+      "foundationsTitle": "Technical AI Safety Course",
+      "foundationsDesc": "Technical foundations for contributing to AI safety",
       "replicate": "Replicate",
-      "replicateTitle": "Paper replication workshop",
-      "replicateDesc": "Weekly hands-on technical practice",
-      "publish": "Publish",
-      "publishTitle": "Research fellowship",
-      "publishDesc": "6-month program with mentorship & stipend"
+      "replicateTitle": "Technical AI Safety Project",
+      "replicateDesc": "Hands-on project sprint toward a concrete AI safety contribution",
+      "publish": "Govern",
+      "publishTitle": "Frontier AI Governance",
+      "publishDesc": "Governance foundations for frontier AI risks"
     },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
@@ -89,30 +89,30 @@
         },
         {
           "number": "02",
-          "title": "Learn the fundamentals",
-          "description": "Take our AI Safety Fundamentals course — a 13-week inverted classroom covering core alignment concepts.",
-          "cta": "View Course",
-          "link": "/activities/fundamentals"
+          "title": "Learn technical AI safety",
+          "description": "Apply or express interest in Technical AI Safety Course — a BlueDot Impact course facilitated in person by BAISH.",
+          "cta": "Apply / express interest",
+          "link": "/activities#technical-ai-safety-course"
         },
         {
           "number": "03",
           "title": "Build technical skills",
-          "description": "Join the AIS Research Workshop to replicate papers and develop research skills hands-on.",
-          "cta": "Join Workshop",
-          "link": "/activities/workshop"
+          "description": "Apply or express interest in Technical AI Safety Project to develop a concrete AI safety research or engineering contribution.",
+          "cta": "Apply / express interest",
+          "link": "/activities#technical-ai-safety-project"
         },
         {
           "number": "04",
-          "title": "Contribute to research",
-          "description": "Apply to AISAR for a 6-month research fellowship with mentorship, stipend, and compute access.",
-          "cta": "Learn About AISAR",
-          "link": "https://aisar.ar"
+          "title": "Study frontier AI governance",
+          "description": "Apply or express interest in Frontier AI Governance to explore coordination, compute governance, accountability, and risk assessment for frontier AI systems.",
+          "cta": "Apply / express interest",
+          "link": "/activities#frontier-ai-governance"
         }
       ]
     },
     "events": {
       "eyebrow": "Upcoming Events",
-      "title": "Join our community workshops and meetups",
+      "title": "Join our community courses and meetups",
       "description": "Stay current on AI safety discussions, research sprints, and collaboration spaces.",
       "calendarPlaceholder": "Calendar loads once it's almost in view to keep the initial load quick.",
       "subscribe": "Subscribe to Calendar"
@@ -120,42 +120,49 @@
     "activities": {
       "eyebrow": "Programs",
       "title": "Our Programs",
-      "description": "Explore recurring programs designed to grow the AI safety community.",
+      "description": "Explore BAISH courses currently open for applications or expressions of interest.",
       "items": {
-        "fundamentals": {
+        "technical-ai-safety-course": {
           "eyebrow": "Course",
-          "title": "AI Safety Fundamentals",
-          "description": "Inverted classroom course with weekly discussions on AI alignment and final mini-project.",
-          "schedule": "Fridays · 2:30pm",
-          "duration": "13 weeks"
+          "title": "Technical AI Safety Course",
+          "description": "BlueDot Impact’s technical AI safety course, hosted in person by BAISH. Build the foundations to understand current safety techniques and where you can contribute.",
+          "duration": "30 hours"
         },
-        "workshop": {
-          "eyebrow": "Workshop",
-          "title": "AIS Research Workshop",
-          "description": "Technical workshop to replicate recent AI Safety research through programming.",
-          "schedule": "Tuesdays · 2:30pm",
-          "duration": "2.5 hrs"
+        "technical-ai-safety-project": {
+          "eyebrow": "Project course",
+          "title": "Technical AI Safety Project",
+          "description": "A project sprint for making a first concrete contribution to AI safety research or engineering, hosted in person by BAISH.",
+          "duration": "5 weeks · 30 hours"
         },
-        "reading": {
-          "eyebrow": "Reading Group",
-          "title": "Paper Presentations Club",
-          "description": "Full paper presentations by community members with YouTube recordings.",
-          "schedule": "Alternate Thursdays · 3pm",
-          "duration": "2 hrs"
+        "frontier-ai-governance": {
+          "eyebrow": "Governance course",
+          "title": "Frontier AI Governance",
+          "description": "Explore governance challenges from frontier AI systems: coordination, compute governance, accountability, and risk assessment.",
+          "duration": "Dates TBD"
         }
       },
       "joinNow": "Join now",
       "joinTelegram": "Join Telegram",
-      "learnMore": "Learn more"
+      "learnMore": "Learn more",
+      "applyNow": "Apply / express interest"
     },
     "successStories": {
       "eyebrow": "Impact",
       "title": "Where Our Community Goes",
       "description": "BAISH alumni have gone on to research positions, fellowships, and published work.",
       "stats": [
-        { "number": "3+", "label": "Published papers" },
-        { "number": "10+", "label": "Research fellowships" },
-        { "number": "200+", "label": "Community members" }
+        {
+          "number": "3+",
+          "label": "Published papers"
+        },
+        {
+          "number": "10+",
+          "label": "Research fellowships"
+        },
+        {
+          "number": "200+",
+          "label": "Community members"
+        }
       ],
       "stories": [
         {
@@ -222,18 +229,18 @@
     },
     "courseSpotlight": {
       "eyebrow": "BlueDot Impact × BAISH",
-      "badge": "Apply by Apr 22",
+      "badge": "Expression of interest open",
       "title": "Technical AI Safety Course",
-      "subtitle": "April–June 2026",
-      "description": "Understand current safety techniques, map the gaps, and identify where you can contribute — all in 30 hours. Hosted in-person. Free.",
+      "subtitle": "Current BAISH course opportunity",
+      "description": "BlueDot Impact’s technical AI safety course, hosted in person by BAISH. Build the foundations to understand current safety techniques and where you can contribute.",
       "details": {
-        "duration": "6 weekly sessions",
-        "format": "In-person · In Spanish",
+        "duration": "30 hours",
+        "format": "In-person · BAISH-hosted",
         "cost": "Free"
       },
-      "cta": "Apply Now",
-      "applyUrl": "https://safetytalent.org/org/baish/apply/ps7f9f08q1b8bmb90zfavg9hv584jzzn",
-      "deadline": "Deadline: April 22nd, 23:59"
+      "cta": "Apply / express interest",
+      "applyUrl": "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+      "deadline": "Expression of interest currently open"
     },
     "astn": {
       "eyebrow": "A BAISH Project",
@@ -363,21 +370,20 @@
       "current": "Programs"
     },
     "title": "Our Programs",
-    "description": "Join our community and participate in AI safety research and learning",
+    "description": "Explore BAISH courses currently open for applications or expressions of interest.",
     "subscribeCalendar": "Subscribe to Events Calendar",
     "agiSafety": {
-      "title": "AI Safety Fundamentals",
-      "status": "Currently Active",
-      "description": "The activity consists of discussing and following up in person on the contents of BlueDot's AI Alignment course, which must be completed asynchronously.",
-      "overview": "The (unofficial) course uses a flipped classroom format. Each week, participants must come with the content read/watched (2-3 hours), and on Fridays from 2:30 PM to 5:00 PM we meet in person.",
+      "title": "Technical AI Safety Course",
+      "status": "Expression of interest open",
+      "description": "BlueDot Impact’s technical AI safety course, hosted in person by BAISH for students in Buenos Aires.",
+      "overview": "A 30-hour course for understanding current technical AI safety work, mapping open problems, and finding where you can contribute.",
       "whatToExpect": "Course Format",
       "expectations": [
-        "13 total sessions: 9 conceptual + 4 project-based",
-        "Conceptual sessions: Discussions on content with pre-designed dynamics",
-        "Project sessions: Personal mini-project with mentorship",
-        "2-3 hours weekly of asynchronous content",
-        "2.5 hours weekly in-person (Fridays 2:30-5:00 PM)",
-        "Completion certificate (requires 7/9 sessions + final project)"
+        "30 hours of BlueDot technical AI safety content",
+        "In-person sessions hosted by BAISH",
+        "Asynchronous preparation between sessions",
+        "Discussion of current technical safety techniques and open problems",
+        "Free participation"
       ],
       "whoWeSeek": "Who We're Looking For",
       "seekCriteria": [
@@ -385,20 +391,20 @@
         "You want to explore what opportunities exist in the field and your next steps",
         "You're willing to participate in open discussions",
         "You have a good level of English",
-        "You can dedicate yourself to the in-person course (approximately 2.5 hours per week)",
-        "You can dedicate yourself to asynchronous activities and review material (approximately 3 hours per week)"
+        "You can commit to the course workload",
+        "You can dedicate yourself to asynchronous activities and review material"
       ],
       "programDetails": "Program Details",
-      "duration": "13 weeks",
-      "fellowshipPeriod": "Fridays 2:30-5:00 PM",
-      "viewCurriculum": "View Curriculum",
-      "applyNow": "Apply Now"
+      "duration": "30 hours",
+      "fellowshipPeriod": "Schedule announced through BAISH",
+      "viewCurriculum": "Learn more at BlueDot",
+      "applyNow": "Apply / express interest"
     },
     "aisWorkshop": {
-      "title": "AIS Research Workshop",
-      "schedule": "Every Tuesday @ 2:30 PM",
-      "description": "The activity consists of discussing and replicating (through programming) recent AI Safety research in person to acquire the technical skills necessary to conduct independent research.",
-      "overview": "This workshop takes place on Tuesdays from 2:30 PM to 5:00 PM and is designed for students who want to develop practical technical skills in AI safety.",
+      "title": "Technical AI Safety Project",
+      "schedule": "Expression of interest open",
+      "description": "Project-based technical course for making concrete contributions to AI safety research or engineering.",
+      "overview": "A 5-week, 30-hour project course for turning technical context into a concrete AI safety research or engineering contribution.",
       "whoWeSeek": "Who We're Looking For",
       "seekCriteria": [
         "You can dedicate at least 5 hours per week (2 hrs in-person + 3 hrs asynchronous)",
@@ -407,22 +413,21 @@
         "You're interested in acquiring technical skills in ML and Safety",
         "You want to enter the field and take your first steps as a researcher"
       ],
-      "formatTitle": "Workshop Format",
+      "formatTitle": "Project format",
       "format": [
-        "2.5-hour in-person sessions on Tuesdays",
-        "Discussion of recent AI Safety papers",
-        "Practical implementation by programming the discussed methods",
-        "Asynchronous work to familiarize yourself with materials (3 hrs/week)",
-        "Mentorship to develop independent research skills"
+        "In-person project sessions with BAISH facilitators",
+        "Hands-on technical work toward an AI safety research or engineering contribution",
+        "Requires the Technical AI Safety Course or equivalent context"
       ],
-      "nextSession": "Next Session",
-      "date": "Check calendar",
-      "time": "2:30 PM - 5:00 PM",
-      "location": "See Telegram for location",
-      "topic": "To be defined weekly",
+      "nextSession": "Program Details",
+      "date": "Applications / EOI",
+      "time": "5 weeks · 30 hours",
+      "location": "In person in Buenos Aires",
+      "topic": "Technical AI safety project work",
       "joinTelegram": "Join Telegram for Updates",
       "joinWhatsapp": "Join WhatsApp",
-      "applyNow": "Apply Now"
+      "applyNow": "Apply / express interest",
+      "learnMore": "Learn more at BlueDot"
     },
     "paperReading": {
       "title": "Paper Presentations Club",
@@ -590,19 +595,19 @@
         {
           "number": "01",
           "title": "Learn",
-          "program": "AI Safety Fundamentals",
-          "description": "Build foundations through our 13-week course covering alignment, interpretability, and AI governance.",
-          "duration": "13 weeks",
-          "link": "/activities/fundamentals",
+          "program": "Technical AI Safety Course",
+          "description": "Build foundations through BlueDot Impact’s Technical AI Safety Course, hosted in person by BAISH.",
+          "duration": "30 hours",
+          "link": "/activities#technical-ai-safety-course",
           "icon": "book"
         },
         {
           "number": "02",
           "title": "Practice",
-          "program": "AIS Research Workshop",
-          "description": "Replicate recent AI safety papers through hands-on programming. Develop the technical skills to conduct independent research.",
-          "duration": "Ongoing",
-          "link": "/activities/workshop",
+          "program": "Technical AI Safety Project",
+          "description": "Project-based technical course for making concrete contributions to AI safety research or engineering.",
+          "duration": "5 weeks · 30 hours",
+          "link": "/activities#technical-ai-safety-project",
           "icon": "code"
         },
         {
@@ -1047,7 +1052,10 @@
         "name": "Product Manager",
         "role": "Investigative Product Strategist & Market-Savvy PM",
         "description": "Creates PRDs, defines product strategy, prioritizes features, and keeps stakeholders aligned. Mandatory step in the method.",
-        "artifacts": ["PRD (Product Requirements Document)", "Brownfield PRD"]
+        "artifacts": [
+          "PRD (Product Requirements Document)",
+          "Brownfield PRD"
+        ]
       },
       "architect": {
         "name": "Architect",
@@ -1064,13 +1072,20 @@
         "name": "UX Expert",
         "role": "User Experience Designer & UI Specialist",
         "description": "UI/UX design, wireframes, prototypes, front-end specifications, and ready-to-use prompts for v0 or Lovable.",
-        "artifacts": ["Front-end spec", "UI design prompts"]
+        "artifacts": [
+          "Front-end spec",
+          "UI design prompts"
+        ]
       },
       "productOwner": {
         "name": "Product Owner",
         "role": "Technical Product Owner & Process Steward",
         "description": "Manages the backlog, refines stories, defines acceptance criteria, and keeps artifacts coherent. Critical: sharding prevents model degradation.",
-        "artifacts": ["Sharded documents", "Epic files", "Story validations"]
+        "artifacts": [
+          "Sharded documents",
+          "Epic files",
+          "Story validations"
+        ]
       },
       "scrumMaster": {
         "name": "Scrum Master",
@@ -1385,7 +1400,11 @@
         "droidCli": {
           "title": "Droid CLI",
           "highlight": "Free: GPT-5-Codex via Factory AI.",
-          "bullets": ["GPT-5-Codex model", "100% free", "Factory AI platform"],
+          "bullets": [
+            "GPT-5-Codex model",
+            "100% free",
+            "Factory AI platform"
+          ],
           "note": "Requires a workaround (details below)."
         }
       },

@@ -28,7 +28,6 @@ export async function generateMetadata({
 }
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Calendar03Icon,
   GithubIcon,
   InstagramIcon,
   Linkedin01Icon,
@@ -595,15 +594,6 @@ export default async function AboutPage({
                             className="text-slate-700 transition hover:opacity-70"
                           >
                             <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-                          </a>
-                          <a
-                            href="https://calendly.com/gbergman-fi/30min"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Calendly"
-                            className="text-slate-700 transition hover:opacity-70"
-                          >
-                            <HugeiconsIcon icon={Calendar03Icon} size={20} />
                           </a>
                           <a
                             href="https://scholar.google.com/citations?hl=es&authuser=1&user=sNPb8VgAAAAJ"

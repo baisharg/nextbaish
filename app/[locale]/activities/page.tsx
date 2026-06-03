@@ -19,6 +19,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
+import {
+  COURSE_OPPORTUNITY_STATUS_LABELS,
+  getCourseOpportunities,
+} from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 
 export async function generateMetadata({
@@ -75,6 +79,8 @@ export default async function Activities({
     ? pastPrograms.cards
     : [];
   const pastProgramCount = pastProgramCards.length;
+  const courseOpportunities = await getCourseOpportunities();
+  const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
 
   // Gallery images from past BAISH events
   const galleryImages = [
@@ -211,102 +217,57 @@ export default async function Activities({
                 </p>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {[
-                  {
-                    slug: "activity-fundamentals",
-                    route: "fundamentals",
-                    eyebrow: dict.home.activities.items.fundamentals.eyebrow,
-                    title: dict.home.activities.items.fundamentals.title,
-                    description:
-                      dict.home.activities.items.fundamentals.description,
-                    metaItems: [
-                      {
-                        icon: "calendar",
-                        text: dict.home.activities.items.fundamentals.schedule,
-                      },
-                      {
-                        icon: "clock",
-                        text: dict.home.activities.items.fundamentals.duration,
-                      },
-                    ],
-                    isExternal: false,
-                  },
-                  {
-                    slug: "activity-workshop",
-                    route: "workshop",
-                    eyebrow: dict.home.activities.items.workshop.eyebrow,
-                    title: dict.home.activities.items.workshop.title,
-                    description:
-                      dict.home.activities.items.workshop.description,
-                    metaItems: [
-                      {
-                        icon: "calendar",
-                        text: dict.home.activities.items.workshop.schedule,
-                      },
-                      {
-                        icon: "clock",
-                        text: dict.home.activities.items.workshop.duration,
-                      },
-                    ],
-                    isExternal: false,
-                  },
-                  {
-                    slug: "activity-reading",
-                    route: "reading",
-                    eyebrow: dict.home.activities.items.reading.eyebrow,
-                    title: dict.home.activities.items.reading.title,
-                    description: dict.home.activities.items.reading.description,
-                    metaItems: [
-                      {
-                        icon: "calendar",
-                        text: dict.home.activities.items.reading.schedule,
-                      },
-                      {
-                        icon: "clock",
-                        text: dict.home.activities.items.reading.duration,
-                      },
-                    ],
-                    isExternal: false,
-                  },
-                ].map((activity) => (
-                  <article
-                    key={activity.title}
-                    id={activity.route}
-                    className="card-glass scroll-mt-24"
-                  >
-                    <div className="card-eyebrow">{activity.eyebrow}</div>
-                    <AnimatedTitle
-                      text={activity.title}
-                      slug={activity.slug}
-                      className="card-title"
-                      as="h3"
-                    />
-                    <p className="card-body">{activity.description}</p>
+                {courseOpportunities.map((opportunity) => {
+                  const activity = dict.home.activities.items[opportunity.id];
 
-                    <div className="card-meta">
-                      {activity.metaItems.map((item, idx) => (
-                        <span key={idx} className="pill">
-                          {item.icon === "calendar" ? (
-                            <HugeiconsIcon icon={Calendar03Icon} size={16} />
-                          ) : (
-                            <HugeiconsIcon icon={Clock01Icon} size={16} />
-                          )}
-                          {item.text}
+                  return (
+                    <article
+                      key={opportunity.id}
+                      id={opportunity.id}
+                      className="card-glass scroll-mt-24"
+                    >
+                      <div className="card-eyebrow">{activity.eyebrow}</div>
+                      <AnimatedTitle
+                        text={activity.title}
+                        slug={`activity-${opportunity.id}`}
+                        className="card-title"
+                        as="h3"
+                      />
+                      <p className="card-body">{activity.description}</p>
+
+                      <div className="card-meta">
+                        <span className="pill">
+                          <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                          {courseStatusLabels[opportunity.status]}
                         </span>
-                      ))}
-                    </div>
+                        <span className="pill">
+                          <HugeiconsIcon icon={Clock01Icon} size={16} />
+                          {activity.duration}
+                        </span>
+                      </div>
 
-                    <div className="card-footer">
-                      <TransitionLink
-                        className="button-primary w-full"
-                        href={`/${currentLocale}/activities/${activity.route}`}
-                      >
-                        {dict.home.activities.learnMore}
-                        <span>→</span>
-                      </TransitionLink>
-                    </div>
-                  </article>
-                ))}
+                      <div className="card-footer">
+                        <a
+                          className="button-primary w-full"
+                          href={opportunity.applyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {dict.home.activities.applyNow}
+                        </a>
+                        <a
+                          className="link-arrow"
+                          href={opportunity.learnMoreUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {dict.home.activities.learnMore}
+                          <span>→</span>
+                        </a>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           </FadeInSection>
