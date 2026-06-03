@@ -11,6 +11,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { getDictionary } from "../../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import {
+  COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
 } from "@/app/data/course-opportunities";
@@ -55,6 +56,7 @@ export default async function WorkshopPage({
   }
 
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
+  const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -202,7 +204,7 @@ export default async function WorkshopPage({
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {aisWorkshop.applyNow}
+                          {courseCtaLabels[technicalAiSafetyProject.status]}
                           <span aria-hidden="true">→</span>
                         </a>
                         <a

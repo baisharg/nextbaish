@@ -4,11 +4,11 @@ import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
-import { HeroTimeline } from "@/app/components/hero-timeline";
 import { AstnPromo } from "@/app/components/astn-promo";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
 import {
+  COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
 } from "@/app/data/course-opportunities";
@@ -38,26 +38,10 @@ import {
   Clock01Icon,
   TelegramIcon,
   WhatsappIcon,
-  UserGroupIcon,
-  Book02Icon,
-  Wrench01Icon,
-  MicroscopeIcon,
-  TickDouble02Icon,
 } from "@hugeicons/core-free-icons";
 
 
 // Lazy load below-the-fold components for better initial load
-const CalendarSection = dynamic(() => import("@/app/components/calendar-section"), {
-  loading: () => (
-    <div className="calendar-skeleton flex h-[450px] w-full items-center justify-center rounded-xl bg-slate-50/50 border border-slate-200/50">
-      <div className="text-center space-y-3">
-        <div className="w-8 h-8 mx-auto rounded-full bg-slate-200 animate-pulse" />
-        <p className="text-sm text-slate-400">Loading events...</p>
-      </div>
-    </div>
-  ),
-});
-
 const SupascribeSignup = dynamic(() => import("@/app/components/supascribe-signup"), {
   loading: () => <div className="card-glass h-64 animate-pulse" />,
 });
@@ -73,14 +57,7 @@ export default async function Home({
   const t = dict.home;
   const courseOpportunities = await getCourseOpportunities();
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
-  const courseSpotlightOpportunity =
-    courseOpportunities.find(
-      (opportunity) => opportunity.id === "technical-ai-safety-course",
-    ) ?? courseOpportunities[0];
-
-  if (!courseSpotlightOpportunity) {
-    throw new Error("Course spotlight opportunity is missing");
-  }
+  const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -113,18 +90,20 @@ export default async function Home({
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                   <TransitionLink
-                    href={`/${currentLocale}/resources`}
+                    href={`/${currentLocale}/activities`}
                     className="button-primary inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-semibold"
                   >
                     {t.hero.primaryCta}
                     <span aria-hidden="true">→</span>
                   </TransitionLink>
-                  <TransitionLink
-                    href={`/${currentLocale}/activities`}
+                  <a
+                    href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
                     className="button-secondary inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-semibold"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {t.hero.secondaryCta}
-                  </TransitionLink>
+                  </a>
                 </div>
 
                 {/* Social Proof Stats - Above the fold */}
@@ -143,110 +122,74 @@ export default async function Home({
                   </div>
                 </div>
 
-                {/* Timeline integrated into hero - BAISH-specific journey */}
-                <HeroTimeline
-                  steps={[
-                    {
-                      icon: UserGroupIcon,
-                      shortLabel: t.timeline?.connect || "Connect",
-                      fullTitle: t.timeline?.connectTitle || "Join our community",
-                      description: t.timeline?.connectDesc || "200+ members on WhatsApp & Telegram",
-                      badge: "120+",
-                      link: "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
-                      isExternal: true,
-                    },
-                    {
-                      icon: Book02Icon,
-                      shortLabel: t.timeline?.foundations || "Foundations",
-                      fullTitle: t.timeline?.foundationsTitle || "Technical AI Safety Course",
-                      description:
-                        t.timeline?.foundationsDesc ||
-                        "Technical foundations for contributing to AI safety",
-                      badge: t.activities.items["technical-ai-safety-course"].duration,
-                      link: "/activities#technical-ai-safety-course",
-                    },
-                    {
-                      icon: Wrench01Icon,
-                      shortLabel: t.timeline?.replicate || "Replicate",
-                      fullTitle: t.timeline?.replicateTitle || "Technical AI Safety Project",
-                      description:
-                        t.timeline?.replicateDesc ||
-                        "Hands-on project sprint toward a concrete AI safety contribution",
-                      badge: t.activities.items["technical-ai-safety-project"].duration,
-                      link: "/activities#technical-ai-safety-project",
-                    },
-                    {
-                      icon: MicroscopeIcon,
-                      shortLabel: t.timeline?.publish || "Govern",
-                      fullTitle: t.timeline?.publishTitle || "Frontier AI Governance",
-                      description:
-                        t.timeline?.publishDesc ||
-                        "Governance foundations for frontier AI risks",
-                      badge: t.activities.items["frontier-ai-governance"].duration,
-                      link: "/activities#frontier-ai-governance",
-                    },
-                  ]}
-                  locale={currentLocale}
-                />
               </div>
             </section>
           </FadeInSection>
 
-          <FadeInSection variant="slide-up" delay={50}>
-            <section className="section-open" id="course">
-              <div className="relative rounded-3xl border-2 border-[var(--color-accent-primary)]/20 bg-gradient-to-br from-[var(--color-accent-primary)]/[0.06] via-white to-[var(--color-accent-secondary)]/[0.06] p-8 sm:p-12 overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-tertiary)] to-[var(--color-accent-secondary)]" />
+          {/* Courses Section - primary conversion path */}
+          <FadeInSection variant="slide-up" delay={50} as="section">
+            <section className="section-content" id="activities">
+              <div className="space-y-4 text-center mb-10">
+                <p className="eyebrow">{t.activities.eyebrow || "Programs"}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.activities.title}
+                </h2>
+                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
+                  {t.activities.description}
+                </p>
+              </div>
+              <div className="programs-container">
+                <div className="card-grid">
+                  {courseOpportunities.map((opportunity) => {
+                    const activity = t.activities.items[opportunity.id];
 
-                <div className="relative z-10 max-w-3xl mx-auto text-center">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-primary)]">
-                      {t.courseSpotlight.eyebrow}
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
-                      {courseStatusLabels[courseSpotlightOpportunity.status]}
-                    </span>
-                  </div>
+                    return (
+                      <article
+                        key={opportunity.id}
+                        className="card-glass card-refined"
+                      >
+                        <div className="card-eyebrow">{activity.eyebrow}</div>
+                        <AnimatedTitle
+                          text={activity.title}
+                          slug={`activity-${opportunity.id}`}
+                          className="card-title"
+                          as="h3"
+                        />
+                        <p className="card-body">{activity.description}</p>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-slate-900 mb-1 tracking-tight">
-                    {t.courseSpotlight.title}
-                  </h2>
-                  <p className="text-lg text-[var(--color-accent-primary)] font-medium mb-4">
-                    {t.courseSpotlight.subtitle}
-                  </p>
+                        <div className="card-meta">
+                          <span className="pill">
+                            <HugeiconsIcon icon={Calendar03Icon} size={16} />
+                            {courseStatusLabels[opportunity.status]}
+                          </span>
+                          <span className="pill">
+                            <HugeiconsIcon icon={Clock01Icon} size={16} />
+                            {activity.duration}
+                          </span>
+                        </div>
 
-                  <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 leading-relaxed">
-                    {t.courseSpotlight.description}
-                  </p>
-
-                  <div className="flex flex-wrap justify-center gap-3 mb-10">
-                    <span className="pill">
-                      <HugeiconsIcon icon={Calendar03Icon} size={16} />
-                      {t.courseSpotlight.details.duration}
-                    </span>
-                    <span className="pill">
-                      <HugeiconsIcon icon={Book02Icon} size={16} />
-                      {t.courseSpotlight.details.format}
-                    </span>
-                    <span className="pill">
-                      <HugeiconsIcon icon={TickDouble02Icon} size={16} />
-                      {t.courseSpotlight.details.cost}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col items-center gap-3">
-                    <a
-                      href={courseSpotlightOpportunity.applyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="button-primary inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold"
-                    >
-                      {t.courseSpotlight.cta}
-                      <span aria-hidden="true">→</span>
-                    </a>
-                    <span className="text-sm font-medium text-[var(--color-accent-primary)]">
-                      {t.courseSpotlight.deadline}
-                    </span>
-                  </div>
+                        <div className="card-footer">
+                          <a
+                            className="button-primary"
+                            href={opportunity.applyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {courseCtaLabels[opportunity.status]}
+                          </a>
+                          <a
+                            className="link-arrow"
+                            href={opportunity.learnMoreUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {t.activities.learnMore}
+                            <span>→</span>
+                          </a>
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -310,100 +253,6 @@ export default async function Home({
                     </a>
                   </div>
                 </article>
-              </div>
-            </section>
-          </FadeInSection>
-
-          {/* Events Section */}
-          <FadeInSection variant="slide-up" delay={100} as="section">
-            <section
-              className="section-container"
-              id="events"
-            >
-              <div className="space-y-4 text-center mb-12">
-                <p className="eyebrow">
-                  {t.events.eyebrow}
-                </p>
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.events.title}
-                </h2>
-                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
-                  {t.events.description}
-                </p>
-              </div>
-              <CalendarSection
-                calendarPlaceholder={t.events.calendarPlaceholder}
-                subscribeText={t.events.subscribe}
-              />
-            </section>
-          </FadeInSection>
-
-          {/* Activities Section - with visual grouping */}
-          <FadeInSection variant="slide-up" delay={150} as="section">
-            <section className="section-content" id="activities">
-              <div className="space-y-4 text-center mb-10">
-                <p className="eyebrow">{t.activities.eyebrow || "Programs"}</p>
-                <h2 className="text-3xl font-semibold text-slate-900">
-                  {t.activities.title}
-                </h2>
-                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
-                  {t.activities.description}
-                </p>
-              </div>
-              {/* Visual grouping container for program cards */}
-              <div className="programs-container">
-                <div className="card-grid">
-                  {courseOpportunities.map((opportunity) => {
-                    const activity = t.activities.items[opportunity.id];
-
-                    return (
-                      <article
-                        key={opportunity.id}
-                        className="card-glass card-refined"
-                      >
-                        <div className="card-eyebrow">{activity.eyebrow}</div>
-                        <AnimatedTitle
-                          text={activity.title}
-                          slug={`activity-${opportunity.id}`}
-                          className="card-title"
-                          as="h3"
-                        />
-                        <p className="card-body">{activity.description}</p>
-
-                        <div className="card-meta">
-                          <span className="pill">
-                            <HugeiconsIcon icon={Calendar03Icon} size={16} />
-                            {courseStatusLabels[opportunity.status]}
-                          </span>
-                          <span className="pill">
-                            <HugeiconsIcon icon={Clock01Icon} size={16} />
-                            {activity.duration}
-                          </span>
-                        </div>
-
-                        <div className="card-footer">
-                          <a
-                            className="button-primary"
-                            href={opportunity.applyUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {t.activities.applyNow}
-                          </a>
-                          <a
-                            className="link-arrow"
-                            href={opportunity.learnMoreUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {t.activities.learnMore}
-                            <span>→</span>
-                          </a>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
               </div>
             </section>
           </FadeInSection>

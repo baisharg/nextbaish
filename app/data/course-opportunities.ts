@@ -16,6 +16,17 @@ export type CourseOpportunity = {
   learnMoreUrl: string;
 };
 
+export const COURSE_OPPORTUNITY_CTA_LABELS = {
+  en: {
+    eoi_open: "Express interest",
+    applications_open: "Apply",
+  },
+  es: {
+    eoi_open: "Expresá interés",
+    applications_open: "Inscribite",
+  },
+} satisfies Record<AppLocale, Record<CourseOpportunityStatus, string>>;
+
 export const COURSE_OPPORTUNITY_STATUS_LABELS = {
   en: {
     eoi_open: "Expression of interest open",

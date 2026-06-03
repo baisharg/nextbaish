@@ -47,10 +47,10 @@
     },
     "hero": {
       "communityMembers": "Community Members",
-      "weeklyPrograms": "Weekly Programs",
+      "weeklyPrograms": "Open courses",
       "publishedPapers": "Published Papers",
-      "primaryCta": "Start learning",
-      "secondaryCta": "Join events"
+      "primaryCta": "View open courses",
+      "secondaryCta": "Join the community"
     },
     "timeline": {
       "connect": "Connect",
@@ -61,8 +61,8 @@
       "foundationsDesc": "Technical foundations for contributing to AI safety",
       "replicate": "Replicate",
       "replicateTitle": "Technical AI Safety Project",
-      "replicateDesc": "Hands-on project sprint toward a concrete AI safety contribution",
-      "publish": "Govern",
+      "replicateDesc": "Project-based course for making a concrete AI safety contribution",
+      "publish": "Governance",
       "publishTitle": "Frontier AI Governance",
       "publishDesc": "Governance foundations for frontier AI risks"
     },
@@ -90,30 +90,30 @@
         {
           "number": "02",
           "title": "Learn technical AI safety",
-          "description": "Apply or express interest in Technical AI Safety Course — a BlueDot Impact course facilitated in person by BAISH.",
-          "cta": "Apply / express interest",
+          "description": "View details for Technical AI Safety Course — a BlueDot Impact course facilitated in person by BAISH.",
+          "cta": "View course",
           "link": "/activities#technical-ai-safety-course"
         },
         {
           "number": "03",
           "title": "Build technical skills",
-          "description": "Apply or express interest in Technical AI Safety Project to develop a concrete AI safety research or engineering contribution.",
-          "cta": "Apply / express interest",
+          "description": "View details for Technical AI Safety Project to develop a concrete AI safety research or engineering contribution.",
+          "cta": "View course",
           "link": "/activities#technical-ai-safety-project"
         },
         {
           "number": "04",
           "title": "Study frontier AI governance",
-          "description": "Apply or express interest in Frontier AI Governance to explore coordination, compute governance, accountability, and risk assessment for frontier AI systems.",
-          "cta": "Apply / express interest",
+          "description": "View details for Frontier AI Governance to explore coordination, compute governance, accountability, and risk assessment for frontier AI systems.",
+          "cta": "View course",
           "link": "/activities#frontier-ai-governance"
         }
       ]
     },
     "events": {
       "eyebrow": "Upcoming Events",
-      "title": "Join our community courses and meetups",
-      "description": "Stay current on AI safety discussions, research sprints, and collaboration spaces.",
+      "title": "Courses and open opportunities",
+      "description": "Active expressions of interest and applications appear here automatically from Safety Talent.",
       "calendarPlaceholder": "Calendar loads once it's almost in view to keep the initial load quick.",
       "subscribe": "Subscribe to Calendar"
     },
@@ -144,7 +144,7 @@
       "joinNow": "Join now",
       "joinTelegram": "Join Telegram",
       "learnMore": "Learn more",
-      "applyNow": "Apply / express interest"
+      "applyNow": "Apply"
     },
     "successStories": {
       "eyebrow": "Impact",
@@ -238,7 +238,7 @@
         "format": "In-person · BAISH-hosted",
         "cost": "Free"
       },
-      "cta": "Apply / express interest",
+      "cta": "Apply",
       "applyUrl": "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
       "deadline": "Expression of interest currently open"
     },
@@ -398,7 +398,7 @@
       "duration": "30 hours",
       "fellowshipPeriod": "Schedule announced through BAISH",
       "viewCurriculum": "Learn more at BlueDot",
-      "applyNow": "Apply / express interest"
+      "applyNow": "Apply"
     },
     "aisWorkshop": {
       "title": "Technical AI Safety Project",
@@ -426,7 +426,7 @@
       "topic": "Technical AI safety project work",
       "joinTelegram": "Join Telegram for Updates",
       "joinWhatsapp": "Join WhatsApp",
-      "applyNow": "Apply / express interest",
+      "applyNow": "Express interest",
       "learnMore": "Learn more at BlueDot"
     },
     "paperReading": {
@@ -584,7 +584,7 @@
       "current": "Research"
     },
     "title": "Research at BAISH",
-    "intro": "We help students in Buenos Aires go from curious to published. Join research sprints, workshops, and a community of aspiring AI safety researchers.",
+    "intro": "We help students in Buenos Aires go from curious to published. Join research projects, workshops, and a community of aspiring AI safety researchers.",
     "ctaPrograms": "Join a Program",
     "ctaPublications": "View Publications",
     "ctaLearnMore": "Learn More",
@@ -613,8 +613,8 @@
         {
           "number": "03",
           "title": "Research",
-          "program": "Research Sprints",
-          "description": "Contribute original work in collaborative sprints. Past participants have placed in Apart Research competitions.",
+          "program": "Research projects",
+          "description": "Contribute original work through collaborative projects. Past participants have placed in Apart Research competitions.",
           "duration": "2-4 weeks",
           "link": "/contact",
           "icon": "lightbulb"
@@ -743,7 +743,7 @@
           ]
         }
       ],
-      "note": "Our community continues to grow — we're building our publication track record through programs like AISAR and Apart Research sprints."
+      "note": "Our community continues to grow — we're building our publication track record through programs like AISAR and Apart Research projects and competitions."
     },
     "expressInterest": {
       "eyebrow": "Get Involved",
