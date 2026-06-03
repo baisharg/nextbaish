@@ -96,7 +96,8 @@ export default async function WorkshopPage({
           </FadeInSection>
 
           {/* Technical AI Safety Project */}
-          <section className="section-container">
+          <FadeInSection variant="slide-up" delay={100} as="section">
+            <section className="section-container">
               <div className="space-y-8">
                 <div className="space-y-4">
                   <div>
@@ -218,7 +219,8 @@ export default async function WorkshopPage({
                   </div>
                 </div>
               </div>
-          </section>
+            </section>
+          </FadeInSection>
         </div>
       </div>
 

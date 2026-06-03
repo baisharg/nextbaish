@@ -73,6 +73,14 @@ export default async function Home({
   const t = dict.home;
   const courseOpportunities = await getCourseOpportunities();
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
+  const courseSpotlightOpportunity =
+    courseOpportunities.find(
+      (opportunity) => opportunity.id === "technical-ai-safety-course",
+    ) ?? courseOpportunities[0];
+
+  if (!courseSpotlightOpportunity) {
+    throw new Error("Course spotlight opportunity is missing");
+  }
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -195,7 +203,7 @@ export default async function Home({
                       {t.courseSpotlight.eyebrow}
                     </span>
                     <span className="inline-flex items-center rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
-                      {t.courseSpotlight.badge}
+                      {courseStatusLabels[courseSpotlightOpportunity.status]}
                     </span>
                   </div>
 
@@ -227,7 +235,7 @@ export default async function Home({
 
                   <div className="flex flex-col items-center gap-3">
                     <a
-                      href={t.courseSpotlight.applyUrl}
+                      href={courseSpotlightOpportunity.applyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="button-primary inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold"
