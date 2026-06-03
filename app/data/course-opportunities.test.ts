@@ -154,9 +154,9 @@ describe("BAISH course opportunities", () => {
     );
     expect(programPages).toHaveLength(6);
     for (const entry of programPages) {
-      expect((entry.lastModified as Date).toISOString()).toStartWith(
-        "2026-06-03",
-      );
+      const lastModified = (entry.lastModified as Date).toISOString();
+
+      expect(lastModified.startsWith("2026-06-03")).toBe(true);
     }
   });
 
