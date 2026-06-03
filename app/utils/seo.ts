@@ -103,48 +103,48 @@ export const SEO_CONTENT = {
     en: {
       title: "About Us",
       description:
-        "Meet the BAISH team. We help students in Buenos Aires enter AI safety research through courses, workshops, and community support.",
+        "Meet the BAISH team. We help students in Buenos Aires enter AI safety research through courses, community, and research support.",
     },
     es: {
       title: "Sobre Nosotros",
       description:
-        "Conoce al equipo de BAISH. Ayudamos a estudiantes en Buenos Aires a ingresar a la investigación en seguridad de IA a través de cursos, talleres y apoyo comunitario.",
+        "Conoce al equipo de BAISH. Ayudamos a estudiantes en Buenos Aires a ingresar a la investigación en seguridad de IA a través de cursos, comunidad y apoyo de investigación.",
     },
   },
   activities: {
     en: {
       title: "Programs",
       description:
-        "Join our AI Safety Fundamentals course, technical research workshop, or paper reading club. In-person programs in Buenos Aires.",
+        "Join BAISH courses: Technical AI Safety Course, Technical AI Safety Project, and Frontier AI Governance. In-person programs in Buenos Aires.",
     },
     es: {
       title: "Programas",
       description:
-        "Únete a nuestro curso de Fundamentos de Seguridad en IA, taller técnico de investigación o club de lectura de papers. Programas presenciales en Buenos Aires.",
+        "Sumate a los cursos de BAISH: Technical AI Safety Course, Technical AI Safety Project y Frontier AI Governance. Programas presenciales en Buenos Aires.",
     },
   },
   "activities/fundamentals": {
     en: {
-      title: "AI Safety Fundamentals Course",
+      title: "Technical AI Safety Course",
       description:
-        "13-week inverted classroom course covering AI alignment concepts. Weekly in-person sessions in Buenos Aires with mentorship and final project.",
+        "30-hour BlueDot Impact technical AI safety course hosted in person by BAISH in Buenos Aires.",
     },
     es: {
-      title: "Curso de Fundamentos de Seguridad en IA",
+      title: "Technical AI Safety Course",
       description:
-        "Curso de 13 semanas en formato de clase invertida sobre conceptos de alineamiento de IA. Sesiones presenciales semanales en Buenos Aires con mentoría y proyecto final.",
+        "Curso técnico de seguridad en IA de 30 horas de BlueDot Impact, facilitado presencialmente por BAISH en Buenos Aires.",
     },
   },
   "activities/workshop": {
     en: {
-      title: "AIS Research Workshop",
+      title: "Technical AI Safety Project",
       description:
-        "Weekly technical workshop to replicate AI safety papers through programming. Develop hands-on research skills in Buenos Aires.",
+        "Project-based technical AI safety course for making a concrete research or engineering contribution in Buenos Aires.",
     },
     es: {
-      title: "Taller de Investigación en Seguridad de IA",
+      title: "Technical AI Safety Project",
       description:
-        "Taller técnico semanal para replicar papers de seguridad en IA mediante programación. Desarrolla habilidades prácticas de investigación en Buenos Aires.",
+        "Curso técnico basado en proyectos para hacer una contribución concreta de investigación o ingeniería en seguridad en IA en Buenos Aires.",
     },
   },
   "activities/reading": {
