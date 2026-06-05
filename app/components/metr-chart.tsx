@@ -397,6 +397,21 @@ export function MetrChart({
             )}
           </g>
 
+          {/* dashed continuation into the unreliable zone */}
+          {outlier && (
+            <line
+              x1={coords[coords.length - 1].x}
+              y1={coords[coords.length - 1].y}
+              x2={xPos(outlier.year)}
+              y2={yPos(outlier.minutes, scale)}
+              strokeWidth={2}
+              strokeDasharray="3 7"
+              strokeLinecap="round"
+              className="stroke-slate-400 max-sm:[stroke-width:3]"
+              style={pointStyle(totalLen)}
+            />
+          )}
+
           {/* outlier in the unreliable zone */}
           {outlier && (
             <g style={pointStyle(totalLen * 1.1)}>
