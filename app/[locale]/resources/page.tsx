@@ -7,6 +7,7 @@ import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { InteractiveCourseCard } from "@/app/components/interactive-course-card";
 import { ConcreteRisks, type Risk } from "@/app/components/concrete-risks";
+import { MetrChart } from "@/app/components/metr-chart";
 import { AstnPromo } from "@/app/components/astn-promo";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
@@ -47,6 +48,8 @@ export default async function Resources({
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
+  const evidence = dict.resources.sections.evidence;
+  const upside = dict.resources.sections.upside;
   const fundamentalReadingItems = dict.resources.sections.selfStudy
     .fundamentalReading.items as SelfStudyResourceItem[];
   const standardCourseItems = dict.resources.sections.selfStudy.standardCourses
@@ -79,21 +82,82 @@ export default async function Resources({
               </span>
             </div>
             <div className="space-y-4">
+              <p className="eyebrow">{dict.resources.hero.eyebrow}</p>
               <AnimatedTitle
                 text={dict.resources.title}
                 slug="resources"
                 className="text-4xl font-semibold text-slate-900 sm:text-5xl"
                 as="h1"
               />
-              <p className="text-lg text-slate-700">
+              <p className="max-w-3xl text-lg text-slate-700">
                 {dict.resources.description}
               </p>
             </div>
           </section>
         </FadeInSection>
 
-        {/* Concrete Risks Panel */}
+        {/* Evidence: METR chart + explanation + stats */}
         <FadeInSection variant="slide-up" delay={100} as="section">
+          <section className="space-y-6">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-semibold text-slate-900">
+                {evidence.heading}
+              </h2>
+              <p className="max-w-3xl text-base text-slate-600">
+                {evidence.intro}
+              </p>
+            </div>
+
+            <MetrChart
+              title={evidence.chart.title}
+              xAxisLabel={evidence.chart.xAxisLabel}
+              yAxisLabel={evidence.chart.yAxisLabel}
+              scaleToggle={evidence.chart.scaleToggle}
+              yAnchorLabels={evidence.chart.yAnchorLabels}
+              taskExamples={evidence.chart.taskExamples}
+              unreliableZoneCaption={evidence.chart.unreliableZoneCaption}
+              sourceLabel={evidence.chart.sourceLabel}
+              sourceUrl={evidence.chart.sourceUrl}
+            />
+
+            <div className="max-w-3xl space-y-4">
+              {evidence.explanation.paragraphs.map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 32)}
+                  className="text-base leading-relaxed text-slate-700"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              {evidence.stats.items.map((stat) => (
+                <div key={stat.value} className="card-glass space-y-2 p-5">
+                  <p
+                    className="text-[1.45rem] font-semibold leading-tight"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-tertiary))",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="text-sm font-medium text-slate-900">
+                    {stat.label}
+                  </p>
+                  <p className="text-sm text-slate-600">{stat.note}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </FadeInSection>
+
+        {/* Concrete Risks Panel */}
+        <FadeInSection variant="slide-up" delay={150} as="section">
           <ConcreteRisks
             heading={dict.resources.sections.concreteRisks.heading}
             intro={dict.resources.sections.concreteRisks.intro}
@@ -103,8 +167,20 @@ export default async function Resources({
           />
         </FadeInSection>
 
+        {/* Upside */}
+        <FadeInSection variant="slide-up" delay={175} as="section">
+          <section className="max-w-3xl space-y-3">
+            <h2 className="text-3xl font-semibold text-slate-900">
+              {upside.heading}
+            </h2>
+            <p className="text-base leading-relaxed text-slate-700">
+              {upside.body}
+            </p>
+          </section>
+        </FadeInSection>
+
         {/* Self-Study Section */}
-        <FadeInSection variant="slide-up" delay={150} as="section">
+        <FadeInSection variant="slide-up" delay={200} as="section">
           <section className="space-y-6">
             <div className="space-y-2">
               <h2 className="text-3xl font-semibold text-slate-900">
@@ -269,7 +345,7 @@ export default async function Resources({
         </FadeInSection>
 
         {/* ASTN Promo */}
-        <FadeInSection variant="slide-up" delay={200} as="section">
+        <FadeInSection variant="slide-up" delay={250} as="section">
           <AstnPromo t={dict.home.astn} />
         </FadeInSection>
         </div>

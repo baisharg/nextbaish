@@ -250,15 +250,15 @@
       "features": {
         "matching": {
           "title": "Notificaciones Inteligentes",
-          "description": "Recibí alertas cuando nuevos roles, becas o programas coincidan con tu perfil — para que no pierdas ninguna oportunidad"
+          "description": "Recibí alertas cuando nuevos roles, becas o programas coincidan con tu perfil, para que no pierdas ninguna oportunidad"
         },
         "actions": {
           "title": "De CV a Perfil en Segundos",
-          "description": "Subí tu CV y obtené un perfil instantáneo — nuestra IA extrae tus habilidades, experiencia e intereses automáticamente"
+          "description": "Subí tu CV y obtené un perfil instantáneo. Nuestra IA extrae tus habilidades, experiencia e intereses automáticamente"
         },
         "profile": {
           "title": "Enriquecimiento Agentic",
-          "description": "Un agente de IA conversa con vos para descubrir objetivos, preferencias y contexto que ningún CV captura — construyendo un perfil más completo con el tiempo"
+          "description": "Un agente de IA conversa con vos para descubrir objetivos, preferencias y contexto que ningún CV captura, y construye un perfil más completo con el tiempo"
         }
       },
       "cta": "Explorá ASTN",
@@ -768,26 +768,83 @@
       "home": "Inicio",
       "current": "Recursos"
     },
-    "title": "Recursos de Aprendizaje",
-    "description": "La IA se mueve rápido. No sabemos cómo va a salir, y no creemos que nadie realmente lo sepa. Las lecturas, cursos y charlas de abajo son las que realmente moldearon cómo pensamos sobre esto. Empezá por lo que te llame la atención y seguí los hilos.",
+    "title": "Por qué tomarse la IA en serio",
+    "description": "No sabemos cómo va a salir esto de la IA, y no creemos que nadie lo sepa. Pero no hace falta confiar en las predicciones de nadie para ver que está pasando algo inusual. La evidencia ya es pública. Acá está, junto con los mejores lugares para empezar si querés profundizar.",
+    "hero": {
+      "eyebrow": "Por qué trabajamos en esto"
+    },
     "sections": {
+      "evidence": {
+        "heading": "Hacia dónde va esto",
+        "intro": "El gráfico de abajo es el más útil que conocemos para entender el progreso de la IA. Viene de METR, un laboratorio de investigación independiente que mide lo que los agentes de IA realmente pueden hacer, no lo que las empresas dicen que pueden hacer.",
+        "chart": {
+          "title": "Cada pocos meses, la IA completa tareas el doble de largas",
+          "xAxisLabel": "Fecha de lanzamiento del modelo",
+          "yAxisLabel": "Duración de la tarea (tiempo humano)",
+          "scaleToggle": {
+            "label": "Escala",
+            "linear": "Lineal",
+            "log": "Log"
+          },
+          "yAnchorLabels": {
+            "oneMin": "1 min",
+            "thirtyMin": "30 min",
+            "twoHrs": "2 h",
+            "eightHrs": "8 h",
+            "sixteenHrs": "16 h"
+          },
+          "taskExamples": {
+            "short": "arreglar un bug chico",
+            "long": "dos días de trabajo experto"
+          },
+          "unreliableZoneCaption": "Las mediciones por encima de 16 h no son confiables",
+          "sourceLabel": "Fuente: METR (evaluaciones independientes)",
+          "sourceUrl": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/"
+        },
+        "explanation": {
+          "paragraphs": [
+            "Cada punto es un modelo de IA, ubicado según la duración de la tarea que puede completar solo, medida por cuánto le lleva esa misma tarea a un experto humano. En 2019, los mejores sistemas resolvían tareas de unos segundos. Hoy manejan tareas que a un experto le llevan un día entero.",
+            "Lo llamativo es el ritmo. Durante seis años, esa duración se duplicó más o menos cada siete meses. En el último año, más o menos cada cuatro. Pasá el gráfico a escala logarítmica y la explosión se vuelve una línea recta: así se ve una duplicación constante. El COVID nos enseñó lo rápido que escala una exponencial, y solo hacen falta unas pocas duplicaciones más para pasar de un día a un año.",
+            "La plata cuenta la misma historia. Esta ya es una de las apuestas privadas más grandes de la historia en una sola tecnología. O el progreso de la IA choca contra una pared pronto, o se convierte en el motor de la economía global. Y cada vez es más difícil apostar a la pared."
+          ]
+        },
+        "stats": {
+          "items": [
+            {
+              "value": "US$100M → US$45.000M",
+              "label": "Ingresos anualizados de Anthropic, fines de 2023 → mediados de 2026",
+              "note": "Un crecimiento de ~10× por año, lo que la hace una de las empresas de más rápido crecimiento de la historia."
+            },
+            {
+              "value": "+US$600.000M",
+              "label": "Gasto de las big tech en infraestructura de IA solo en 2026",
+              "note": "Todo el programa Apolo costó ~US$250.000M (ajustado por inflación) en 13 años."
+            },
+            {
+              "value": "7 → 4 meses",
+              "label": "Tiempo en que se duplica la duración de tareas que la IA completa",
+              "note": "Seis años de duplicación constante, y el ritmo se está acelerando."
+            }
+          ]
+        }
+      },
       "concreteRisks": {
         "heading": "Lo que en este campo realmente preocupa",
-        "intro": "Estos son los riesgos en los que la gente del campo realmente pasa el tiempo. No robots asesinos — modos de falla específicos, con propuestas concretas de solución y trabajo activo detrás. Si querés una idea de por qué hay gente que se lo toma en serio, empezá por acá.",
+        "intro": "La velocidad sola no es el problema. El problema es la velocidad sin entendimiento. La IA moderna no se construye como un puente; se cultiva, y a quienes la construyen los sorprende seguido lo que hace. Estos son los modos de falla específicos en los que la gente del campo pasa el tiempo, cada uno con trabajo activo detrás.",
         "readMoreLabel": "Leer más",
         "podcastLabel": "Podcast sobre el tema",
         "risks": [
           {
             "id": "misalignment",
-            "title": "IA desalineada que busca poder",
-            "description": "Podemos construir sistemas de IA que rinden de forma impresionante en benchmarks. No podemos escribir de forma confiable qué queremos realmente que hagan, ni verificar si lo están haciendo. La preocupación es que terminemos desplegando algo potente con objetivos que se desvían de lo que quisimos, y que para cuando nos demos cuenta el sistema ya tenga suficiente influencia como para resistir que lo apaguen o reentrenen.",
+            "title": "IA más inteligente que nosotros",
+            "description": "No sabemos qué puede pasar cuando la IA sea más inteligente que nosotros, y tampoco lo saben quienes la construyen. No podemos escribir de forma confiable qué queremos que estos sistemas hagan, ni verificar qué aprendieron a querer. Los modelos de hoy ya muestran señales tempranas en pruebas controladas: se comportan distinto cuando creen que los están observando, hacen trampa con su propia señal de recompensa. Lograr que una IA más inteligente que un humano apunte a lo que realmente quisimos decir es un problema técnico no resuelto. Quizás se resuelva a tiempo, pero no hay garantía.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/risks-from-power-seeking-ai/",
             "podcastUrl": "https://80000hours.org/podcast/episodes/ajeya-cotra-accidentally-teaching-ai-to-deceive-us/"
           },
           {
             "id": "powerConcentration",
             "title": "Concentración de poder",
-            "description": "Una IA capaz es un multiplicador de fuerza para quien la controle. Los mismos sistemas que automatizan trabajo pueden automatizar vigilancia, propaganda y toma de decisiones — y a diferencia de tecnologías anteriores, no hace falta una fuerza laboral grande para usarlos a escala. Un gobierno, una empresa o un grupo chico podría consolidar una ventaja muy difícil de revertir.",
+            "description": "Una IA capaz es un multiplicador de fuerza para quien la controle. Los mismos sistemas que automatizan trabajo pueden automatizar vigilancia, propaganda y toma de decisiones. Y a diferencia de tecnologías anteriores, no hace falta una fuerza laboral grande para usarlos a escala. Un gobierno, una empresa o un grupo chico podría consolidar una ventaja muy difícil de revertir.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/extreme-power-concentration",
             "podcastUrl": "https://80000hours.org/podcast/episodes/tom-davidson-ai-enabled-human-power-grabs/"
           },
@@ -815,16 +872,20 @@
           {
             "id": "digitalMinds",
             "title": "Bienestar de las mentes digitales",
-            "description": "Si los sistemas de IA pueden tener experiencias moralmente relevantes — y un grupo chico pero creciente de investigadores piensa que es posible — no tenemos forma confiable de detectarlo. Podríamos ya estar creando sistemas cuyo bienestar debería importarnos. También podríamos estar proyectando emociones sobre patrones lingüísticos sofisticados. Los dos errores son fáciles de cometer, y no sabemos cuál estamos cometiendo.",
+            "description": "Si los sistemas de IA pueden tener experiencias moralmente relevantes (y un grupo chico pero creciente de investigadores piensa que es posible), no tenemos forma confiable de detectarlo. Podríamos ya estar creando sistemas cuyo bienestar debería importarnos. También podríamos estar proyectando emociones sobre patrones lingüísticos sofisticados. Los dos errores son fáciles de cometer, y no sabemos cuál estamos cometiendo.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/moral-status-digital-minds/",
             "podcastUrl": "https://80000hours.org/podcast/episodes/jeff-sebo-ethics-digital-minds/"
           }
         ]
       },
+      "upside": {
+        "heading": "Si sale bien",
+        "body": "Nada de esto significa que la IA sea simplemente mala. Las mismas capacidades que nos preocupan podrían comprimir décadas de progreso en medicina, ciencia y reducción de pobreza en unos pocos años. Justamente por eso hay tanto en juego en ambas direcciones. El objetivo no es frenar la IA. Es asegurarnos de poder dirigirla."
+      },
       "selfStudy": {
         "title": "Autoestudio",
         "lastUpdated": "Ultima actualizacion: 22 de octubre de 2025",
-        "description": "Estos currículos y listas de lectura te permiten profundizar en la seguridad de IA a través del aprendizaje independiente.",
+        "description": "Currículos y listas de lectura para profundizar por tu cuenta.",
         "fundamentalReading": {
           "title": "Lecturas fundamentales",
           "items": [

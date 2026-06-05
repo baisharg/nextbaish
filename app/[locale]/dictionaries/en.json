@@ -250,15 +250,15 @@
       "features": {
         "matching": {
           "title": "Smart Notifications",
-          "description": "Get notified when new roles, grants, or programs match your profile — so you never miss an opportunity"
+          "description": "Get notified when new roles, grants, or programs match your profile, so you never miss an opportunity"
         },
         "actions": {
           "title": "CV to Profile in Seconds",
-          "description": "Upload your CV and get an instant profile — our AI extracts your skills, experience, and interests automatically"
+          "description": "Upload your CV and get an instant profile. Our AI extracts your skills, experience, and interests automatically"
         },
         "profile": {
           "title": "Agentic Profile Enrichment",
-          "description": "An AI agent chats with you to uncover goals, preferences, and context that no CV captures — building a richer profile over time"
+          "description": "An AI agent chats with you to uncover goals, preferences, and context that no CV captures, and builds a richer profile over time"
         }
       },
       "cta": "Explore ASTN",
@@ -768,26 +768,83 @@
       "home": "Home",
       "current": "Resources"
     },
-    "title": "Learning Resources",
-    "description": "AI is moving fast. We don't know how it'll play out, and we don't think anyone really does. The readings, courses, and talks below are the ones that actually shaped how we think about this. Start wherever something looks interesting and follow the threads.",
+    "title": "The case for taking AI seriously",
+    "description": "We don't know how AI will turn out, and we don't think anyone does. But you don't need to trust anyone's predictions to see that something unusual is happening. The evidence is already public. Here it is, along with the best places to start if you want to dig deeper.",
+    "hero": {
+      "eyebrow": "Why we work on this"
+    },
     "sections": {
+      "evidence": {
+        "heading": "Where things are headed",
+        "intro": "The chart below is the single most useful graph we know for understanding AI progress. It comes from METR, an independent research lab that measures what AI agents can actually do, not what companies say they can do.",
+        "chart": {
+          "title": "Every few months, AI completes tasks twice as long",
+          "xAxisLabel": "Model release date",
+          "yAxisLabel": "Task length (human time)",
+          "scaleToggle": {
+            "label": "Scale",
+            "linear": "Linear",
+            "log": "Log"
+          },
+          "yAnchorLabels": {
+            "oneMin": "1 min",
+            "thirtyMin": "30 min",
+            "twoHrs": "2 hrs",
+            "eightHrs": "8 hrs",
+            "sixteenHrs": "16 hrs"
+          },
+          "taskExamples": {
+            "short": "fixing a small bug",
+            "long": "two days of expert work"
+          },
+          "unreliableZoneCaption": "Measurements above 16 hrs are unreliable",
+          "sourceLabel": "Source: METR (independent evaluations)",
+          "sourceUrl": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/"
+        },
+        "explanation": {
+          "paragraphs": [
+            "Each dot is an AI model, placed by the length of task it can complete on its own, measured by how long that same task takes a human expert. In 2019, the best systems managed tasks that take a person a few seconds. Today they handle tasks that take an expert a full day.",
+            "The striking part is the rhythm. For six years, that task length has doubled roughly every seven months. Over the past year, roughly every four. Flip the chart to a log scale and the explosion becomes a straight line: that's what steady doubling looks like. COVID taught us how fast exponentials escalate, and it only takes a few more doublings to go from one day to one year.",
+            "The money tells the same story. This is already one of the largest private bets on a single technology in history. Either AI progress hits a wall soon, or it becomes the driving force of the global economy. It's getting harder to bet on the wall."
+          ]
+        },
+        "stats": {
+          "items": [
+            {
+              "value": "$100M → $45B",
+              "label": "Anthropic's annualized revenue, end of 2023 → mid-2026",
+              "note": "Roughly 10× growth per year, which makes it one of the fastest-growing companies ever."
+            },
+            {
+              "value": "$600B+",
+              "label": "Big-tech spending on AI infrastructure in 2026 alone",
+              "note": "The entire Apollo program cost ~$250B (inflation-adjusted) over 13 years."
+            },
+            {
+              "value": "7 → 4 months",
+              "label": "Time it takes for AI task length to double",
+              "note": "Six years of steady doubling, and the pace is picking up."
+            }
+          ]
+        }
+      },
       "concreteRisks": {
         "heading": "What people in this field actually worry about",
-        "intro": "These are the risks researchers in the field actually spend their time on. Not killer robots — specific failure modes with proposed solutions and active work behind them. If you want a sense of why people take this seriously, this is where to start.",
+        "intro": "Speed alone isn't the problem. The problem is speed without understanding. Modern AI isn't engineered like a bridge; it's grown, and the people building it are routinely surprised by what it does. These are the specific failure modes researchers spend their time on, each with active work behind it.",
         "readMoreLabel": "Read more",
         "podcastLabel": "Podcast on this issue",
         "risks": [
           {
             "id": "misalignment",
-            "title": "Misaligned, power-seeking AI",
-            "description": "We can build AI systems that perform impressively on benchmarks. We can't reliably write down what we actually want them to do, and we can't reliably check whether they're doing it. The worry is that we deploy something powerful with goals that drift from what we meant, and by the time we notice, the system has enough influence to resist being shut down or retrained.",
+            "title": "AI smarter than us",
+            "description": "We don't know what can happen when AI becomes smarter than we are, and neither do the people building it. We can't reliably write down what we want these systems to do, and we can't reliably check what they've learned to want. Today's models already show early warning signs in controlled tests: behaving differently when they think they're being observed, gaming their own reward signals. Keeping a smarter-than-human AI pointed at what we actually meant is an unsolved technical problem. Researchers may solve it in time, but there's no guarantee.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/risks-from-power-seeking-ai/",
             "podcastUrl": "https://80000hours.org/podcast/episodes/ajeya-cotra-accidentally-teaching-ai-to-deceive-us/"
           },
           {
             "id": "powerConcentration",
             "title": "Concentration of power",
-            "description": "Capable AI is a force multiplier for whoever owns it. The same systems that automate work can automate surveillance, propaganda, and decision-making — and unlike past technologies, you don't need a large workforce to wield them at scale. A government, a company, or a small group could lock in an advantage that's very hard to roll back.",
+            "description": "Capable AI is a force multiplier for whoever owns it. The same systems that automate work can automate surveillance, propaganda, and decision-making. And unlike past technologies, you don't need a large workforce to wield them at scale. A government, a company, or a small group could lock in an advantage that's very hard to roll back.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/extreme-power-concentration",
             "podcastUrl": "https://80000hours.org/podcast/episodes/tom-davidson-ai-enabled-human-power-grabs/"
           },
@@ -815,16 +872,20 @@
           {
             "id": "digitalMinds",
             "title": "Welfare of digital minds",
-            "description": "If AI systems can have experiences that matter morally — and a small but growing group of researchers thinks they might — we have no reliable way to detect it. We could already be creating systems whose welfare we should care about. We could also be projecting feelings onto sophisticated language patterns. Both mistakes are easy to make, and we don't know which one we're making.",
+            "description": "If AI systems can have experiences that matter morally (and a small but growing group of researchers thinks they might), we have no reliable way to detect it. We could already be creating systems whose welfare we should care about. We could also be projecting feelings onto sophisticated language patterns. Both mistakes are easy to make, and we don't know which one we're making.",
             "readMoreUrl": "https://80000hours.org/problem-profiles/moral-status-digital-minds/",
             "podcastUrl": "https://80000hours.org/podcast/episodes/jeff-sebo-ethics-digital-minds/"
           }
         ]
       },
+      "upside": {
+        "heading": "If it goes well",
+        "body": "None of this means AI is simply bad. The same capabilities that worry us could compress decades of progress in medicine, science, and poverty reduction into a few years. That's exactly why the stakes run high in both directions. The goal isn't to stop AI. It's to make sure we can steer it."
+      },
       "selfStudy": {
         "title": "Self-study",
         "lastUpdated": "Last updated: October 22, 2025",
-        "description": "These curricula and reading lists enable you to dive deeper into AI safety through independent learning.",
+        "description": "Curricula and reading lists for going deeper on your own.",
         "fundamentalReading": {
           "title": "Fundamental reading",
           "items": [

@@ -175,12 +175,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Learning Resources",
       description:
-        "Readings, courses, and talks on AI safety — the ones we'd actually recommend to someone trying to figure out what they think. Covers alignment, interpretability, and governance.",
+        "The public evidence that AI capability is growing exponentially: METR's time-horizon data, revenue and investment figures. Plus what could go wrong and where to start learning.",
     },
     es: {
       title: "Recursos de Aprendizaje",
       description:
-        "Lecturas, cursos y charlas sobre seguridad en IA — las que de verdad le recomendaríamos a alguien que está tratando de pensar qué cree. Cubre alineamiento, interpretabilidad y gobernanza.",
+        "La evidencia pública de que la capacidad de la IA crece exponencialmente: los datos de METR, cifras de ingresos e inversión. Más qué podría salir mal y por dónde empezar a aprender.",
     },
   },
   contact: {
