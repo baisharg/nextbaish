@@ -22,6 +22,7 @@ import {
   COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
+  resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 
@@ -201,7 +202,7 @@ export default async function Activities({
                       <div className="card-footer">
                         <a
                           className="button-primary w-full"
-                          href={opportunity.applyUrl}
+                          href={resolveApplyUrl(opportunity)}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
