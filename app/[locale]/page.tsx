@@ -11,6 +11,7 @@ import {
   COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
+  resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
@@ -171,7 +172,7 @@ export default async function Home({
                         <div className="card-footer">
                           <a
                             className="button-primary"
-                            href={opportunity.applyUrl}
+                            href={resolveApplyUrl(opportunity)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >

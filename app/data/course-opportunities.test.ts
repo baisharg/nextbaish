@@ -10,6 +10,7 @@ import {
   COURSE_OPPORTUNITY_IDS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
+  resolveApplyUrl,
 } from "./course-opportunities";
 
 type JsonLdEventElement = { props: { name: string } };
@@ -43,23 +44,60 @@ describe("BAISH course opportunities", () => {
     expect(opportunities).toEqual([
       expect.objectContaining({
         id: "technical-ai-safety-course",
-        applyUrl:
+        status: "applications_open",
+        eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+        applicationUrl:
+          "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
         learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety",
       }),
       expect.objectContaining({
         id: "technical-ai-safety-project",
-        applyUrl:
+        status: "applications_open",
+        eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
+        applicationUrl:
+          "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
         learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
       }),
       expect.objectContaining({
         id: "frontier-ai-governance",
-        applyUrl:
+        status: "eoi_open",
+        eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
         learnMoreUrl: "https://bluedot.org/courses/ai-governance",
       }),
     ]);
+  });
+
+  test("routes to the application when open and back to the EOI otherwise", async () => {
+    const opportunities = await getCourseOpportunities();
+    const byId = Object.fromEntries(
+      opportunities.map((opportunity) => [opportunity.id, opportunity]),
+    );
+
+    // Applications open → application form.
+    expect(resolveApplyUrl(byId["technical-ai-safety-course"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
+    );
+    expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
+    );
+
+    // EOI open → expression-of-interest form.
+    expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
+    );
+
+    // Falls back to the EOI when an application URL is not yet known.
+    expect(
+      resolveApplyUrl({
+        id: "frontier-ai-governance",
+        status: "applications_open",
+        eoiUrl: "https://example.org/eoi",
+        learnMoreUrl: "https://example.org/learn",
+      }),
+    ).toBe("https://example.org/eoi");
   });
 
   test("supports separate status and CTA labels for EOI vs applications", () => {
@@ -118,11 +156,11 @@ describe("BAISH course opportunities", () => {
 
     expect(en.home.courseSpotlight.title).toBe("Technical AI Safety Course");
     expect(en.home.courseSpotlight.applyUrl).toBe(
-      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
     );
     expect(es.home.courseSpotlight.title).toBe("Technical AI Safety Course");
     expect(es.home.courseSpotlight.applyUrl).toBe(
-      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
     );
 
     expect(SEO_CONTENT.activities.en.description).toContain(

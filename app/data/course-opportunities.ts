@@ -12,9 +12,24 @@ export type CourseOpportunityStatus = "eoi_open" | "applications_open";
 export type CourseOpportunity = {
   id: CourseOpportunityId;
   status: CourseOpportunityStatus;
-  applyUrl: string;
+  /** Expression-of-interest form. Used while applications are closed. */
+  eoiUrl: string;
+  /** Open application form. Only known once applications are open. */
+  applicationUrl?: string;
   learnMoreUrl: string;
 };
+
+/**
+ * The link a CTA should point at right now: the application when it is open,
+ * otherwise the expression-of-interest form. Flipping `status` (here or via the
+ * remote source) is all it takes to switch a course between the two.
+ */
+export function resolveApplyUrl(opportunity: CourseOpportunity): string {
+  if (opportunity.status === "applications_open" && opportunity.applicationUrl) {
+    return opportunity.applicationUrl;
+  }
+  return opportunity.eoiUrl;
+}
 
 export const COURSE_OPPORTUNITY_CTA_LABELS = {
   en: {
@@ -47,22 +62,26 @@ const PUBLIC_SOURCE_URL =
 const FALLBACK_COURSE_OPPORTUNITIES = [
   {
     id: "technical-ai-safety-course",
-    status: "eoi_open",
-    applyUrl:
+    status: "applications_open",
+    eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
+    applicationUrl:
+      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
     learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety",
   },
   {
     id: "technical-ai-safety-project",
-    status: "eoi_open",
-    applyUrl:
+    status: "applications_open",
+    eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
+    applicationUrl:
+      "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
     learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
   },
   {
     id: "frontier-ai-governance",
     status: "eoi_open",
-    applyUrl:
+    eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
     learnMoreUrl: "https://bluedot.org/courses/ai-governance",
   },
@@ -100,7 +119,10 @@ function mergeCourseOpportunities(payload: unknown): readonly CourseOpportunity[
       ...(isCourseOpportunityStatus(candidate.status) && {
         status: candidate.status,
       }),
-      ...(isHttpUrl(candidate.applyUrl) && { applyUrl: candidate.applyUrl }),
+      ...(isHttpUrl(candidate.eoiUrl) && { eoiUrl: candidate.eoiUrl }),
+      ...(isHttpUrl(candidate.applicationUrl) && {
+        applicationUrl: candidate.applicationUrl,
+      }),
       ...(isHttpUrl(candidate.learnMoreUrl) && {
         learnMoreUrl: candidate.learnMoreUrl,
       }),

@@ -14,6 +14,7 @@ import {
   COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
   getCourseOpportunities,
+  resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 
 export async function generateMetadata({
@@ -187,7 +188,7 @@ export default async function FundamentalsPage({
                       </dl>
                       <div className="mt-6 flex flex-col gap-3">
                         <a
-                          href={technicalAiSafetyCourse.applyUrl}
+                          href={resolveApplyUrl(technicalAiSafetyCourse)}
                           className="button-primary w-full flex items-center justify-center gap-2"
                           target="_blank"
                           rel="noopener noreferrer"
