@@ -410,7 +410,7 @@ export default async function Activities({
                   <div className="card-footer">
                     <a
                       className="button-primary w-full"
-                      href="https://frontierartificialinteligenceresearch.com/"
+                      href="https://fair-uba.com/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
