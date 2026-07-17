@@ -62,7 +62,7 @@ const PUBLIC_SOURCE_URL =
 const FALLBACK_COURSE_OPPORTUNITIES = [
   {
     id: "technical-ai-safety-course",
-    status: "applications_open",
+    status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     applicationUrl:
@@ -71,7 +71,7 @@ const FALLBACK_COURSE_OPPORTUNITIES = [
   },
   {
     id: "technical-ai-safety-project",
-    status: "applications_open",
+    status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
     applicationUrl:

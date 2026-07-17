@@ -44,7 +44,7 @@ describe("BAISH course opportunities", () => {
     expect(opportunities).toEqual([
       expect.objectContaining({
         id: "technical-ai-safety-course",
-        status: "applications_open",
+        status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
         applicationUrl:
@@ -53,7 +53,7 @@ describe("BAISH course opportunities", () => {
       }),
       expect.objectContaining({
         id: "technical-ai-safety-project",
-        status: "applications_open",
+        status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
         applicationUrl:
@@ -76,17 +76,25 @@ describe("BAISH course opportunities", () => {
       opportunities.map((opportunity) => [opportunity.id, opportunity]),
     );
 
-    // Applications open → application form.
+    // EOI open → expression-of-interest form, even when an application URL is stored.
     expect(resolveApplyUrl(byId["technical-ai-safety-course"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
+      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
     expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
+      "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
     );
-
-    // EOI open → expression-of-interest form.
     expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
       "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
+    );
+
+    // Applications open → application form.
+    expect(
+      resolveApplyUrl({
+        ...byId["technical-ai-safety-course"],
+        status: "applications_open",
+      }),
+    ).toBe(
+      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
     );
 
     // Falls back to the EOI when an application URL is not yet known.
@@ -156,11 +164,11 @@ describe("BAISH course opportunities", () => {
 
     expect(en.home.courseSpotlight.title).toBe("Technical AI Safety Course");
     expect(en.home.courseSpotlight.applyUrl).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
+      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
     expect(es.home.courseSpotlight.title).toBe("Technical AI Safety Course");
     expect(es.home.courseSpotlight.applyUrl).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
+      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
 
     expect(SEO_CONTENT.activities.en.description).toContain(
