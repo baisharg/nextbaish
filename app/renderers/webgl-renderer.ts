@@ -15,77 +15,19 @@ import type {
   ThreadFrame,
   ColorStop,
 } from "../types/renderer";
-import { BEZIER_CONTROL_FACTOR } from "../utils/thread-utils";
-
-// ============================================================================
-// CPU-SIDE UTILITIES
-// ============================================================================
-
-/**
- * Convert HSL to RGB on CPU (removes expensive per-fragment conversion)
- * @param h Hue (0-360)
- * @param s Saturation (0-100)
- * @param l Lightness (0-100)
- * @returns RGB tuple (0-1 range)
- */
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-  h = h / 360.0;
-  s = s / 100.0;
-  l = l / 100.0;
-
-  const c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
-  const x = c * (1.0 - Math.abs(((h * 6.0) % 2.0) - 1.0));
-  const m = l - c / 2.0;
-
-  let rgb: [number, number, number];
-  if (h < 1.0 / 6.0) rgb = [c, x, 0.0];
-  else if (h < 2.0 / 6.0) rgb = [x, c, 0.0];
-  else if (h < 3.0 / 6.0) rgb = [0.0, c, x];
-  else if (h < 4.0 / 6.0) rgb = [0.0, x, c];
-  else if (h < 5.0 / 6.0) rgb = [x, 0.0, c];
-  else rgb = [c, 0.0, x];
-
-  return [rgb[0] + m, rgb[1] + m, rgb[2] + m];
-}
-
-/**
- * Compute 5-tap linear Gaussian weights and offsets
- * Uses bilinear filtering optimization: 5 taps instead of 9
- */
-function computeLinearGaussianWeights(sigma: number): {
-  weights: [number, number, number];
-  offsets: [number, number];
-} {
-  // Gaussian function
-  const gauss = (x: number, sigma: number) =>
-    Math.exp(-(x * x) / (2.0 * sigma * sigma));
-
-  // Sample 5 points: -2, -1, 0, +1, +2 (scaled by sigma)
-  const w0 = gauss(0, sigma);
-  const w1 = gauss(1, sigma);
-  const w2 = gauss(2, sigma);
-
-  // Paired weights (for linear sampling)
-  // Note: We apply each weight to BOTH +offset and -offset samples in the shader,
-  // so we use the individual weight (w1, w2) rather than the pair sum (w1+w1, w2+w2)
-  const wCenter = w0;
-  const wPair1 = w1; // Will be applied to both +offset and -offset
-  const wPair2 = w2; // Will be applied to both +offset and -offset
-
-  // Normalize (total includes both directions: w0 + 2*w1 + 2*w2)
-  const total = wCenter + 2 * wPair1 + 2 * wPair2;
-  const weights: [number, number, number] = [
-    wCenter / total,
-    wPair1 / total,
-    wPair2 / total,
-  ];
-
-  // Offsets for sampling (in units of sigma for Gaussian spread)
-  // We sample at ±1σ and ±2σ for a 5-tap blur approximation
-  const offsets: [number, number] = [1.0 * sigma, 2.0 * sigma];
-
-  return { weights, offsets };
-}
+import {
+  BEZIER_CONTROL_FACTOR,
+  SEGMENTS_PER_CURVE,
+  THREAD_WIDTH_SCALE,
+  OVERLAY_OPACITY,
+  MAX_GRADIENT_STOPS,
+  DEFAULT_OFFSET_X_MULTIPLIER,
+  DEFAULT_OFFSET_Y_MULTIPLIER,
+  PULSE_WIDTH,
+  GRAIN_AMPLITUDE,
+  hslToRgb,
+  computeLinearGaussianWeights,
+} from "../utils/thread-utils";
 
 // ============================================================================
 // SHADER SOURCES
@@ -94,16 +36,19 @@ function computeLinearGaussianWeights(sigma: number): {
 const VERTEX_SHADER = `
   attribute vec2 a_position;
   attribute float a_gradientPos; // Normalized y position for gradient
+  attribute float a_lengthPos;   // Normalized position along the thread
 
   uniform vec2 u_resolution;
 
   varying float v_gradientPos;
+  varying float v_lengthPos;
 
   void main() {
     // Convert from pixel space to clip space
     vec2 clipSpace = (a_position / u_resolution) * 2.0 - 1.0;
     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
     v_gradientPos = a_gradientPos;
+    v_lengthPos = a_lengthPos;
   }
 `;
 
@@ -114,13 +59,18 @@ const FRAGMENT_SHADER = `
   uniform float u_stopPos[5];    // Gradient stop positions
   uniform int u_stopCount;
   uniform float u_opacity;
+  uniform float u_pulsePos;      // Flip pulse center along the thread
+  uniform float u_pulseIntensity; // 0 = no pulse
 
   varying float v_gradientPos;
+  varying float v_lengthPos;
 
   vec4 shadeOutput(vec3 baseColor) {
     float clampedPos = clamp(v_gradientPos, 0.0, 1.0);
     float shade = smoothstep(0.93, 1.0, clampedPos) * 0.35;
     vec3 finalColor = mix(baseColor, vec3(0.0), shade);
+    float pd = (v_lengthPos - u_pulsePos) / ${PULSE_WIDTH};
+    finalColor *= 1.0 + u_pulseIntensity * exp(-pd * pd);
     return vec4(finalColor, u_opacity);
   }
 
@@ -204,7 +154,6 @@ const BLUR_FRAGMENT_SHADER = `
   varying vec2 v_texCoord;
 
   // 5-tap separable Gaussian blur with linear filtering optimization
-  // Reduces texture fetches from 9 to 5 while maintaining quality
   void main() {
     vec2 texelSize = 1.0 / u_resolution;
     vec2 dir = u_direction * texelSize;
@@ -224,7 +173,7 @@ const BLUR_FRAGMENT_SHADER = `
   }
 `;
 
-// Passthrough shader for compositing (avoids unnecessary blur shader overhead)
+// Passthrough shader for compositing
 const PASSTHROUGH_VERTEX_SHADER = `
   attribute vec2 a_position;
   attribute vec2 a_texCoord;
@@ -261,17 +210,17 @@ const COMPOSITE_FRAGMENT_SHADER = `
 
   varying vec2 v_texCoord;
 
-  // Screen blend mode: 1 - (1 - a) * (1 - b)
-  vec3 screenBlend(vec3 a, vec3 b) {
-    return vec3(1.0) - (vec3(1.0) - a) * (vec3(1.0) - b);
-  }
-
   void main() {
     vec4 scene = texture2D(u_sceneTexture, v_texCoord);
     vec4 glow = texture2D(u_glowTexture, v_texCoord);
 
     // Additive glow blend
     vec3 color = scene.rgb + glow.rgb * u_glowOpacity;
+
+    // Interleaved gradient noise dither: debands the glow gradients and adds
+    // the faintest paper grain (same formula as the WebGPU composite).
+    float n = fract(52.9829189 * fract(0.06711056 * gl_FragCoord.x + 0.00583715 * gl_FragCoord.y));
+    color = clamp(color + vec3((n - 0.5) * ${GRAIN_AMPLITUDE}), 0.0, 1.0);
 
     gl_FragColor = vec4(color, scene.a);
   }
@@ -299,19 +248,25 @@ export class WebGLRenderer implements Renderer {
     stopPos: WebGLUniformLocation | null;
     stopCount: WebGLUniformLocation | null;
     opacity: WebGLUniformLocation | null;
+    pulsePos: WebGLUniformLocation | null;
+    pulseIntensity: WebGLUniformLocation | null;
   } = {
     resolution: null,
     rgbStops: null,
     stopPos: null,
     stopCount: null,
     opacity: null,
+    pulsePos: null,
+    pulseIntensity: null,
   };
   private lineAttribs: {
     position: number;
     gradientPos: number;
+    lengthPos: number;
   } = {
     position: -1,
     gradientPos: -1,
+    lengthPos: -1,
   };
 
   // Uniforms and attributes for blur program
@@ -387,24 +342,22 @@ export class WebGLRenderer implements Renderer {
   private streamingVBO: WebGLBuffer | null = null;
   private streamingVBOSize: number = 0;
 
-  // Scratch buffers for gradient uniforms (5 stops max → 15 rgb floats)
-  private gradientRgbScratch = new Float32Array(15);
-  private gradientPosScratch = new Float32Array(5);
+  // Scratch buffers for gradient uniforms (MAX_GRADIENT_STOPS stops -> rgb floats)
+  private gradientRgbScratch = new Float32Array(MAX_GRADIENT_STOPS * 3);
+  private gradientPosScratch = new Float32Array(MAX_GRADIENT_STOPS);
 
   // Pooled vertex scratch buffer (grows as needed, reused across frames)
-  // Avoids ~1800 Float32Array allocations/second (30 threads × 60fps)
-  private vertexScratchBuffer: Float32Array = new Float32Array(65536); // 64KB initial
-  private vertexScratchLength: number = 0;
+  private vertexScratchBuffer: Float32Array = new Float32Array(65536);
 
   // Pooled curve data buffer for Bezier tessellation (grows as needed)
   private curveScratchBuffer: Float32Array = new Float32Array(4096);
 
+  // Pre-allocated overlay quad vertices (updated on resize)
+  private overlayVertices: Float32Array = new Float32Array(24);
+
   // Blur weights and offsets (precomputed)
   private blurWeights: [number, number, number] = [1, 0, 0];
   private blurOffsets: [number, number] = [1, 2];
-
-  // Context loss tracking
-  private contextLost: boolean = false;
 
   // Rectangular render target dimensions (actual framebuffer size)
   private rtWidth: number = 0;
@@ -419,7 +372,6 @@ export class WebGLRenderer implements Renderer {
     this.canvas = canvas;
     this.config = config;
 
-    // Get WebGL context (use standard alpha, not premultiplied)
     const gl = canvas.getContext("webgl", {
       alpha: true,
       premultipliedAlpha: false,
@@ -433,9 +385,7 @@ export class WebGLRenderer implements Renderer {
     }
 
     this.gl = gl;
-    this.contextLost = false;
 
-    // Add context loss/restoration handlers (only for HTMLCanvasElement)
     if ("addEventListener" in canvas) {
       canvas.addEventListener(
         "webglcontextlost",
@@ -449,48 +399,33 @@ export class WebGLRenderer implements Renderer {
       );
     }
 
-    // Compute blur weights and offsets
     this.updateBlurWeights(config.blurStdDeviation);
-
-    // Setup canvas dimensions
     this.updateCanvasSize();
-
-    // Compile shaders
     await this.compileShaders();
-
-    // Create streaming VBO for line vertices
     this.createStreamingVBO();
 
-    // Setup blur framebuffers
     if (config.enableBlur) {
       this.setupSceneFramebuffer();
       this.setupBlurFramebuffers();
     }
 
-    // Enable blending for standard alpha
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   }
 
   private handleContextLost = (event: Event) => {
     event.preventDefault();
-    this.contextLost = true;
-    console.warn("[WebGLRenderer] Context lost");
   };
 
   private handleContextRestored = async () => {
-    console.log("[WebGLRenderer] Context restored, reinitializing...");
-    this.contextLost = false;
 
     if (this.canvas && this.config) {
-      // Re-compile shaders and recreate resources
       await this.compileShaders();
       this.createStreamingVBO();
       if (this.config.enableBlur) {
         this.setupSceneFramebuffer();
         this.setupBlurFramebuffers();
       }
-      // Re-enable blending
       if (this.gl) {
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
@@ -537,11 +472,12 @@ export class WebGLRenderer implements Renderer {
 
     this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 0, vertices);
 
-    const stride = 3 * Float32Array.BYTES_PER_ELEMENT;
+    const stride = 4 * Float32Array.BYTES_PER_ELEMENT;
     const positionAttrib = this.lineAttribs.position;
     const gradientAttrib = this.lineAttribs.gradientPos;
+    const lengthAttrib = this.lineAttribs.lengthPos;
 
-    if (positionAttrib < 0 || gradientAttrib < 0) {
+    if (positionAttrib < 0 || gradientAttrib < 0 || lengthAttrib < 0) {
       return 0;
     }
 
@@ -565,7 +501,17 @@ export class WebGLRenderer implements Renderer {
       2 * Float32Array.BYTES_PER_ELEMENT,
     );
 
-    return vertices.length / 3;
+    this.gl.enableVertexAttribArray(lengthAttrib);
+    this.gl.vertexAttribPointer(
+      lengthAttrib,
+      1,
+      this.gl.FLOAT,
+      false,
+      stride,
+      3 * Float32Array.BYTES_PER_ELEMENT,
+    );
+
+    return vertices.length / 4;
   }
 
   private applyGradientUniforms(
@@ -576,10 +522,10 @@ export class WebGLRenderer implements Renderer {
       return 0;
     }
 
-    const stopCount = Math.min(colorStops.length, 5);
+    const stopCount = Math.min(colorStops.length, MAX_GRADIENT_STOPS);
     const lastIndex = stopCount - 1;
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < MAX_GRADIENT_STOPS; i++) {
       const stop = colorStops[i <= lastIndex ? i : lastIndex];
       const [r, g, b] = hslToRgb(stop.hsl[0], stop.hsl[1], stop.hsl[2]);
       const base = i * 3;
@@ -605,14 +551,12 @@ export class WebGLRenderer implements Renderer {
   private createStreamingVBO(): void {
     if (!this.gl) return;
 
-    // Dispose prior buffer if we are rebuilding
     if (this.streamingVBO) {
       this.gl.deleteBuffer(this.streamingVBO);
     }
 
-    // Create streaming VBO (initially 1MB, will grow as needed)
     this.streamingVBO = this.gl.createBuffer();
-    this.streamingVBOSize = 1024 * 1024; // 1MB initial size
+    this.streamingVBOSize = 1024 * 1024;
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.streamingVBO);
     this.gl.bufferData(
@@ -627,7 +571,6 @@ export class WebGLRenderer implements Renderer {
 
     const { dpr } = this.config;
 
-    // Resolve display size in CSS pixels
     let displayWidth = 1000;
     let displayHeight = 1000;
 
@@ -639,47 +582,41 @@ export class WebGLRenderer implements Renderer {
       displayHeight = this.canvas.offsetHeight;
     }
 
-    // Set canvas internal resolution (high DPI)
     this.canvas.width = Math.max(1, Math.floor(displayWidth * dpr));
     this.canvas.height = Math.max(1, Math.floor(displayHeight * dpr));
 
-    // Track actual render target dimensions (rectangular, not square)
     this.rtWidth = this.canvas.width;
     this.rtHeight = this.canvas.height;
 
-    // Update config with actual size (needed for coordinate scaling)
-    // Keep viewSize for aesthetic "square world" coordinate system
     this.config.viewSize = Math.max(displayWidth, displayHeight);
 
-    // Set viewport to match actual render target size
     this.gl.viewport(0, 0, this.rtWidth, this.rtHeight);
   }
 
   private async compileShaders(): Promise<void> {
     if (!this.gl) return;
 
-    // Compile line program
     this.lineProgram = this.createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     if (!this.lineProgram) {
       throw new Error("Failed to create line shader program");
     }
 
-    // Get uniform and attribute locations for line program
-    // CRITICAL: Use [0] suffix for array uniforms in WebGL 1.0
     this.lineUniforms = {
       resolution: this.gl.getUniformLocation(this.lineProgram, "u_resolution"),
       rgbStops: this.gl.getUniformLocation(this.lineProgram, "u_rgbStops[0]"),
       stopPos: this.gl.getUniformLocation(this.lineProgram, "u_stopPos[0]"),
       stopCount: this.gl.getUniformLocation(this.lineProgram, "u_stopCount"),
       opacity: this.gl.getUniformLocation(this.lineProgram, "u_opacity"),
+      pulsePos: this.gl.getUniformLocation(this.lineProgram, "u_pulsePos"),
+      pulseIntensity: this.gl.getUniformLocation(this.lineProgram, "u_pulseIntensity"),
     };
 
     this.lineAttribs = {
       position: this.gl.getAttribLocation(this.lineProgram, "a_position"),
       gradientPos: this.gl.getAttribLocation(this.lineProgram, "a_gradientPos"),
+      lengthPos: this.gl.getAttribLocation(this.lineProgram, "a_lengthPos"),
     };
 
-    // Compile blur program
     if (this.config?.enableBlur) {
       this.blurProgram = this.createProgram(
         BLUR_VERTEX_SHADER,
@@ -687,7 +624,6 @@ export class WebGLRenderer implements Renderer {
       );
 
       if (this.blurProgram) {
-        // Get uniform and attribute locations for blur program
         this.blurUniforms = {
           texture: this.gl.getUniformLocation(this.blurProgram, "u_texture"),
           resolution: this.gl.getUniformLocation(
@@ -708,7 +644,6 @@ export class WebGLRenderer implements Renderer {
         };
       }
 
-      // Compile passthrough program
       this.passthroughProgram = this.createProgram(
         PASSTHROUGH_VERTEX_SHADER,
         PASSTHROUGH_FRAGMENT_SHADER,
@@ -738,9 +673,8 @@ export class WebGLRenderer implements Renderer {
         };
       }
 
-      // Compile composite program
       this.compositeProgram = this.createProgram(
-        PASSTHROUGH_VERTEX_SHADER, // Reuse vertex shader
+        PASSTHROUGH_VERTEX_SHADER,
         COMPOSITE_FRAGMENT_SHADER,
       );
 
@@ -773,15 +707,12 @@ export class WebGLRenderer implements Renderer {
       }
     }
 
-    // Create fullscreen quad buffer
     this.createQuadBuffer();
   }
 
   private createQuadBuffer(): void {
     if (!this.gl) return;
 
-    // Fullscreen quad with position and texcoord interleaved
-    // Format: [x, y, u, v, ...]
     const quadVertices = new Float32Array([
       // Triangle 1
       -1, -1, 0, 0, 1, -1, 1, 0, -1, 1, 0, 1,
@@ -827,7 +758,6 @@ export class WebGLRenderer implements Renderer {
       return null;
     }
 
-    // Detach and delete shaders (best practice - driver can free memory)
     this.gl.detachShader(program, vertexShader);
     this.gl.detachShader(program, fragmentShader);
     this.gl.deleteShader(vertexShader);
@@ -891,15 +821,13 @@ export class WebGLRenderer implements Renderer {
   private setupBlurFramebuffers(): void {
     if (!this.gl || !this.config) return;
 
-    const blurScale = 0.5; // Render blur at half resolution for performance
+    const blurScale = 0.5;
 
-    // Create rectangular blur targets matching canvas aspect ratio
     const blurW = Math.max(1, Math.floor(this.rtWidth * blurScale));
     const blurH = Math.max(1, Math.floor(this.rtHeight * blurScale));
     this.blurRtWidth = blurW;
     this.blurRtHeight = blurH;
 
-    // Create framebuffer 1
     this.blurFBO1 = this.gl.createFramebuffer();
     this.blurTexture1 = this.createTexture(blurW, blurH);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
@@ -911,18 +839,13 @@ export class WebGLRenderer implements Renderer {
       0,
     );
 
-    // Check FBO1 completeness
     const status1 = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
     if (status1 !== this.gl.FRAMEBUFFER_COMPLETE) {
-      console.warn(
-        `[WebGLRenderer] Blur FBO1 incomplete: 0x${status1.toString(16)}`,
-      );
       this.destroyBlurTargets();
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
       return;
     }
 
-    // Create framebuffer 2
     this.blurFBO2 = this.gl.createFramebuffer();
     this.blurTexture2 = this.createTexture(blurW, blurH);
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO2);
@@ -934,25 +857,19 @@ export class WebGLRenderer implements Renderer {
       0,
     );
 
-    // Check FBO2 completeness
     const status2 = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
     if (status2 !== this.gl.FRAMEBUFFER_COMPLETE) {
-      console.warn(
-        `[WebGLRenderer] Blur FBO2 incomplete: 0x${status2.toString(16)}`,
-      );
       this.destroyBlurTargets();
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
       return;
     }
 
-    // Reset to default framebuffer
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
   }
 
   private setupSceneFramebuffer(): void {
     if (!this.gl) return;
 
-    // Clean up any existing targets before recreating
     this.destroySceneFramebuffer();
 
     const width = Math.max(1, this.rtWidth);
@@ -962,9 +879,6 @@ export class WebGLRenderer implements Renderer {
     this.sceneTexture = this.createTexture(width, height);
 
     if (!this.sceneFBO || !this.sceneTexture) {
-      console.warn(
-        "[WebGLRenderer] Failed to create scene framebuffer/texture",
-      );
       this.destroySceneFramebuffer();
       return;
     }
@@ -980,15 +894,11 @@ export class WebGLRenderer implements Renderer {
 
     const status = this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);
     if (status !== this.gl.FRAMEBUFFER_COMPLETE) {
-      console.warn(
-        `[WebGLRenderer] Scene FBO incomplete: 0x${status.toString(16)}`,
-      );
       this.destroySceneFramebuffer();
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
       return;
     }
 
-    // Reset back to default framebuffer
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
   }
 
@@ -1042,12 +952,10 @@ export class WebGLRenderer implements Renderer {
 
     this.config = { ...this.config, ...config };
 
-    // Update blur weights if sigma changed
     if (oldBlurStdDev !== this.config.blurStdDeviation) {
       this.updateBlurWeights(this.config.blurStdDeviation);
     }
 
-    // Resize if needed
     if (oldViewSize !== this.config.viewSize || oldDpr !== this.config.dpr) {
       this.updateCanvasSize();
       if (this.config.enableBlur) {
@@ -1058,7 +966,6 @@ export class WebGLRenderer implements Renderer {
       }
     }
 
-    // Enable/disable blur
     if (oldBlur !== this.config.enableBlur) {
       if (this.config.enableBlur) {
         this.setupSceneFramebuffer();
@@ -1078,9 +985,7 @@ export class WebGLRenderer implements Renderer {
     const targetH = this.rtHeight;
 
     if (enableBlur && this.blurFBO1 && this.blurFBO2 && this.blurProgram) {
-      // ============================================================================
-      // BLUR PIPELINE (rectangular render targets matching canvas aspect ratio)
-      // ============================================================================
+      // BLUR PIPELINE
 
       // Step 1: Render threads to blurFBO1 at half resolution
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
@@ -1089,7 +994,6 @@ export class WebGLRenderer implements Renderer {
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
       this.gl.useProgram(this.lineProgram);
-      // Keep square coordinate system for aesthetic consistency
       const squareScaleHalf = viewSize * dpr * 0.5;
       this.gl.uniform2f(
         this.lineUniforms.resolution,
@@ -1107,7 +1011,7 @@ export class WebGLRenderer implements Renderer {
         );
       }
 
-      // Step 2: Horizontal blur pass (FBO1 → FBO2)
+      // Step 2: Horizontal blur pass (FBO1 -> FBO2)
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO2);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
@@ -1120,7 +1024,7 @@ export class WebGLRenderer implements Renderer {
         this.blurRtHeight,
       );
 
-      // Step 3: Vertical blur pass (FBO2 → FBO1)
+      // Step 3: Vertical blur pass (FBO2 -> FBO1)
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.blurFBO1);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
@@ -1168,7 +1072,6 @@ export class WebGLRenderer implements Renderer {
         this.gl.clearColor(0, 0, 0, 0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-        // Composite pass writes directly, so disable blending/depth
         this.gl.disable(this.gl.DEPTH_TEST);
         this.gl.disable(this.gl.BLEND);
 
@@ -1186,7 +1089,6 @@ export class WebGLRenderer implements Renderer {
 
         this.drawQuad(this.compositeAttribs);
 
-        // Restore default state for subsequent overlay pass
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
@@ -1214,15 +1116,12 @@ export class WebGLRenderer implements Renderer {
         }
       }
     } else {
-      // ============================================================================
       // NO BLUR PIPELINE (direct rendering)
-      // ============================================================================
       this.gl.viewport(0, 0, targetW, targetH);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
       this.gl.useProgram(this.lineProgram);
-      // Keep square coordinate system for aesthetic consistency
       const squareScale = viewSize * dpr;
       this.gl.uniform2f(this.lineUniforms.resolution, squareScale, squareScale);
 
@@ -1231,13 +1130,10 @@ export class WebGLRenderer implements Renderer {
       }
     }
 
-    // Step 5: Draw overlay gradient with screen blend mode (purple glow)
+    // Draw overlay gradient with screen blend mode
     this.drawOverlay(frame);
   }
 
-  /**
-   * Apply a single blur pass (horizontal or vertical) using 5-tap optimization
-   */
   private applyBlurPass(
     sourceTexture: WebGLTexture | null,
     dirX: number,
@@ -1248,18 +1144,15 @@ export class WebGLRenderer implements Renderer {
     if (!this.gl || !this.blurProgram || !sourceTexture || !this.quadBuffer)
       return;
 
-    // Disable blending for blur pass - we're writing to empty FBO, blending only adds ROP cost
     this.gl.disable(this.gl.DEPTH_TEST);
     this.gl.disable(this.gl.BLEND);
 
     this.gl.useProgram(this.blurProgram);
 
-    // Bind source texture
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, sourceTexture);
     this.gl.uniform1i(this.blurUniforms.texture, 0);
 
-    // Set uniforms (use precomputed weights and offsets, rectangular resolution)
     this.gl.uniform2f(this.blurUniforms.resolution, resW, resH);
     this.gl.uniform2f(this.blurUniforms.direction, dirX, dirY);
     this.gl.uniform3f(
@@ -1274,13 +1167,9 @@ export class WebGLRenderer implements Renderer {
       this.blurOffsets[1],
     );
 
-    // Draw fullscreen quad
     this.drawQuad(this.blurAttribs);
   }
 
-  /**
-   * Draw a texture to the screen with optional opacity
-   */
   private drawTextureToScreen(
     texture: WebGLTexture | null,
     opacity: number = 1.0,
@@ -1300,9 +1189,6 @@ export class WebGLRenderer implements Renderer {
     this.drawQuad(this.passthroughAttribs);
   }
 
-  /**
-   * Draw fullscreen quad using the quad buffer
-   */
   private drawQuad(attribs: { position: number; texCoord: number }): void {
     if (!this.gl || !this.quadBuffer) return;
 
@@ -1311,7 +1197,7 @@ export class WebGLRenderer implements Renderer {
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.quadBuffer);
 
-    const stride = 4 * Float32Array.BYTES_PER_ELEMENT; // x, y, u, v
+    const stride = 4 * Float32Array.BYTES_PER_ELEMENT;
 
     this.gl.enableVertexAttribArray(position);
     this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, false, stride, 0);
@@ -1329,47 +1215,34 @@ export class WebGLRenderer implements Renderer {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
-  /**
-   * Draw overlay gradient with screen blend mode
-   */
   private drawOverlay(frame: FramePacket): void {
     if (!this.gl || !this.lineProgram || !frame.overlayGradient.length) return;
     if (!this.lineUniforms.resolution || !this.lineUniforms.opacity) return;
 
-    // Use actual render target dimensions for overlay
     const canvasWidth = this.rtWidth;
     const canvasHeight = this.rtHeight;
 
     this.gl.useProgram(this.lineProgram);
     this.gl.uniform2f(this.lineUniforms.resolution, canvasWidth, canvasHeight);
 
-    const vertices = new Float32Array([
-      0,
-      0,
-      0,
-      canvasWidth,
-      0,
-      0,
-      0,
-      canvasHeight,
-      1,
-      0,
-      canvasHeight,
-      1,
-      canvasWidth,
-      0,
-      0,
-      canvasWidth,
-      canvasHeight,
-      1,
-    ]);
+    // Reuse pre-allocated overlay vertices (x, y, gradientPos, lengthPos)
+    const vertices = this.overlayVertices;
+    vertices[0] = 0; vertices[1] = 0; vertices[2] = 0; vertices[3] = 0;
+    vertices[4] = canvasWidth; vertices[5] = 0; vertices[6] = 0; vertices[7] = 0;
+    vertices[8] = 0; vertices[9] = canvasHeight; vertices[10] = 1; vertices[11] = 0;
+    vertices[12] = 0; vertices[13] = canvasHeight; vertices[14] = 1; vertices[15] = 0;
+    vertices[16] = canvasWidth; vertices[17] = 0; vertices[18] = 0; vertices[19] = 0;
+    vertices[20] = canvasWidth; vertices[21] = canvasHeight; vertices[22] = 1; vertices[23] = 0;
 
     const vertexCount = this.uploadLineGeometry(vertices);
     if (vertexCount === 0) return;
 
     if (this.applyGradientUniforms(frame.overlayGradient) === 0) return;
-    // Slightly subdued overlay to reduce overall background glow
-    this.gl.uniform1f(this.lineUniforms.opacity, 0.35);
+    // Slightly more transparent overlay for dark backgrounds
+    this.gl.uniform1f(this.lineUniforms.opacity, OVERLAY_OPACITY);
+    // The overlay never pulses
+    this.gl.uniform1f(this.lineUniforms.pulsePos, 0);
+    this.gl.uniform1f(this.lineUniforms.pulseIntensity, 0);
 
     // Screen blend: S + D - S*D = src ONE, dest (1 - src)
     this.gl.enable(this.gl.BLEND);
@@ -1398,8 +1271,6 @@ export class WebGLRenderer implements Renderer {
     const { points, width, opacity, colorStops, gradientMinY, gradientMaxY } =
       thread;
 
-    // Build vertex data with line expansion (convert line to triangles)
-    // Uses pooled scratch buffer to avoid per-frame allocations
     const vertexFloatCount = this.buildLineVertices(
       points,
       width,
@@ -1413,7 +1284,6 @@ export class WebGLRenderer implements Renderer {
 
     if (vertexFloatCount === 0) return;
 
-    // Upload from pooled scratch buffer (no allocation)
     const vertexCount = this.uploadLineGeometry(
       this.vertexScratchBuffer.subarray(0, vertexFloatCount),
     );
@@ -1421,16 +1291,12 @@ export class WebGLRenderer implements Renderer {
 
     if (this.applyGradientUniforms(colorStops) === 0) return;
     this.gl.uniform1f(this.lineUniforms.opacity, opacity);
+    this.gl.uniform1f(this.lineUniforms.pulsePos, thread.pulsePos);
+    this.gl.uniform1f(this.lineUniforms.pulseIntensity, thread.pulseIntensity);
 
-    // Draw triangles
     this.gl.drawArrays(this.gl.TRIANGLES, 0, vertexCount);
   }
 
-  /**
-   * Builds line vertices directly into pooled scratch buffer.
-   * Returns the number of floats written (vertexCount * 3).
-   * PERF: Eliminates per-frame array allocations (~1800/sec).
-   */
   private buildLineVertices(
     points: Float32Array,
     width: number,
@@ -1444,62 +1310,49 @@ export class WebGLRenderer implements Renderer {
     const n = points.length >>> 1;
     if (n === 0) return 0;
 
-    // Use target dimensions if provided (for blur FBO), otherwise use canvas dimensions
     const canvasWidth = targetW ?? (this.canvas?.width || viewSize * dpr);
     const canvasHeight = targetH ?? (this.canvas?.height || viewSize * dpr);
 
-    // Scale normalized coordinates [0,1] to canvas pixel dimensions
     const scale = viewSize * dpr;
     const scaleX = scale;
     const scaleY = scale;
 
-    // Apply configurable positioning offsets
-    const offsetXMultiplier = this.config?.offsetXMultiplier ?? 0.5;
-    const offsetYMultiplier = this.config?.offsetYMultiplier ?? -0.35;
+    const offsetXMultiplier = this.config?.offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER;
+    const offsetYMultiplier = this.config?.offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER;
     const offsetX = (canvasWidth - scale) * offsetXMultiplier;
     const offsetY = (canvasHeight - scale) * offsetYMultiplier;
 
-    // Scale up thread width for better visibility
-    const WIDTH_SCALE = 2.4;
-    const halfWidth = (width * dpr * WIDTH_SCALE) / 2;
+    const halfWidth = (width * dpr * THREAD_WIDTH_SCALE) / 2;
 
-    // Gradient normalization
     const gradientMargin = halfWidth / scaleY;
     const adjustedMinY = gradientMinY - gradientMargin;
     const adjustedMaxY = gradientMaxY + gradientMargin;
     const yRange = adjustedMaxY - adjustedMinY;
     const yRangeInv = yRange > 0 ? 1 / yRange : 0;
 
-    // Estimate max floats needed: (n-1) segments × 8 subdivisions × 6 verts × 3 floats
-    const segmentsPerCurve = 8;
+    const segmentsPerCurve = SEGMENTS_PER_CURVE;
     const maxCurvePoints = 1 + (n - 1) * segmentsPerCurve;
-    const maxFloats = (maxCurvePoints - 1) * 6 * 3;
+    const maxFloats = (maxCurvePoints - 1) * 6 * 4;
 
-    // Grow scratch buffer if needed (rare after warmup)
     if (maxFloats > this.vertexScratchBuffer.length) {
       const newSize = Math.max(maxFloats, this.vertexScratchBuffer.length * 2);
       this.vertexScratchBuffer = new Float32Array(newSize);
     }
 
-    // Grow curve scratch buffer if needed
     const curveFloats = maxCurvePoints * 3;
     if (curveFloats > this.curveScratchBuffer.length) {
       const newSize = Math.max(curveFloats, this.curveScratchBuffer.length * 2);
       this.curveScratchBuffer = new Float32Array(newSize);
     }
 
-    // Build curve points inline using pooled buffer (avoid object allocations)
-    // Store as flat array: [x, y, normY, x, y, normY, ...]
     const curveData = this.curveScratchBuffer;
     let curveIdx = 0;
 
-    // First point
     const firstNormY = points[1];
     curveData[curveIdx++] = points[0] * scaleX + offsetX;
     curveData[curveIdx++] = firstNormY * scaleY + offsetY;
     curveData[curveIdx++] = firstNormY;
 
-    // Generate Bezier curves between points
     let prevPrevX = points[0] * scaleX + offsetX;
     let prevPrevY = points[1] * scaleY + offsetY;
     let prevX = prevPrevX;
@@ -1515,13 +1368,11 @@ export class WebGLRenderer implements Renderer {
       const nextX = points[nextIdx * 2] * scaleX + offsetX;
       const nextY = points[nextIdx * 2 + 1] * scaleY + offsetY;
 
-      // Control points
       const cp1x = prevX + (currX - prevPrevX) * BEZIER_CONTROL_FACTOR;
       const cp1y = prevY + (currY - prevPrevY) * BEZIER_CONTROL_FACTOR;
       const cp2x = currX - (nextX - prevX) * BEZIER_CONTROL_FACTOR;
       const cp2y = currY - (nextY - prevY) * BEZIER_CONTROL_FACTOR;
 
-      // Tessellate cubic Bezier curve
       for (let t = 1; t <= segmentsPerCurve; t++) {
         const u = t / segmentsPerCurve;
         const u2 = u * u;
@@ -1544,8 +1395,8 @@ export class WebGLRenderer implements Renderer {
     }
 
     const curvePointCount = curveIdx / 3;
+    const invLastCurveIdx = curvePointCount > 1 ? 1 / (curvePointCount - 1) : 0;
 
-    // Expand curve into triangles, writing directly to scratch buffer
     let writeIdx = 0;
     const buf = this.vertexScratchBuffer;
 
@@ -1560,7 +1411,6 @@ export class WebGLRenderer implements Renderer {
       const p1y = curveData[i1 + 1];
       const p1normY = curveData[i1 + 2];
 
-      // Calculate perpendicular
       const dx = p1x - p0x;
       const dy = p1y - p0y;
       const len = Math.sqrt(dx * dx + dy * dy);
@@ -1572,41 +1422,48 @@ export class WebGLRenderer implements Renderer {
 
       const nyNorm = ny / scaleY;
 
-      // Gradient positions (inline clamp)
       const p0Upper = Math.max(0, Math.min(1, (p0normY + nyNorm - adjustedMinY) * yRangeInv));
       const p0Lower = Math.max(0, Math.min(1, (p0normY - nyNorm - adjustedMinY) * yRangeInv));
       const p1Upper = Math.max(0, Math.min(1, (p1normY + nyNorm - adjustedMinY) * yRangeInv));
       const p1Lower = Math.max(0, Math.min(1, (p1normY - nyNorm - adjustedMinY) * yRangeInv));
 
+      // Along-thread positions for the flip pulse
+      const lp0 = i * invLastCurveIdx;
+      const lp1 = (i + 1) * invLastCurveIdx;
+
       // Triangle 1
       buf[writeIdx++] = p0x + nx;
       buf[writeIdx++] = p0y + ny;
       buf[writeIdx++] = p0Upper;
+      buf[writeIdx++] = lp0;
       buf[writeIdx++] = p0x - nx;
       buf[writeIdx++] = p0y - ny;
       buf[writeIdx++] = p0Lower;
+      buf[writeIdx++] = lp0;
       buf[writeIdx++] = p1x + nx;
       buf[writeIdx++] = p1y + ny;
       buf[writeIdx++] = p1Upper;
+      buf[writeIdx++] = lp1;
 
       // Triangle 2
       buf[writeIdx++] = p0x - nx;
       buf[writeIdx++] = p0y - ny;
       buf[writeIdx++] = p0Lower;
+      buf[writeIdx++] = lp0;
       buf[writeIdx++] = p1x - nx;
       buf[writeIdx++] = p1y - ny;
       buf[writeIdx++] = p1Lower;
+      buf[writeIdx++] = lp1;
       buf[writeIdx++] = p1x + nx;
       buf[writeIdx++] = p1y + ny;
       buf[writeIdx++] = p1Upper;
+      buf[writeIdx++] = lp1;
     }
 
-    this.vertexScratchLength = writeIdx;
     return writeIdx;
   }
 
   dispose(): void {
-    // Remove context loss/restoration handlers
     if (this.canvas && "removeEventListener" in this.canvas) {
       this.canvas.removeEventListener(
         "webglcontextlost",
@@ -1619,23 +1476,19 @@ export class WebGLRenderer implements Renderer {
     }
 
     if (this.gl) {
-      // Delete programs
       if (this.lineProgram) this.gl.deleteProgram(this.lineProgram);
       if (this.blurProgram) this.gl.deleteProgram(this.blurProgram);
       if (this.passthroughProgram)
         this.gl.deleteProgram(this.passthroughProgram);
       if (this.compositeProgram) this.gl.deleteProgram(this.compositeProgram);
 
-      // Delete buffers
       if (this.quadBuffer) this.gl.deleteBuffer(this.quadBuffer);
       if (this.streamingVBO) this.gl.deleteBuffer(this.streamingVBO);
 
-      // Destroy blur targets
       this.destroySceneFramebuffer();
       this.destroyBlurTargets();
     }
 
-    // Clear all references
     this.gl = null;
     this.canvas = null;
     this.config = null;
@@ -1646,6 +1499,5 @@ export class WebGLRenderer implements Renderer {
     this.quadBuffer = null;
     this.streamingVBO = null;
     this.streamingVBOSize = 0;
-    this.contextLost = false;
   }
 }

@@ -16,6 +16,8 @@ import {
   VIEWBOX_SIZE,
   FRAME_INTERVAL,
   GOLDEN_RATIO_SEED,
+  DEFAULT_OFFSET_X_MULTIPLIER,
+  DEFAULT_OFFSET_Y_MULTIPLIER,
   createSeededRandom,
   chooseColor,
   createPathProfile,
@@ -25,7 +27,10 @@ import {
   getUpFraction,
 } from "../utils/thread-utils";
 
-import type { InitMessage } from "../workers/animation-types";
+import type {
+  InitMessage,
+  RendererReadyMessage,
+} from "../workers/animation-types";
 
 // Note: SIN_OFFSETS/COS_OFFSETS computation moved to animation.worker.ts
 // Animation computations run entirely in the web worker now.
@@ -261,6 +266,9 @@ function TimelineThreadsComponent({
   const animationWorkerRef = useRef<Worker | null>(null);
   const rafIdRef = useRef<number | null>(null);
   const tickFnRef = useRef<((now: number) => void) | null>(null);
+  // Device-pixel size of the transferred OffscreenCanvas, for mapping pointer
+  // events into the worker's normalized viewbox space
+  const canvasDeviceSizeRef = useRef<{ w: number; h: number } | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -512,6 +520,7 @@ function TimelineThreadsComponent({
         const displayHeight = rect.height || window.innerHeight || 1;
         offscreen.width = Math.max(1, Math.floor(displayWidth * dpr));
         offscreen.height = Math.max(1, Math.floor(displayHeight * dpr));
+        canvasDeviceSizeRef.current = { w: offscreen.width, h: offscreen.height };
 
         // Create animation worker
         let worker: Worker;
@@ -527,6 +536,15 @@ function TimelineThreadsComponent({
         }
 
         animationWorkerRef.current = worker;
+
+        // The worker reports which backend it initialized; surface it on the
+        // container so the active renderer is inspectable in DevTools.
+        worker.onmessage = (event: MessageEvent<RendererReadyMessage>) => {
+          if (event.data?.type === "rendererReady") {
+            containerRef.current?.setAttribute("data-renderer", event.data.kind);
+            logTimelineDebug("Renderer:", event.data.kind);
+          }
+        };
 
         worker.onerror = (error: ErrorEvent) => {
           console.error("[Timeline] Animation worker error:", {
@@ -618,6 +636,7 @@ function TimelineThreadsComponent({
         rafIdRef.current = null;
       }
       tickFnRef.current = null;
+      canvasDeviceSizeRef.current = null;
 
       // Terminate worker
       if (animationWorkerRef.current) {
@@ -629,6 +648,78 @@ function TimelineThreadsComponent({
       logTimelineDebug("Canvas renderer cleaned up");
     };
   }, [shouldAnimate, blurStdDeviation, frameInterval]);
+
+  // Pointer interaction: forward mouse position to the worker in the same
+  // normalized viewbox space as the thread points. rAF-throttled; the worker
+  // eases the response so threads bow lazily away from the cursor.
+  const offsetXMultiplier = overrideParams?.offsetXMultiplier;
+  const offsetYMultiplier = overrideParams?.offsetYMultiplier;
+  useEffect(() => {
+    if (!shouldAnimate || prefersReducedMotion) return;
+    if (typeof window === "undefined") return;
+
+    let rafId = 0;
+    let pending: { x: number; y: number } | null = null;
+
+    const flush = () => {
+      rafId = 0;
+      const worker = animationWorkerRef.current;
+      if (pending && worker) {
+        worker.postMessage({
+          type: "pointer",
+          x: pending.x,
+          y: pending.y,
+          active: true,
+        });
+        pending = null;
+      }
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      const canvas = canvasRef.current;
+      const size = canvasDeviceSizeRef.current;
+      if (!canvas || !size || !animationWorkerRef.current) return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      // CSS px -> device px -> normalized viewbox space (same mapping as
+      // the renderers: pixel = point * squareScale + offset)
+      const xDev = (e.clientX - rect.left) * (size.w / rect.width);
+      const yDev = (e.clientY - rect.top) * (size.h / rect.height);
+      const squareScale = Math.max(size.w, size.h);
+      const offsetX =
+        (size.w - squareScale) *
+        (offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER);
+      const offsetY =
+        (size.h - squareScale) *
+        (offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER);
+      pending = {
+        x: (xDev - offsetX) / squareScale,
+        y: (yDev - offsetY) / squareScale,
+      };
+      if (!rafId) rafId = requestAnimationFrame(flush);
+    };
+
+    const handlePointerLeave = () => {
+      animationWorkerRef.current?.postMessage({
+        type: "pointer",
+        x: 0.5,
+        y: 0.5,
+        active: false,
+      });
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.documentElement.addEventListener("pointerleave", handlePointerLeave);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.documentElement.removeEventListener(
+        "pointerleave",
+        handlePointerLeave,
+      );
+    };
+  }, [shouldAnimate, prefersReducedMotion, offsetXMultiplier, offsetYMultiplier]);
 
   // Return nothing if WebGL is not supported
   if (!webglSupported) {

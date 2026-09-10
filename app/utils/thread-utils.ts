@@ -16,7 +16,7 @@ export type HSL = { h: number; s: number; l: number };
 // CONSTANTS - Visual Layout
 // ============================================================================
 
-export const THREAD_COUNT = 30;
+export const THREAD_COUNT = 80;
 export const SEGMENTS = 10;
 export const PIVOT_X = 0.42;
 export const PIVOT_Y = 0.54;
@@ -36,7 +36,10 @@ export const COLOR_PALETTE: HSL[] = [
 
 export const FLIP_INTERVAL_MS = 8000;
 export const SETTLE_BUFFER_MS = 900;
-export const TARGET_FPS = 60;
+// Cap, not a target: the rAF-driven tick loop follows the display's refresh
+// rate and throttles to this. High-refresh monitors get up to 144Hz; the
+// low-power profile still clamps to 45fps in TimelineThreads.
+export const TARGET_FPS = 144;
 export const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 export const UP_DURATION_MIN = 10400;
@@ -61,6 +64,105 @@ for (let i = 0; i < SEGMENTS; i++) {
 export const SEGMENT_FACTORS = new Float32Array(SEGMENTS);
 for (let i = 0; i < SEGMENTS; i++) {
   SEGMENT_FACTORS[i] = i / (SEGMENTS - 1);
+}
+
+// ============================================================================
+// CONSTANTS & HELPERS - Rendering (shared by the WebGL and WebGPU renderers;
+// both paths must stay visually identical, so change these here, never fork
+// a copy inside one renderer)
+// ============================================================================
+
+/** Bezier subdivisions per polyline segment when tessellating threads */
+export const SEGMENTS_PER_CURVE = 8;
+
+/** Stroke width multiplier applied to each thread's weight */
+export const THREAD_WIDTH_SCALE = 2.4;
+
+/** Opacity of the overlay gradient pass */
+export const OVERLAY_OPACITY = 0.25;
+
+/** Color stops per gradient; the shaders are sized/unrolled for this count */
+export const MAX_GRADIENT_STOPS = 5;
+
+/** Default placement of the square viewbox inside a non-square canvas */
+export const DEFAULT_OFFSET_X_MULTIPLIER = 0.5;
+export const DEFAULT_OFFSET_Y_MULTIPLIER = -0.35;
+
+// --- Pointer interaction (applied to control points in the worker, so both
+// renderers inherit it identically) ---
+
+/** Gaussian falloff radius around the pointer, in normalized viewbox space */
+export const POINTER_RADIUS = 0.16;
+/** Displacement scale; peak push is ~0.6x this at one radius from the pointer */
+export const POINTER_STRENGTH = 0.014;
+/** Easing time constant for the trailing pointer position */
+export const POINTER_POS_TAU_MS = 250;
+/** Easing time constant for engage/release of the effect */
+export const POINTER_STRENGTH_TAU_MS = 400;
+
+// --- Flip pulse (a brief highlight traveling along a thread when it starts
+// changing direction; rendered by both fragment shaders) ---
+
+/** How long the pulse takes to travel the full thread */
+export const PULSE_TRAVEL_MS = 2600;
+/** Gaussian width of the pulse along the thread (0..1 length space) */
+export const PULSE_WIDTH = 0.09;
+/** Peak brightness boost at the pulse center */
+export const PULSE_AMPLITUDE = 0.3;
+
+// --- Composite grain ---
+
+/** Dither amplitude for the final composite: debands the glow gradients and
+ * reads as the faintest paper texture. ~2 steps of 8-bit. */
+export const GRAIN_AMPLITUDE = 2.0 / 255;
+
+/**
+ * Convert HSL to RGB on CPU (removes expensive per-fragment conversion)
+ * @param h Hue (0-360)
+ * @param s Saturation (0-100)
+ * @param l Lightness (0-100)
+ * @returns RGB tuple (0-1 range)
+ */
+export function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  h = h / 360.0;
+  s = s / 100.0;
+  l = l / 100.0;
+
+  const c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
+  const x = c * (1.0 - Math.abs(((h * 6.0) % 2.0) - 1.0));
+  const m = l - c / 2.0;
+
+  let rgb: [number, number, number];
+  if (h < 1.0 / 6.0) rgb = [c, x, 0.0];
+  else if (h < 2.0 / 6.0) rgb = [x, c, 0.0];
+  else if (h < 3.0 / 6.0) rgb = [0.0, c, x];
+  else if (h < 4.0 / 6.0) rgb = [0.0, x, c];
+  else if (h < 5.0 / 6.0) rgb = [x, 0.0, c];
+  else rgb = [c, 0.0, x];
+
+  return [rgb[0] + m, rgb[1] + m, rgb[2] + m];
+}
+
+/**
+ * Compute 5-tap linear Gaussian weights and offsets
+ * Uses bilinear filtering optimization: 5 taps instead of 9
+ */
+export function computeLinearGaussianWeights(sigma: number): {
+  weights: [number, number, number];
+  offsets: [number, number];
+} {
+  const gauss = (x: number, sigma: number) =>
+    Math.exp(-(x * x) / (2.0 * sigma * sigma));
+
+  const w0 = gauss(0, sigma);
+  const w1 = gauss(1, sigma);
+  const w2 = gauss(2, sigma);
+
+  const total = w0 + 2 * w1 + 2 * w2;
+  const weights: [number, number, number] = [w0 / total, w1 / total, w2 / total];
+  const offsets: [number, number] = [1.0 * sigma, 2.0 * sigma];
+
+  return { weights, offsets };
 }
 
 // ============================================================================
