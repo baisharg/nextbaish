@@ -27,6 +27,9 @@ export type ThreadFrame = {
   // Static gradient bounds (from thread's base profile, not animated)
   gradientMinY: number; // Min Y in normalized [0..1] space
   gradientMaxY: number; // Max Y in normalized [0..1] space
+  // Flip pulse: highlight traveling along the thread after a direction flip
+  pulsePos: number; // Pulse center in [0..1] along-thread space
+  pulseIntensity: number; // Peak brightness boost; 0 = no pulse
 };
 
 /**
@@ -36,7 +39,6 @@ export type FramePacket = {
   time: number; // Current timestamp in ms
   viewSize: number; // VIEWBOX_SIZE constant
   threads: ThreadFrame[];
-  overlayMixMode: "screen"; // Capture <rect> overlay behavior
   overlayGradient: ColorStop[]; // Overlay gradient stops
 };
 
@@ -44,11 +46,26 @@ export type FramePacket = {
  * Renderer capabilities
  */
 export type RendererCapabilities = {
-  offscreenCanvas: boolean;
   webgl2: boolean;
   webgl: boolean;
-  sharedArrayBuffer: boolean;
 };
+
+/**
+ * Presence check only — adapter/device acquisition is async and can still
+ * fail, so createRenderer treats WebGPU as an attempt with WebGL fallback.
+ */
+export function supportsWebGPU(): boolean {
+  return (
+    typeof navigator !== "undefined" &&
+    Boolean((navigator as { gpu?: unknown }).gpu)
+  );
+}
+
+/**
+ * Which rendering backend createRenderer ended up with; reported to the
+ * main thread so the active path is observable (data-renderer attribute).
+ */
+export type RendererKind = "webgpu" | "webgl";
 
 /**
  * Renderer configuration
@@ -66,28 +83,9 @@ export type RendererConfig = {
  * Renderer interface - all renderers must implement this
  */
 export interface Renderer {
-  /**
-   * Initialize the renderer with a canvas element
-   * @param canvas - HTMLCanvasElement or OffscreenCanvas
-   * @param config - Renderer configuration
-   */
   init(canvas: HTMLCanvasElement | OffscreenCanvas, config: RendererConfig): Promise<void>;
-
-  /**
-   * Draw a single frame
-   * @param frame - Frame data to render
-   */
   draw(frame: FramePacket): void;
-
-  /**
-   * Update configuration (e.g., blur amount, viewport size)
-   * @param config - New configuration
-   */
   updateConfig(config: Partial<RendererConfig>): void;
-
-  /**
-   * Clean up resources
-   */
   dispose(): void;
 }
 
@@ -111,7 +109,6 @@ export function detectCapabilities(): RendererCapabilities {
   };
 
   const probeCanvas = createProbeCanvas();
-  const offscreenCanvas = Boolean(probeCanvas && typeof OffscreenCanvas !== "undefined");
 
   let webgl = false;
   let webgl2 = false;
@@ -133,21 +130,16 @@ export function detectCapabilities(): RendererCapabilities {
     }
   }
 
-  const sharedArrayBuffer = typeof SharedArrayBuffer !== "undefined";
-
   return {
-    offscreenCanvas,
     webgl2,
     webgl,
-    sharedArrayBuffer,
   };
 }
 
 /**
- * Renderer type enum (WebGL only)
+ * Renderer type enum
  */
 export enum RendererType {
-  SVG = "svg", // Not implemented - kept for future fallback
   WebGL = "webgl",
   WebGL2 = "webgl2",
 }

@@ -50,6 +50,7 @@ export default tseslint.config(
       "**/rum-monitor.tsx",
       "**/create-renderer.ts",
       "**/webgl-renderer.ts",
+      "**/vgpu-renderer.ts",
       "**/*.worker.ts",
     ],
     rules: {

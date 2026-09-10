@@ -1,12 +1,9 @@
 /**
  * Animation Worker Types
- *
- * Type definitions for animation worker messages and communication.
- * These types are used by the main thread to communicate with animation workers.
  */
 
 import type { Direction, HSL } from "../utils/thread-utils";
-import type { FramePacket } from "../types/renderer";
+import type { RendererKind } from "../types/renderer";
 
 // ============================================================================
 // MESSAGE TYPES
@@ -43,26 +40,18 @@ export type InitMessage = {
   frameInterval: number;
 };
 
-export type PauseMessage = {
-  type: "pause";
-};
+export type WorkerMessage =
+  | InitMessage
+  | { type: "pause" }
+  | { type: "resume" }
+  | { type: "terminate" }
+  | { type: "tick"; now: number }
+  // Pointer position in normalized viewbox space (same space as thread
+  // points); active=false eases the interaction back out.
+  | { type: "pointer"; x: number; y: number; active: boolean };
 
-export type ResumeMessage = {
-  type: "resume";
-};
-
-export type TerminateMessage = {
-  type: "terminate";
-};
-
-export type TickMessage = {
-  type: "tick";
-  now: number;
-};
-
-export type WorkerMessage = InitMessage | PauseMessage | ResumeMessage | TerminateMessage | TickMessage;
-
-export type FrameMessage = {
-  type: "frame";
-  packet: FramePacket;
+// Worker -> main thread: which renderer backend was initialized.
+export type RendererReadyMessage = {
+  type: "rendererReady";
+  kind: RendererKind;
 };

@@ -364,6 +364,17 @@ export interface Resource {
 }
 ```
 
+### Timeline Renderers
+
+The background thread animation runs entirely inside `workers/animation.worker.ts` on an `OffscreenCanvas`. Two renderers implement the `Renderer` interface in `types/renderer.ts`:
+
+- **`renderers/vgpu-renderer.ts`** - WebGPU via the `vgpu` library (preferred). WGSL shaders; bezier tessellation and ribbon extrusion happen in the vertex shader, with analytic edge AA, dual-level bloom, and shimmer. Loaded via dynamic import so browsers without WebGPU never download it.
+- **`renderers/webgl-renderer.ts`** - WebGL fallback (CPU tessellation, 5-tap Gaussian blur).
+
+`utils/create-renderer.ts` owns the ordering: try WebGPU, fall back to WebGL. The worker reports the chosen backend and the component exposes it as `data-renderer="webgpu" | "webgl"` on the `.timeline-background` container (inspect it in DevTools to know which path is active). Both paths must stay visually identical, so the shared parity constants and helpers (`SEGMENTS_PER_CURVE`, `THREAD_WIDTH_SCALE`, `OVERLAY_OPACITY`, `MAX_GRADIENT_STOPS`, offset defaults, pointer/pulse/grain tuning, `hslToRgb`, `computeLinearGaussianWeights`) live in `utils/thread-utils.ts`. Change them there, never fork a copy in one renderer. Note: `meta` is a reserved word in WGSL.
+
+Effects shared by both renderers: pointer interaction (threads bow away from the mouse; applied to control points in the worker), flip pulses (a highlight travels a thread when it changes direction), and composite grain (interleaved-gradient-noise dither). Do not add framework imports to any file under `renderers/`, `workers/`, or `utils/thread-utils.ts` - they run in a Web Worker.
+
 ### Web Workers
 
 **`workers/thread-generator.worker.ts`** - Timeline Animation Worker

@@ -15,10 +15,15 @@ import {
   type PathProfile,
   FLIP_INTERVAL_MS,
   SETTLE_BUFFER_MS,
-  FRAME_INTERVAL,
   PIVOT_DAMPING,
   SEGMENT_FACTORS,
   VIEWBOX_SIZE,
+  POINTER_RADIUS,
+  POINTER_STRENGTH,
+  POINTER_POS_TAU_MS,
+  POINTER_STRENGTH_TAU_MS,
+  PULSE_TRAVEL_MS,
+  PULSE_AMPLITUDE,
   adjustColor,
   directionDuration,
 } from "../utils/thread-utils";
@@ -27,6 +32,7 @@ import type { FramePacket, ThreadFrame, ColorStop, Renderer } from "../types/ren
 import { createRenderer } from "../utils/create-renderer";
 import type {
   WorkerMessage,
+  RendererReadyMessage,
 } from "./animation-types";
 
 // ============================================================================
@@ -69,7 +75,7 @@ type WorkerThreadState = {
 // PERFORMANCE OPTIMIZATIONS
 // ============================================================================
 
-// Precompute sin/cos offsets (same as main thread implementation)
+// Precompute sin/cos offsets
 const SEG_LEN = SEGMENT_FACTORS.length;
 const SIN_OFFSETS = new Float32Array(SEG_LEN);
 const COS_OFFSETS = new Float32Array(SEG_LEN);
@@ -79,7 +85,7 @@ for (let i = 0; i < SEG_LEN; i++) {
   COS_OFFSETS[i] = s * Math.PI * 0.5;
 }
 
-// Sin/Cos lookup table (same as main thread)
+// Sin/Cos lookup table
 const SIN_TABLE_SIZE = 4096;
 const SIN_TABLE = new Float32Array(SIN_TABLE_SIZE);
 const TWO_PI = Math.PI * 2;
@@ -124,11 +130,12 @@ function createGradientStops(color: HSL): {
 } {
   // UP gradient: Darker, richer colors for better contrast
   const upStops: ColorStop[] = [
-    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: -5 })) }, // Darker top (was l: 10)
-    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: -5 })) }, // Darker mid (was l: 0)
-    { yPct: 1, hsl: hslToArray(adjustColor(color, { h: 24, s: -3, l: -15 })) }, // Darker bottom (was l: -12)
+    { yPct: 0, hsl: hslToArray(adjustColor(color, { h: -18, s: 0, l: -5 })) },
+    { yPct: 0.5, hsl: hslToArray(adjustColor(color, { h: 4, s: 0, l: -5 })) },
+    { yPct: 1, hsl: hslToArray(adjustColor(color, { h: 24, s: -3, l: -15 })) },
   ];
 
+  // DOWN gradient: soft floor shading for the light background
   const downStops: ColorStop[] = [
     { yPct: 0, hsl: hslToArray(color) }, // Base color
     { yPct: 0.3, hsl: hslToArray(adjustColor(color, { s: -8, l: -3 })) }, // Slight darken at 30%
@@ -176,40 +183,41 @@ const OVERLAY_GRADIENT: ColorStop[] = [
 // THREAD FLIP LOGIC
 // ============================================================================
 
-type FlipDecision = { threadId: number; direction: Direction } | null;
+type FlipDecision = { thread: WorkerThreadState; direction: Direction } | null;
 
 const selectThreadToFlip = (
   threads: WorkerThreadState[],
   now: number,
-  settleBufferMs: number = SETTLE_BUFFER_MS,
-  preferDownWeight: number = 0.75,
 ): FlipDecision => {
-  const eligible = (dir: Direction) =>
-    threads.filter(
-      (thread) =>
-        thread.direction === dir && now - thread.lastFlipAt > settleBufferMs,
-    );
+  const settleBufferMs = SETTLE_BUFFER_MS;
+  const eligibleDown: WorkerThreadState[] = [];
+  const eligibleUp: WorkerThreadState[] = [];
 
-  const pick = (dir: Direction) => {
-    const candidates = eligible(dir);
-    if (!candidates.length) return null;
-    return candidates[(Math.random() * candidates.length) | 0];
-  };
+  for (const t of threads) {
+    if (now - t.lastFlipAt <= settleBufferMs) continue;
+    if (t.direction === "down") eligibleDown.push(t);
+    else eligibleUp.push(t);
+  }
 
-  let target = Math.random() < preferDownWeight ? pick("down") : null;
-  if (!target) target = pick("up");
-  if (!target) target = pick("down");
+  const pickFrom = (arr: WorkerThreadState[]) =>
+    arr.length ? arr[(Math.random() * arr.length) | 0] : null;
+
+  let target = Math.random() < 0.75 ? pickFrom(eligibleDown) : null;
+  if (!target) target = pickFrom(eligibleUp);
+  if (!target) target = pickFrom(eligibleDown);
   if (!target) return null;
 
   const nextDirection: Direction = target.direction === "down" ? "up" : "down";
 
   // Ensure at least one "up" thread remains
-  const upThreads = threads.filter(
-    (t) => t.direction === "up" || t.targetDirection === "up",
-  );
-  if (nextDirection === "down" && upThreads.length <= 1) return null;
+  if (nextDirection === "down") {
+    const upCount = threads.filter(
+      (t) => t.direction === "up" || t.targetDirection === "up",
+    ).length;
+    if (upCount <= 1) return null;
+  }
 
-  return { threadId: target.id, direction: nextDirection };
+  return { thread: target, direction: nextDirection };
 };
 
 // ============================================================================
@@ -281,13 +289,21 @@ const writeAnimatedPoints = (
 
 let threads: WorkerThreadState[] = [];
 let viewSize = VIEWBOX_SIZE;
-let frameInterval = FRAME_INTERVAL;
 let isPaused = false;
 let lastFlipCheck = 0;
-let lastFrameTime = 0;
 let renderer: Renderer | null = null;
 let threadFrames: ThreadFrame[] = [];
 let reusablePacket: FramePacket | null = null;
+
+// Pointer interaction state: targets set by "pointer" messages, eased values
+// advanced each frame so the response trails like air movement.
+let pointerTargetX = 0.5;
+let pointerTargetY = 0.5;
+let pointerTargetActive = false;
+let pointerX = 0.5;
+let pointerY = 0.5;
+let pointerStrength = 0;
+let lastAnimateNow = 0;
 
 // ============================================================================
 // ANIMATION LOOP
@@ -298,25 +314,30 @@ function animate(now: number) {
     return;
   }
 
-  if (now - lastFrameTime < frameInterval - 1) {
-    return;
-  }
-  lastFrameTime = now;
+  // Advance pointer easing (frame-rate independent)
+  const dt = lastAnimateNow > 0 ? Math.min(now - lastAnimateNow, 100) : 16;
+  lastAnimateNow = now;
+  const posBlend = 1 - Math.exp(-dt / POINTER_POS_TAU_MS);
+  const strengthBlend = 1 - Math.exp(-dt / POINTER_STRENGTH_TAU_MS);
+  pointerX += (pointerTargetX - pointerX) * posBlend;
+  pointerY += (pointerTargetY - pointerY) * posBlend;
+  pointerStrength +=
+    ((pointerTargetActive ? 1 : 0) - pointerStrength) * strengthBlend;
+  const pointerOn = pointerStrength > 0.002;
+  const pointerInvR2 = 1 / (2 * POINTER_RADIUS * POINTER_RADIUS);
+  const pointerScale = (POINTER_STRENGTH / POINTER_RADIUS) * pointerStrength;
 
   // Flip decision on interval
   if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
     lastFlipCheck = now;
     const decision = selectThreadToFlip(threads, now);
     if (decision) {
-      const { threadId, direction: nextDirection } = decision;
-      const thread = threads.find((t) => t.id === threadId);
-      if (thread) {
-        thread.duration = directionDuration(nextDirection);
-        thread.targetDirection = nextDirection;
-        thread.transitionStartTime = now;
-        thread.lastFlipAt = now;
-        transitioningThreadIds.add(threadId);
-      }
+      const { thread, direction: nextDirection } = decision;
+      thread.duration = directionDuration(nextDirection);
+      thread.targetDirection = nextDirection;
+      thread.transitionStartTime = now;
+      thread.lastFlipAt = now;
+      transitioningThreadIds.add(thread.id);
     }
   }
 
@@ -343,6 +364,20 @@ function animate(now: number) {
       thread.driftAmp,
     );
 
+    // Bow points away from the (eased) pointer with a gaussian falloff.
+    // The push magnitude is d * scale * falloff, which is zero at the pointer
+    // itself and peaks one radius out — no singularity, no jitter.
+    if (pointerOn) {
+      const pts = thread.floatingPoints;
+      for (let p = 0; p < pts.length; p += 2) {
+        const dx = pts[p] - pointerX;
+        const dy = pts[p + 1] - pointerY;
+        const falloff = Math.exp(-(dx * dx + dy * dy) * pointerInvR2);
+        pts[p] += dx * pointerScale * falloff;
+        pts[p + 1] += dy * pointerScale * falloff;
+      }
+    }
+
     // Check if transition completed
     if (!isTransitioning && thread.direction !== thread.targetDirection) {
       thread.direction = thread.targetDirection;
@@ -358,6 +393,18 @@ function animate(now: number) {
     frame.colorStops = thread.gradientStops[thread.direction];
     frame.gradientMinY = thread.gradientBounds.minY;
     frame.gradientMaxY = thread.gradientBounds.maxY;
+
+    // Flip pulse: a highlight travels the thread during the first moments of
+    // a direction transition (durations always exceed PULSE_TRAVEL_MS).
+    const pulseElapsed = now - thread.transitionStartTime;
+    if (thread.transitionStartTime > 0 && pulseElapsed < PULSE_TRAVEL_MS) {
+      const p = pulseElapsed / PULSE_TRAVEL_MS;
+      frame.pulsePos = p;
+      frame.pulseIntensity = PULSE_AMPLITUDE * Math.sin(Math.PI * p);
+    } else {
+      frame.pulsePos = 0;
+      frame.pulseIntensity = 0;
+    }
   }
 
   if (!reusablePacket || !renderer) return;
@@ -411,8 +458,6 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       });
 
       viewSize = data.config.viewSize;
-      frameInterval = data.frameInterval;
-      lastFrameTime = 0;
       transitioningThreadIds.clear();
 
       // Prepare reusable frame structures
@@ -423,13 +468,14 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         colorStops: thread.gradientStops[thread.direction],
         gradientMinY: thread.gradientBounds.minY,
         gradientMaxY: thread.gradientBounds.maxY,
+        pulsePos: 0,
+        pulseIntensity: 0,
       }));
 
       reusablePacket = {
         time: 0,
         viewSize,
         threads: threadFrames,
-        overlayMixMode: "screen",
         overlayGradient: OVERLAY_GRADIENT,
       };
 
@@ -441,6 +487,11 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         .then((result) => {
           renderer?.dispose();
           renderer = result.renderer;
+          const ready: RendererReadyMessage = {
+            type: "rendererReady",
+            kind: result.kind,
+          };
+          self.postMessage(ready);
         })
         .catch((error) => {
           console.error("[Timeline] Worker renderer init failed", error);
@@ -462,6 +513,17 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       break;
     }
 
+    case "pointer": {
+      // On release keep the last position so the effect fades out in place
+      // instead of swinging toward the parked target.
+      if (data.active) {
+        pointerTargetX = data.x;
+        pointerTargetY = data.y;
+      }
+      pointerTargetActive = data.active;
+      break;
+    }
+
     case "pause": {
       isPaused = true;
       break;
@@ -470,7 +532,6 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
     case "resume": {
       isPaused = false;
       lastFlipCheck = performance.now();
-      lastFrameTime = 0;
       break;
     }
 
@@ -478,7 +539,6 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       isPaused = true;
       threads = [];
       transitioningThreadIds.clear();
-      lastFrameTime = 0;
       renderer?.dispose();
       renderer = null;
       reusablePacket = null;
