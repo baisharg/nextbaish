@@ -41,6 +41,16 @@ export const BIO_LINKS: Record<string, { href: string; text: string }> = {
     href: "https://arxiv.org/abs/2510.27378",
     text: "chain-of-thought monitorability research",
   },
+  equistampLink: { href: "https://equistamp.com/", text: "Equistamp" },
+  eightyKLink: { href: "https://80000hours.org/", text: "80,000 Hours" },
+  conceptProbeLink: {
+    href: "https://github.com/mneuronico/concept-probe",
+    text: "concept-probe",
+  },
+  nicoBookLink: {
+    href: "https://sigloxxieditores.com.ar/libro/que-es-y-que-no-es-la-inteligencia-artificial/",
+    text: "¿Qué es (y qué no es) la inteligencia artificial?",
+  },
 };
 
 function Footnote({ id }: { id: number }) {

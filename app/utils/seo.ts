@@ -91,36 +91,36 @@ export const SEO_CONTENT = {
     en: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        "Supporting your path into AI safety research. Join our community of 200+ members learning about AI alignment, interpretability, and governance.",
+        "The largest AI safety hub in Latin America. 300+ members, in-person courses, a research lab and career support in Buenos Aires.",
     },
     es: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        "Apoyando tu camino hacia la investigación en seguridad de IA. Únete a nuestra comunidad de más de 200 miembros aprendiendo sobre alineamiento, interpretabilidad y gobernanza de IA.",
+        "El hub de AI Safety más grande de Latinoamérica. Más de 300 miembros, cursos presenciales, un laboratorio de investigación y acompañamiento de carrera en Buenos Aires.",
     },
   },
   about: {
     en: {
       title: "About Us",
       description:
-        "Meet the BAISH team. We help students in Buenos Aires enter AI safety research through courses, community, and research support.",
+        "Who we are, what we have achieved and who runs BAISH: 6 full-time placements, 28 fellowship placements, and a team of 30+ volunteers, staff and advisors in Buenos Aires.",
     },
     es: {
       title: "Sobre Nosotros",
       description:
-        "Conoce al equipo de BAISH. Ayudamos a estudiantes en Buenos Aires a ingresar a la investigación en seguridad de IA a través de cursos, comunidad y apoyo de investigación.",
+        "Quiénes somos, qué logramos y quién hace BAISH: 6 roles full-time, 28 placements en fellowships y un equipo de más de 30 voluntarios, staff y advisors en Buenos Aires.",
     },
   },
   activities: {
     en: {
       title: "Programs",
       description:
-        "Join BAISH courses: Technical AI Safety Course, Technical AI Safety Project, and Frontier AI Governance. In-person programs in Buenos Aires.",
+        "BAISH courses, community events and career support: Technical AI Safety, Projects Sprint, Frontier AI Governance, monthly socials, hackathons and more, in person in Buenos Aires.",
     },
     es: {
       title: "Programas",
       description:
-        "Sumate a los cursos de BAISH: Technical AI Safety Course, Technical AI Safety Project y Frontier AI Governance. Programas presenciales en Buenos Aires.",
+        "Cursos, eventos de comunidad y acompañamiento de carrera de BAISH: Technical AI Safety, Projects Sprint, Frontier AI Governance, eventos mensuales, hackathons y más, presenciales en Buenos Aires.",
     },
   },
   "activities/fundamentals": {
@@ -163,12 +163,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Research",
       description:
-        "BAISH community research publications in AI safety. Work on mechanistic interpretability, LLM evaluations, and alignment theory.",
+        "BAISH Labs, our AI safety research arm in Buenos Aires, and 15+ publications by researchers connected to BAISH at NeurIPS, ICLR workshops and beyond.",
     },
     es: {
       title: "Investigación",
       description:
-        "Publicaciones de investigación de la comunidad BAISH en seguridad de IA. Trabajo en interpretabilidad mecanística, evaluaciones de LLMs y teoría de alineamiento.",
+        "BAISH Labs, nuestro brazo de investigación en AI safety en Buenos Aires, y más de 15 publicaciones de investigadores conectados a BAISH en NeurIPS, workshops de ICLR y más.",
     },
   },
   resources: {
@@ -187,12 +187,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Contact",
       description:
-        "Get in touch with BAISH. Join our Telegram and WhatsApp communities, or reach out directly via email.",
+        "Get in touch with BAISH. Join our WhatsApp and Telegram communities, write to the team, or reach out for press and partnerships.",
     },
     es: {
       title: "Contacto",
       description:
-        "Contacta con BAISH. Únete a nuestras comunidades de Telegram y WhatsApp, o escríbenos directamente por email.",
+        "Contactá a BAISH. Sumate a nuestras comunidades de WhatsApp y Telegram, escribile al equipo, o contactanos por prensa y alianzas.",
     },
   },
   privacyPolicy: {

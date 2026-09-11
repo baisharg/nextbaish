@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
+import NewsletterSignup from "@/app/components/newsletter-signup";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
 import { AstnPromo } from "@/app/components/astn-promo";
+import { ImpactStats } from "@/app/components/impact-stats";
+import { StoryCard, type SuccessStory } from "@/app/components/story-card";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
 import {
@@ -14,6 +16,7 @@ import {
   resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+import { withLocale } from "@/app/utils/locale";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 
@@ -42,10 +45,14 @@ import {
 } from "@hugeicons/core-free-icons";
 
 
-// Lazy load below-the-fold components for better initial load
-const SupascribeSignup = dynamic(() => import("@/app/components/supascribe-signup"), {
-  loading: () => <div className="card-glass h-64 animate-pulse" />,
-});
+type WhatWeDoItem = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  cta: string;
+  link: string;
+};
 
 export default async function Home({
   params,
@@ -59,6 +66,10 @@ export default async function Home({
   const courseOpportunities = await getCourseOpportunities();
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
   const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
+  const whatWeDo = t.whatWeDo.items as WhatWeDoItem[];
+  const featuredStories = (dict.about.impact.stories as SuccessStory[]).filter(
+    (story) => story.featured,
+  );
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -76,6 +87,8 @@ export default async function Home({
               id="about"
             >
               <div className="max-w-4xl mx-auto text-center">
+                <p className="eyebrow">{t.hero.eyebrow}</p>
+
                 {/* Larger headline */}
                 <AnimatedTitle
                   text={t.mission.title}
@@ -108,21 +121,43 @@ export default async function Home({
                 </div>
 
                 {/* Social Proof Stats - Above the fold */}
-                <div className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-8 text-center">
-                  <div className="social-proof-stat">
-                    <span className="stat-number">120+</span>
-                    <span className="stat-label">{t.hero.communityMembers}</span>
-                  </div>
-                  <div className="social-proof-stat">
-                    <span className="stat-number">3</span>
-                    <span className="stat-label">{t.hero.weeklyPrograms}</span>
-                  </div>
-                  <div className="social-proof-stat">
-                    <span className="stat-number">3+</span>
-                    <span className="stat-label">{t.hero.publishedPapers}</span>
-                  </div>
-                </div>
+                <ImpactStats labels={t.hero.stats} className="mt-10" />
+              </div>
+            </section>
+          </FadeInSection>
 
+          {/* What we do - four pillars */}
+          <FadeInSection variant="slide-up" delay={50} as="section">
+            <section className="section-content" id="what-we-do">
+              <div className="space-y-4 text-center">
+                <p className="eyebrow">{t.whatWeDo.eyebrow}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.whatWeDo.title}
+                </h2>
+                <p className="text-lg text-slate-700 max-w-2xl mx-auto">
+                  {t.whatWeDo.description}
+                </p>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {whatWeDo.map((item) => (
+                  <article
+                    key={item.id}
+                    className="card-glass card-refined flex flex-col"
+                  >
+                    <div className="card-eyebrow">{item.eyebrow}</div>
+                    <h3 className="card-title">{item.title}</h3>
+                    <p className="card-body">{item.description}</p>
+                    <div className="card-footer">
+                      <TransitionLink
+                        className="link-arrow"
+                        href={withLocale(currentLocale, item.link)}
+                      >
+                        {item.cta}
+                        <span>→</span>
+                      </TransitionLink>
+                    </div>
+                  </article>
+                ))}
               </div>
             </section>
           </FadeInSection>
@@ -196,12 +231,46 @@ export default async function Home({
             </section>
           </FadeInSection>
 
+          {/* Impact - where our community goes */}
+          <FadeInSection variant="slide-up" delay={50} as="section">
+            <section className="section-container" id="impact">
+              <div className="space-y-4 text-center mb-10">
+                <p className="eyebrow">{t.successStories.eyebrow}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {t.successStories.title}
+                </h2>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  {t.successStories.description}
+                </p>
+                <ImpactStats
+                  labels={t.successStories.statLabels}
+                  keys={["fullTimeRoles", "fellowshipPlacements", "publications"]}
+                  className="pt-4"
+                />
+              </div>
+              <div className="grid gap-6 md:grid-cols-3">
+                {featuredStories.map((story) => (
+                  <StoryCard key={story.id} story={story} />
+                ))}
+              </div>
+              <div className="mt-8 text-center">
+                <TransitionLink
+                  href={withLocale(currentLocale, t.successStories.ctaLink)}
+                  className="button-secondary inline-flex items-center gap-2"
+                >
+                  {t.successStories.cta}
+                  <span aria-hidden="true">→</span>
+                </TransitionLink>
+              </div>
+            </section>
+          </FadeInSection>
+
           {/* ASTN Promo Section - Launch Your Career */}
           <FadeInSection variant="slide-up" delay={50} as="section">
             <AstnPromo t={t.astn} />
           </FadeInSection>
 
-          {/* Get Involved Section - MOVED UP for conversion */}
+          {/* Get Involved Section */}
           <FadeInSection variant="slide-up" delay={50} as="section">
             <section
               className="section-container"
@@ -217,7 +286,7 @@ export default async function Home({
                 </p>
               </div>
               <div className="grid gap-6 md:grid-cols-2">
-                <SupascribeSignup t={dict.substack} />
+                <NewsletterSignup t={dict.substack} />
 
                 <article className="card-glass card-refined">
                   <div className="card-eyebrow">{t.getInvolved.communityEyebrow}</div>
@@ -230,18 +299,6 @@ export default async function Home({
                   <div className="flex flex-col gap-3 mt-auto">
                     <a
                       className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                      href="https://t.me/+zhSGhXrn56g1YjVh"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <div className="flex items-center gap-2">
-                        <HugeiconsIcon icon={TelegramIcon} size={20} />
-                        <span className="font-semibold">{t.getInvolved.telegramCta}</span>
-                      </div>
-                      <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
-                    </a>
-                    <a
-                      className="button-primary flex flex-col items-center justify-center gap-1 py-4"
                       href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -252,8 +309,39 @@ export default async function Home({
                       </div>
                       <span className="text-xs opacity-90">{t.getInvolved.whatsappMembers}</span>
                     </a>
+                    <a
+                      className="button-primary flex flex-col items-center justify-center gap-1 py-4"
+                      href="https://t.me/+zhSGhXrn56g1YjVh"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon icon={TelegramIcon} size={20} />
+                        <span className="font-semibold">{t.getInvolved.telegramCta}</span>
+                      </div>
+                      <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
+                    </a>
                   </div>
                 </article>
+              </div>
+
+              {/* Press & partnerships strip */}
+              <div className="mt-8 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1">
+                  <p className="card-eyebrow">{t.pressCta.eyebrow}</p>
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    {t.pressCta.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 max-w-xl">
+                    {t.pressCta.description}
+                  </p>
+                </div>
+                <TransitionLink
+                  href={withLocale(currentLocale, t.pressCta.link)}
+                  className="button-secondary whitespace-nowrap"
+                >
+                  {t.pressCta.cta}
+                </TransitionLink>
               </div>
             </section>
           </FadeInSection>

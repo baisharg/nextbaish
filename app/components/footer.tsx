@@ -7,6 +7,7 @@ import { withLocale } from "@/app/utils/locale";
 import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Calendar03Icon,
   InstagramIcon,
   Linkedin01Icon,
   TelegramIcon,
@@ -120,6 +121,15 @@ export default function Footer({ locale, t }: FooterProps) {
               rel="noopener noreferrer"
             >
               <HugeiconsIcon icon={WhatsappIcon} size={20} />
+            </a>
+            <a
+              href="https://luma.com/BAISH"
+              aria-label={t.luma}
+              className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <HugeiconsIcon icon={Calendar03Icon} size={20} />
             </a>
           </div>
           <TransitionLink
