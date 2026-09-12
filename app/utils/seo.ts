@@ -109,7 +109,7 @@ export const SEO_CONTENT = {
     es: {
       title: "Sobre Nosotros",
       description:
-        "Quiénes somos, qué logramos y quién hace BAISH: 6 roles full-time, 28 placements en fellowships y un equipo de más de 30 voluntarios, staff y advisors en Buenos Aires.",
+        "Quiénes somos, qué logramos y quién hace BAISH: 6 roles full-time, 28 placements en fellowships y un equipo de más de 30 voluntarios, staff y asesores en Buenos Aires.",
     },
   },
   activities: {

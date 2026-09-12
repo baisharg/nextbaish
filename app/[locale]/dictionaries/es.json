@@ -355,7 +355,7 @@
           "text": "BAISH apoyó su viaje a EAG London 2026. Los contactos que hizo ahí lo llevaron directo a una beca de tres meses en Iliad, y hoy es research fellow en BAISH Labs."
         },
         "guido-bergman": {
-          "path": "Courses Lead → Algoverse → Equistamp",
+          "path": "Lead de cursos → Algoverse → Equistamp",
           "quote": "BAISH me dio la base y las conexiones para transicionar a investigación de AI safety profesionalmente.",
           "text": "Lideró los cursos de BAISH, pasó por Algoverse, recibió un career transition grant de BlueDot y hoy es Research Engineer en Equistamp."
         },
@@ -440,16 +440,16 @@
     },
     "team": {
       "title": "Nuestro Equipo",
-      "advisorsTitle": "Advisors",
+      "advisorsTitle": "Asesores",
       "roles": {
         "eitan-sprejer": "Director cofundador · Research Manager Lead, Apart Research",
         "carlos-giudice": "Codirector · Research Engineer, Equistamp",
         "luca-de-leo": "Director cofundador · Product Engineer, 80,000 Hours",
         "nicolas-martorell": "Research Lead · Head de BAISH Labs",
-        "nicolas-spinelli": "Communications Lead",
-        "marina-romanisio": "Community Lead",
-        "rocio-monjes": "Operations Lead",
-        "augusto-esquivel-masciotta": "Courses Lead · Frontier AI Governance",
+        "nicolas-spinelli": "Lead de comunicaciones",
+        "marina-romanisio": "Lead de comunidad",
+        "rocio-monjes": "Lead de operaciones",
+        "augusto-esquivel-masciotta": "Lead de cursos · Frontier AI Governance",
         "tobias-bersia": "Owner del Projects Sprint · Research Lead, BAISH Labs",
         "gonzalo-heredia": "Owner del Technical AI Safety course · BAISH Labs",
         "gaspar-labastie": "Facilitador · Plataforma ASTN · BAISH Labs",
@@ -462,7 +462,7 @@
         "josefina-zappettini": "Diseño gráfico",
         "aaron-sznaider": "Lead de la comunidad de bioseguridad",
         "nahuel-segovia": "Lead de la comunidad de ciberseguridad",
-        "trinidad-reynoso": "Fundraising",
+        "trinidad-reynoso": "Recaudación de fondos",
         "malena-cocozzella": "Voluntaria",
         "julian-szere": "Research Fellow, BAISH Labs · Alumno de Iliad",
         "lucio-garcia": "Research Fellow, BAISH Labs · Doctorado, UBA",
@@ -475,7 +475,7 @@
         "tobias-martin": "MIRI",
         "tao-burga": "Technology Fellow, Institute for Progress",
         "luis-enrique-urtubey": "Director, CEGIA",
-        "guido-bergman": "Ex Courses Lead · Research Engineer, Equistamp"
+        "guido-bergman": "Ex lead de cursos · Research Engineer, Equistamp"
       },
       "bios": {
         "eitan-sprejer": "Eitán es Research Manager Lead en {apartResearchLink} y director cofundador de BAISH. Es coautor de {eitanPaperLink} aceptados en workshops de NeurIPS, {eitanArxivPaperLink}, {eitanCoTPaperLink} y un paper en un workshop de ICLR 2026 sobre monitoreo white-box. Es Licenciado en Física por la Universidad de Buenos Aires, fue asistente de enseñanza en dos campamentos de {ml4gLink}, facilitó el {aisesLink} del Center for AI Safety y cofundó EA Argentina.",
@@ -484,7 +484,7 @@
         "nicolas-martorell": "Nicolás lidera BAISH Labs. Es investigador posdoctoral en el Laboratorio de Inteligencia Artificial Aplicada de UBA-CONICET, donde dirige una línea de investigación sobre interpretabilidad de LLMs, con trabajos revisados por pares en la xAI World Conference y un workshop de ICML 2026. Es Doctor en Neurociencias por la Universidad de Buenos Aires, fue cuatro años asistente y lead TA en Neuromatch Academy, facilita el curso Technical AI Safety Projects de BlueDot, mantiene la librería open-source de interpretabilidad {conceptProbeLink} y es autor de {nicoBookLink}, un libro de divulgación sobre IA publicado por Siglo XXI."
       },
       "directorsTitle": "Directores",
-      "leadsTitle": "Leads",
+      "leadsTitle": "Responsables",
       "teamTitle": "Equipo"
     },
     "support": {
@@ -502,7 +502,7 @@
       },
       "grantmaking": {
         "name": "grantmaking.ai",
-        "program": "Launch Round",
+        "program": "Ronda de lanzamiento",
         "description": "Financiamiento para las operaciones de BAISH a través de la ronda de lanzamiento de grantmaking.ai, con una ampliación de AISTOF vía Manifund."
       },
       "coefficientGiving": {
