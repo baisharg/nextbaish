@@ -113,7 +113,12 @@ app/
 │   ├── header.css               # Header-specific styles
 │   ├── mobile-menu.tsx          # Mobile navigation (portal-based)
 │   ├── footer.tsx               # Site footer
-│   ├── substack-signup.tsx      # Newsletter subscription (dynamic import)
+│   ├── newsletter-signup.tsx    # Newsletter card linking to Substack
+│   ├── impact-stats.tsx         # Headline numbers (values from data/impact.ts)
+│   ├── team-card.tsx            # Team avatar, text and bio cards
+│   ├── story-card.tsx           # Success story card
+│   ├── funder-card.tsx          # Funder card (About page)
+│   ├── external-link-icon.tsx   # Shared external-link icon
 │   ├── calendar-section.tsx     # lu.ma calendar embed (lazy loaded)
 │   ├── airtable-embed.tsx       # Airtable integration (IntersectionObserver lazy load)
 │   ├── research-filters.tsx     # Category filter buttons
@@ -134,6 +139,10 @@ app/
 ├── types/
 │   └── resources.ts             # Resource type definitions
 ├── data/
+│   ├── impact.ts                # Headline numbers + fillImpact() for dictionary placeholders
+│   ├── team.ts                  # Team roster (groups, photos, links)
+│   ├── stories.ts               # Success story metadata
+│   ├── funders.ts               # Funder logos and links
 │   └── resources.ts             # 50+ AI safety learning resources
 ├── workers/
 │   └── thread-generator.worker.ts  # Background thread generation
@@ -206,7 +215,7 @@ Root Documentation:
    - Fully bilingual with Spanish translations
 
 6. **`/[locale]/contact/page.tsx`** - Contact information
-   - Contact methods: Telegram, Email, LinkedIn
+   - Contact methods: WhatsApp, Email, LinkedIn
    - FAQ accordion with template variables
    - Structured contact cards with CTAs
 
@@ -251,11 +260,9 @@ Root Documentation:
 
 **Feature Components:**
 
-- **`SubstackSignup.tsx`** - Newsletter subscription form
-  - Submits to Substack API
-  - Form validation and error handling
-  - States: idle, loading, success, error
-  - 10-second timeout with AbortController
+- **`NewsletterSignup.tsx`** - Newsletter card
+  - Links straight to the Substack subscribe page (`NEWSLETTER_SUBSCRIBE_URL`)
+  - Replaced the Supascribe embed, which stopped rendering on the free plan
 
 - **`CalendarSection.tsx`** - lu.ma calendar embed
   - Lazy loading with IntersectionObserver (200px rootMargin)
@@ -363,6 +370,13 @@ export interface Resource {
   isNew?: boolean;
 }
 ```
+
+### Site Data (`app/data/`)
+
+- **`impact.ts`** - headline numbers (`IMPACT`) plus `fillImpact(text)`, which replaces `{communityMembers}`-style placeholders in dictionary copy. Change a number once here and every page updates; never hardcode it in a dictionary string.
+- **`team.ts`** - roster (`TEAM`, `teamByGroup`, `labsTeam`). `TeamMember.id` is typed as `keyof about.team.roles`, so adding a member without a role label in `en.json` fails type-checking. `isBaishAffiliatedAuthor` matches publication authors ignoring accents, hyphens and case.
+- **`stories.ts`** - success-story metadata (`SUCCESS_STORIES`); translated copy lives under `about.impact.stories[id]`.
+- **`funders.ts`** - funder logos and links; copy lives under `about.support[id]`.
 
 ### Timeline Renderers
 
@@ -622,11 +636,9 @@ Use with `.map()`:
 
 ### Third-Party Integrations
 
-**Substack API** - Newsletter subscription
-- Endpoint: `https://substackapi.com/api/subscribe`
-- Integration: `SubstackSignup.tsx` component
-- Form validation and error handling
-- 10-second timeout with AbortController
+**Substack** - Newsletter subscription
+- Direct link to `https://baish.substack.com/subscribe`; no API call or embed
+- Integration: `NewsletterSignup.tsx` component
 
 **lu.ma Calendar** - Event calendar embed
 - Calendar ID: `cal-0oFAsTn5vpwcAwb`

@@ -112,7 +112,7 @@ All routes are available in both English (`/en`) and Spanish (`/es`):
 | `/research` | Research — project showcase with category filtering |
 | `/resources` | Resources — self-study paths, reading lists, Airtable timeline |
 | `/agentic-coding-workshop` | Workshop — agentic coding workshop details |
-| `/contact` | Contact — methods (Telegram, Email, LinkedIn) + FAQ accordion |
+| `/contact` | Contact — methods (WhatsApp, Email, LinkedIn) + FAQ accordion |
 | `/privacy-policy` | Privacy policy |
 
 ## Project Structure
@@ -136,7 +136,7 @@ app/
 │       └── es.json              # Spanish translations
 ├── api/
 │   └── analytics/web-vitals/route.ts  # Web vitals API endpoint
-├── components/                  # React components (29 files)
+├── components/                  # React components (37 files)
 │   ├── header.tsx / header.css  # Main navigation
 │   ├── mobile-menu.tsx          # Mobile navigation drawer
 │   ├── footer.tsx               # Site footer
@@ -148,8 +148,12 @@ app/
 │   ├── timeline-threads-with-controls.tsx
 │   ├── hero-timeline.tsx        # Hero section timeline
 │   ├── thread-control-panel.tsx / .css
-│   ├── substack-signup.tsx      # Newsletter subscription
-│   ├── supascribe-signup.tsx    # Alternative signup component
+│   ├── newsletter-signup.tsx    # Newsletter card linking to Substack
+│   ├── impact-stats.tsx         # Headline numbers (values from data/impact.ts)
+│   ├── team-card.tsx            # Team avatar, text and bio cards
+│   ├── story-card.tsx           # Success story card
+│   ├── funder-card.tsx          # Funder card (About page)
+│   ├── external-link-icon.tsx   # Shared external-link icon
 │   ├── calendar-section.tsx     # lu.ma calendar embed (lazy)
 │   ├── airtable-embed.tsx       # Airtable integration (lazy)
 │   ├── events-carousel.tsx      # Auto-scrolling gallery
@@ -171,6 +175,13 @@ app/
 │   └── use-prefers-reduced-motion.ts  # Motion preference hook
 ├── contexts/
 │   └── language-context.tsx     # i18n context provider
+├── data/
+│   ├── impact.ts                # Headline numbers + fillImpact() for dictionary placeholders
+│   ├── team.ts                  # Team roster (groups, photos, links)
+│   ├── stories.ts               # Success story metadata
+│   ├── funders.ts               # Funder logos and links
+│   ├── resources.ts             # AI safety learning resources
+│   └── course-opportunities.ts  # Course listings
 ├── renderers/
 │   └── webgl-renderer.ts       # GPU-accelerated WebGL renderer
 ├── utils/
@@ -323,4 +334,4 @@ Use present-tense commit messages. Reference issue IDs when relevant.
 ## Contact
 
 - Website: [baish.com.ar](https://baish.com.ar)
-- Telegram: [Join our community](https://t.me/+zhSGhXrn56g1YjVh)
+- WhatsApp: [Join our community](https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P)

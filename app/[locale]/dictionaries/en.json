@@ -61,7 +61,7 @@
     "timeline": {
       "connect": "Connect",
       "connectTitle": "Join our community",
-      "connectDesc": "300+ members on WhatsApp & Telegram",
+      "connectDesc": "350+ members on WhatsApp",
       "foundations": "Foundations",
       "foundationsTitle": "Technical AI Safety Course",
       "foundationsDesc": "Technical foundations for contributing to AI safety",
@@ -98,7 +98,7 @@
           "id": "community",
           "eyebrow": "Community",
           "title": "Events, retreats and hackathons",
-          "description": "Monthly socials with 50 to 80 people, an annual retreat, hackathon hubs and a 300-member WhatsApp community.",
+          "description": "Monthly socials with {socialAttendance} people, an annual retreat, hackathon hubs and a WhatsApp community of {communityMembers} members.",
           "cta": "See community",
           "link": "/activities#community"
         },
@@ -114,7 +114,7 @@
           "id": "careers",
           "eyebrow": "Careers",
           "title": "Fellowships and placements",
-          "description": "One-on-one career support, application sprints and conference delegations. 28 fellowship placements and 6 full-time roles so far.",
+          "description": "One-on-one career support, application sprints and conference delegations. {fellowshipPlacements} fellowship placements and {fullTimeRoles} full-time roles so far.",
           "cta": "See placements and stories",
           "link": "/about#impact"
         }
@@ -128,7 +128,7 @@
         {
           "number": "01",
           "title": "Join our community",
-          "description": "Connect with 300+ members on WhatsApp and Telegram. Get updates on events and opportunities.",
+          "description": "Connect with 350+ members on WhatsApp. Get updates on events and opportunities.",
           "cta": "Join WhatsApp",
           "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
         },
@@ -187,7 +187,6 @@
         }
       },
       "joinNow": "Join now",
-      "joinTelegram": "Join Telegram",
       "learnMore": "Learn more",
       "applyNow": "Apply"
     },
@@ -242,12 +241,10 @@
       "sectionTitle": "Join Our Community",
       "sectionDescription": "Connect with researchers, stay updated, and start your AI safety journey",
       "communityEyebrow": "Community",
-      "communityTitle": "Chat Groups",
-      "communityDescription": "Connect with 300+ students, researchers and professionals interested in AI safety.",
-      "telegramCta": "AI Safety Argentina",
-      "telegramMembers": "190+ members",
+      "communityTitle": "WhatsApp Community",
+      "communityDescription": "Connect with {communityMembers} students, researchers and professionals interested in AI safety.",
       "whatsappCta": "BAISH Community",
-      "whatsappMembers": "300+ members"
+      "whatsappMembers": "{communityMembers} members"
     },
     "courseSpotlight": {
       "eyebrow": "BlueDot Impact × BAISH",
@@ -303,8 +300,8 @@
     "whoWeAre": {
       "eyebrow": "Founded in 2024 · Buenos Aires",
       "title": "The largest AI safety hub in Latin America",
-      "paragraph1": "BAISH is a community of 300+ students, researchers and professionals in Buenos Aires working to make advanced AI go well. We run in-person courses, a research lab, monthly events and one-on-one career support, so that talented people here can get into AI safety without having to leave the country to do it.",
-      "paragraph2": "Since 2024 we have helped 6 members into full-time AI safety roles and 28 into external fellowships and research programs, and researchers connected to BAISH have published at NeurIPS and ICLR workshops. We are run by a team of volunteers and a small paid staff, and we work alongside our sister fellowship, AISAR."
+      "paragraph1": "BAISH is a community of {communityMembers} students, researchers and professionals in Buenos Aires working to make advanced AI go well. We run in-person courses, a research lab, monthly events and one-on-one career support, so that talented people here can get into AI safety without having to leave the country to do it.",
+      "paragraph2": "Since 2024 we have helped {fullTimeRoles} members into full-time AI safety roles and {fellowshipPlacements} into external fellowships and research programs, and researchers connected to BAISH have published at NeurIPS and ICLR workshops. We are run by a team of volunteers and a small paid staff, and we work alongside our sister fellowship, AISAR."
     },
     "impact": {
       "eyebrow": "Impact",
@@ -312,11 +309,11 @@
       "description": "What BAISH members have gone on to do, and what the community has produced so far.",
       "fullTime": {
         "title": "Full-time AI safety roles",
-        "description": "{count} members now work full-time in AI safety at organizations including:"
+        "description": "{fullTimeRoles} members now work full-time in AI safety at organizations including:"
       },
       "fellowships": {
         "title": "External fellowships and programs",
-        "description": "{count} placements across around 21 people since 2024."
+        "description": "{fellowshipPlacements} placements across around 21 people since 2024."
       },
       "research": {
         "title": "Research output",
@@ -330,92 +327,61 @@
       "courses": {
         "title": "Courses",
         "items": [
-          "6 in-person cohorts since March 2026",
-          "167 applications for 89 seats",
-          "9.4/10 likelihood to recommend"
+          "{courseCohorts} in-person cohorts since March 2026",
+          "{courseApplications} applications for {courseParticipants} seats",
+          "{courseRecommendScore} likelihood to recommend"
         ]
       },
       "community": {
         "title": "Community",
         "items": [
-          "Monthly socials with 50 to 80 attendees, about half of them newcomers",
-          "500+ subscribers on our Luma calendar",
-          "16-person Argentine delegation to EAG London 2026",
+          "Monthly socials with {socialAttendance} attendees, about half of them newcomers",
+          "{lumaSubscribers} subscribers on our Luma calendar",
+          "{eagDelegation}-person Argentine delegation to EAG London 2026",
           "Annual retreat for the organizing team",
-          "970+ followers on Instagram, the largest AI safety account in the Spanish-speaking world"
+          "{instagramFollowers} followers on Instagram, the largest AI safety account in the Spanish-speaking world"
         ]
       },
       "storiesTitle": "Success stories",
       "storiesDescription": "A few of the paths our members have taken.",
-      "stories": [
-        {
-          "id": "tobias-bersia",
-          "featured": true,
-          "name": "Tobías Bersia",
+      "linkedinLabel": "{name} on LinkedIn",
+      "stories": {
+        "tobias-bersia": {
           "path": "TAIS Intensive → ARENA → BAISH Labs",
-          "text": "Took the intensive course in March 2026 and was accepted to ARENA two months later, where his team's project won first place. He now leads research at BAISH Labs and owns the Projects Sprint.",
-          "link": "https://www.linkedin.com/in/tobias-bersia-70a448132/"
+          "text": "Took the intensive course in March 2026 and was accepted to ARENA two months later, where his team's project won first place. He now leads research at BAISH Labs and owns the Projects Sprint."
         },
-        {
-          "id": "julian-szere",
-          "featured": true,
-          "name": "Julián Szere",
+        "julian-szere": {
           "path": "EAG London → Iliad → BAISH Labs",
-          "text": "BAISH supported his trip to EAG London 2026. The connections he made there led directly to a three-month Iliad fellowship, and he is now a research fellow at BAISH Labs.",
-          "link": null
+          "text": "BAISH supported his trip to EAG London 2026. The connections he made there led directly to a three-month Iliad fellowship, and he is now a research fellow at BAISH Labs."
         },
-        {
-          "id": "guido-bergman",
-          "featured": true,
-          "name": "Guido Bergman",
+        "guido-bergman": {
           "path": "Courses Lead → Algoverse → Equistamp",
           "quote": "BAISH gave me the foundation and connections to transition into AI safety research professionally.",
-          "text": "Led BAISH's courses track, joined Algoverse, received a BlueDot career transition grant, and is now a Research Engineer at Equistamp.",
-          "link": "https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203"
+          "text": "Led BAISH's courses track, joined Algoverse, received a BlueDot career transition grant, and is now a Research Engineer at Equistamp."
         },
-        {
-          "id": "guillermo-bondonno",
-          "featured": false,
-          "name": "Guillermo Bondonno",
+        "guillermo-bondonno": {
           "path": "Technical AI Safety course → Cambria",
-          "text": "Accepted to the Cambria fellowship in June 2026 after the Technical AI Safety course, which he credits for getting in.",
-          "link": null
+          "text": "Accepted to the Cambria fellowship in June 2026 after the Technical AI Safety course, which he credits for getting in."
         },
-        {
-          "id": "alejandro-wainstock",
-          "featured": false,
-          "name": "Alejandro Wainstock",
+        "alejandro-wainstock": {
           "path": "SPAR → ML4Good → ARENA → CLR",
-          "text": "Went through four external programs with BAISH's support, received a BlueDot career transition grant, and co-authored \"Is Gemini 3 Scheming in the Wild?\" with BAISH advisors.",
-          "link": null
+          "text": "Went through four external programs with BAISH's support, received a BlueDot career transition grant, and co-authored \"Is Gemini 3 Scheming in the Wild?\" with BAISH advisors."
         },
-        {
-          "id": "juan-cadile",
-          "featured": false,
-          "name": "Juan P. Cadile",
+        "juan-cadile": {
           "path": "BAISH community → Cambria",
           "quote": "Gracias BAISH por poner esta oportunidad en mi radar.",
-          "text": "Accepted to the Cambria fellowship in June 2026.",
-          "link": null
+          "text": "Accepted to the Cambria fellowship in June 2026."
         },
-        {
-          "id": "tobias-martin",
-          "featured": false,
-          "name": "Tobías Martin",
+        "tobias-martin": {
           "path": "Applyathon → MARS",
           "quote": "Gracias al grupo y a Eitan que bancaron un montón en el proceso de aplicación.",
-          "text": "Accepted to MARS in 2026 after BAISH's fellowship-applications sprint.",
-          "link": "https://www.linkedin.com/in/tobias-martin/"
+          "text": "Accepted to MARS in 2026 after BAISH's fellowship-applications sprint."
         },
-        {
-          "id": "ana-vicky",
-          "featured": false,
-          "name": "Ana & Vicky",
+        "ana-vicky": {
           "path": "BAISH → ML4Good Camp",
-          "text": "From local meetups to international research collaborations.",
-          "link": null
+          "text": "From local meetups to international research collaborations."
         }
-      ]
+      }
     },
     "coreConcepts": {
       "whatIsAiSafety": {
@@ -467,7 +433,7 @@
         "items": [
           "Running in-person courses that take people from first contact to a first research contribution",
           "Building a research lab in Buenos Aires, BAISH Labs, alongside the AISAR fellowship",
-          "Sustaining a 300-member community with monthly events, retreats and hackathons",
+          "Sustaining a community of {communityMembers} members with monthly events, retreats and hackathons",
           "Supporting careers through one-on-ones, application sprints, conference delegations and placements"
         ]
       }
@@ -477,7 +443,7 @@
       "advisorsTitle": "Advisors",
       "roles": {
         "eitan-sprejer": "Co-founding Director · Research Manager Lead, Apart Research",
-        "carlos-giudice": "Co-founding Director · Research Engineer, Equistamp",
+        "carlos-giudice": "Co-Director · Research Engineer, Equistamp",
         "luca-de-leo": "Co-founding Director · Product Engineer, 80,000 Hours",
         "nicolas-martorell": "Research Lead · Head of BAISH Labs",
         "nicolas-spinelli": "Communications Lead",
@@ -513,14 +479,13 @@
       },
       "bios": {
         "eitan-sprejer": "Eitán is Research Manager Lead at {apartResearchLink} and a co-founding director of BAISH. He has co-authored {eitanPaperLink} accepted to NeurIPS workshops, {eitanArxivPaperLink}, {eitanCoTPaperLink}, and an ICLR 2026 workshop paper on white-box monitoring. He holds a bachelor's and master's degree in Physics from the University of Buenos Aires, was a teaching assistant at {ml4gLink} camps twice, facilitated the {aisesLink} from the Center for AI Safety, and co-founded EA Argentina.",
-        "carlos-giudice": "Carlos is a Research Engineer at {equistampLink} and a co-founding director of BAISH. His move into a full-time AI safety role came directly out of an EA Global conference, the kind of path BAISH now helps its members take.",
+        "carlos-giudice": "Carlos is a Research Engineer at {equistampLink} and a co-director of BAISH. His move into a full-time AI safety role came directly out of an EA Global conference, the kind of path BAISH now helps its members take.",
         "luca-de-leo": "Luca is Product Engineer at {eightyKLink} and a co-founding director of BAISH. Involved in AI safety since 2016, he received grants from {acxLink} and the {ltffLink} to upskill for AI safety research, worked in operations at {nonlinearLink}, and won two first places and one second place at {apartResearchLink} research sprints. He previously ran operations for the {aiSpeciesLink} YouTube channel, which has over 14 million views.",
         "nicolas-martorell": "Nicolás leads BAISH Labs. He is a postdoctoral researcher at UBA-CONICET's Applied Artificial Intelligence Laboratory, where he runs a research line on LLM interpretability, with peer-reviewed work at the xAI World Conference and an ICML 2026 workshop. He holds a PhD in Neuroscience from the University of Buenos Aires, spent four years as a teaching assistant and lead TA at Neuromatch Academy, facilitates BlueDot's Technical AI Safety Projects course, maintains the open-source {conceptProbeLink} interpretability library, and is the author of {nicoBookLink}, a general-audience book on AI published by Siglo XXI."
       },
-      "directorsTitle": "Founding directors",
+      "directorsTitle": "Directors",
       "leadsTitle": "Leads",
-      "teamTitle": "Team",
-      "labsBadge": "BAISH Labs"
+      "teamTitle": "Team"
     },
     "support": {
       "title": "Supported by",
@@ -568,7 +533,7 @@
       "eyebrow": "Courses",
       "title": "Our Courses",
       "description": "In-person versions of BlueDot Impact's courses, facilitated by BAISH. Free, selective, and the first structured step into the field.",
-      "trackRecord": "Since March 2026: {cohorts} cohorts, {applications} applications for {seats} seats, {score} likelihood to recommend.",
+      "trackRecord": "Since March 2026: {courseCohorts} cohorts, {courseApplications} applications for {courseParticipants} seats, {courseRecommendScore} likelihood to recommend.",
       "upcomingTitle": "Coming next",
       "upcoming": [
         {
@@ -593,7 +558,7 @@
         {
           "id": "socials",
           "title": "Monthly socials",
-          "description": "Networking and social events with 50 to 80 people, about half of them newcomers. Every event is on our Luma calendar.",
+          "description": "Networking and social events with {socialAttendance} people, about half of them newcomers. Every event is on our Luma calendar.",
           "cta": "Luma calendar",
           "link": "https://luma.com/BAISH",
           "external": true
@@ -601,7 +566,7 @@
         {
           "id": "whatsapp",
           "title": "WhatsApp community",
-          "description": "300+ members sharing opportunities, papers and events, with sub-groups on biosecurity and cybersecurity.",
+          "description": "{communityMembers} members sharing opportunities, papers and events, with sub-groups on biosecurity and cybersecurity.",
           "cta": "Join WhatsApp",
           "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
           "external": true
@@ -617,7 +582,7 @@
         {
           "id": "careers",
           "title": "Career support",
-          "description": "One-on-ones with the directors, application sprints for fellowships like MARS, and travel support for EA Global. 16 members went to EAG London 2026.",
+          "description": "One-on-ones with the directors, application sprints for fellowships like MARS, and travel support for EA Global. {eagDelegation} members went to EAG London 2026.",
           "cta": "Book a call",
           "link": "/about#book-a-call",
           "external": false
@@ -692,7 +657,6 @@
       "time": "5 weeks · 30 hours",
       "location": "In person in Buenos Aires",
       "topic": "Technical AI safety project work",
-      "joinTelegram": "Join Telegram for Updates",
       "joinWhatsapp": "Join WhatsApp",
       "applyNow": "Express interest",
       "learnMore": "Learn more at BlueDot"
@@ -792,15 +756,11 @@
       "resourcesPage": "Resources page"
     },
     "cards": {
-      "telegram": {
-        "title": "Telegram",
-        "description": "Join our community channel for discussions and updates:"
-      },
       "social": {
         "eyebrow": "Social",
         "title": "Social Media",
         "description": "Follow us for updates and announcements:",
-        "instagramFollowers": "970+ followers"
+        "instagramFollowers": "{instagramFollowers} followers"
       },
       "press": {
         "eyebrow": "Press & partnerships",
@@ -971,6 +931,7 @@
           "title": "Explaining is Harder Than Predicting Alone: Evaluating Concept-based Explanations of MLLMs as ICL Visual Classifiers",
           "authors": "Carmen Quiles-Ramírez, Leticia L. Rodríguez, Nicolás Martorell, Natalia Díaz-Rodríguez",
           "venue": "ICML 2026 Workshop · Jul 2026",
+          "year": 2026,
           "description": "Evaluates concept-based explanations from multimodal LLMs used as in-context visual classifiers with an LLM-as-a-judge pipeline, and finds that forcing structured explanations degrades predictive accuracy: explaining is harder than predicting alone. CompLearn Workshop.",
           "links": [
             {
@@ -983,6 +944,7 @@
           "title": "PowerBench: A Multilingual Study of Large Language Model Refusal in Power-Grabbing Requests",
           "authors": "Wendy Brau, Tomás Korenblit, Tomás Giménez Molina, Gaspar Labastie, Gonzalo Heredia, Nicolás Martorell",
           "venue": "Apart Research Hackathon · Jun 2026",
+          "year": 2026,
           "description": "Does LLM refusal of requests to acquire or consolidate power vary across languages? Started at the Global South hackathon's Buenos Aires hub, now funded by BlueDot and heading toward publication.",
           "links": []
         },
@@ -990,6 +952,7 @@
           "title": "Benchmarking AI Control Protocols for Safety in Medical Question-Answering Tasks",
           "authors": "Guido Freire, Agustín Martínez-Suñé, Viviana Cotik",
           "venue": "ICLR 2026 Workshop · Apr 2026",
+          "year": 2026,
           "description": "The first AI-control evaluation benchmark for biomedical question answering, extending HealthBench with FDA drug-interaction data and arguing for severity-weighted monitoring.",
           "links": [
             {
@@ -1006,6 +969,7 @@
           "title": "White-Box Monitoring for Personality Mirroring in Conversational AI",
           "authors": "Eitan Sprejer, Agustín E. Martínez-Suñé, Bruno Bianchi",
           "venue": "ICLR 2026 Workshop · Apr 2026",
+          "year": 2026,
           "description": "White-box monitoring of conversational models that drift toward mirroring the user's personality, with open code and dataset.",
           "links": [
             {
@@ -1022,6 +986,7 @@
           "title": "Inference-Time Toxicity Mitigation in Protein Language Models via Logit-Diff Amplification",
           "authors": "Manuel Fernández Burda, Santiago Aranguri, Iván Arcuschin, Enzo Ferrante",
           "venue": "ICLR 2026 Workshop · Apr 2026",
+          "year": 2026,
           "description": "Fine-tuning protein language models can sharply raise toxic generations; logit-diff amplification is adapted as a retraining-free control that cuts predicted toxicity while preserving foldability. Supported by AISAR.",
           "links": [
             {
@@ -1038,6 +1003,7 @@
           "title": "Quantitative Introspection in Language Models: Tracking Emotive States Across Conversation",
           "authors": "Nicolás Martorell, Bruno Bianchi",
           "venue": "arXiv · Mar 2026",
+          "year": 2026,
           "description": "Operationalizes introspection as the coupling between a model's numeric self-reports and probe-defined internal directions, and shows that steering those directions shifts the reports coherently.",
           "links": [
             {
@@ -1050,6 +1016,7 @@
           "title": "Is Gemini 3 Scheming in the Wild?",
           "authors": "Alejandro Wainstock, Agustín Martínez Suñé, Iván Arcuschin, Victor Braberman",
           "venue": "LessWrong · Mar 2026",
+          "year": 2026,
           "description": "Documents Gemini 3 violating an explicit system-prompt prohibition in most runs of an unmodified official tutorial while concealing it from the user and reasoning about oversight.",
           "links": [
             {
@@ -1062,6 +1029,7 @@
           "title": "What Large Language Models Know About Plant Molecular Biology",
           "authors": "Manuel Fernández Burda, Lucia Ferrero, Nicolás Gaggion, Camille Fonouni-Farde, The MoBiPlant Consortium, Martín Crespi, Federico Ariel, Enzo Ferrante",
           "venue": "NeurIPS 2025 Workshop · Dec 2025",
+          "year": 2025,
           "description": "MoBiPlant, a benchmark of expert-curated questions built with 112 plant scientists across 19 countries. Leading LLMs pass 75% accuracy but show option bias and hallucinations. Supported by AISAR.",
           "links": [
             {
@@ -1074,6 +1042,7 @@
           "title": "Table Top Agents",
           "authors": "Luca De Leo",
           "venue": "Apart Research Hackathon · Nov 2025",
+          "year": 2025,
           "description": "AI-powered framework that accelerates AI governance scenario exploration through autonomous agent tabletop exercises, compressing preparation cycles from years to minutes.",
           "links": [
             {
@@ -1086,6 +1055,7 @@
           "title": "Explorando AI Safety via Debate: un estudio sobre capacidades asimétricas y jueces débiles en el entorno MNIST",
           "authors": "Joaquín Machulsky",
           "venue": "Master's Thesis · Oct 2025",
+          "year": 2025,
           "description": "Master's thesis exploring AI safety through debate mechanisms, studying asymmetric capabilities and weak judges in the MNIST environment. Features an interactive demo.",
           "links": [
             {
@@ -1098,6 +1068,7 @@
           "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
           "authors": "Austin Meek, Eitan Sprejer, Iván Arcuschin, Austin J. Brockmeier, Steven Basart",
           "venue": "arXiv · Oct 2025",
+          "year": 2025,
           "description": "Investigating how well chain-of-thought reasoning can be monitored for safety through faithfulness and verbosity metrics.",
           "links": [
             {
@@ -1110,6 +1081,7 @@
           "title": "AI Debaters are More Persuasive when Arguing in Alignment with Their Own Beliefs",
           "authors": "María Victoria Carro, Denise Mester, Facundo Nieto, Oscar Stanchi, Guido Bergman, Mario Leiva, Eitan Sprejer, Luca Forziati Gangi, et al.",
           "venue": "arXiv · Oct 2025",
+          "year": 2025,
           "description": "Studying how AI systems' internal beliefs affect their persuasiveness in debate scenarios — implications for AI safety and deception.",
           "links": [
             {
@@ -1122,6 +1094,7 @@
           "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
           "authors": "Eitan Sprejer, Fernando Avalos, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
           "venue": "NeurIPS Workshop · Sep 2025",
+          "year": 2025,
           "description": "A multi-judge approach to better approximate human preferences in AI systems, improving alignment evaluation.",
           "links": [
             {
@@ -1134,6 +1107,7 @@
           "title": "RobustCBRN Eval: A Practical Benchmark Robustification Toolkit",
           "authors": "Luca De Leo, James Sykes, Balázs László, Ewura Ama Etruwaa Sam",
           "venue": "Apart Research Hackathon · Sep 2025",
+          "year": 2025,
           "award": "2nd Place",
           "description": "A pipeline addressing CBRN evaluation vulnerabilities through consensus detection, verified cloze scoring, and statistical evaluation with bootstrap confidence intervals.",
           "links": [
@@ -1147,6 +1121,7 @@
           "title": "From Text to Space: Mapping Abstract Spatial Models in LLMs during a Grid-World Navigation Task",
           "authors": "Nicolás Martorell",
           "venue": "xAI 2025 World Conference · Jul 2025",
+          "year": 2025,
           "description": "Cartesian text encodings give LLMs the best spatial navigation, and intermediate-layer units in LLaMA-3.1-8B encode agent position and action correctness regardless of surface representation.",
           "links": [
             {
@@ -1163,6 +1138,7 @@
           "title": "Four Paths to Failure: Red Teaming ASI Governance",
           "authors": "Luca De Leo, Zoé Roy-Stang, Heramb Podar, Damin Curtis, Vishakha Agrawal, Ben Smyth",
           "venue": "Apart Research Hackathon · Jun 2025",
+          "year": 2025,
           "award": "1st Place",
           "description": "Stress-tested A Narrow Path Phase 0 ASI moratorium, identifying four circumvention routes and proposing ten mutually reinforcing policy amendments.",
           "links": [

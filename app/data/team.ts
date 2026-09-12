@@ -1,3 +1,5 @@
+import type en from "@/app/[locale]/dictionaries/en.json";
+
 /**
  * BAISH team roster.
  *
@@ -11,6 +13,13 @@
 
 export type TeamGroup = "directors" | "leads" | "team" | "advisors";
 
+/**
+ * Every member id must have a role label under `about.team.roles` in the
+ * dictionaries; typing the id this way turns a missing label into a type
+ * error instead of an empty card.
+ */
+export type TeamMemberId = keyof typeof en.about.team.roles;
+
 export type LabsRole = "head" | "lead" | "fellow";
 
 export type TeamLinks = {
@@ -22,7 +31,7 @@ export type TeamLinks = {
 };
 
 export type TeamMember = {
-  id: string;
+  id: TeamMemberId;
   name: string;
   group: TeamGroup;
   /** Path under /public, e.g. "/images/team/eitan-new.png". */
@@ -33,7 +42,7 @@ export type TeamMember = {
 };
 
 export const TEAM: TeamMember[] = [
-  // ─── Founding directors ────────────────────────────────────────────────
+  // ─── Directors ────────────────────────────────────────────────
   {
     id: "eitan-sprejer",
     name: "Eitán Sprejer",
@@ -289,7 +298,6 @@ export const TEAM: TeamMember[] = [
     id: "sergio-abriola",
     name: "Sergio Abriola",
     group: "advisors",
-    photo: "/images/team/sergio-new.png",
     links: {
       website: "https://glyc.dc.uba.ar/abriola/",
     },
@@ -339,7 +347,6 @@ export const TEAM: TeamMember[] = [
     id: "guido-bergman",
     name: "Guido Bergman",
     group: "advisors",
-    photo: "/images/team/guido-new.png",
     links: {
       github: "https://github.com/GuidoBergman",
       linkedin: "https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203",
@@ -370,26 +377,43 @@ export function initials(name: string): string {
 }
 
 /**
- * Names used to highlight BAISH-affiliated authors in publication lists.
- * Includes the roster above plus community members who are not on the org
- * chart but whose work is shown on the research page. Matching is by
- * substring, so include the form that appears in author strings.
+ * Lower-cases a name and strips accents and hyphens, so "Nicolás Martorell"
+ * and "Nicolas Martorell", or "Martínez-Suñé" and "Martínez Suñé", compare
+ * equal. Used for author highlighting on the research page.
  */
-export const BAISH_AFFILIATED_AUTHORS: string[] = [
+export function normalizeAuthorName(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * Names used to highlight BAISH-affiliated authors in publication lists:
+ * the roster above plus community members who are not on the org chart but
+ * whose work is shown on the research page. Accents, hyphens and case are
+ * ignored when matching, so only genuinely different forms (e.g. a middle
+ * initial) need listing here.
+ */
+const BAISH_AFFILIATED_AUTHORS: string[] = [
   ...TEAM.map((member) => member.name),
-  // Accent-free / alternate spellings that appear in author lists
-  "Eitan Sprejer",
-  "Nicolas Martorell",
-  "Nicolás Martorell",
-  "Tobias Bersia",
-  "Ivan Arcuschin",
-  "Agustín Martínez-Suñé",
-  "Agustín E. Martínez-Suñé",
-  "Agustín Martínez Suñé",
-  "Julian Szere",
+  // Forms with a middle initial that appear in author lists
+  "Agustín E. Martínez Suñé",
   // Community members and alumni
   "Joaquín Machulsky",
   "Alejandro Wainstock",
   "Manuel Fernández Burda",
   "Guido Freire",
 ];
+
+const NORMALIZED_AFFILIATED_AUTHORS =
+  BAISH_AFFILIATED_AUTHORS.map(normalizeAuthorName);
+
+/** True when one author name, as written in a publication, is a BAISH member or alumnus. */
+export function isBaishAffiliatedAuthor(author: string): boolean {
+  const normalized = normalizeAuthorName(author);
+  return NORMALIZED_AFFILIATED_AUTHORS.some((name) => normalized.includes(name));
+}

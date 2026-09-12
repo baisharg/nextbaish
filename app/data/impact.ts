@@ -3,12 +3,16 @@
  * can never drift apart. Labels are translated in the dictionaries; only the
  * language-independent values live here.
  *
+ * Dictionary copy references these values as `{key}` placeholders, e.g.
+ * "{communityMembers} members on WhatsApp". Render such strings through
+ * `fillImpact` so that changing a number here updates every page.
+ *
  * Last reviewed: September 2026.
  */
 
 export const IMPACT = {
   /** Members of the BAISH WhatsApp community. */
-  communityMembers: "300+",
+  communityMembers: "350+",
   /** Subscribers to the BAISH Luma events calendar. */
   lumaSubscribers: "500+",
   /** Followers of @baish_arg on Instagram. */
@@ -28,9 +32,22 @@ export const IMPACT = {
   socialAttendance: "50-80",
   /** Argentine delegation to EAG London 2026 supported by BAISH. */
   eagDelegation: "16",
-  /** Scholars funded through the AISAR fellowship (first cohort + second). */
-  aisarScholars: "6 + 15",
 } as const;
+
+export type ImpactKey = keyof typeof IMPACT;
+
+const PLACEHOLDER = /\{(\w+)\}/g;
+
+/**
+ * Replaces `{key}` placeholders in a dictionary string with the matching
+ * IMPACT value. Unknown placeholders are left untouched, so strings that also
+ * carry other template variables (e.g. `{name}`) pass through safely.
+ */
+export function fillImpact(text: string): string {
+  return text.replace(PLACEHOLDER, (match, key: string) =>
+    key in IMPACT ? IMPACT[key as ImpactKey] : match,
+  );
+}
 
 export type FellowshipPlacement = {
   /** Program name as commonly written. */

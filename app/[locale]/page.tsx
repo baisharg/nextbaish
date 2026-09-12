@@ -6,7 +6,7 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { TransitionLink } from "@/app/components/transition-link";
 import { AstnPromo } from "@/app/components/astn-promo";
 import { ImpactStats } from "@/app/components/impact-stats";
-import { StoryCard, type SuccessStory } from "@/app/components/story-card";
+import { StoryCard } from "@/app/components/story-card";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "./dictionaries";
 import {
@@ -17,6 +17,8 @@ import {
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { withLocale } from "@/app/utils/locale";
+import { fillImpact } from "@/app/data/impact";
+import { featuredStories, withStoryCopy } from "@/app/data/stories";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 
@@ -40,7 +42,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
   Clock01Icon,
-  TelegramIcon,
   WhatsappIcon,
 } from "@hugeicons/core-free-icons";
 
@@ -67,9 +68,7 @@ export default async function Home({
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
   const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
   const whatWeDo = t.whatWeDo.items as WhatWeDoItem[];
-  const featuredStories = (dict.about.impact.stories as SuccessStory[]).filter(
-    (story) => story.featured,
-  );
+  const stories = withStoryCopy(featuredStories(), dict.about.impact.stories);
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -121,7 +120,9 @@ export default async function Home({
                 </div>
 
                 {/* Social Proof Stats - Above the fold */}
-                <ImpactStats labels={t.hero.stats} className="mt-10" />
+                <div className="mt-10">
+                  <ImpactStats labels={t.hero.stats} />
+                </div>
               </div>
             </section>
           </FadeInSection>
@@ -146,7 +147,7 @@ export default async function Home({
                   >
                     <div className="card-eyebrow">{item.eyebrow}</div>
                     <h3 className="card-title">{item.title}</h3>
-                    <p className="card-body">{item.description}</p>
+                    <p className="card-body">{fillImpact(item.description)}</p>
                     <div className="card-footer">
                       <TransitionLink
                         className="link-arrow"
@@ -242,15 +243,20 @@ export default async function Home({
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                   {t.successStories.description}
                 </p>
-                <ImpactStats
-                  labels={t.successStories.statLabels}
-                  keys={["fullTimeRoles", "fellowshipPlacements", "publications"]}
-                  className="pt-4"
-                />
+                <div className="pt-4">
+                  <ImpactStats
+                    labels={t.successStories.statLabels}
+                    keys={["fullTimeRoles", "fellowshipPlacements", "publications"]}
+                  />
+                </div>
               </div>
               <div className="grid gap-6 md:grid-cols-3">
-                {featuredStories.map((story) => (
-                  <StoryCard key={story.id} story={story} />
+                {stories.map((story) => (
+                  <StoryCard
+                    key={story.id}
+                    story={story}
+                    linkedinLabel={dict.about.impact.linkedinLabel}
+                  />
                 ))}
               </div>
               <div className="mt-8 text-center">
@@ -294,7 +300,7 @@ export default async function Home({
                     {t.getInvolved.communityTitle}
                   </h3>
                   <p className="card-body">
-                    {t.getInvolved.communityDescription}
+                    {fillImpact(t.getInvolved.communityDescription)}
                   </p>
                   <div className="flex flex-col gap-3 mt-auto">
                     <a
@@ -307,19 +313,7 @@ export default async function Home({
                         <HugeiconsIcon icon={WhatsappIcon} size={20} />
                         <span className="font-semibold">{t.getInvolved.whatsappCta}</span>
                       </div>
-                      <span className="text-xs opacity-90">{t.getInvolved.whatsappMembers}</span>
-                    </a>
-                    <a
-                      className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                      href="https://t.me/+zhSGhXrn56g1YjVh"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <div className="flex items-center gap-2">
-                        <HugeiconsIcon icon={TelegramIcon} size={20} />
-                        <span className="font-semibold">{t.getInvolved.telegramCta}</span>
-                      </div>
-                      <span className="text-xs opacity-90">{t.getInvolved.telegramMembers}</span>
+                      <span className="text-xs opacity-90">{fillImpact(t.getInvolved.whatsappMembers)}</span>
                     </a>
                   </div>
                 </article>

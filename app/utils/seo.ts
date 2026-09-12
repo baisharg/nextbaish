@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { i18n, type AppLocale } from "@/i18n.config";
+import { IMPACT } from "@/app/data/impact";
 
 const BASE_URL = "https://baish.com.ar";
 const SITE_NAME = "BAISH";
@@ -91,12 +92,12 @@ export const SEO_CONTENT = {
     en: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        "The largest AI safety hub in Latin America. 300+ members, in-person courses, a research lab and career support in Buenos Aires.",
+        `The largest AI safety hub in Latin America. ${IMPACT.communityMembers} members, in-person courses, a research lab and career support in Buenos Aires.`,
     },
     es: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        "El hub de AI Safety más grande de Latinoamérica. Más de 300 miembros, cursos presenciales, un laboratorio de investigación y acompañamiento de carrera en Buenos Aires.",
+        `El hub de AI Safety más grande de Latinoamérica. ${IMPACT.communityMembers} miembros, cursos presenciales, un laboratorio de investigación y acompañamiento de carrera en Buenos Aires.`,
     },
   },
   about: {
@@ -115,12 +116,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Programs",
       description:
-        "BAISH courses, community events and career support: Technical AI Safety, Projects Sprint, Frontier AI Governance, monthly socials, hackathons and more, in person in Buenos Aires.",
+        "BAISH courses, community events and career support: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, monthly socials, hackathons and more, in person in Buenos Aires.",
     },
     es: {
       title: "Programas",
       description:
-        "Cursos, eventos de comunidad y acompañamiento de carrera de BAISH: Technical AI Safety, Projects Sprint, Frontier AI Governance, eventos mensuales, hackathons y más, presenciales en Buenos Aires.",
+        "Cursos, eventos de comunidad y acompañamiento de carrera de BAISH: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, eventos mensuales, hackathons y más, presenciales en Buenos Aires.",
     },
   },
   "activities/fundamentals": {
@@ -187,12 +188,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Contact",
       description:
-        "Get in touch with BAISH. Join our WhatsApp and Telegram communities, write to the team, or reach out for press and partnerships.",
+        "Get in touch with BAISH. Join our WhatsApp community, write to the team, or reach out for press and partnerships.",
     },
     es: {
       title: "Contacto",
       description:
-        "Contactá a BAISH. Sumate a nuestras comunidades de WhatsApp y Telegram, escribile al equipo, o contactanos por prensa y alianzas.",
+        "Contactá a BAISH. Sumate a nuestra comunidad de WhatsApp, escribile al equipo, o contactanos por prensa y alianzas.",
     },
   },
   privacyPolicy: {

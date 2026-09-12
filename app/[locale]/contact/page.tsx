@@ -8,6 +8,7 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
+import { fillImpact } from "@/app/data/impact";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 import type { AppLocale } from "@/i18n.config";
@@ -32,7 +33,6 @@ export async function generateMetadata({
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
-  TelegramIcon,
   InstagramIcon,
   Linkedin01Icon,
   WhatsappIcon,
@@ -114,25 +114,9 @@ export default async function ContactPage({
                   {dict.home.getInvolved.communityTitle}
                 </h3>
                 <p className="card-body">
-                  {dict.home.getInvolved.communityDescription}
+                  {fillImpact(dict.home.getInvolved.communityDescription)}
                 </p>
                 <div className="flex flex-col gap-3 mt-auto">
-                  <a
-                    className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                    href="https://t.me/+zhSGhXrn56g1YjVh"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <div className="flex items-center gap-2">
-                      <HugeiconsIcon icon={TelegramIcon} size={20} />
-                      <span className="font-semibold">
-                        {dict.home.getInvolved.telegramCta}
-                      </span>
-                    </div>
-                    <span className="text-xs opacity-90">
-                      {dict.home.getInvolved.telegramMembers}
-                    </span>
-                  </a>
                   <a
                     className="button-primary flex flex-col items-center justify-center gap-1 py-4"
                     href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
@@ -146,7 +130,7 @@ export default async function ContactPage({
                       </span>
                     </div>
                     <span className="text-xs opacity-90">
-                      {dict.home.getInvolved.whatsappMembers}
+                      {fillImpact(dict.home.getInvolved.whatsappMembers)}
                     </span>
                   </a>
                 </div>
@@ -174,7 +158,7 @@ export default async function ContactPage({
                     <HugeiconsIcon icon={InstagramIcon} size={20} />
                     Instagram
                     <span className="text-xs font-normal text-slate-500">
-                      · {dict.contact.cards.social.instagramFollowers}
+                      · {fillImpact(dict.contact.cards.social.instagramFollowers)}
                     </span>
                   </a>
                   <a

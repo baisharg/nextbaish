@@ -70,18 +70,23 @@ const LINK_ICONS: {
   { key: "instagram", label: "Instagram", icon: InstagramIcon },
 ];
 
+const LINK_GAP = { sm: "gap-2", md: "gap-3" } as const;
+
 export function TeamLinksRow({
   links,
+  gap = "sm",
   className = "",
 }: {
   links?: TeamLinks;
+  gap?: keyof typeof LINK_GAP;
+  /** Outer spacing only (margins/padding); the row owns its layout classes. */
   className?: string;
 }) {
   if (!links) return null;
   const entries = LINK_ICONS.filter(({ key }) => links[key]);
   if (entries.length === 0) return null;
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex ${LINK_GAP[gap]} ${className}`}>
       {entries.map(({ key, label, icon }) => (
         <a
           key={key}
@@ -105,15 +110,12 @@ export function TeamLinksRow({
 export function TeamCard({
   member,
   role,
-  badge,
 }: {
   member: TeamMember;
   role?: string;
-  /** Small pill shown under the role, e.g. "BAISH Labs". */
-  badge?: string;
 }) {
   return (
-    <article className="card-glass relative overflow-hidden flex flex-col items-center p-4 text-center">
+    <article className="card-glass relative overflow-hidden flex flex-col items-center text-center">
       <div className="relative flex flex-col items-center space-y-2">
         <TeamPhoto member={member} size="sm" />
         <div className="space-y-1">
@@ -123,7 +125,6 @@ export function TeamCard({
           {role && (
             <p className="text-xs leading-snug text-slate-600">{role}</p>
           )}
-          {badge && <span className="pill">{badge}</span>}
         </div>
         <TeamLinksRow links={member.links} />
       </div>
@@ -142,7 +143,7 @@ export function TeamTextCard({
   role?: string;
 }) {
   return (
-    <article className="card-glass relative overflow-hidden flex flex-col gap-2 p-5">
+    <article className="card-glass relative overflow-hidden flex flex-col gap-2">
       <h4 className="text-base font-semibold text-slate-900">{member.name}</h4>
       {role && <p className="text-sm leading-snug text-slate-600">{role}</p>}
       <TeamLinksRow links={member.links} className="mt-auto pt-2" />
@@ -151,7 +152,7 @@ export function TeamTextCard({
 }
 
 /**
- * Wide card with a bio, used for the founding directors and the Head of Lab.
+ * Wide card with a bio, used for the directors and the Head of Lab.
  */
 export function TeamBioCard({
   member,
@@ -176,7 +177,7 @@ export function TeamBioCard({
             {role && <p className="text-sm text-slate-600 mt-1">{role}</p>}
           </div>
           <p className="text-sm leading-relaxed text-slate-700">{bio}</p>
-          <TeamLinksRow links={member.links} className="gap-3" />
+          <TeamLinksRow links={member.links} gap="md" />
         </div>
       </div>
     </article>

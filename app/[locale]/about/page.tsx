@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { ImpactStats } from "@/app/components/impact-stats";
-import { StoryCard, type SuccessStory } from "@/app/components/story-card";
+import { StoryCard } from "@/app/components/story-card";
+import { FunderCard } from "@/app/components/funder-card";
 import {
   TeamBioCard,
   TeamCard,
@@ -15,11 +15,13 @@ import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { renderWithBioLinks } from "@/app/utils/footnotes";
-import { teamByGroup } from "@/app/data/team";
+import { teamByGroup, type TeamMemberId } from "@/app/data/team";
+import { SUCCESS_STORIES, withStoryCopy } from "@/app/data/stories";
+import { FUNDERS } from "@/app/data/funders";
 import {
   FELLOWSHIP_PLACEMENTS,
   FULL_TIME_ORGS,
-  IMPACT,
+  fillImpact,
 } from "@/app/data/impact";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
@@ -41,19 +43,6 @@ export async function generateMetadata({
   });
 }
 
-function ExternalIcon() {
-  return (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-      />
-    </svg>
-  );
-}
-
 export default async function AboutPage({
   params,
 }: {
@@ -64,9 +53,9 @@ export default async function AboutPage({
   const dict = await getDictionary(currentLocale);
   const t = dict.about;
   const callToAction = t.callToAction;
-  const roles = t.team.roles as Record<string, string>;
-  const bios = t.team.bios as Record<string, string>;
-  const stories = t.impact.stories as SuccessStory[];
+  const roles = t.team.roles;
+  const bios: Partial<Record<TeamMemberId, string>> = t.team.bios;
+  const stories = withStoryCopy(SUCCESS_STORIES, t.impact.stories);
 
   const directors = teamByGroup("directors");
   const leads = teamByGroup("leads");
@@ -122,17 +111,14 @@ export default async function AboutPage({
                     {t.whoWeAre.title}
                   </h2>
                   <p className="text-base leading-relaxed text-slate-700">
-                    {t.whoWeAre.paragraph1}
+                    {fillImpact(t.whoWeAre.paragraph1)}
                   </p>
                   <p className="text-base leading-relaxed text-slate-700">
-                    {t.whoWeAre.paragraph2}
+                    {fillImpact(t.whoWeAre.paragraph2)}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6">
-                  <ImpactStats
-                    labels={dict.home.hero.stats}
-                    className="grid grid-cols-2 gap-6 sm:gap-6"
-                  />
+                  <ImpactStats labels={dict.home.hero.stats} layout="grid" />
                 </div>
               </div>
             </section>
@@ -156,10 +142,7 @@ export default async function AboutPage({
                 <article className="card-glass">
                   <h3 className="card-title">{t.impact.fullTime.title}</h3>
                   <p className="card-body">
-                    {t.impact.fullTime.description.replace(
-                      "{count}",
-                      IMPACT.fullTimeRoles,
-                    )}
+                    {fillImpact(t.impact.fullTime.description)}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {FULL_TIME_ORGS.map((org) => (
@@ -180,10 +163,7 @@ export default async function AboutPage({
                 <article className="card-glass">
                   <h3 className="card-title">{t.impact.fellowships.title}</h3>
                   <p className="card-body">
-                    {t.impact.fellowships.description.replace(
-                      "{count}",
-                      IMPACT.fellowshipPlacements,
-                    )}
+                    {fillImpact(t.impact.fellowships.description)}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {FELLOWSHIP_PLACEMENTS.map((program) => (
@@ -210,7 +190,7 @@ export default async function AboutPage({
                               aria-hidden="true"
                               className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-primary)]"
                             />
-                            <span>{item}</span>
+                            <span>{fillImpact(item)}</span>
                           </li>
                         ))}
                       </ul>
@@ -231,7 +211,11 @@ export default async function AboutPage({
                 </div>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {stories.map((story) => (
-                    <StoryCard key={story.id} story={story} />
+                    <StoryCard
+                      key={story.id}
+                      story={story}
+                      linkedinLabel={t.impact.linkedinLabel}
+                    />
                   ))}
                 </div>
               </div>
@@ -245,7 +229,7 @@ export default async function AboutPage({
                 {t.team.title}
               </h2>
 
-              {/* Founding directors */}
+              {/* Directors */}
               <div className="space-y-6">
                 <h3 className="text-2xl font-semibold text-slate-900">
                   {t.team.directorsTitle}
@@ -373,7 +357,7 @@ export default async function AboutPage({
                     </p>
                     <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
                       {t.ourApproach.contribution.items.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <li key={index}>{fillImpact(item)}</li>
                       ))}
                     </ul>
                   </div>
@@ -396,147 +380,14 @@ export default async function AboutPage({
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto pt-4">
-                  {/* Kairos Pathfinder */}
-                  <article className="card-glass relative overflow-hidden p-6 text-left">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative space-y-3">
-                      <div className="space-y-2">
-                        <Image
-                          src="/images/logos/kairos.png"
-                          alt="Kairos"
-                          width={180}
-                          height={49}
-                          className="h-8 w-auto"
-                          loading="lazy"
-                        />
-                        <p className="text-sm text-slate-600">
-                          {t.support.kairos.program}
-                        </p>
-                      </div>
-                      <p className="text-base text-slate-700">
-                        {t.support.kairos.description}
-                      </p>
-                      <div className="flex gap-3">
-                        <a
-                          href="https://pathfinder.kairos-project.org/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                        >
-                          {t.support.pathfinderCta}
-                          <ExternalIcon />
-                        </a>
-                        <span className="text-slate-400">·</span>
-                        <a
-                          href="https://kairos-project.org/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                        >
-                          {t.support.kairosCta}
-                          <ExternalIcon />
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-
-                  {/* BlueDot Impact */}
-                  <article className="card-glass relative overflow-hidden p-6 text-left">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-slate-900">
-                          {t.support.bluedot.name}
-                        </h3>
-                        <p className="text-sm text-slate-600">
-                          {t.support.bluedot.program}
-                        </p>
-                      </div>
-                      <p className="text-base text-slate-700">
-                        {t.support.bluedot.description}
-                      </p>
-                      <a
-                        href="https://bluedot.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                      >
-                        {t.support.visitWebsiteCta}
-                        <ExternalIcon />
-                      </a>
-                    </div>
-                  </article>
-
-                  {/* grantmaking.ai + AISTOF */}
-                  <article className="card-glass relative overflow-hidden p-6 text-left">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-slate-900">
-                          {t.support.grantmaking.name}
-                        </h3>
-                        <p className="text-sm text-slate-600">
-                          {t.support.grantmaking.program}
-                        </p>
-                      </div>
-                      <p className="text-base text-slate-700">
-                        {t.support.grantmaking.description}
-                      </p>
-                      <a
-                        href="https://app.grantmaking.ai/projects/fbc09447-e027-4818-af5f-bf577c076aa7"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                      >
-                        {t.support.visitWebsiteCta}
-                        <ExternalIcon />
-                      </a>
-                    </div>
-                  </article>
-
-                  {/* Coefficient Giving via AISAR */}
-                  <article className="card-glass relative overflow-hidden p-6 text-left">
-                    <div className="absolute inset-y-0 right-[-20%] w-1/2 rounded-full bg-[#9275E533] blur-3xl opacity-30" />
-                    <div className="relative space-y-3">
-                      <div className="space-y-2">
-                        <Image
-                          src="/images/logos/coefficient-giving.svg"
-                          alt="Coefficient Giving"
-                          width={140}
-                          height={54}
-                          className="h-8 w-auto"
-                          loading="lazy"
-                        />
-                        <p className="text-sm text-slate-600">
-                          {t.support.coefficientGiving.program}
-                        </p>
-                      </div>
-                      <p className="text-base text-slate-700">
-                        {t.support.coefficientGiving.description}
-                      </p>
-                      <div className="flex gap-3">
-                        <a
-                          href="https://coefficientgiving.org/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                        >
-                          {t.support.visitWebsiteCta}
-                          <ExternalIcon />
-                        </a>
-                        <span className="text-slate-400">·</span>
-                        <a
-                          href="https://scholarship.aisafety.ar/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-[var(--color-accent-primary)] hover:underline font-medium text-sm"
-                        >
-                          AISAR
-                          <ExternalIcon />
-                        </a>
-                      </div>
-                    </div>
-                  </article>
+                  {FUNDERS.map((funder) => (
+                    <FunderCard
+                      key={funder.id}
+                      funder={funder}
+                      copy={t.support[funder.id]}
+                      ctaLabels={t.support}
+                    />
+                  ))}
                 </div>
               </div>
             </section>

@@ -18,6 +18,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
+import { withLocale } from "@/app/utils/locale";
 import {
   COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
@@ -25,7 +26,7 @@ import {
   resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
-import { IMPACT } from "@/app/data/impact";
+import { fillImpact } from "@/app/data/impact";
 
 export async function generateMetadata({
   params,
@@ -92,11 +93,7 @@ export default async function Activities({
   const pastProgramCount = pastProgramCards.length;
   const courses = t.courses;
   const upcomingCourses = courses.upcoming as { title: string; description: string }[];
-  const courseTrackRecord = courses.trackRecord
-    .replace("{cohorts}", IMPACT.courseCohorts)
-    .replace("{applications}", IMPACT.courseApplications)
-    .replace("{seats}", IMPACT.courseParticipants)
-    .replace("{score}", IMPACT.courseRecommendScore);
+  const courseTrackRecord = fillImpact(courses.trackRecord);
   const community = t.community;
   const communityItems = community.items as CommunityItem[];
   const courseOpportunities = await getCourseOpportunities();
@@ -283,7 +280,7 @@ export default async function Activities({
                 {communityItems.map((item) => (
                   <article key={item.id} className="card-glass flex flex-col">
                     <h3 className="card-title">{item.title}</h3>
-                    <p className="card-body">{item.description}</p>
+                    <p className="card-body">{fillImpact(item.description)}</p>
                     {item.cta && item.link && (
                       <div className="card-footer">
                         {item.external ? (
@@ -299,7 +296,7 @@ export default async function Activities({
                         ) : (
                           <TransitionLink
                             className="link-arrow"
-                            href={`/${currentLocale}${item.link}`}
+                            href={withLocale(currentLocale, item.link)}
                           >
                             {item.cta}
                             <span>→</span>

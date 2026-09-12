@@ -669,6 +669,11 @@ canvas {
   margin: 0 0 12px;
 }
 
+/* Last paragraph in a card: no trailing margin, so the card padding stays even. */
+.card-body-tight {
+  margin-bottom: 0;
+}
+
 /* ==========================================================================
    Section Spacing - More Breathing Room
    ========================================================================== */
@@ -1563,7 +1568,6 @@ span[style*="view-transition-name"] {
   contain-intrinsic-size: 0 300px;
 }
 
-/* Newsletter embed needs traditional rendering so the script can measure the container */
 /* Activities cards on homepage (taller content) */
 article.card-glass {
   content-visibility: auto;

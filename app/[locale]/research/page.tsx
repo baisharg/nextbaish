@@ -6,9 +6,14 @@ import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { TeamBioCard, TeamCard } from "@/app/components/team-card";
+import { ExternalLinkIcon } from "@/app/components/external-link-icon";
 import { withLocale } from "@/app/utils/locale";
 import { renderWithBioLinks } from "@/app/utils/footnotes";
-import { BAISH_AFFILIATED_AUTHORS, labsTeam } from "@/app/data/team";
+import {
+  isBaishAffiliatedAuthor,
+  labsTeam,
+  type TeamMemberId,
+} from "@/app/data/team";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
@@ -52,6 +57,8 @@ type Publication = {
   title: string;
   authors: string;
   venue: string;
+  /** Publication year; the list is grouped and sorted by it. */
+  year: number;
   description: string;
   links: { label: string; url: string }[];
   award?: string;
@@ -130,24 +137,6 @@ function RocketIcon({ className }: { className?: string }) {
   );
 }
 
-function ExternalLinkIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-      />
-    </svg>
-  );
-}
-
 const pathwayIcons = {
   book: BookIcon,
   code: CodeIcon,
@@ -162,9 +151,7 @@ function highlightBaishMembers(authors: string): React.ReactNode {
 
   return parts.map((part, index) => {
     const trimmedPart = part.trim();
-    const isBaishMember = BAISH_AFFILIATED_AUTHORS.some((member) =>
-      trimmedPart.includes(member),
-    );
+    const isBaishMember = isBaishAffiliatedAuthor(trimmedPart);
 
     return (
       <span key={index}>
@@ -215,19 +202,13 @@ function extractVenue(venue: string): string {
   return venue.split("·")[0].trim();
 }
 
-// Extract the year from a venue string (e.g., "ICLR 2026 Workshop · Apr 2026" → "2026")
-function extractYear(venue: string): string {
-  const matches = venue.match(/\b20\d{2}\b/g);
-  return matches ? matches[matches.length - 1] : "";
-}
-
-// Group publications by year, preserving the (newest-first) order of the list
-function groupByYear(publications: Publication[]): [string, Publication[]][] {
-  const groups = new Map<string, Publication[]>();
-  for (const pub of publications) {
-    const year = extractYear(pub.venue);
-    if (!groups.has(year)) groups.set(year, []);
-    groups.get(year)!.push(pub);
+// Group publications by year, newest first. Within a year the dictionary order is kept.
+function groupByYear(publications: Publication[]): [number, Publication[]][] {
+  const groups = new Map<number, Publication[]>();
+  const newestFirst = [...publications].sort((a, b) => b.year - a.year);
+  for (const pub of newestFirst) {
+    if (!groups.has(pub.year)) groups.set(pub.year, []);
+    groups.get(pub.year)!.push(pub);
   }
   return Array.from(groups.entries());
 }
@@ -251,8 +232,8 @@ export default async function ResearchPage({
   const labsMembers = labsTeam();
   const labsHead = labsMembers.find((member) => member.labs === "head");
   const labsOthers = labsMembers.filter((member) => member.labs !== "head");
-  const labsRoles = labs.roles as Record<string, string>;
-  const bios = dict.about.team.bios as Record<string, string>;
+  const labsRoles = labs.roles;
+  const bios: Partial<Record<TeamMemberId, string>> = dict.about.team.bios;
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -553,11 +534,9 @@ export default async function ResearchPage({
               <div className="space-y-10">
                 {publicationsByYear.map(([year, pubs]) => (
                   <div key={year} className="space-y-4">
-                    {year && (
-                      <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-tertiary)]">
-                        {year}
-                      </h3>
-                    )}
+                    <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-tertiary)]">
+                      {year}
+                    </h3>
                     {pubs.map((pub) => {
                       const venueName = extractVenue(pub.venue);
 

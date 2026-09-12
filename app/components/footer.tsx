@@ -10,7 +10,6 @@ import {
   Calendar03Icon,
   InstagramIcon,
   Linkedin01Icon,
-  TelegramIcon,
   WhatsappIcon,
 } from "@hugeicons/core-free-icons";
 
@@ -103,15 +102,6 @@ export default function Footer({ locale, t }: FooterProps) {
               rel="noopener noreferrer"
             >
               <HugeiconsIcon icon={Linkedin01Icon} size={20} />
-            </a>
-            <a
-              href="https://t.me/+zhSGhXrn56g1YjVh"
-              aria-label="Telegram"
-              className="text-slate-600 hover:text-[var(--color-accent-primary)] transition"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <HugeiconsIcon icon={TelegramIcon} size={20} />
             </a>
             <a
               href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"

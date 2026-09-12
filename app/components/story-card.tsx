@@ -1,20 +1,15 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Linkedin01Icon } from "@hugeicons/core-free-icons";
+import type { SuccessStory } from "@/app/data/stories";
 
-export type SuccessStory = {
-  id: string;
-  featured?: boolean;
-  name: string;
-  /** The path taken, e.g. "TAIS → ARENA → BAISH Labs". */
-  path: string;
-  /** Verbatim quote from the person, if we have one. */
-  quote?: string;
-  /** Short description of what happened. */
-  text?: string;
-  link?: string | null;
-};
-
-export function StoryCard({ story }: { story: SuccessStory }) {
+export function StoryCard({
+  story,
+  linkedinLabel,
+}: {
+  story: SuccessStory;
+  /** Dictionary template for the profile link's aria-label, e.g. "{name} on LinkedIn". */
+  linkedinLabel: string;
+}) {
   return (
     <article className="card-glass card-refined flex flex-col">
       <div className="card-eyebrow">{story.path}</div>
@@ -25,7 +20,7 @@ export function StoryCard({ story }: { story: SuccessStory }) {
             href={story.link}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${story.name} on LinkedIn`}
+            aria-label={linkedinLabel.replace("{name}", story.name)}
             className="text-slate-500 transition hover:text-[var(--color-accent-primary)]"
           >
             <HugeiconsIcon icon={Linkedin01Icon} size={18} />
@@ -37,7 +32,9 @@ export function StoryCard({ story }: { story: SuccessStory }) {
           “{story.quote}”
         </blockquote>
       )}
-      {story.text && <p className="card-body mb-0">{story.text}</p>}
+      {story.text && (
+        <p className="card-body card-body-tight">{story.text}</p>
+      )}
     </article>
   );
 }
