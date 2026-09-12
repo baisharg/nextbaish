@@ -18,6 +18,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getDictionary } from "../dictionaries";
+import { withLocale } from "@/app/utils/locale";
 import {
   COURSE_OPPORTUNITY_CTA_LABELS,
   COURSE_OPPORTUNITY_STATUS_LABELS,
@@ -25,6 +26,7 @@ import {
   resolveApplyUrl,
 } from "@/app/data/course-opportunities";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
+import { fillImpact } from "@/app/data/impact";
 
 export async function generateMetadata({
   params,
@@ -42,6 +44,15 @@ export async function generateMetadata({
     locale: currentLocale,
   });
 }
+
+type CommunityItem = {
+  id: string;
+  title: string;
+  description: string;
+  cta: string | null;
+  link: string | null;
+  external: boolean;
+};
 
 type PastProgramCard = {
   eyebrow: string;
@@ -80,6 +91,11 @@ export default async function Activities({
     ? pastPrograms.cards
     : [];
   const pastProgramCount = pastProgramCards.length;
+  const courses = t.courses;
+  const upcomingCourses = courses.upcoming as { title: string; description: string }[];
+  const courseTrackRecord = fillImpact(courses.trackRecord);
+  const community = t.community;
+  const communityItems = community.items as CommunityItem[];
   const courseOpportunities = await getCourseOpportunities();
   const courseStatusLabels = COURSE_OPPORTUNITY_STATUS_LABELS[currentLocale];
   const courseCtaLabels = COURSE_OPPORTUNITY_CTA_LABELS[currentLocale];
@@ -160,13 +176,17 @@ export default async function Activities({
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
         <div className="flex flex-col gap-20 pb-16">
           <FadeInSection variant="slide-up" delay={200} as="section">
-            <section className="space-y-8">
+            <section className="space-y-8 scroll-mt-24" id="courses">
               <div className="space-y-2">
+                <p className="eyebrow">{courses.eyebrow}</p>
                 <h2 className="text-3xl font-semibold text-slate-900">
-                  {dict.home.activities.title}
+                  {courses.title}
                 </h2>
-                <p className="text-base text-slate-600">
-                  {dict.home.activities.description}
+                <p className="text-base text-slate-600 max-w-3xl">
+                  {courses.description}
+                </p>
+                <p className="text-sm font-medium text-[var(--color-accent-primary)]">
+                  {courseTrackRecord}
                 </p>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -221,6 +241,71 @@ export default async function Activities({
                     </article>
                   );
                 })}
+              </div>
+
+              {/* Coming next */}
+              <div className="rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                  {courses.upcomingTitle}
+                </h3>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {upcomingCourses.map((course) => (
+                    <div key={course.title} className="space-y-1">
+                      <p className="text-base font-semibold text-slate-900">
+                        {course.title}
+                      </p>
+                      <p className="text-sm text-slate-600">
+                        {course.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </FadeInSection>
+
+          {/* Community */}
+          <FadeInSection variant="slide-up" delay={220} as="section">
+            <section className="space-y-8 scroll-mt-24" id="community">
+              <div className="space-y-2">
+                <p className="eyebrow">{community.eyebrow}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {community.title}
+                </h2>
+                <p className="text-base text-slate-600 max-w-3xl">
+                  {community.description}
+                </p>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {communityItems.map((item) => (
+                  <article key={item.id} className="card-glass flex flex-col">
+                    <h3 className="card-title">{item.title}</h3>
+                    <p className="card-body">{fillImpact(item.description)}</p>
+                    {item.cta && item.link && (
+                      <div className="card-footer">
+                        {item.external ? (
+                          <a
+                            className="link-arrow"
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {item.cta}
+                            <span>→</span>
+                          </a>
+                        ) : (
+                          <TransitionLink
+                            className="link-arrow"
+                            href={withLocale(currentLocale, item.link)}
+                          >
+                            {item.cta}
+                            <span>→</span>
+                          </TransitionLink>
+                        )}
+                      </div>
+                    )}
+                  </article>
+                ))}
               </div>
             </section>
           </FadeInSection>

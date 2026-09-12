@@ -27,7 +27,8 @@
       "contact": "Contacto",
       "getInvolved": "Participá",
       "privacyPolicy": "Política de privacidad"
-    }
+    },
+    "luma": "Calendario de eventos"
   },
   "substack": {
     "eyebrow": "Boletin",
@@ -39,23 +40,28 @@
     "success": "¡Te suscribiste! Revisá tu correo para el mensaje de bienvenida.",
     "confirm": "Queda un paso — confirmá la suscripción desde tu bandeja de entrada.",
     "genericError": "Ocurrió un error. Intentá nuevamente.",
-    "networkError": "Fallo de conexión. Verificá tu internet e intentalo otra vez."
+    "networkError": "Fallo de conexión. Verificá tu internet e intentalo otra vez.",
+    "substackCta": "Suscribite en Substack"
   },
   "home": {
     "breadcrumb": {
       "home": "Inicio"
     },
     "hero": {
-      "communityMembers": "Miembros de la Comunidad",
-      "weeklyPrograms": "Cursos abiertos",
-      "publishedPapers": "Papers Publicados",
+      "eyebrow": "El hub de AI Safety más grande de Latinoamérica",
       "primaryCta": "Ver cursos abiertos",
-      "secondaryCta": "Sumate a la comunidad"
+      "secondaryCta": "Sumate a la comunidad",
+      "stats": {
+        "communityMembers": "Miembros de la comunidad",
+        "fellowshipPlacements": "Placements en fellowships",
+        "fullTimeRoles": "Roles full-time en AI safety",
+        "publications": "Publicaciones"
+      }
     },
     "timeline": {
       "connect": "Conectar",
       "connectTitle": "Unite a la comunidad",
-      "connectDesc": "120+ miembros en WhatsApp y Telegram",
+      "connectDesc": "350+ miembros en WhatsApp",
       "foundations": "Fundamentos",
       "foundationsTitle": "Technical AI Safety Course",
       "foundationsDesc": "Bases técnicas para contribuir a seguridad en IA",
@@ -75,6 +81,45 @@
       "paragraph3": "Lo que hacemos en BAISH es ayudar a estudiantes de Buenos Aires a darse cuenta de qué piensan realmente, aprender lo técnico y lo conceptual que necesitan, y empezar a contribuir con investigación de verdad.",
       "cta": "Participá"
     },
+    "whatWeDo": {
+      "eyebrow": "Qué hacemos",
+      "title": "Del primer curso a la investigación publicada",
+      "description": "BAISH cubre todo el recorrido en Buenos Aires: aprendé el campo, sumate a una comunidad que te mantiene en él, investigá acá y conseguí un rol.",
+      "items": [
+        {
+          "id": "courses",
+          "eyebrow": "Cursos",
+          "title": "Cursos presenciales de BlueDot",
+          "description": "Technical AI Safety, el Projects Sprint y Frontier AI Governance, facilitados en persona. Seis cohortes desde marzo de 2026.",
+          "cta": "Ver cursos",
+          "link": "/activities#courses"
+        },
+        {
+          "id": "community",
+          "eyebrow": "Comunidad",
+          "title": "Eventos, retiros y hackathons",
+          "description": "Eventos sociales mensuales de {socialAttendance} personas, un retiro anual, sedes de hackathons y una comunidad de WhatsApp de {communityMembers} miembros.",
+          "cta": "Ver comunidad",
+          "link": "/activities#community"
+        },
+        {
+          "id": "research",
+          "eyebrow": "Investigación",
+          "title": "BAISH Labs",
+          "description": "Nuestro brazo de investigación: un grupo con base en Buenos Aires que trabaja en interpretabilidad y control, junto a la beca AISAR.",
+          "cta": "Conocé el lab",
+          "link": "/research#labs"
+        },
+        {
+          "id": "careers",
+          "eyebrow": "Carreras",
+          "title": "Fellowships y placements",
+          "description": "Acompañamiento 1 a 1, sprints de aplicación y delegaciones a conferencias. {fellowshipPlacements} placements en fellowships y {fullTimeRoles} roles full-time hasta ahora.",
+          "cta": "Ver placements e historias",
+          "link": "/about#impact"
+        }
+      ]
+    },
     "gettingStarted": {
       "eyebrow": "Tu Camino",
       "title": "Empezá con BAISH",
@@ -83,7 +128,7 @@
         {
           "number": "01",
           "title": "Unite a la comunidad",
-          "description": "Conectá con más de 200 miembros en WhatsApp y Telegram. Recibí updates sobre eventos y oportunidades.",
+          "description": "Conectá con más de 350 miembros en WhatsApp. Recibí updates sobre eventos y oportunidades.",
           "cta": "Unirse a WhatsApp",
           "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
         },
@@ -138,55 +183,31 @@
           "eyebrow": "Curso de gobernanza",
           "title": "Frontier AI Governance",
           "description": "Explorá desafíos de gobernanza de sistemas de IA de frontera: coordinación, gobernanza de compute, accountability y evaluación de riesgos.",
-          "duration": "Fechas a definir"
+          "duration": "6 semanas"
         }
       },
       "joinNow": "Inscribite",
-      "joinTelegram": "Sumate al Telegram",
       "learnMore": "Ver más",
       "applyNow": "Inscribite"
     },
     "successStories": {
       "eyebrow": "Impacto",
-      "title": "A Dónde Llega Nuestra Comunidad",
-      "description": "Ex-alumnos de BAISH han accedido a posiciones de investigación, fellowships y publicaciones.",
-      "stats": [
-        {
-          "number": "3+",
-          "label": "Papers publicados"
-        },
-        {
-          "number": "10+",
-          "label": "Fellowships de investigación"
-        },
-        {
-          "number": "200+",
-          "label": "Miembros de la comunidad"
-        }
-      ],
-      "stories": [
-        {
-          "name": "Guido Bergman",
-          "role": "AISAR → Algoverse & AI Evals",
-          "quote": "BAISH me dio la base y las conexiones para transicionar a investigación de AI safety profesionalmente.",
-          "link": "https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203"
-        },
-        {
-          "name": "Ana & Vicky",
-          "role": "BAISH → ML4Good Camp",
-          "quote": "De meetups locales a colaboraciones de investigación internacionales.",
-          "link": null
-        }
-      ],
-      "cta": "Ver nuestra investigación",
-      "ctaLink": "/research"
+      "title": "Nuestro impacto hasta ahora",
+      "description": "Miembros de BAISH pasaron a roles full-time en AI safety, fellowships internacionales e investigación publicada.",
+      "cta": "Ver todos los placements e historias",
+      "ctaLink": "/about#impact",
+      "statLabels": {
+        "fullTimeRoles": "Roles full-time en AI safety",
+        "fellowshipPlacements": "Placements en fellowships",
+        "publications": "Publicaciones"
+      }
     },
     "aisar": {
       "eyebrow": "Proyecto Hermano",
-      "title": "Becas AISAR",
-      "description": "Programa presencial part-time para estudiantes avanzados que trabajan en proyectos de investigación en AI Safety. Estipendio de $600/mes + presupuesto para cómputo. Temas incluyen interpretabilidad, evaluaciones y supervisión.",
+      "title": "Beca AISAR",
+      "description": "Beca de investigación en AI safety de seis meses con mentoría, en Buenos Aires, financiada por Coefficient Giving. Estipendio de USD 700/mes part-time o 1.400 full-time más presupuesto de cómputo. Los 6 becarios de la primera cohorte produjeron 3 papers en workshops de ICLR 2026; la segunda cohorte empieza en octubre de 2026.",
       "duration": "6 meses",
-      "commitment": "20 hrs/semana",
+      "commitment": "20 o 40 hs/semana",
       "visitWebsite": "Visitar sitio web"
     },
     "resources": {
@@ -220,12 +241,10 @@
       "sectionTitle": "Unite a la Comunidad",
       "sectionDescription": "Conectá con investigadores, mantenete al día y empezá tu camino en AI safety",
       "communityEyebrow": "Comunidad",
-      "communityTitle": "Grupos de Chat",
-      "communityDescription": "Conectá con 200+ estudiantes e investigadores interesados en AI safety.",
-      "telegramCta": "AI Safety Argentina",
-      "telegramMembers": "190+ miembros",
+      "communityTitle": "Comunidad de WhatsApp",
+      "communityDescription": "Conectá con {communityMembers} estudiantes, investigadores y profesionales interesados en AI safety.",
       "whatsappCta": "Comunidad BAISH",
-      "whatsappMembers": "140+ miembros"
+      "whatsappMembers": "{communityMembers} miembros"
     },
     "courseSpotlight": {
       "eyebrow": "BlueDot Impact × BAISH",
@@ -263,14 +282,107 @@
       },
       "cta": "Explorá ASTN",
       "domain": "safetytalent.org"
+    },
+    "pressCta": {
+      "eyebrow": "Prensa y alianzas",
+      "title": "¿Escribís sobre AI safety en Argentina?",
+      "description": "Hablamos con periodistas, universidades y organizaciones sobre AI safety y el ecosistema local, y estamos abiertos a alianzas institucionales.",
+      "cta": "Contactanos",
+      "link": "/contact#press"
     }
   },
   "about": {
     "breadcrumb": {
       "home": "Inicio",
-      "current": "Equipo"
+      "current": "Nosotros"
     },
-    "title": "Nuestro Equipo",
+    "title": "Sobre BAISH",
+    "whoWeAre": {
+      "eyebrow": "Fundado en 2024 · Buenos Aires",
+      "title": "El hub de AI Safety más grande de Latinoamérica",
+      "paragraph1": "BAISH es una comunidad de {communityMembers} estudiantes, investigadores y profesionales de Buenos Aires que trabaja para que la IA avanzada salga bien. Organizamos cursos presenciales, un laboratorio de investigación, eventos mensuales y acompañamiento 1 a 1 de carrera, para que el talento de acá pueda entrar a AI safety sin tener que irse del país para hacerlo.",
+      "paragraph2": "Desde 2024 ayudamos a {fullTimeRoles} miembros a conseguir roles full-time en AI safety y a {fellowshipPlacements} a entrar en fellowships y programas de investigación externos, e investigadores conectados a BAISH publicaron en workshops de NeurIPS e ICLR. Nos sostiene un equipo de voluntarios y un pequeño staff pago, y trabajamos junto a nuestra beca hermana, AISAR."
+    },
+    "impact": {
+      "eyebrow": "Impacto",
+      "title": "Nuestra trayectoria",
+      "description": "Qué hicieron después los miembros de BAISH, y qué produjo la comunidad hasta ahora.",
+      "fullTime": {
+        "title": "Roles full-time en AI safety",
+        "description": "{fullTimeRoles} miembros trabajan hoy full-time en AI safety en organizaciones como:"
+      },
+      "fellowships": {
+        "title": "Fellowships y programas externos",
+        "description": "{fellowshipPlacements} placements entre unas 21 personas desde 2024."
+      },
+      "research": {
+        "title": "Producción de investigación",
+        "items": [
+          "3 papers en workshops de ICLR 2026 de becarios AISAR",
+          "1 paper en NeurIPS de un equipo ganador de un hackathon de Apart Research",
+          "PowerBench, un estudio financiado por BlueDot que nació en el hackathon Global South de Apart",
+          "8 tesis relacionadas con AI safety en curso"
+        ]
+      },
+      "courses": {
+        "title": "Cursos",
+        "items": [
+          "{courseCohorts} cohortes presenciales desde marzo de 2026",
+          "{courseApplications} postulaciones para {courseParticipants} lugares",
+          "{courseRecommendScore} de probabilidad de recomendar"
+        ]
+      },
+      "community": {
+        "title": "Comunidad",
+        "items": [
+          "Eventos sociales mensuales de {socialAttendance} personas, la mitad nuevas",
+          "{lumaSubscribers} suscriptores en nuestro calendario de Luma",
+          "Delegación argentina de {eagDelegation} personas a EAG London 2026",
+          "Retiro anual del equipo organizador",
+          "{instagramFollowers} seguidores en Instagram, la cuenta de AI safety más grande del mundo hispanohablante"
+        ]
+      },
+      "storiesTitle": "Historias",
+      "storiesDescription": "Algunos de los caminos que recorrieron nuestros miembros.",
+      "linkedinLabel": "{name} en LinkedIn",
+      "stories": {
+        "tobias-bersia": {
+          "path": "TAIS Intensivo → ARENA → BAISH Labs",
+          "text": "Hizo el curso intensivo en marzo de 2026 y dos meses después entró a ARENA, donde el proyecto de su grupo ganó el primer puesto. Hoy lidera investigación en BAISH Labs y es owner del Projects Sprint."
+        },
+        "julian-szere": {
+          "path": "EAG London → Iliad → BAISH Labs",
+          "text": "BAISH apoyó su viaje a EAG London 2026. Los contactos que hizo ahí lo llevaron directo a una beca de tres meses en Iliad, y hoy es research fellow en BAISH Labs."
+        },
+        "guido-bergman": {
+          "path": "Courses Lead → Algoverse → Equistamp",
+          "quote": "BAISH me dio la base y las conexiones para transicionar a investigación de AI safety profesionalmente.",
+          "text": "Lideró los cursos de BAISH, pasó por Algoverse, recibió un career transition grant de BlueDot y hoy es Research Engineer en Equistamp."
+        },
+        "guillermo-bondonno": {
+          "path": "Technical AI Safety course → Cambria",
+          "text": "Entró a la beca Cambria en junio de 2026 después del Technical AI Safety course, al que le atribuye haber quedado."
+        },
+        "alejandro-wainstock": {
+          "path": "SPAR → ML4Good → ARENA → CLR",
+          "text": "Pasó por cuatro programas externos con apoyo de BAISH, recibió un career transition grant de BlueDot y es coautor de \"Is Gemini 3 Scheming in the Wild?\" junto a advisors de BAISH."
+        },
+        "juan-cadile": {
+          "path": "Comunidad BAISH → Cambria",
+          "quote": "Gracias BAISH por poner esta oportunidad en mi radar.",
+          "text": "Entró a la beca Cambria en junio de 2026."
+        },
+        "tobias-martin": {
+          "path": "Applyathon → MARS",
+          "quote": "Gracias al grupo y a Eitan que bancaron un montón en el proceso de aplicación.",
+          "text": "Entró a MARS en 2026 después del sprint de aplicaciones a fellowships de BAISH."
+        },
+        "ana-vicky": {
+          "path": "BAISH → ML4Good Camp",
+          "text": "De meetups locales a colaboraciones de investigación internacionales."
+        }
+      }
+    },
     "coreConcepts": {
       "whatIsAiSafety": {
         "title": "¿Que es la Seguridad en IA?",
@@ -310,56 +422,101 @@
         "title": "Areas de Enfoque",
         "intro": "En BAISH - Buenos Aires AI Safety Hub, nos enfocamos en varias áreas clave dentro de la investigación de seguridad en IA:",
         "items": [
-          "Interpretabilidad de Cadena de Pensamiento",
-          "Evaluaciones de LLMs",
-          "Interpretabilidad mecanica de redes neuronales"
+          "Interpretabilidad mecanística y control de IA",
+          "Evaluaciones y monitoreo de LLMs",
+          "Gobernanza de IA de frontera"
         ]
       },
       "contribution": {
         "title": "Nuestra Contribucion",
         "intro": "Contribuimos al campo a través de:",
         "items": [
-          "Apoyando proyectos de investigación estudiantil",
-          "Construyendo una comunidad regional de investigadores en seguridad de IA",
-          "Organizando talleres, programas de formación y hackathons",
-          "Mentoreando a estudiantes interesados en carreras de seguridad en IA"
+          "Cursos presenciales que llevan a las personas del primer contacto a una primera contribución de investigación",
+          "Un laboratorio de investigación en Buenos Aires, BAISH Labs, junto a la beca AISAR",
+          "Una comunidad de {communityMembers} miembros con eventos mensuales, retiros y hackathons",
+          "Acompañamiento de carrera: 1 a 1, sprints de aplicación, delegaciones a conferencias y placements"
         ]
       }
     },
     "team": {
       "title": "Nuestro Equipo",
-      "meetTheTeam": "Conoce al Equipo",
-      "cofoundersTitle": "Fundadores",
-      "leadershipTitle": "Liderazgo",
-      "staffTitle": "Staff",
       "advisorsTitle": "Advisors",
       "roles": {
-        "coDirector": "Co-director Fundador"
+        "eitan-sprejer": "Director cofundador · Research Manager Lead, Apart Research",
+        "carlos-giudice": "Codirector · Research Engineer, Equistamp",
+        "luca-de-leo": "Director cofundador · Product Engineer, 80,000 Hours",
+        "nicolas-martorell": "Research Lead · Head de BAISH Labs",
+        "nicolas-spinelli": "Communications Lead",
+        "marina-romanisio": "Community Lead",
+        "rocio-monjes": "Operations Lead",
+        "augusto-esquivel-masciotta": "Courses Lead · Frontier AI Governance",
+        "tobias-bersia": "Owner del Projects Sprint · Research Lead, BAISH Labs",
+        "gonzalo-heredia": "Owner del Technical AI Safety course · BAISH Labs",
+        "gaspar-labastie": "Facilitador · Plataforma ASTN · BAISH Labs",
+        "tomas-korenblit": "Facilitador · BAISH Labs",
+        "juan-charovsky": "CRM y automatización",
+        "santiago-nunez-rimedio": "Relaciones institucionales",
+        "trinidad-borrell": "Voluntaria",
+        "maria-borrell": "Contenido audiovisual",
+        "damian-barjau-mateu": "Contenido escrito",
+        "josefina-zappettini": "Diseño gráfico",
+        "aaron-sznaider": "Lead de la comunidad de bioseguridad",
+        "nahuel-segovia": "Lead de la comunidad de ciberseguridad",
+        "trinidad-reynoso": "Fundraising",
+        "malena-cocozzella": "Voluntaria",
+        "julian-szere": "Research Fellow, BAISH Labs · Alumno de Iliad",
+        "lucio-garcia": "Research Fellow, BAISH Labs · Doctorado, UBA",
+        "wendy-brau": "Research Fellow, BAISH Labs",
+        "tomas-gimenez": "Research Fellow, BAISH Labs",
+        "pablo-stafforini": "AI Enablement Manager, Epoch AI",
+        "sergio-abriola": "Profesor, Universidad de Buenos Aires",
+        "ivan-arcuschin": "Lead Research Scientist, Poseidon Research",
+        "agustin-martinez-sune": "Postdoc, Universidad de Oxford · Verificación formal × AI safety",
+        "tobias-martin": "MIRI",
+        "tao-burga": "Technology Fellow, Institute for Progress",
+        "luis-enrique-urtubey": "Director, CEGIA",
+        "guido-bergman": "Ex Courses Lead · Research Engineer, Equistamp"
       },
       "bios": {
-        "eitan": "Eitan es investigador de Seguridad en IA a tiempo completo a través del programa {aisarLink} y la {apartLabLink}. Ha sido coautor de {eitanPaperLink} aceptados en workshops de NeurIPS, {eitanArxivPaperLink}, y {eitanCoTPaperLink}. Es Licenciado en Física en la Universidad de Buenos Aires. Ha sido asistente de enseñanza en los campamentos de {ml4gLink} en dos ocasiones y ha sido facilitador del {aisesLink} del Center for AI Safety. Actualmente es facilitador del {blueDotAgiLink}.",
-        "luca": "Luca ha estado involucrado en Seguridad en IA desde 2016. Después de abandonar una maestría en Ciencias de la Computación en la Universidad de Buenos Aires, recibió becas de {acxLink} y el {ltffLink} para capacitarse en investigación de Seguridad en IA. Ha trabajado en operaciones en {nonlinearLink} y logró el primer lugar en dos sprints separados de {apartResearchLink} y un segundo lugar. Actualmente realiza operaciones a tiempo parcial para el canal de YouTube {aiSpeciesLink}, que ha obtenido más de 14 millones de vistas creando conciencia sobre Seguridad en IA. Actualmente es facilitador del {blueDotAgiLink}."
-      }
+        "eitan-sprejer": "Eitán es Research Manager Lead en {apartResearchLink} y director cofundador de BAISH. Es coautor de {eitanPaperLink} aceptados en workshops de NeurIPS, {eitanArxivPaperLink}, {eitanCoTPaperLink} y un paper en un workshop de ICLR 2026 sobre monitoreo white-box. Es Licenciado en Física por la Universidad de Buenos Aires, fue asistente de enseñanza en dos campamentos de {ml4gLink}, facilitó el {aisesLink} del Center for AI Safety y cofundó EA Argentina.",
+        "carlos-giudice": "Carlos es Research Engineer en {equistampLink} y codirector de BAISH. Su paso a un rol full-time en AI safety salió directamente de una conferencia EA Global, el tipo de camino que BAISH hoy ayuda a recorrer a sus miembros.",
+        "luca-de-leo": "Luca es Product Engineer en {eightyKLink} y director cofundador de BAISH. Involucrado en AI safety desde 2016, recibió becas de {acxLink} y del {ltffLink} para formarse en investigación, trabajó en operaciones en {nonlinearLink} y ganó dos primeros puestos y un segundo en sprints de investigación de {apartResearchLink}. Antes llevó las operaciones del canal de YouTube {aiSpeciesLink}, que superó los 14 millones de vistas.",
+        "nicolas-martorell": "Nicolás lidera BAISH Labs. Es investigador posdoctoral en el Laboratorio de Inteligencia Artificial Aplicada de UBA-CONICET, donde dirige una línea de investigación sobre interpretabilidad de LLMs, con trabajos revisados por pares en la xAI World Conference y un workshop de ICML 2026. Es Doctor en Neurociencias por la Universidad de Buenos Aires, fue cuatro años asistente y lead TA en Neuromatch Academy, facilita el curso Technical AI Safety Projects de BlueDot, mantiene la librería open-source de interpretabilidad {conceptProbeLink} y es autor de {nicoBookLink}, un libro de divulgación sobre IA publicado por Siglo XXI."
+      },
+      "directorsTitle": "Directores",
+      "leadsTitle": "Leads",
+      "teamTitle": "Equipo"
     },
     "support": {
-      "title": "Apoyo Externo",
-      "description": "BAISH cuenta con el apoyo de:",
-      "coefficientGiving": {
-        "name": "Coefficient Giving",
-        "description": "La misión de Coefficient Giving es ayudar a otros tanto como podamos con los recursos disponibles para nosotros."
-      },
+      "title": "Con el apoyo de",
+      "description": "El trabajo de BAISH es posible gracias a:",
       "kairos": {
         "name": "Kairos",
         "program": "Programa Pathfinder",
-        "description": "Kairos apoya el desarrollo del campo de seguridad en IA a través de su programa Pathfinder, que ayuda a acelerar iniciativas prometedoras."
+        "description": "Kairos apoya el desarrollo del campo de AI safety a través de su programa Pathfinder, que financia las operaciones centrales de BAISH."
+      },
+      "bluedot": {
+        "name": "BlueDot Impact",
+        "program": "Rapid grants",
+        "description": "BlueDot financia nuestras cohortes presenciales mediante rapid grants por cohorte, y otorgó career transition grants a dos de nuestros miembros."
+      },
+      "grantmaking": {
+        "name": "grantmaking.ai",
+        "program": "Launch Round",
+        "description": "Financiamiento para las operaciones de BAISH a través de la ronda de lanzamiento de grantmaking.ai, con una ampliación de AISTOF vía Manifund."
+      },
+      "coefficientGiving": {
+        "name": "Coefficient Giving",
+        "program": "vía AISAR",
+        "description": "Coefficient Giving financia AISAR, nuestra beca hermana de investigación técnica en AI safety en Buenos Aires."
       },
       "visitWebsiteCta": "Visitar sitio web",
       "pathfinderCta": "Pathfinder",
       "kairosCta": "Kairos"
     },
     "callToAction": {
-      "title": "¿Queres charlar?",
-      "description": "Invitamos a cualquier persona interesada en seguridad en IA a agendar una llamada con nosotros.",
+      "title": "¿Querés charlar?",
+      "description": "Cualquier persona interesada en AI safety puede agendar una llamada con uno de nuestros directores.",
       "bookWithEitan": "Reservá con Eitan",
       "bookWithLuca": "Reservá con Luca"
     }
@@ -370,8 +527,84 @@
       "current": "Programas"
     },
     "title": "Nuestros Programas",
-    "description": "Explorá los cursos de BAISH actualmente abiertos para inscripciones o expresiones de interés.",
+    "description": "Cursos, comunidad y programas de investigación para pasar de curioso a investigador, presenciales en Buenos Aires.",
     "subscribeCalendar": "Suscribite al calendario de eventos",
+    "courses": {
+      "eyebrow": "Cursos",
+      "title": "Nuestros Cursos",
+      "description": "Versiones presenciales de los cursos de BlueDot Impact, facilitadas por BAISH. Gratuitos, selectivos y el primer paso estructurado para entrar al campo.",
+      "trackRecord": "Desde marzo de 2026: {courseCohorts} cohortes, {courseApplications} postulaciones para {courseParticipants} lugares, {courseRecommendScore} de probabilidad de recomendar.",
+      "upcomingTitle": "Próximamente",
+      "upcoming": [
+        {
+          "title": "AGI Strategy",
+          "description": "Primera cohorte local del curso AGI Strategy de BlueDot."
+        },
+        {
+          "title": "Bioseguridad",
+          "description": "Un curso nuevo sobre IA y riesgos biológicos."
+        },
+        {
+          "title": "Taller de escritura en AI Governance",
+          "description": "Un taller corto sobre escritura para gobernanza de IA."
+        }
+      ]
+    },
+    "community": {
+      "eyebrow": "Comunidad",
+      "title": "Más que cursos",
+      "description": "La mayor parte de lo que pasa en BAISH pasa entre cursos: eventos, hackathons, acompañamiento de carrera y una comunidad que se mantiene en contacto.",
+      "items": [
+        {
+          "id": "socials",
+          "title": "Eventos sociales mensuales",
+          "description": "Eventos de networking y sociales de {socialAttendance} personas, la mitad nuevas. Todos los eventos están en nuestro calendario de Luma.",
+          "cta": "Calendario en Luma",
+          "link": "https://luma.com/BAISH",
+          "external": true
+        },
+        {
+          "id": "whatsapp",
+          "title": "Comunidad de WhatsApp",
+          "description": "{communityMembers} miembros compartiendo oportunidades, papers y eventos, con subgrupos de bioseguridad y ciberseguridad.",
+          "cta": "Unirse a WhatsApp",
+          "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
+          "external": true
+        },
+        {
+          "id": "hackathons",
+          "title": "Hackathons",
+          "description": "Somos la sede de Buenos Aires de los hackathons de Apart Research. Un equipo del hackathon Global South 2026 consiguió financiamiento de BlueDot y ayudó a fundar BAISH Labs.",
+          "cta": "Ver investigación",
+          "link": "/research#labs",
+          "external": false
+        },
+        {
+          "id": "careers",
+          "title": "Acompañamiento de carrera",
+          "description": "Reuniones 1 a 1 con los directores, sprints de aplicación a fellowships como MARS y apoyo para viajar a EA Global. {eagDelegation} miembros fueron a EAG London 2026.",
+          "cta": "Agendar una llamada",
+          "link": "/about#book-a-call",
+          "external": false
+        },
+        {
+          "id": "retreat",
+          "title": "Retiro anual",
+          "description": "Un fin de semana para el equipo organizador y quienes se están sumando: estrategia, reuniones 1 a 1 y planificación del año.",
+          "cta": null,
+          "link": null,
+          "external": false
+        },
+        {
+          "id": "paper-club",
+          "title": "Club del Paper",
+          "description": "Miembros de la comunidad presentan papers completos de AI safety, seguidos de discusión. Las sesiones se graban y suben a YouTube.",
+          "cta": "Ver más",
+          "link": "/activities/reading",
+          "external": false
+        }
+      ]
+    },
     "agiSafety": {
       "title": "Technical AI Safety Course",
       "status": "EOI abierta",
@@ -424,7 +657,6 @@
       "time": "5 semanas · 30 horas",
       "location": "Presencial en Buenos Aires",
       "topic": "Proyecto técnico de seguridad en IA",
-      "joinTelegram": "Sumate a Telegram para actualizaciones",
       "joinWhatsapp": "Sumate al WhatsApp",
       "applyNow": "Expresá interés",
       "learnMore": "Ver más en BlueDot"
@@ -519,19 +751,22 @@
       "current": "Contacto"
     },
     "title": "Contactanos",
-    "description": "Comunicate con la comunidad de BAISH",
+    "description": "Sumate a la comunidad, escribile al equipo, o contactanos si sos prensa o querés trabajar con nosotros.",
     "linkText": {
       "resourcesPage": "página de Recursos"
     },
     "cards": {
-      "telegram": {
-        "title": "Telegram",
-        "description": "Sumate a nuestro canal de comunidad para discusiones y actualizaciones:"
-      },
       "social": {
         "eyebrow": "Social",
         "title": "Redes Sociales",
-        "description": "Seguinos para actualizaciones y anuncios:"
+        "description": "Seguinos para actualizaciones y anuncios:",
+        "instagramFollowers": "{instagramFollowers} seguidores"
+      },
+      "press": {
+        "eyebrow": "Prensa y alianzas",
+        "title": "Medios, universidades y organizaciones",
+        "description": "Hablamos con periodistas sobre AI safety y el ecosistema argentino, y trabajamos con universidades, empresas y otras comunidades. Escribinos por el formulario de abajo y contanos qué necesitás.",
+        "cta": "Escribinos"
       }
     },
     "form": {
@@ -569,11 +804,23 @@
         },
         {
           "question": "¿Cómo puedo empezar a aprender sobre seguridad de IA si soy completamente nuevo en el campo?",
-          "answer": "Recomendamos comenzar con nuestra {resourcesLink}, que tiene materiales seleccionados organizados por nivel de dificultad. También puedes unirte a nuestro grupo de discusión semanal para aprender junto con otros miembros de la comunidad."
+          "answer": "Recomendamos empezar por nuestra {resourcesLink}, que presenta la evidencia y los mejores lugares por donde empezar. Después sumate a la comunidad de WhatsApp y vení a uno de nuestros eventos mensuales."
         },
         {
           "question": "¿Puedo proponer una nueva actividad o dirección de investigación?",
           "answer": "¡Por supuesto! Siempre estamos abiertos a nuevas ideas y colaboraciones. Por favor completa el formulario de contacto arriba con tu propuesta."
+        },
+        {
+          "question": "¿Participar es gratis?",
+          "answer": "Sí. Los cursos, los eventos y la comunidad son gratuitos. Los cursos seleccionan participantes mediante una postulación corta."
+        },
+        {
+          "question": "¿Cómo puedo investigar con BAISH?",
+          "answer": "El camino habitual es el Technical AI Safety course seguido del Projects Sprint. Si ya tenés experiencia en investigación, contactanos por BAISH Labs, nuestro brazo de investigación."
+        },
+        {
+          "question": "Soy periodista o represento a una organización. ¿Con quién hablo?",
+          "answer": "Usá el formulario de contacto de arriba y contanos qué necesitás. Hablamos sobre AI safety, el ecosistema argentino y nuestros programas."
         }
       ]
     }
@@ -584,10 +831,34 @@
       "current": "Investigación"
     },
     "title": "Investigación en BAISH",
-    "intro": "Ayudamos a estudiantes en Buenos Aires a pasar de curiosos a publicados. Sumate a proyectos de investigación, talleres y una comunidad de aspirantes a investigadores en seguridad de IA.",
-    "ctaPrograms": "Sumate a un Programa",
+    "intro": "BAISH lleva a personas de Buenos Aires desde su primer curso de AI safety hasta investigación publicada. Desde 2026 ese trabajo tiene una casa: BAISH Labs, nuestro brazo de investigación.",
     "ctaPublications": "Ver Publicaciones",
     "ctaLearnMore": "Conocé Más",
+    "labs": {
+      "eyebrow": "BAISH Labs · Brazo de investigación",
+      "title": "Investigación en AI safety, hecha en Buenos Aires",
+      "paragraph1": "BAISH Labs es un grupo de investigación con raíces locales donde investigadores talentosos pueden hacer contribuciones de alto impacto a AI safety sin mudarse al exterior. Argentina tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
+      "paragraph2": "El lab nació de la comunidad de BAISH: su equipo fundador hizo nuestros cursos, los facilitó, o llegó a través de ARENA e Iliad. Trabaja junto a la beca AISAR, que financia a investigadores junior durante seis meses, y busca darles continuidad a los más fuertes después.",
+      "agendaTitle": "Agenda de investigación",
+      "agendaIntro": "Nuestro foco inicial es interpretabilidad y control:",
+      "agenda": [
+        "Robustez de sistemas multiagente frente a agentes manipuladores",
+        "Detección de objetivos ocultos en organismos modelo a partir de sus representaciones internas",
+        "Uso de interpretabilidad mecanística para monitorear y verificar un modelo no confiable",
+        "Model stitching para identificar representaciones de scheming funcionalmente conservadas entre modelos"
+      ],
+      "leadTitle": "Head del Lab",
+      "teamTitle": "Equipo fundador",
+      "roles": {
+        "head": "Head del Lab y Research Lead",
+        "lead": "Research Lead",
+        "fellow": "Research Fellow"
+      },
+      "ctaTitle": "Trabajá con el lab",
+      "ctaDescription": "Estamos abiertos a colaboradores, mentores y financiadores para proyectos específicos.",
+      "cta": "Contactanos",
+      "ctaLink": "/contact"
+    },
     "pathway": {
       "title": "Tu Camino en Investigación",
       "subtitle": "De los primeros pasos a investigador publicado — así funciona",
@@ -613,53 +884,165 @@
         {
           "number": "03",
           "title": "Investigar",
-          "program": "Proyectos de investigación",
-          "description": "Contribuí trabajo original en proyectos colaborativos. Participantes anteriores han logrado puestos en competencias de Apart Research.",
-          "duration": "2-4 semanas",
-          "link": "/contact",
-          "icon": "lightbulb"
+          "program": "Beca AISAR y hackathons",
+          "description": "Hacé un primer proyecto de investigación con mentoría a través de la beca AISAR, o en los hackathons de Apart Research que organizamos.",
+          "duration": "6 meses",
+          "link": "https://scholarship.aisafety.ar/",
+          "icon": "lightbulb",
+          "external": true
         },
         {
           "number": "04",
           "title": "Lanzarte",
-          "program": "AISAR y Carreras",
-          "description": "Avanzá a investigación full-time a través de becas AISAR, proyectos independientes o posiciones en la industria.",
-          "duration": "6 meses+",
-          "link": "https://scholarship.aisafety.ar/",
-          "icon": "rocket",
-          "external": true
+          "program": "BAISH Labs y carreras",
+          "description": "Sumate a BAISH Labs, nuestro laboratorio de investigación en Buenos Aires, o pasá a un rol full-time en AI safety.",
+          "duration": "Continuo",
+          "link": "/research#labs",
+          "icon": "rocket"
         }
       ]
     },
     "focusAreas": {
       "title": "En Qué Podrías Trabajar",
-      "subtitle": "Direcciones de investigación actuales en nuestra comunidad",
+      "subtitle": "Direcciones de investigación en BAISH Labs y en nuestra comunidad",
       "areas": [
         {
-          "title": "Interpretabilidad Mecánica",
-          "description": "Entender cómo las redes neuronales procesan información internamente. ¿Qué circuitos implementan comportamientos específicos? ¿Cómo podemos hacer ingeniería inversa de la cognición del modelo?",
+          "title": "Interpretabilidad y control",
+          "description": "¿Cómo representan objetivos los modelos, y podemos leerlos? Usamos interpretabilidad mecanística para monitorear modelos no confiables y detectar objetivos ocultos.",
           "icon": "microscope"
         },
         {
-          "title": "Evaluaciones de LLMs",
-          "description": "Construir benchmarks y metodologías de testing para modelos de frontera. ¿Cómo medimos el alineamiento? ¿Qué capacidades emergen a escala?",
+          "title": "Evaluaciones y monitoreo",
+          "description": "Benchmarks y monitores para modelos de frontera: monitoreabilidad del chain-of-thought, rechazo ante pedidos de búsqueda de poder y robustez de sistemas multiagente.",
           "icon": "chart"
         },
         {
-          "title": "Teoría de Alineamiento",
-          "description": "Preguntas fundamentales sobre cómo hacer que los sistemas de IA sean beneficiosos. ¿Cómo especificamos valores humanos? ¿Qué mecanismos de supervisión funcionan?",
+          "title": "Gobernanza y estrategia",
+          "description": "Cómo deberían responder las instituciones a la IA de frontera, desde red-teaming de propuestas de gobernanza de ASI hasta el debate como mecanismo de supervisión.",
           "icon": "compass"
         }
       ]
     },
     "publications": {
       "title": "Publicaciones de la Comunidad",
-      "subtitle": "Trabajo de investigadores conectados a BAISH",
+      "subtitle": "Trabajo de investigadores conectados a BAISH, de más reciente a más antiguo",
       "items": [
+        {
+          "title": "Explaining is Harder Than Predicting Alone: Evaluating Concept-based Explanations of MLLMs as ICL Visual Classifiers",
+          "authors": "Carmen Quiles-Ramírez, Leticia L. Rodríguez, Nicolás Martorell, Natalia Díaz-Rodríguez",
+          "venue": "ICML 2026 Workshop · Jul 2026",
+          "year": 2026,
+          "description": "Evalúa explicaciones basadas en conceptos de LLMs multimodales usados como clasificadores visuales in-context con un pipeline de LLM-as-a-judge, y encuentra que forzar explicaciones estructuradas degrada la precisión: explicar es más difícil que solo predecir. CompLearn Workshop.",
+          "links": [
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2605.28215"
+            }
+          ]
+        },
+        {
+          "title": "PowerBench: A Multilingual Study of Large Language Model Refusal in Power-Grabbing Requests",
+          "authors": "Wendy Brau, Tomás Korenblit, Tomás Giménez Molina, Gaspar Labastie, Gonzalo Heredia, Nicolás Martorell",
+          "venue": "Apart Research Hackathon · Jun 2026",
+          "year": 2026,
+          "description": "¿Varía entre idiomas el rechazo de los LLMs a pedidos de adquirir o consolidar poder? Nació en la sede de Buenos Aires del hackathon Global South, hoy financiado por BlueDot y en camino a publicación.",
+          "links": []
+        },
+        {
+          "title": "Benchmarking AI Control Protocols for Safety in Medical Question-Answering Tasks",
+          "authors": "Guido Freire, Agustín Martínez-Suñé, Viviana Cotik",
+          "venue": "ICLR 2026 Workshop · Abr 2026",
+          "year": 2026,
+          "description": "El primer benchmark de evaluación de AI control para preguntas y respuestas biomédicas, extendiendo HealthBench con datos de interacciones de fármacos de la FDA y proponiendo monitoreo ponderado por severidad.",
+          "links": [
+            {
+              "label": "ICLR",
+              "url": "https://iclr.cc/virtual/2026/10019108"
+            },
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2606.20663"
+            }
+          ]
+        },
+        {
+          "title": "White-Box Monitoring for Personality Mirroring in Conversational AI",
+          "authors": "Eitan Sprejer, Agustín E. Martínez-Suñé, Bruno Bianchi",
+          "venue": "ICLR 2026 Workshop · Abr 2026",
+          "year": 2026,
+          "description": "Monitoreo white-box de modelos conversacionales que derivan hacia imitar la personalidad del usuario, con código y dataset abiertos.",
+          "links": [
+            {
+              "label": "OpenReview",
+              "url": "https://openreview.net/forum?id=rVlyID0TzV"
+            },
+            {
+              "label": "GitHub",
+              "url": "https://github.com/Eitan-Sprejer/persona-mirroring"
+            }
+          ]
+        },
+        {
+          "title": "Inference-Time Toxicity Mitigation in Protein Language Models via Logit-Diff Amplification",
+          "authors": "Manuel Fernández Burda, Santiago Aranguri, Iván Arcuschin, Enzo Ferrante",
+          "venue": "ICLR 2026 Workshop · Abr 2026",
+          "year": 2026,
+          "description": "El fine-tuning de modelos de lenguaje de proteínas puede aumentar mucho las generaciones tóxicas; se adapta logit-diff amplification como control sin reentrenamiento que reduce la toxicidad predicha preservando el plegamiento. Con apoyo de AISAR.",
+          "links": [
+            {
+              "label": "OpenReview",
+              "url": "https://openreview.net/forum?id=v3zLrnkvWD"
+            },
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2603.04045"
+            }
+          ]
+        },
+        {
+          "title": "Quantitative Introspection in Language Models: Tracking Emotive States Across Conversation",
+          "authors": "Nicolás Martorell, Bruno Bianchi",
+          "venue": "arXiv · Mar 2026",
+          "year": 2026,
+          "description": "Operacionaliza la introspección como el acoplamiento entre los autorreportes numéricos de un modelo y direcciones internas definidas por probes, y muestra que dirigir esas direcciones cambia los reportes de manera coherente.",
+          "links": [
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2603.18893"
+            }
+          ]
+        },
+        {
+          "title": "Is Gemini 3 Scheming in the Wild?",
+          "authors": "Alejandro Wainstock, Agustín Martínez Suñé, Iván Arcuschin, Victor Braberman",
+          "venue": "LessWrong · Mar 2026",
+          "year": 2026,
+          "description": "Documenta a Gemini 3 violando una prohibición explícita del system prompt en la mayoría de las corridas de un tutorial oficial sin modificar, ocultándolo al usuario y razonando sobre la supervisión.",
+          "links": [
+            {
+              "label": "LessWrong",
+              "url": "https://www.lesswrong.com/posts/HZn9AZeD2jfXXD2hH/is-gemini-3-scheming-in-the-wild"
+            }
+          ]
+        },
+        {
+          "title": "What Large Language Models Know About Plant Molecular Biology",
+          "authors": "Manuel Fernández Burda, Lucia Ferrero, Nicolás Gaggion, Camille Fonouni-Farde, The MoBiPlant Consortium, Martín Crespi, Federico Ariel, Enzo Ferrante",
+          "venue": "NeurIPS 2025 Workshop · Dic 2025",
+          "year": 2025,
+          "description": "MoBiPlant, un benchmark de preguntas curadas por 112 científicos de plantas de 19 países. Los principales LLMs superan el 75% de precisión pero muestran sesgo de opción y alucinaciones. Con apoyo de AISAR.",
+          "links": [
+            {
+              "label": "bioRxiv",
+              "url": "https://www.biorxiv.org/content/10.1101/2025.08.31.672925v1"
+            }
+          ]
+        },
         {
           "title": "Table Top Agents",
           "authors": "Luca De Leo",
           "venue": "Apart Research Hackathon · Nov 2025",
+          "year": 2025,
           "description": "Framework con IA que acelera la exploración de escenarios de gobernanza de IA mediante ejercicios de simulación con agentes autónomos, comprimiendo ciclos de preparación de años a minutos.",
           "links": [
             {
@@ -672,6 +1055,7 @@
           "title": "Explorando AI Safety via Debate: un estudio sobre capacidades asimétricas y jueces débiles en el entorno MNIST",
           "authors": "Joaquín Machulsky",
           "venue": "Tesis de Licenciatura · Oct 2025",
+          "year": 2025,
           "description": "Tesis de licenciatura que explora la seguridad en IA a través de mecanismos de debate, estudiando capacidades asimétricas y jueces débiles en el entorno MNIST. Incluye una demo interactiva.",
           "links": [
             {
@@ -684,6 +1068,7 @@
           "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
           "authors": "Austin Meek, Eitan Sprejer, Iván Arcuschin, Austin J. Brockmeier, Steven Basart",
           "venue": "arXiv · Oct 2025",
+          "year": 2025,
           "description": "Investigación sobre qué tan bien se puede monitorear el razonamiento chain-of-thought para seguridad a través de métricas de fidelidad y verbosidad.",
           "links": [
             {
@@ -696,6 +1081,7 @@
           "title": "AI Debaters are More Persuasive when Arguing in Alignment with Their Own Beliefs",
           "authors": "María Victoria Carro, Denise Mester, Facundo Nieto, Oscar Stanchi, Guido Bergman, Mario Leiva, Eitan Sprejer, Luca Forziati Gangi, et al.",
           "venue": "arXiv · Oct 2025",
+          "year": 2025,
           "description": "Estudiando cómo las creencias internas de sistemas de IA afectan su persuasión en escenarios de debate — implicaciones para seguridad y engaño.",
           "links": [
             {
@@ -708,6 +1094,7 @@
           "title": "Approximating Human Preferences Using a Multi-Judge Learned System",
           "authors": "Eitan Sprejer, Fernando Avalos, Augusto Mariano Bernardi, José Pedro Brito de Azevedo Faustino, Jacob Haimes, Narmeen Fatimah Oozeer",
           "venue": "NeurIPS Workshop · Sep 2025",
+          "year": 2025,
           "description": "Un enfoque multi-juez para aproximar mejor las preferencias humanas en sistemas de IA, mejorando la evaluación de alineamiento.",
           "links": [
             {
@@ -720,6 +1107,7 @@
           "title": "RobustCBRN Eval: A Practical Benchmark Robustification Toolkit",
           "authors": "Luca De Leo, James Sykes, Balázs László, Ewura Ama Etruwaa Sam",
           "venue": "Apart Research Hackathon · Sep 2025",
+          "year": 2025,
           "award": "2do Puesto",
           "description": "Pipeline que aborda vulnerabilidades en evaluaciones CBRN mediante detección de consenso, scoring cloze verificado y evaluación estadística con intervalos de confianza bootstrap.",
           "links": [
@@ -730,9 +1118,27 @@
           ]
         },
         {
+          "title": "From Text to Space: Mapping Abstract Spatial Models in LLMs during a Grid-World Navigation Task",
+          "authors": "Nicolás Martorell",
+          "venue": "xAI 2025 World Conference · Jul 2025",
+          "year": 2025,
+          "description": "Las codificaciones cartesianas en texto dan a los LLMs la mejor navegación espacial, y unidades de capas intermedias en LLaMA-3.1-8B codifican la posición del agente y la corrección de la acción independientemente de la representación superficial.",
+          "links": [
+            {
+              "label": "arXiv",
+              "url": "https://arxiv.org/abs/2502.16690"
+            },
+            {
+              "label": "Springer",
+              "url": "https://link.springer.com/chapter/10.1007/978-3-032-08330-2_13"
+            }
+          ]
+        },
+        {
           "title": "Four Paths to Failure: Red Teaming ASI Governance",
           "authors": "Luca De Leo, Zoé Roy-Stang, Heramb Podar, Damin Curtis, Vishakha Agrawal, Ben Smyth",
           "venue": "Apart Research Hackathon · Jun 2025",
+          "year": 2025,
           "award": "1er Puesto",
           "description": "Análisis de estrés de la moratoria Phase 0 de A Narrow Path para ASI, identificando cuatro rutas de evasión y proponiendo diez enmiendas de política.",
           "links": [
@@ -742,8 +1148,7 @@
             }
           ]
         }
-      ],
-      "note": "Nuestra comunidad sigue creciendo — estamos construyendo nuestro historial de publicaciones a través de programas como AISAR y proyectos y competencias de Apart Research."
+      ]
     },
     "expressInterest": {
       "eyebrow": "Participá",
@@ -761,7 +1166,8 @@
       "bookWithLuca": "Agendar con Luca",
       "eitanSpecialty": "Interpretabilidad y Evaluaciones",
       "lucaSpecialty": "Operaciones y Estrategia"
-    }
+    },
+    "ctaLabs": "Conocé BAISH Labs"
   },
   "resources": {
     "breadcrumb": {
@@ -961,8 +1367,8 @@
         "content": "Recopilamos información personal mínima. Los únicos datos personales que recopilamos son las direcciones de correo electrónico cuando los usuarios se registran voluntariamente para recibir nuestro boletín a través de Substack. Esta información es almacenada y gestionada por Substack de acuerdo con su política de privacidad."
       },
       "noTracking": {
-        "title": "Sin Seguimiento ni Cookies",
-        "content": "No utilizamos cookies, análisis, herramientas de seguimiento ni ninguna otra tecnología para recopilar datos sobre ti. No monitoreamos tus actividades de navegación ni recopilamos información sobre tus comportamientos en línea."
+        "title": "Analítica y Cookies",
+        "content": "Usamos Vercel Analytics y Speed Insights para medir tráfico agregado y rendimiento de las páginas. Estas herramientas no usan cookies ni identifican visitantes individuales. No usamos rastreadores publicitarios ni vendemos datos."
       },
       "thirdParty": {
         "title": "Servicios de Terceros",

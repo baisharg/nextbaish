@@ -5,7 +5,15 @@ import Footer from "@/app/components/footer";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd } from "@/app/components/json-ld";
+import { TeamBioCard, TeamCard } from "@/app/components/team-card";
+import { ExternalLinkIcon } from "@/app/components/external-link-icon";
 import { withLocale } from "@/app/utils/locale";
+import { renderWithBioLinks } from "@/app/utils/footnotes";
+import {
+  isBaishAffiliatedAuthor,
+  labsTeam,
+  type TeamMemberId,
+} from "@/app/data/team";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import type { AppLocale } from "@/i18n.config";
@@ -49,6 +57,8 @@ type Publication = {
   title: string;
   authors: string;
   venue: string;
+  /** Publication year; the list is grouped and sorted by it. */
+  year: number;
   description: string;
   links: { label: string; url: string }[];
   award?: string;
@@ -127,42 +137,6 @@ function RocketIcon({ className }: { className?: string }) {
   );
 }
 
-function ExternalLinkIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-      />
-    </svg>
-  );
-}
-
-function _ArrowRightIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-      />
-    </svg>
-  );
-}
-
 const pathwayIcons = {
   book: BookIcon,
   code: CodeIcon,
@@ -170,23 +144,14 @@ const pathwayIcons = {
   rocket: RocketIcon,
 };
 
-// BAISH team members to highlight in purple
-const BAISH_MEMBERS = [
-  "Eitan Sprejer",
-  "Luca De Leo",
-  "Joaquín Machulsky",
-];
-
-// Function to highlight BAISH members in author lists
+// Function to highlight BAISH-affiliated authors in author lists
 function highlightBaishMembers(authors: string): React.ReactNode {
   // Split by comma but keep "et al." together
   const parts = authors.split(/,\s*/);
 
   return parts.map((part, index) => {
     const trimmedPart = part.trim();
-    const isBaishMember = BAISH_MEMBERS.some(member =>
-      trimmedPart.includes(member)
-    );
+    const isBaishMember = isBaishAffiliatedAuthor(trimmedPart);
 
     return (
       <span key={index}>
@@ -237,6 +202,17 @@ function extractVenue(venue: string): string {
   return venue.split("·")[0].trim();
 }
 
+// Group publications by year, newest first. Within a year the dictionary order is kept.
+function groupByYear(publications: Publication[]): [number, Publication[]][] {
+  const groups = new Map<number, Publication[]>();
+  const newestFirst = [...publications].sort((a, b) => b.year - a.year);
+  for (const pub of newestFirst) {
+    if (!groups.has(pub.year)) groups.set(pub.year, []);
+    groups.get(pub.year)!.push(pub);
+  }
+  return Array.from(groups.entries());
+}
+
 export default async function ResearchPage({
   params,
 }: {
@@ -246,10 +222,18 @@ export default async function ResearchPage({
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
   const dict = await getDictionary(currentLocale);
   const t = dict.research;
+  const labs = t.labs;
 
   const pathwaySteps = t.pathway.steps as PathwayStep[];
   const focusAreas = t.focusAreas.areas as FocusArea[];
   const publications = t.publications.items as Publication[];
+  const publicationsByYear = groupByYear(publications);
+
+  const labsMembers = labsTeam();
+  const labsHead = labsMembers.find((member) => member.labs === "head");
+  const labsOthers = labsMembers.filter((member) => member.labs !== "head");
+  const labsRoles = labs.roles;
+  const bios: Partial<Record<TeamMemberId, string>> = dict.about.team.bios;
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent text-slate-900">
@@ -287,18 +271,98 @@ export default async function ResearchPage({
                 </p>
               </div>
               <div className="flex flex-wrap gap-4">
-                <Link
-                  href={withLocale(currentLocale, "/activities")}
-                  className="button-primary"
-                >
-                  {t.ctaPrograms}
-                </Link>
+                <a href="#labs" className="button-primary">
+                  {t.ctaLabs}
+                </a>
                 <a
                   href="#publications"
                   className="button-secondary"
                 >
                   {t.ctaPublications}
                 </a>
+              </div>
+            </section>
+          </FadeInSection>
+
+          {/* BAISH Labs */}
+          <FadeInSection variant="slide-up" delay={100} as="section">
+            <section id="labs" className="section-container space-y-10 scroll-mt-24">
+              <div className="space-y-3">
+                <p className="eyebrow">{labs.eyebrow}</p>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  {labs.title}
+                </h2>
+              </div>
+
+              <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+                <div className="space-y-4">
+                  <p className="text-base leading-relaxed text-slate-700">
+                    {labs.paragraph1}
+                  </p>
+                  <p className="text-base leading-relaxed text-slate-700">
+                    {labs.paragraph2}
+                  </p>
+                </div>
+                <article className="card-glass">
+                  <h3 className="card-title">{labs.agendaTitle}</h3>
+                  <p className="card-body">{labs.agendaIntro}</p>
+                  <ul className="space-y-2 text-sm text-slate-700">
+                    {labs.agenda.map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span
+                          aria-hidden="true"
+                          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-primary)]"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
+
+              {labsHead && (
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-slate-900">
+                    {labs.leadTitle}
+                  </h3>
+                  <TeamBioCard
+                    member={labsHead}
+                    role={labsRoles.head}
+                    bio={renderWithBioLinks(bios[labsHead.id] ?? "")}
+                  />
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <h3 className="text-2xl font-semibold text-slate-900">
+                  {labs.teamTitle}
+                </h3>
+                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+                  {labsOthers.map((member) => (
+                    <TeamCard
+                      key={member.id}
+                      member={member}
+                      role={member.labs ? labsRoles[member.labs] : undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    {labs.ctaTitle}
+                  </h3>
+                  <p className="text-sm text-slate-600 max-w-xl">
+                    {labs.ctaDescription}
+                  </p>
+                </div>
+                <Link
+                  href={withLocale(currentLocale, labs.ctaLink)}
+                  className="button-primary whitespace-nowrap"
+                >
+                  {labs.cta}
+                </Link>
               </div>
             </section>
           </FadeInSection>
@@ -455,7 +519,7 @@ export default async function ResearchPage({
             </section>
           </FadeInSection>
 
-          {/* Community Publications - Enhanced with Venue Badges */}
+          {/* Community Publications - grouped by year */}
           <FadeInSection variant="slide-up" delay={200} as="section">
             <section id="publications" className="section-container space-y-8 scroll-mt-24">
               <div className="space-y-2">
@@ -467,83 +531,85 @@ export default async function ResearchPage({
                 </p>
               </div>
 
-              <div className="space-y-4">
-                {publications.map((pub) => {
-                  const venueName = extractVenue(pub.venue);
+              <div className="space-y-10">
+                {publicationsByYear.map(([year, pubs]) => (
+                  <div key={year} className="space-y-4">
+                    <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-tertiary)]">
+                      {year}
+                    </h3>
+                    {pubs.map((pub) => {
+                      const venueName = extractVenue(pub.venue);
 
-                  return (
-                    <article key={pub.title} className="card-glass group">
-                      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div className="space-y-3 flex-1">
-                          {/* Venue badge */}
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="pill">
-                              <svg
-                                className="h-3.5 w-3.5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                                />
-                              </svg>
-                              {venueName}
-                            </span>
-                            <span className="text-xs text-slate-500">
-                              {pub.venue.includes("·")
-                                ? pub.venue.split("·")[1].trim()
-                                : ""}
-                            </span>
-                            {pub.award && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-                                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                {pub.award}
-                              </span>
+                      return (
+                        <article key={pub.title} className="card-glass group">
+                          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div className="space-y-3 flex-1">
+                              {/* Venue badge */}
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="pill">
+                                  <svg
+                                    className="h-3.5 w-3.5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                                    />
+                                  </svg>
+                                  {venueName}
+                                </span>
+                                <span className="text-xs text-slate-500">
+                                  {pub.venue.includes("·")
+                                    ? pub.venue.split("·")[1].trim()
+                                    : ""}
+                                </span>
+                                {pub.award && (
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    {pub.award}
+                                  </span>
+                                )}
+                              </div>
+
+                              <h4 className="text-xl font-semibold text-slate-900 group-hover:text-[var(--color-accent-primary)] transition-colors">
+                                {pub.title}
+                              </h4>
+                              <p className="text-sm text-slate-600">
+                                {highlightBaishMembers(pub.authors)}
+                              </p>
+                              <p className="text-sm text-slate-600 mt-2">
+                                {pub.description}
+                              </p>
+                            </div>
+                            {pub.links.length > 0 && (
+                              <div className="flex gap-3 flex-shrink-0 flex-wrap">
+                                {pub.links.map((link) => (
+                                  <a
+                                    key={`${pub.title}-${link.label}`}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="button-secondary inline-flex items-center gap-2 group/btn"
+                                  >
+                                    {link.label}
+                                    <ExternalLinkIcon className="h-4 w-4 opacity-60 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                                  </a>
+                                ))}
+                              </div>
                             )}
                           </div>
-
-                          <h3 className="text-xl font-semibold text-slate-900 group-hover:text-[var(--color-accent-primary)] transition-colors">
-                            {pub.title}
-                          </h3>
-                          <p className="text-sm text-slate-600">
-                            {highlightBaishMembers(pub.authors)}
-                          </p>
-                          <p className="text-sm text-slate-600 mt-2">
-                            {pub.description}
-                          </p>
-                        </div>
-                        {pub.links.length > 0 && (
-                          <div className="flex gap-3 flex-shrink-0">
-                            {pub.links.map((link) => (
-                              <a
-                                key={`${pub.title}-${link.label}`}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="button-secondary inline-flex items-center gap-2 group/btn"
-                              >
-                                {link.label}
-                                <ExternalLinkIcon className="h-4 w-4 opacity-60 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </article>
-                  );
-                })}
+                        </article>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-
-              {/* Note about growing publications */}
-              <p className="text-sm text-slate-500 italic text-center">
-                {t.publications.note}
-              </p>
             </section>
           </FadeInSection>
 
@@ -697,7 +763,7 @@ export default async function ResearchPage({
                     />
                   </div>
                   <h3 className="text-lg font-semibold text-slate-900">
-                    Eitan Sprejer
+                    Eitán Sprejer
                   </h3>
                   <p className="text-sm text-slate-500 mb-4">
                     {t.cta.eitanSpecialty}

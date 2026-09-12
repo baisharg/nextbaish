@@ -12,6 +12,7 @@ interface OrganizationSchema {
   url: string;
   logo: string;
   description: string;
+  foundingDate?: string;
   sameAs: string[];
   contactPoint?: {
     "@type": "ContactPoint";
@@ -143,10 +144,13 @@ export function OrganizationJsonLd() {
     url: BASE_URL,
     logo: `${BASE_URL}/images/logos/logo-192.png`,
     description:
-      "Supporting students in Buenos Aires to enter AI safety research through courses, research, and community.",
+      "The largest AI safety hub in Latin America. Courses, a research lab (BAISH Labs), community events and career support in Buenos Aires.",
+    foundingDate: "2024",
     sameAs: [
-      "https://t.me/+zhSGhXrn56g1YjVh",
+      "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
       ORGANIZATION_LINKEDIN_URL,
+      "https://www.instagram.com/baish_arg",
+      "https://luma.com/BAISH",
       "https://www.youtube.com/@BAISHaiSafety",
     ],
     contactPoint: {

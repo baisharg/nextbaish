@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer";
+import NewsletterSignup from "@/app/components/newsletter-signup";
 import { FadeInSection } from "@/app/components/fade-in-section";
 import { AnimatedTitle } from "@/app/components/animated-title";
 import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
 import { withLocale } from "@/app/utils/locale";
 import { getDictionary } from "../dictionaries";
+import { fillImpact } from "@/app/data/impact";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
 import { ORGANIZATION_LINKEDIN_URL } from "@/app/constants/social-links";
 import type { AppLocale } from "@/i18n.config";
@@ -30,7 +32,7 @@ export async function generateMetadata({
 }
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  TelegramIcon,
+  Calendar03Icon,
   InstagramIcon,
   Linkedin01Icon,
   WhatsappIcon,
@@ -42,12 +44,6 @@ const FAQAccordion = dynamic(() => import("@/app/components/faq-accordion"), {
   loading: () => <div className="h-96 animate-pulse rounded-xl bg-slate-100" />,
 });
 
-const SupascribeSignup = dynamic(
-  () => import("@/app/components/supascribe-signup"),
-  {
-    loading: () => <div className="card-glass h-64 animate-pulse" />,
-  },
-);
 
 export default async function ContactPage({
   params,
@@ -108,7 +104,7 @@ export default async function ContactPage({
 
           {/* Contact Info Cards */}
           <FadeInSection variant="slide-up" delay={100} as="section">
-            <section className="grid gap-6 md:grid-cols-2">
+            <section className="grid gap-6 md:grid-cols-3">
               {/* Community Card with Stacked Buttons */}
               <article className="card-glass">
                 <div className="card-eyebrow">
@@ -118,25 +114,9 @@ export default async function ContactPage({
                   {dict.home.getInvolved.communityTitle}
                 </h3>
                 <p className="card-body">
-                  {dict.home.getInvolved.communityDescription}
+                  {fillImpact(dict.home.getInvolved.communityDescription)}
                 </p>
                 <div className="flex flex-col gap-3 mt-auto">
-                  <a
-                    className="button-primary flex flex-col items-center justify-center gap-1 py-4"
-                    href="https://t.me/+zhSGhXrn56g1YjVh"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <div className="flex items-center gap-2">
-                      <HugeiconsIcon icon={TelegramIcon} size={20} />
-                      <span className="font-semibold">
-                        {dict.home.getInvolved.telegramCta}
-                      </span>
-                    </div>
-                    <span className="text-xs opacity-90">
-                      {dict.home.getInvolved.telegramMembers}
-                    </span>
-                  </a>
                   <a
                     className="button-primary flex flex-col items-center justify-center gap-1 py-4"
                     href="https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
@@ -150,7 +130,7 @@ export default async function ContactPage({
                       </span>
                     </div>
                     <span className="text-xs opacity-90">
-                      {dict.home.getInvolved.whatsappMembers}
+                      {fillImpact(dict.home.getInvolved.whatsappMembers)}
                     </span>
                   </a>
                 </div>
@@ -177,6 +157,9 @@ export default async function ContactPage({
                   >
                     <HugeiconsIcon icon={InstagramIcon} size={20} />
                     Instagram
+                    <span className="text-xs font-normal text-slate-500">
+                      · {fillImpact(dict.contact.cards.social.instagramFollowers)}
+                    </span>
                   </a>
                   <a
                     href={ORGANIZATION_LINKEDIN_URL}
@@ -188,6 +171,34 @@ export default async function ContactPage({
                     <HugeiconsIcon icon={Linkedin01Icon} size={20} />
                     LinkedIn
                   </a>
+                  <a
+                    href="https://luma.com/BAISH"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-primary)] hover:text-[var(--color-accent-tertiary)] transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Luma"
+                  >
+                    <HugeiconsIcon icon={Calendar03Icon} size={20} />
+                    Luma
+                  </a>
+                </div>
+              </article>
+
+              {/* Press & partnerships Card */}
+              <article className="card-glass scroll-mt-24" id="press">
+                <div className="card-eyebrow">
+                  {dict.contact.cards.press.eyebrow}
+                </div>
+                <h3 className="card-title">
+                  {dict.contact.cards.press.title}
+                </h3>
+                <p className="card-body">
+                  {dict.contact.cards.press.description}
+                </p>
+                <div className="mt-auto">
+                  <a href="#contact-form" className="button-primary">
+                    {dict.contact.cards.press.cta}
+                  </a>
                 </div>
               </article>
             </section>
@@ -197,7 +208,7 @@ export default async function ContactPage({
           <FadeInSection variant="slide-up" delay={200} as="section">
             <section className="section-container grid gap-6 md:grid-cols-2">
               {/* Contact Form */}
-              <article className="card-glass">
+              <article className="card-glass scroll-mt-24" id="contact-form">
                 <div className="card-eyebrow">{dict.contact.form.eyebrow}</div>
                 <h2 className="card-title">{dict.contact.form.title}</h2>
                 <p className="card-body">{dict.contact.form.description}</p>
@@ -271,7 +282,7 @@ export default async function ContactPage({
               </article>
 
               {/* Newsletter Signup */}
-              <SupascribeSignup t={dict.substack} />
+              <NewsletterSignup t={dict.substack} />
             </section>
           </FadeInSection>
 
