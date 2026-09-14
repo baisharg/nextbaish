@@ -55,6 +55,27 @@ const DEFAULT_PERFORMANCE_PROFILE: PerformanceProfile = {
 
 const LOW_POWER_FRAME_INTERVAL = 1000 / 45;
 
+/**
+ * Parallax: the canvas is translated up by scrollY * PARALLAX_FACTOR, and the
+ * container reserves PARALLAX_BUFFER_VH of extra height to cover that shift.
+ * The offset is clamped to the buffer, because any page taller than
+ * PARALLAX_BUFFER_VH / PARALLAX_FACTOR viewports (5 screens at these values)
+ * would otherwise drag the canvas off the bottom of the viewport and expose a
+ * flat band. The About page runs to ~30 viewports on a phone.
+ */
+const PARALLAX_FACTOR = 0.02;
+const PARALLAX_BUFFER_VH = 0.1;
+
+/** Device-pixel cap for the render target; a big fill-rate win on phones. */
+const MAX_RENDER_DPR = 2;
+
+/**
+ * How long the canvas box has to hold still before the renderer is rebuilt at
+ * the new size. A window drag fires ResizeObserver every frame, and each
+ * rebuild spawns a Worker and a GPU context.
+ */
+const RESIZE_SETTLE_MS = 250;
+
 type NavigatorConnection = {
   saveData?: boolean;
   effectiveType?: string;
@@ -250,6 +271,9 @@ function TimelineThreadsComponent({
   const [performanceProfile, setPerformanceProfile] =
     useState<PerformanceProfile>(DEFAULT_PERFORMANCE_PROFILE);
   const parallaxRef = useRef(0);
+  // Bumped when the canvas box no longer matches the size the renderer was
+  // built at; feeds the renderer key and the init effect.
+  const [rendererEpoch, setRendererEpoch] = useState(0);
   const [webglSupported, setWebglSupported] = useState(true);
 
   // Apply override parameters if provided
@@ -445,16 +469,62 @@ function TimelineThreadsComponent({
     }
   }, [isVisible, shouldAnimate]);
 
+  /**
+   * The OffscreenCanvas is sized once, at transfer time, and neither renderer
+   * reads the box again. Any resize that leaves the performance profile alone
+   * (a plain window drag, or one that stays inside a thread-count bucket) would
+   * otherwise stretch a stale bitmap across the new box. Watch the real box and
+   * rebuild the renderer when it diverges from what was built.
+   */
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const checkSize = () => {
+      const canvas = canvasRef.current;
+      const built = canvasDeviceSizeRef.current;
+      // Null until the renderer has initialized: nothing to compare against.
+      if (!canvas || !built) return;
+
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_RENDER_DPR);
+      const w = Math.max(1, Math.floor(rect.width * dpr));
+      const h = Math.max(1, Math.floor(rect.height * dpr));
+
+      // Sub-pixel churn is not worth a rebuild.
+      if (Math.abs(w - built.w) < 2 && Math.abs(h - built.h) < 2) return;
+
+      setRendererEpoch((n) => n + 1);
+    };
+
+    const observer = new ResizeObserver(() => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(checkSize, RESIZE_SETTLE_MS);
+    });
+    observer.observe(container);
+
+    return () => {
+      clearTimeout(settleTimer);
+      observer.disconnect();
+    };
+  }, []);
+
   // Parallax scroll effect (imperative to avoid React re-renders)
   useEffect(() => {
     if (typeof window === "undefined" || prefersReducedMotion) return;
 
-    const PARALLAX_FACTOR = 0.02; // Subtle parallax effect (reduced to prevent bottom gap)
     let rafId = 0;
     let currentScroll = window.scrollY;
 
     const updateParallax = () => {
-      parallaxRef.current = -currentScroll * PARALLAX_FACTOR;
+      // window.innerHeight is never larger than the vh the buffer is sized in
+      // (on iOS vh tracks the large viewport), so this stays within the buffer.
+      const maxOffset = window.innerHeight * PARALLAX_BUFFER_VH;
+      parallaxRef.current = -Math.min(currentScroll * PARALLAX_FACTOR, maxOffset);
       if (canvasRef.current) {
         canvasRef.current.style.transform = `translateY(${parallaxRef.current}px)`;
       }
@@ -499,9 +569,8 @@ function TimelineThreadsComponent({
       if (!canvas) return;
 
       try {
-        // Cap DPR to 2 on mobile (huge fill-rate win)
         const baseDpr = window.devicePixelRatio || 1;
-        const dpr = Math.min(baseDpr, 2);
+        const dpr = Math.min(baseDpr, MAX_RENDER_DPR);
 
         // Disable blur on narrow viewports or high-DPR devices (fill-rate optimization)
         const isNarrow = (window.innerWidth || 0) <= 480;
@@ -647,7 +716,11 @@ function TimelineThreadsComponent({
 
       logTimelineDebug("Canvas renderer cleaned up");
     };
-  }, [shouldAnimate, blurStdDeviation, frameInterval]);
+    // threads.length is a dependency because a threadCount change (any viewport
+    // resize crossing a width threshold, including a phone rotation) resets
+    // threads to [], which unmounts the canvas. The replacement element needs a
+    // fresh transferControlToOffscreen() or nothing ever draws on it again.
+  }, [shouldAnimate, blurStdDeviation, frameInterval, threads.length, rendererEpoch]);
 
   // Pointer interaction: forward mouse position to the worker in the same
   // normalized viewbox space as the thread points. rAF-throttled; the worker
@@ -737,10 +810,13 @@ function TimelineThreadsComponent({
     );
   }
 
-  // Extra height buffer to prevent blank gap at bottom during parallax scroll.
-  // Parallax moves canvas UP by (scrollY * 0.02), so we need extra height at bottom.
-  // 10vh covers typical scroll depths (10vh / 0.02 = 500vh of page scroll).
-  const parallaxBuffer = "10vh";
+  // Extra height buffer covering the parallax shift; updateParallax clamps the
+  // offset to it so the canvas can never expose a gap at the bottom.
+  const parallaxBuffer = `${PARALLAX_BUFFER_VH * 100}vh`;
+
+  // Keyed on the renderer's inputs so every re-initialization mounts a fresh
+  // canvas: transferControlToOffscreen() can only be called once per element.
+  const rendererKey = `${threads.length}:${blurStdDeviation}:${frameInterval}:${rendererEpoch}`;
 
   return (
     <div
@@ -753,6 +829,7 @@ function TimelineThreadsComponent({
       }}
     >
       <canvas
+        key={rendererKey}
         ref={canvasRef}
         className="h-full w-full"
         style={{
