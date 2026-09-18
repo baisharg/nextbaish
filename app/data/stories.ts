@@ -36,7 +36,7 @@ export const SUCCESS_STORIES: SuccessStoryMeta[] = [
     name: "Tobías Bersia",
     link: "https://www.linkedin.com/in/tobias-bersia-70a448132/",
   },
-  { id: "julian-szere", featured: true, name: "Julián Szere" },
+  { id: "julian-szere", featured: true, name: "Julián Szereszewski" },
   {
     id: "guido-bergman",
     featured: true,
