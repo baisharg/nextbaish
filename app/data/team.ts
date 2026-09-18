@@ -249,7 +249,7 @@ export const TEAM: TeamMember[] = [
   // ─── BAISH Labs research fellows (not otherwise on the org chart) ──────
   {
     id: "julian-szere",
-    name: "Julián Szere",
+    name: "Julián Szereszewski",
     group: "team",
     photo: "/images/team/julian-szere.jpg",
     labs: "fellow",
