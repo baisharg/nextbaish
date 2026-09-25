@@ -2283,6 +2283,26 @@
         }
       },
       "writeToUs": "Write to us"
+    },
+    "researchPage": {
+      "baishAuthor": "Researcher connected to BAISH",
+      "jumpLabs": "BAISH Labs",
+      "jumpDirections": "Research directions",
+      "jumpPublications": "Publications"
+    },
+    "programsPage": {
+      "jumpCourses": "Courses",
+      "jumpCommunity": "Community",
+      "jumpGallery": "Past events",
+      "jumpNetwork": "Sister projects",
+      "events": "Upcoming events are on Luma",
+      "eventsCta": "See the Luma calendar"
+    },
+    "resourcesPage": {
+      "jumpEvidence": "The evidence",
+      "jumpRisks": "The risks",
+      "jumpStudy": "Self-study",
+      "nextTitle": "Where to go from here"
     }
   }
 }

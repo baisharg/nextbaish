@@ -14,7 +14,7 @@ import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { LabAnnouncement } from "./_components/lab-announcement";
 import { LabFooter } from "./_components/lab-footer";
-import { SmartLink, isExternal } from "./_components/smart-link";
+import { SmartLink, isExternal, labHref } from "./_components/smart-link";
 import { StoryList } from "./_components/story-list";
 import "./lab.css";
 
@@ -203,7 +203,7 @@ export default async function LabPage({
                     </dl>
                     <TransitionLink
                       className="lab-link"
-                      href={withLocale(currentLocale, item.link)}
+                      href={withLocale(currentLocale, labHref(item.link))}
                     >
                       {item.cta}
                       <span aria-hidden="true">→</span>

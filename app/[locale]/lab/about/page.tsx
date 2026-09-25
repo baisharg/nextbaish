@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { ThreadPage } from "@/app/components/thread-page";
 import { ThreadSet } from "@/app/components/thread-set";
 import { TeamLinksRow } from "@/app/components/team-card";
 import { getDictionary } from "../../dictionaries";
-import { renderWithBioLinks } from "@/app/utils/footnotes";
 import {
-  initials,
   teamByGroup,
   type TeamMember,
   type TeamMemberId,
@@ -22,7 +20,7 @@ import {
 } from "@/app/data/impact";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
-import { BioDialog } from "../_components/bio-dialog";
+import { MemberCard } from "../_components/member-card";
 import { LabAnnouncement } from "../_components/lab-announcement";
 import { LabFooter } from "../_components/lab-footer";
 import { StoryList } from "../_components/story-list";
@@ -46,24 +44,6 @@ export async function generateMetadata({
     title: `${dict.about.title} · ${dict.lab.metaTitle}`,
     robots: { index: false, follow: false },
   };
-}
-
-function MemberFace({ member }: { member: TeamMember }) {
-  return (
-    <div className="lab-member-photo">
-      {member.photo ? (
-        <Image
-          src={member.photo}
-          alt=""
-          width={400}
-          height={400}
-          sizes="(max-width: 820px) 45vw, 220px"
-        />
-      ) : (
-        <span aria-hidden="true">{initials(member.name)}</span>
-      )}
-    </div>
-  );
 }
 
 export default async function LabAboutPage({
@@ -100,46 +80,16 @@ export default async function LabAboutPage({
   ];
   const advisors = teamByGroup("advisors");
 
-  const memberCard = (member: TeamMember) => {
-    const face = (
-      <>
-        <MemberFace member={member} />
-        <span className="lab-member-name">{member.name}</span>
-        {roles[member.id] && (
-          <span className="lab-member-role">{roles[member.id]}</span>
-        )}
-      </>
-    );
-    const bio = bios[member.id];
-    if (bio) {
-      return (
-        <li key={member.id}>
-          <BioDialog
-            card={face}
-            label={member.name}
-            openLabel={lab.aboutPage.readBio}
-            closeLabel={lab.aboutPage.close}
-          >
-            <div className="lab-dialog-head">
-              <MemberFace member={member} />
-              <div>
-                <h3 className="lab-member-name">{member.name}</h3>
-                <p className="lab-member-role">{roles[member.id]}</p>
-                <TeamLinksRow links={member.links} gap="md" className="mt-3" />
-              </div>
-            </div>
-            <p className="lab-dialog-bio">{renderWithBioLinks(bio)}</p>
-          </BioDialog>
-        </li>
-      );
-    }
-    return (
-      <li key={member.id} className="lab-member">
-        {face}
-        <TeamLinksRow links={member.links} className="mt-2" />
-      </li>
-    );
-  };
+  const memberCard = (member: TeamMember) => (
+    <MemberCard
+      key={member.id}
+      member={member}
+      role={roles[member.id]}
+      bio={bios[member.id]}
+      readBioLabel={lab.aboutPage.readBio}
+      closeLabel={lab.aboutPage.close}
+    />
+  );
 
   return (
     <div className="lab">

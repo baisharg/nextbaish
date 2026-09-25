@@ -2283,6 +2283,26 @@
         }
       },
       "writeToUs": "Escribinos"
+    },
+    "researchPage": {
+      "baishAuthor": "Investigador/a vinculado/a a BAISH",
+      "jumpLabs": "BAISH Labs",
+      "jumpDirections": "Líneas de investigación",
+      "jumpPublications": "Publicaciones"
+    },
+    "programsPage": {
+      "jumpCourses": "Cursos",
+      "jumpCommunity": "Comunidad",
+      "jumpGallery": "Eventos pasados",
+      "jumpNetwork": "Proyectos hermanos",
+      "events": "Los próximos eventos están en Luma",
+      "eventsCta": "Ver el calendario en Luma"
+    },
+    "resourcesPage": {
+      "jumpEvidence": "La evidencia",
+      "jumpRisks": "Los riesgos",
+      "jumpStudy": "Autoestudio",
+      "nextTitle": "Por dónde seguir"
     }
   }
 }

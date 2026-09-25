@@ -130,16 +130,20 @@ const sceneY = (
       const rope = 0.5 + twist(0.035, 1.25, 0.7);
       return lerp(edgeLane, rope, smooth((a + 0.02) / 0.5));
     }
-    // A rope rises from below the copy and splits into three strands.
+    // A rope rises from below the copy and splits into three strands. Left
+    // of the box it runs along the bottom edge, below the copy beside it.
     case "strands": {
       const center = STRAND_CENTERS[k % STRAND_CENTERS.length];
-      const rope = lerp(1.08, 0.5, smooth((a + 0.1) / 0.3)) + twist(0.03, 1.2, 0.6);
+      const rope =
+        lerp(1.2, 0.5, smooth((a - 0.02) / 0.3)) + twist(0.03, 1.2, 0.6);
       const strand = center + twist(0.022, 1.6, 0.8);
       return lerp(rope, strand, smooth((a - 0.15) / 0.5));
     }
     // A low rope rises and fans out towards many destinations.
     case "fan": {
-      const rope = 0.88 + twist(0.02, 1, 0.6);
+      // Left of the box the rope runs below it, clear of any copy beside it.
+      const rope =
+        lerp(1.25, 0.88, smooth((a + 0.1) / 0.25)) + twist(0.02, 1, 0.6);
       const end = -0.1 + 0.9 * r2;
       const g = Math.pow(smooth((a - 0.05) / 0.95), 1.4);
       return lerp(rope, end, g) + 0.015 * Math.sin(TAU * (a + r1) + 0.4 * t);
