@@ -30,7 +30,10 @@ import {
 import type {
   InitMessage,
   RendererReadyMessage,
+  WorkerMessage,
 } from "../workers/animation-types";
+import type { ThreadChannel } from "../utils/thread-director";
+import type { SceneBox } from "../utils/thread-scenes";
 
 // Note: SIN_OFFSETS/COS_OFFSETS computation moved to animation.worker.ts
 // Animation computations run entirely in the web worker now.
@@ -255,12 +258,19 @@ type TimelineThreadsProps = {
   className?: string;
   style?: CSSProperties;
   overrideParams?: ThreadOverrideParams;
+  /**
+   * Scene channel from a ThreadSet. With one, the canvas belongs to a page
+   * section and draws the shapes it is sent; without one it is the fixed
+   * site-wide background with the free animation and scroll parallax.
+   */
+  channel?: ThreadChannel;
 };
 
 function TimelineThreadsComponent({
   className,
   style,
   overrideParams,
+  channel,
 }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -515,7 +525,10 @@ function TimelineThreadsComponent({
 
   // Parallax scroll effect (imperative to avoid React re-renders)
   useEffect(() => {
-    if (typeof window === "undefined" || prefersReducedMotion) return;
+    // Section canvases scroll with the page; only the background parallaxes.
+    if (typeof window === "undefined" || prefersReducedMotion || channel) {
+      return;
+    }
 
     let rafId = 0;
     let currentScroll = window.scrollY;
@@ -524,7 +537,10 @@ function TimelineThreadsComponent({
       // window.innerHeight is never larger than the vh the buffer is sized in
       // (on iOS vh tracks the large viewport), so this stays within the buffer.
       const maxOffset = window.innerHeight * PARALLAX_BUFFER_VH;
-      parallaxRef.current = -Math.min(currentScroll * PARALLAX_FACTOR, maxOffset);
+      parallaxRef.current = -Math.min(
+        currentScroll * PARALLAX_FACTOR,
+        maxOffset,
+      );
       if (canvasRef.current) {
         canvasRef.current.style.transform = `translateY(${parallaxRef.current}px)`;
       }
@@ -544,7 +560,7 @@ function TimelineThreadsComponent({
       window.removeEventListener("scroll", handleScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, channel]);
 
   /**
    * WebGL Renderer Initialization
@@ -685,6 +701,7 @@ function TimelineThreadsComponent({
 
         tickFnRef.current = tick;
         rafIdRef.current = requestAnimationFrame(tick);
+        postScenesRef.current?.();
       } catch (error) {
         console.error(
           "[Timeline] Failed to initialize canvas renderer:",
@@ -722,11 +739,93 @@ function TimelineThreadsComponent({
     // fresh transferControlToOffscreen() or nothing ever draws on it again.
   }, [shouldAnimate, blurStdDeviation, frameInterval, threads.length, rendererEpoch]);
 
+  const offsetXMultiplier = overrideParams?.offsetXMultiplier;
+  const offsetYMultiplier = overrideParams?.offsetYMultiplier;
+
+  /**
+   * Viewport CSS px -> the worker's normalized viewbox space. Both renderers
+   * lay points out in a squareScale x squareScale pixel space
+   * (pixel = point * squareScale + offset) and stretch that square onto the
+   * canvas, so each axis is rescaled by squareScale / canvas size first.
+   * Null until the renderer is built.
+   */
+  const clientToViewbox = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    const size = canvasDeviceSizeRef.current;
+    if (!canvas || !size) return null;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    const squareScale = Math.max(size.w, size.h);
+    const xDev = ((clientX - rect.left) / rect.width) * squareScale;
+    const yDev = ((clientY - rect.top) / rect.height) * squareScale;
+    const offsetX =
+      (size.w - squareScale) *
+      (offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER);
+    const offsetY =
+      (size.h - squareScale) *
+      (offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER);
+    return {
+      x: (xDev - offsetX) / squareScale,
+      y: (yDev - offsetY) / squareScale,
+    };
+  };
+
+  // Scenes: forward the channel's scene targets (fractions of this canvas) to
+  // the worker in viewbox space. Kept in a ref so the renderer init can replay
+  // the latest targets into a fresh worker.
+  const postScenesRef = useRef<(() => void) | null>(null);
+  postScenesRef.current = () => {
+    const worker = animationWorkerRef.current;
+    const canvas = canvasRef.current;
+    if (!worker || !canvas || !channel?.targets) return;
+    // Edges of the canvas itself: shapes run edge to edge across it, and
+    // colours are graded over its height.
+    const rect = canvas.getBoundingClientRect();
+    const topLeft = clientToViewbox(rect.left, rect.top);
+    const bottomRight = clientToViewbox(rect.right, rect.bottom);
+    if (!topLeft || !bottomRight) return;
+    const targets: Extract<WorkerMessage, { type: "scenes" }>["targets"] = [];
+    for (const target of channel.targets) {
+      const a = clientToViewbox(
+        rect.left + target.box[0] * rect.width,
+        rect.top + target.box[1] * rect.height,
+      );
+      const b = clientToViewbox(
+        rect.left + target.box[2] * rect.width,
+        rect.top + target.box[3] * rect.height,
+      );
+      if (!a || !b) continue;
+      const box: SceneBox = [a.x, a.y, b.x, b.y];
+      targets.push({
+        key: target.key,
+        id: target.id,
+        weight: target.weight,
+        box,
+      });
+    }
+    const message: WorkerMessage = {
+      type: "scenes",
+      targets,
+      edges: [topLeft.x, bottomRight.x],
+      verticalEdges: [topLeft.y, bottomRight.y],
+    };
+    worker.postMessage(message);
+  };
+
+  useEffect(() => {
+    if (!channel) return;
+    return channel.subscribe({
+      onTargets: () => postScenesRef.current?.(),
+      onPulse: (count) => {
+        const message: WorkerMessage = { type: "pulse", count };
+        animationWorkerRef.current?.postMessage(message);
+      },
+    });
+  }, [channel]);
+
   // Pointer interaction: forward mouse position to the worker in the same
   // normalized viewbox space as the thread points. rAF-throttled; the worker
   // eases the response so threads bow lazily away from the cursor.
-  const offsetXMultiplier = overrideParams?.offsetXMultiplier;
-  const offsetYMultiplier = overrideParams?.offsetYMultiplier;
   useEffect(() => {
     if (!shouldAnimate || prefersReducedMotion) return;
     if (typeof window === "undefined") return;
@@ -750,26 +849,10 @@ function TimelineThreadsComponent({
 
     const handlePointerMove = (e: PointerEvent) => {
       if (e.pointerType && e.pointerType !== "mouse") return;
-      const canvas = canvasRef.current;
-      const size = canvasDeviceSizeRef.current;
-      if (!canvas || !size || !animationWorkerRef.current) return;
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-      // CSS px -> device px -> normalized viewbox space (same mapping as
-      // the renderers: pixel = point * squareScale + offset)
-      const xDev = (e.clientX - rect.left) * (size.w / rect.width);
-      const yDev = (e.clientY - rect.top) * (size.h / rect.height);
-      const squareScale = Math.max(size.w, size.h);
-      const offsetX =
-        (size.w - squareScale) *
-        (offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER);
-      const offsetY =
-        (size.h - squareScale) *
-        (offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER);
-      pending = {
-        x: (xDev - offsetX) / squareScale,
-        y: (yDev - offsetY) / squareScale,
-      };
+      if (!animationWorkerRef.current) return;
+      const point = clientToViewbox(e.clientX, e.clientY);
+      if (!point) return;
+      pending = point;
       if (!rafId) rafId = requestAnimationFrame(flush);
     };
 
@@ -824,7 +907,7 @@ function TimelineThreadsComponent({
       className={`pointer-events-none ${className ?? "absolute inset-x-0 top-0"}`}
       style={{
         ...style,
-        height: `calc(100% + ${parallaxBuffer})`,
+        height: channel ? "100%" : `calc(100% + ${parallaxBuffer})`,
         contain: "layout style paint",
       }}
     >

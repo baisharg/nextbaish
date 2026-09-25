@@ -19,7 +19,6 @@ import {
   BEZIER_CONTROL_FACTOR,
   SEGMENTS_PER_CURVE,
   THREAD_WIDTH_SCALE,
-  OVERLAY_OPACITY,
   MAX_GRADIENT_STOPS,
   DEFAULT_OFFSET_X_MULTIPLIER,
   DEFAULT_OFFSET_Y_MULTIPLIER,
@@ -1239,7 +1238,7 @@ export class WebGLRenderer implements Renderer {
 
     if (this.applyGradientUniforms(frame.overlayGradient) === 0) return;
     // Slightly more transparent overlay for dark backgrounds
-    this.gl.uniform1f(this.lineUniforms.opacity, OVERLAY_OPACITY);
+    this.gl.uniform1f(this.lineUniforms.opacity, frame.overlayOpacity);
     // The overlay never pulses
     this.gl.uniform1f(this.lineUniforms.pulsePos, 0);
     this.gl.uniform1f(this.lineUniforms.pulseIntensity, 0);

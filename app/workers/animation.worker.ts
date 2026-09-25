@@ -24,12 +24,27 @@ import {
   POINTER_STRENGTH_TAU_MS,
   PULSE_TRAVEL_MS,
   PULSE_AMPLITUDE,
+  OVERLAY_OPACITY,
+  SCENE_OVERLAY_OPACITY,
+  PIVOT_X,
+  PIVOT_Y,
+  X_START,
+  X_END,
   adjustColor,
   directionDuration,
 } from "../utils/thread-utils";
 
 import type { FramePacket, ThreadFrame, ColorStop, Renderer } from "../types/renderer";
 import { createRenderer } from "../utils/create-renderer";
+import {
+  type SceneBox,
+  type SceneId,
+  SCENE_OPACITY,
+  SCENE_TINT,
+  SCENE_WEIGHT_TAU_MS,
+  mixHue,
+  writeScenePoints,
+} from "../utils/thread-scenes";
 import type {
   WorkerMessage,
   RendererReadyMessage,
@@ -56,6 +71,10 @@ type WorkerThreadState = {
   swayAmp: number;
   driftAmp: number;
   transitionStartTime: number;
+  /** Start of a pulse requested by the page (0 = none) */
+  manualPulseAt: number;
+  /** Scene-mode gradient stops by (rounded) tinted hue, built on demand */
+  tintedStops: Map<number, ColorStop[]>;
 
   // Scratch buffers
   floatingPoints: Float32Array;
@@ -305,6 +324,165 @@ let pointerY = 0.5;
 let pointerStrength = 0;
 let lastAnimateNow = 0;
 
+// Scene state, one per scene per page section. Weights ease toward the
+// targets sent by the page; boxes are taken as sent, so threads stay locked to
+// the DOM while scrolling. With no scenes the free animation runs untouched.
+type SceneState = {
+  key: string;
+  id: SceneId;
+  weight: number;
+  targetWeight: number;
+  box: SceneBox;
+};
+let scenes: SceneState[] = [];
+let sceneEdges: [number, number] = [0, 1];
+let sceneVerticalEdges: [number, number] = [0, 1];
+/** Sum of scene weights, capped at 1: how far the page has taken over */
+let sceneCoverage = 0;
+/** Weighted accent of the active scenes (see SCENE_TINT) */
+let sceneTintHue = 0;
+let sceneTintAmount = 0;
+const sceneScratch = new Float32Array(SEGMENT_FACTORS.length * 2);
+const sceneAccum = new Float32Array(SEGMENT_FACTORS.length * 2);
+
+const advanceScenes = (dt: number) => {
+  const weightBlend = 1 - Math.exp(-dt / SCENE_WEIGHT_TAU_MS);
+  for (const scene of scenes) {
+    scene.weight += (scene.targetWeight - scene.weight) * weightBlend;
+  }
+  scenes = scenes.filter((s) => s.targetWeight > 0 || s.weight > 0.001);
+  sceneCoverage = Math.min(
+    scenes.reduce((sum, s) => sum + s.weight, 0),
+    1,
+  );
+
+  // Circular mean of the scene hues, weighted by scene weight and amount;
+  // untinted scenes pull the amount down, so the accent fades with them.
+  let tx = 0;
+  let ty = 0;
+  let amount = 0;
+  let total = 0;
+  for (const scene of scenes) {
+    total += scene.weight;
+    const tint = SCENE_TINT[scene.id];
+    if (!tint) continue;
+    const w = scene.weight * tint.amount;
+    const rad = (tint.hue * Math.PI) / 180;
+    tx += Math.cos(rad) * w;
+    ty += Math.sin(rad) * w;
+    amount += w;
+  }
+  sceneTintAmount = total > 0 ? amount / Math.max(total, 1) : 0;
+  if (amount > 0) {
+    sceneTintHue = ((Math.atan2(ty, tx) * 180) / Math.PI + 360) % 360;
+  }
+};
+
+/**
+ * Scene-mode gradient stops for a thread: its own hue blended toward the
+ * active accent. Cached per rounded hue, so the renderers (which re-upload a
+ * thread's colours when the stops array changes identity) only see a new
+ * array when the hue moves by a whole degree.
+ */
+const tintedStopsFor = (thread: WorkerThreadState): ColorStop[] => {
+  const hue = Math.round(
+    mixHue(thread.color.h, sceneTintHue, sceneTintAmount),
+  ) % 360;
+  let stops = thread.tintedStops.get(hue);
+  if (!stops) {
+    stops = createGradientStops({ ...thread.color, h: hue }).up;
+    thread.tintedStops.set(hue, stops);
+  }
+  return stops;
+};
+
+/** How far below the knot the free animation's "down" threads settle */
+const FREE_FLOOR_DEPTH = 0.35;
+
+/**
+ * Free animation re-placed so its knot sits at the centre of `box`. Each side
+ * of the knot is stretched separately so the thread ends still reach past
+ * the screen edges, and the height is scaled so the settled threads land on
+ * the bottom of the box.
+ */
+const writeFreePlaced = (
+  src: Float32Array,
+  box: SceneBox,
+  out: Float32Array,
+) => {
+  const span = sceneEdges[1] - sceneEdges[0];
+  const leftEnd = sceneEdges[0] + X_START * span;
+  const rightEnd = sceneEdges[0] + X_END * span;
+  const knotX = (box[0] + box[2]) / 2;
+  const knotY = (box[1] + box[3]) / 2;
+  const scaleLeft = (knotX - leftEnd) / (PIVOT_X - X_START);
+  const scaleRight = (rightEnd - knotX) / (X_END - PIVOT_X);
+  const scaleY = Math.min((box[3] - box[1]) / 2 / FREE_FLOOR_DEPTH, 1);
+  for (let p = 0; p < src.length; p += 2) {
+    const dx = src[p] - PIVOT_X;
+    out[p] = knotX + dx * (dx < 0 ? scaleLeft : scaleRight);
+    out[p + 1] = knotY + (src[p + 1] - PIVOT_Y) * scaleY;
+  }
+};
+
+/**
+ * Blend the thread's free points (already in `thread.floatingPoints`) with
+ * every active scene. Weights below 1 in total are filled with the unplaced
+ * free animation, so fading all scenes out returns to the default look.
+ * Returns the thread opacity multiplier for this frame.
+ */
+const composeScenes = (
+  thread: WorkerThreadState,
+  index: number,
+  count: number,
+  now: number,
+): number => {
+  const pts = thread.floatingPoints;
+  const len = pts.length;
+  sceneAccum.fill(0, 0, len);
+  let total = 0;
+  let opacity = 0;
+  const timeSec = now / 1000;
+  const swayBase = now * thread.swayFreq + thread.swayPhase;
+  const driftBase = now * thread.driftFreq + thread.driftPhase;
+
+  for (const scene of scenes) {
+    const w = scene.weight;
+    if (w < 0.001) continue;
+    if (scene.id === "free") {
+      writeFreePlaced(pts, scene.box, sceneScratch);
+    } else {
+      writeScenePoints(
+        scene.id,
+        index,
+        count,
+        timeSec,
+        scene.box,
+        sceneEdges,
+        sceneScratch,
+      );
+      // Same drift/sway as the free animation, so shapes never sit still
+      for (let i = 0; i < SEG_LEN; i++) {
+        sceneScratch[i * 2] +=
+          fastCos(driftBase + COS_OFFSETS[i]) * thread.driftAmp;
+        sceneScratch[i * 2 + 1] +=
+          fastSin(swayBase + SIN_OFFSETS[i]) * thread.swayAmp;
+      }
+    }
+    for (let p = 0; p < len; p++) sceneAccum[p] += sceneScratch[p] * w;
+    total += w;
+    opacity += SCENE_OPACITY[scene.id] * w;
+  }
+
+  if (total < 1) {
+    const rest = 1 - total;
+    for (let p = 0; p < len; p++) pts[p] = sceneAccum[p] + pts[p] * rest;
+    return opacity + rest;
+  }
+  for (let p = 0; p < len; p++) pts[p] = sceneAccum[p] / total;
+  return opacity / total;
+};
+
 // ============================================================================
 // ANIMATION LOOP
 // ============================================================================
@@ -326,6 +504,7 @@ function animate(now: number) {
   const pointerOn = pointerStrength > 0.002;
   const pointerInvR2 = 1 / (2 * POINTER_RADIUS * POINTER_RADIUS);
   const pointerScale = (POINTER_STRENGTH / POINTER_RADIUS) * pointerStrength;
+  if (scenes.length || sceneCoverage > 0) advanceScenes(dt);
 
   // Flip decision on interval
   if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
@@ -364,6 +543,10 @@ function animate(now: number) {
       thread.driftAmp,
     );
 
+    const opacityScale = scenes.length
+      ? composeScenes(thread, i, threads.length, now)
+      : 1;
+
     // Bow points away from the (eased) pointer with a gaussian falloff.
     // The push magnitude is d * scale * falloff, which is zero at the pointer
     // itself and peaks one radius out — no singularity, no jitter.
@@ -389,28 +572,48 @@ function animate(now: number) {
     const frame = threadFrames[i];
     frame.points = thread.floatingPoints;
     frame.width = thread.weight;
-    frame.opacity = thread.opacity;
-    frame.colorStops = thread.gradientStops[thread.direction];
-    frame.gradientMinY = thread.gradientBounds.minY;
-    frame.gradientMaxY = thread.gradientBounds.maxY;
+    if (scenes.length) {
+      // Scenes move threads far from their own profile, so colour by screen
+      // height instead, with the saturated stops: the "down" stops fade to
+      // grey near the floor, which reads as grey threads on tall screens.
+      frame.colorStops = tintedStopsFor(thread);
+      frame.gradientMinY = sceneVerticalEdges[0];
+      frame.gradientMaxY = sceneVerticalEdges[1];
+    } else {
+      frame.colorStops = thread.gradientStops[thread.direction];
+      frame.gradientMinY = thread.gradientBounds.minY;
+      frame.gradientMaxY = thread.gradientBounds.maxY;
+    }
 
     // Flip pulse: a highlight travels the thread during the first moments of
     // a direction transition (durations always exceed PULSE_TRAVEL_MS).
-    const pulseElapsed = now - thread.transitionStartTime;
-    if (thread.transitionStartTime > 0 && pulseElapsed < PULSE_TRAVEL_MS) {
+    // Page-requested pulses use the same highlight; the newer one wins.
+    const pulseStart = Math.max(
+      thread.transitionStartTime,
+      thread.manualPulseAt,
+    );
+    const pulseElapsed = now - pulseStart;
+    let pulseEnvelope = 0;
+    if (pulseStart > 0 && pulseElapsed < PULSE_TRAVEL_MS) {
       const p = pulseElapsed / PULSE_TRAVEL_MS;
+      pulseEnvelope = Math.sin(Math.PI * p);
       frame.pulsePos = p;
-      frame.pulseIntensity = PULSE_AMPLITUDE * Math.sin(Math.PI * p);
+      frame.pulseIntensity = PULSE_AMPLITUDE * pulseEnvelope;
     } else {
       frame.pulsePos = 0;
       frame.pulseIntensity = 0;
     }
+    // A pulsing thread lifts out of a dimmed scene so the highlight shows.
+    frame.opacity =
+      thread.opacity * (opacityScale + (1 - opacityScale) * pulseEnvelope);
   }
 
   if (!reusablePacket || !renderer) return;
 
   reusablePacket.time = now;
   reusablePacket.viewSize = viewSize;
+  reusablePacket.overlayOpacity =
+    OVERLAY_OPACITY + (SCENE_OVERLAY_OPACITY - OVERLAY_OPACITY) * sceneCoverage;
 
   renderer.draw(reusablePacket);
 }
@@ -451,6 +654,8 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
           swayAmp: t.swayAmp,
           driftAmp: t.driftAmp,
           transitionStartTime: 0,
+          manualPulseAt: 0,
+          tintedStops: new Map(),
           floatingPoints: new Float32Array(profile.down.length),
           gradientStops,
           gradientBounds,
@@ -477,6 +682,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         viewSize,
         threads: threadFrames,
         overlayGradient: OVERLAY_GRADIENT,
+        overlayOpacity: OVERLAY_OPACITY,
       };
 
       // Initialize renderer in-worker using OffscreenCanvas
@@ -521,6 +727,47 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         pointerTargetY = data.y;
       }
       pointerTargetActive = data.active;
+      break;
+    }
+
+    case "scenes": {
+      sceneEdges = data.edges;
+      sceneVerticalEdges = data.verticalEdges;
+      const next: SceneState[] = [];
+      for (const target of data.targets) {
+        const existing = scenes.find((s) => s.key === target.key);
+        if (existing) {
+          existing.targetWeight = target.weight;
+          existing.box = [...target.box];
+          next.push(existing);
+        } else if (target.weight > 0) {
+          // New scenes fade in from zero; zero-weight reports for scenes we
+          // aren't drawing only matter once they gain weight.
+          next.push({
+            key: target.key,
+            id: target.id,
+            weight: 0,
+            targetWeight: target.weight,
+            box: [...target.box],
+          });
+        }
+      }
+      for (const scene of scenes) {
+        if (!next.includes(scene)) {
+          scene.targetWeight = 0;
+          next.push(scene);
+        }
+      }
+      scenes = next;
+      break;
+    }
+
+    case "pulse": {
+      // Worker and page clocks have different origins; use the tick clock.
+      for (let n = 0; n < data.count && threads.length; n++) {
+        threads[(Math.random() * threads.length) | 0].manualPulseAt =
+          lastAnimateNow;
+      }
       break;
     }
 

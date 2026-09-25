@@ -40,6 +40,7 @@ export type FramePacket = {
   viewSize: number; // VIEWBOX_SIZE constant
   threads: ThreadFrame[];
   overlayGradient: ColorStop[]; // Overlay gradient stops
+  overlayOpacity: number; // Alpha of the overlay pass (OVERLAY_OPACITY by default)
 };
 
 /**

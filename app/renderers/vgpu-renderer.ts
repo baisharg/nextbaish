@@ -29,7 +29,6 @@ import {
   BEZIER_CONTROL_FACTOR,
   SEGMENTS_PER_CURVE,
   THREAD_WIDTH_SCALE,
-  OVERLAY_OPACITY,
   MAX_GRADIENT_STOPS,
   DEFAULT_OFFSET_X_MULTIPLIER,
   DEFAULT_OFFSET_Y_MULTIPLIER,
@@ -272,21 +271,19 @@ struct Params {
 
 /**
  * Final composite: scene + two bloom levels, overlay gradient screen-blended
- * on top (full-strength RGB, OVERLAY_OPACITY alpha — exactly the WebGL
+ * on top (full-strength RGB, frame.overlayOpacity alpha — exactly the WebGL
  * overlay pass), then converted to premultiplied alpha for the WebGPU canvas.
  */
 const COMPOSITE_SHADER = /* wgsl */ `
 struct OvBuf {
   stops: array<vec4f, ${MAX_GRADIENT_STOPS}>, // rgb, yPct
-  p0: vec4f, // stopCount, glowWeightHalf, glowWeightQuarter, unused
+  p0: vec4f, // stopCount, glowWeightHalf, glowWeightQuarter, overlayAlpha
 }
 @group(0) @binding(0) var sceneTex: texture_2d<f32>;
 @group(0) @binding(1) var glowHalf: texture_2d<f32>;
 @group(0) @binding(2) var glowQuarter: texture_2d<f32>;
 @group(0) @binding(3) var samp: sampler;
 @group(0) @binding(4) var<uniform> ov: OvBuf;
-
-const OVERLAY_ALPHA: f32 = ${OVERLAY_OPACITY};
 
 ${GRADIENT_WGSL}
 
@@ -304,7 +301,8 @@ ${GRADIENT_WGSL}
 
   // Screen blend, then straight->premultiplied for canvas compositing.
   let outRgb = ovColor + col * (1.0 - ovColor);
-  let outA = OVERLAY_ALPHA + scene.a * (1.0 - OVERLAY_ALPHA);
+  let overlayAlpha = ov.p0.w;
+  let outA = overlayAlpha + scene.a * (1.0 - overlayAlpha);
 
   // Interleaved gradient noise dither: debands the glow gradients and adds
   // the faintest paper grain (same formula as the WebGL composite).
@@ -382,6 +380,7 @@ export class VgpuRenderer implements Renderer {
   private threadStopsCache: (ColorStop[] | null)[] = [];
   private metaDirty = true;
   private lastOverlayGradient: ColorStop[] | null = null;
+  private lastOverlayOpacity = -1;
   private overlayDirty = true;
 
   private squareScale = 1;
@@ -605,11 +604,20 @@ export class VgpuRenderer implements Renderer {
       const base = t * META_FLOATS;
       const i0 = base + MAX_GRADIENT_STOPS * 4;
 
-      // Skip untouched threads: same gradient stops, and no pulse now
-      // (meta[i0 + 7] holds the last written pulse intensity).
+      const halfWidth = (thread.width * dpr * THREAD_WIDTH_SCALE) / 2;
+      const gradientMargin = halfWidth / this.squareScale;
+      const adjustedMinY = thread.gradientMinY - gradientMargin;
+      const adjustedMaxY = thread.gradientMaxY + gradientMargin;
+      const yRange = adjustedMaxY - adjustedMinY;
+
+      // Skip untouched threads: same gradient stops, opacity and gradient
+      // span, and no pulse now (meta[i0 + 7] holds the last written pulse
+      // intensity). meta is float32, so compare against rounded values.
       if (
         !this.metaDirty &&
         this.threadStopsCache[t] === thread.colorStops &&
+        meta[i0 + 1] === Math.fround(thread.opacity) &&
+        meta[i0 + 2] === Math.fround(adjustedMinY) &&
         thread.pulseIntensity === 0 &&
         meta[i0 + 7] === 0
       ) {
@@ -619,12 +627,6 @@ export class VgpuRenderer implements Renderer {
       metaChanged = true;
 
       const stopCount = packStops(meta, base, thread.colorStops);
-
-      const halfWidth = (thread.width * dpr * THREAD_WIDTH_SCALE) / 2;
-      const gradientMargin = halfWidth / this.squareScale;
-      const adjustedMinY = thread.gradientMinY - gradientMargin;
-      const adjustedMaxY = thread.gradientMaxY + gradientMargin;
-      const yRange = adjustedMaxY - adjustedMinY;
 
       meta[i0] = halfWidth;
       meta[i0 + 1] = thread.opacity;
@@ -684,6 +686,7 @@ export class VgpuRenderer implements Renderer {
 
       if (
         framePacket.overlayGradient !== this.lastOverlayGradient ||
+        framePacket.overlayOpacity !== this.lastOverlayOpacity ||
         this.overlayDirty
       ) {
         const ov = this.overlayScratch;
@@ -691,8 +694,10 @@ export class VgpuRenderer implements Renderer {
         ov[base] = packStops(ov, 0, framePacket.overlayGradient);
         ov[base + 1] = bloom ? GLOW_WEIGHT_HALF : 0;
         ov[base + 2] = bloom ? GLOW_WEIGHT_QUARTER : 0;
+        ov[base + 3] = framePacket.overlayOpacity;
         this.overlayUniform!.write(ov);
         this.lastOverlayGradient = framePacket.overlayGradient;
+        this.lastOverlayOpacity = framePacket.overlayOpacity;
         this.overlayDirty = false;
       }
 
