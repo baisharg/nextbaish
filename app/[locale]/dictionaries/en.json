@@ -2013,5 +2013,276 @@
         }
       }
     }
+  },
+  "lab": {
+    "metaTitle": "Threads layout prototype",
+    "hero": {
+      "tagline": "In-person courses, a research lab and a community of {communityMembers} in Buenos Aires, for anyone who wants to help AI go well.",
+      "seeCourses": "See courses",
+      "whatsapp": "Join the WhatsApp community"
+    },
+    "router": {
+      "title": "Where do you want to start?",
+      "items": [
+        {
+          "who": "New to AI safety?",
+          "label": "The case for taking AI seriously",
+          "link": "/resources"
+        },
+        {
+          "who": "Want to work on it?",
+          "label": "Courses and fellowships",
+          "link": "#programs"
+        },
+        {
+          "who": "Researcher or mentor?",
+          "label": "Work with BAISH Labs",
+          "link": "/research#labs"
+        },
+        {
+          "who": "Press, partners or funders?",
+          "label": "Get in touch",
+          "link": "/lab/contact"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "About BAISH",
+      "title": "Why we exist",
+      "rows": [
+        {
+          "label": "Why it matters",
+          "text": "If AI goes well, it could help with problems that have been stuck for decades. If it doesn't, the harm could be very hard to reverse. Nobody has a reliable map, and researchers we respect disagree about the risk. We think it is plausible enough, and the work neglected enough, that careful people can change the outcome.",
+          "linkLabel": "The case for taking AI seriously",
+          "link": "/resources"
+        },
+        {
+          "label": "Why Buenos Aires",
+          "text": "Argentina has the talent, the universities and the research culture. What was missing was a place where people could get into AI safety, and keep doing it, without leaving the country."
+        },
+        {
+          "label": "How we work",
+          "text": "Free in-person courses, monthly socials, a research lab and one-on-one career support. Founded in 2024 and run by volunteers and a small paid staff, alongside our sister fellowship, AISAR."
+        }
+      ]
+    },
+    "path": {
+      "eyebrow": "What we do",
+      "steps": [
+        {
+          "label": "Learn",
+          "line": "Everyone starts somewhere different.",
+          "headline": "Free in-person courses, run with BlueDot",
+          "stats": [
+            {
+              "key": "courseCohorts",
+              "label": "cohorts since March 2026"
+            },
+            {
+              "key": "courseRecommendScore",
+              "label": "likelihood to recommend"
+            }
+          ]
+        },
+        {
+          "label": "Belong",
+          "line": "Then the threads meet.",
+          "headline": "A community that meets every month",
+          "stats": [
+            {
+              "key": "communityMembers",
+              "label": "members on WhatsApp"
+            },
+            {
+              "key": "socialAttendance",
+              "label": "people at each monthly social"
+            }
+          ]
+        },
+        {
+          "label": "Research",
+          "line": "Some of them become research.",
+          "headline": "Research at BAISH Labs, in Buenos Aires",
+          "stats": [
+            {
+              "key": "publications",
+              "label": "publications by researchers connected to BAISH"
+            }
+          ]
+        },
+        {
+          "label": "Launch",
+          "line": "And lead out into the field.",
+          "headline": "Fellowships and full-time roles",
+          "stats": [
+            {
+              "key": "fellowshipPlacements",
+              "label": "fellowship placements"
+            },
+            {
+              "key": "fullTimeRoles",
+              "label": "full-time AI safety roles"
+            }
+          ]
+        }
+      ]
+    },
+    "programs": {
+      "title": "Courses and fellowships",
+      "columns": {
+        "program": "Program",
+        "details": "Details",
+        "status": "Status"
+      },
+      "status": {
+        "eoi_open": "Not open yet. Leave your email and we'll tell you when it opens.",
+        "applications_open": "Applications open"
+      },
+      "cta": {
+        "eoi_open": "Notify me",
+        "applications_open": "Apply"
+      },
+      "chips": {
+        "technical-ai-safety-course": [
+          "Free",
+          "In person, Buenos Aires",
+          "Good English needed"
+        ],
+        "technical-ai-safety-project": [
+          "Free",
+          "In person, Buenos Aires",
+          "5+ hours a week",
+          "Good English needed",
+          "Requires the Technical AI Safety course or equivalent"
+        ],
+        "frontier-ai-governance": [
+          "Free",
+          "In person, Buenos Aires"
+        ]
+      },
+      "aisar": {
+        "description": "Six-month mentored research fellowship in Buenos Aires, funded by Coefficient Giving.",
+        "chips": [
+          "Stipend: USD 700 or 1,400 a month",
+          "20 or 40 hours a week",
+          "Compute budget"
+        ],
+        "status": "Second cohort starts October 2026"
+      },
+      "call": {
+        "title": "Not sure which one fits?",
+        "cta": "Book a call"
+      }
+    },
+    "stories": {
+      "eyebrow": "Where the threads lead",
+      "glossary": {
+        "TAIS": "Technical AI Safety course",
+        "EAG": "Effective Altruism Global conference",
+        "ARENA": "Alignment Research Engineer Accelerator",
+        "SPAR": "Supervised Program for Alignment Research",
+        "MARS": "Mentorship for Alignment Research Students",
+        "CLR": "Center on Long-Term Risk"
+      }
+    },
+    "join": {
+      "eyebrow": "Your thread",
+      "title": "Start where you are",
+      "description": "About half the people at our monthly socials are new to AI safety.",
+      "steps": [
+        {
+          "title": "Come to a monthly social",
+          "text": "Networking and social events with {socialAttendance} people.",
+          "cta": "See the Luma calendar",
+          "link": "https://luma.com/BAISH"
+        },
+        {
+          "title": "Join the WhatsApp community",
+          "text": "{communityMembers} members sharing opportunities, papers and events.",
+          "cta": "Join on WhatsApp",
+          "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+        },
+        {
+          "title": "Get the newsletter",
+          "text": "Our activities, events and opportunities, by email.",
+          "cta": "Subscribe on Substack",
+          "link": "https://baish.substack.com/subscribe"
+        },
+        {
+          "title": "Press, universities or partners?",
+          "text": "We talk to journalists and work with universities, companies and other communities.",
+          "cta": "Write to us",
+          "link": "/lab/contact"
+        }
+      ]
+    },
+    "announcement": {
+      "id": "courses-2026-09",
+      "eoi": "Applications for our next courses aren't open yet. Leave your email and we'll tell you when they open.",
+      "open": "Applications for our courses are open.",
+      "cta": "See courses",
+      "dismiss": "Dismiss announcement"
+    },
+    "band": {
+      "home": "BAISH"
+    },
+    "footer": {
+      "cta": "Join the WhatsApp community",
+      "columns": {
+        "programs": "Programs",
+        "organization": "Organization",
+        "community": "Community"
+      },
+      "links": {
+        "courses": "Courses",
+        "aisar": "AISAR fellowship",
+        "labs": "BAISH Labs",
+        "newsletter": "Newsletter",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram",
+        "linkedin": "LinkedIn"
+      },
+      "supportedBy": "Supported by"
+    },
+    "aboutPage": {
+      "jump": "On this page",
+      "approachTitle": "What we focus on",
+      "fullTimeOrgs": "Where members work full-time",
+      "fellowships": "Fellowships and programs",
+      "readBio": "Read bio",
+      "close": "Close"
+    },
+    "contactPage": {
+      "routingTitle": "Who to talk to",
+      "columns": {
+        "purpose": "If you want to",
+        "how": "Best way"
+      },
+      "purposes": {
+        "course": {
+          "title": "Take a course",
+          "text": "Free, in-person BlueDot courses in Buenos Aires."
+        },
+        "community": {
+          "title": "Meet the community",
+          "text": "Monthly socials and a WhatsApp group of {communityMembers} members."
+        },
+        "career": {
+          "title": "Get career advice"
+        },
+        "research": {
+          "title": "Collaborate on research"
+        },
+        "press": {
+          "title": "Press or partnerships",
+          "text": "We talk to journalists about AI safety and the Argentine ecosystem, and work with universities, companies and other communities."
+        },
+        "follow": {
+          "title": "Follow along",
+          "text": "Events, opportunities and news from the community."
+        }
+      },
+      "writeToUs": "Write to us"
+    }
   }
 }

@@ -2013,5 +2013,276 @@
         }
       }
     }
+  },
+  "lab": {
+    "metaTitle": "Prototipo de diseño con hilos",
+    "hero": {
+      "tagline": "Cursos presenciales, un laboratorio de investigación y una comunidad de {communityMembers} personas en Buenos Aires, para quien quiera ayudar a que la IA salga bien.",
+      "seeCourses": "Ver cursos",
+      "whatsapp": "Sumate al grupo de WhatsApp"
+    },
+    "router": {
+      "title": "¿Por dónde querés empezar?",
+      "items": [
+        {
+          "who": "¿Recién llegás a AI safety?",
+          "label": "Por qué tomarse la IA en serio",
+          "link": "/resources"
+        },
+        {
+          "who": "¿Querés trabajar en esto?",
+          "label": "Cursos y becas",
+          "link": "#programs"
+        },
+        {
+          "who": "¿Investigás o querés mentorear?",
+          "label": "Trabajá con BAISH Labs",
+          "link": "/research#labs"
+        },
+        {
+          "who": "¿Prensa, aliados o financiadores?",
+          "label": "Escribinos",
+          "link": "/lab/contact"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Sobre BAISH",
+      "title": "Por qué existimos",
+      "rows": [
+        {
+          "label": "Por qué importa",
+          "text": "Si la IA sale bien, podría ayudarnos con problemas estancados desde hace décadas. Si no, el daño podría ser muy difícil de revertir. Nadie tiene un mapa confiable, y hay investigadores que respetamos que no están convencidos del riesgo. Creemos que es lo suficientemente plausible, y el trabajo lo suficientemente desatendido, como para que gente cuidadosa pueda cambiar el resultado.",
+          "linkLabel": "Por qué tomarse la IA en serio",
+          "link": "/resources"
+        },
+        {
+          "label": "Por qué Buenos Aires",
+          "text": "Argentina tiene el talento, las universidades y la cultura de investigación. Lo que faltaba era un lugar donde entrar a AI safety, y seguir haciéndolo, sin tener que irse del país."
+        },
+        {
+          "label": "Cómo trabajamos",
+          "text": "Cursos presenciales gratuitos, encuentros mensuales, un laboratorio de investigación y acompañamiento 1 a 1 de carrera. Fundado en 2024, con un equipo de voluntarios y un pequeño staff pago, junto a nuestra beca hermana, AISAR."
+        }
+      ]
+    },
+    "path": {
+      "eyebrow": "Qué hacemos",
+      "steps": [
+        {
+          "label": "Aprender",
+          "line": "Cada persona arranca desde un lugar distinto.",
+          "headline": "Cursos presenciales gratuitos, con BlueDot",
+          "stats": [
+            {
+              "key": "courseCohorts",
+              "label": "cohortes desde marzo de 2026"
+            },
+            {
+              "key": "courseRecommendScore",
+              "label": "de probabilidad de recomendar"
+            }
+          ]
+        },
+        {
+          "label": "Pertenecer",
+          "line": "Después, los hilos se encuentran.",
+          "headline": "Una comunidad que se junta todos los meses",
+          "stats": [
+            {
+              "key": "communityMembers",
+              "label": "miembros en WhatsApp"
+            },
+            {
+              "key": "socialAttendance",
+              "label": "personas en cada encuentro mensual"
+            }
+          ]
+        },
+        {
+          "label": "Investigar",
+          "line": "Algunos se vuelven investigación.",
+          "headline": "Investigación en BAISH Labs, desde Buenos Aires",
+          "stats": [
+            {
+              "key": "publications",
+              "label": "publicaciones de investigadores vinculados a BAISH"
+            }
+          ]
+        },
+        {
+          "label": "Despegar",
+          "line": "Y se abren hacia el resto del campo.",
+          "headline": "Fellowships y puestos de tiempo completo",
+          "stats": [
+            {
+              "key": "fellowshipPlacements",
+              "label": "ingresos a fellowships"
+            },
+            {
+              "key": "fullTimeRoles",
+              "label": "puestos de tiempo completo en AI safety"
+            }
+          ]
+        }
+      ]
+    },
+    "programs": {
+      "title": "Cursos y becas",
+      "columns": {
+        "program": "Programa",
+        "details": "Detalles",
+        "status": "Estado"
+      },
+      "status": {
+        "eoi_open": "Todavía no abrió. Dejá tu email y te avisamos cuando abra.",
+        "applications_open": "Inscripciones abiertas"
+      },
+      "cta": {
+        "eoi_open": "Avisame",
+        "applications_open": "Inscribite"
+      },
+      "chips": {
+        "technical-ai-safety-course": [
+          "Gratis",
+          "Presencial, Buenos Aires",
+          "Requiere buen nivel de inglés"
+        ],
+        "technical-ai-safety-project": [
+          "Gratis",
+          "Presencial, Buenos Aires",
+          "5+ horas por semana",
+          "Requiere buen nivel de inglés",
+          "Requiere el curso Technical AI Safety o equivalente"
+        ],
+        "frontier-ai-governance": [
+          "Gratis",
+          "Presencial, Buenos Aires"
+        ]
+      },
+      "aisar": {
+        "description": "Beca de investigación de seis meses con mentoría, en Buenos Aires, financiada por Coefficient Giving.",
+        "chips": [
+          "Estipendio: USD 700 o 1.400 por mes",
+          "20 o 40 horas por semana",
+          "Presupuesto de cómputo"
+        ],
+        "status": "La segunda cohorte empieza en octubre de 2026"
+      },
+      "call": {
+        "title": "¿No sabés cuál te conviene?",
+        "cta": "Agendá una llamada"
+      }
+    },
+    "stories": {
+      "eyebrow": "Adónde llevan los hilos",
+      "glossary": {
+        "TAIS": "Curso Technical AI Safety",
+        "EAG": "Conferencia Effective Altruism Global",
+        "ARENA": "Alignment Research Engineer Accelerator",
+        "SPAR": "Supervised Program for Alignment Research",
+        "MARS": "Mentorship for Alignment Research Students",
+        "CLR": "Center on Long-Term Risk"
+      }
+    },
+    "join": {
+      "eyebrow": "Tu hilo",
+      "title": "Empezá desde donde estás",
+      "description": "Cerca de la mitad de la gente en nuestros encuentros mensuales es nueva en AI safety.",
+      "steps": [
+        {
+          "title": "Vení a un encuentro mensual",
+          "text": "Eventos de networking y sociales de {socialAttendance} personas.",
+          "cta": "Ver el calendario en Luma",
+          "link": "https://luma.com/BAISH"
+        },
+        {
+          "title": "Sumate al grupo de WhatsApp",
+          "text": "{communityMembers} miembros compartiendo oportunidades, papers y eventos.",
+          "cta": "Unirme por WhatsApp",
+          "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
+        },
+        {
+          "title": "Recibí el newsletter",
+          "text": "Nuestras actividades, eventos y oportunidades, por email.",
+          "cta": "Suscribirme en Substack",
+          "link": "https://baish.substack.com/subscribe"
+        },
+        {
+          "title": "¿Prensa, universidades o aliados?",
+          "text": "Hablamos con periodistas y trabajamos con universidades, empresas y otras comunidades.",
+          "cta": "Escribinos",
+          "link": "/lab/contact"
+        }
+      ]
+    },
+    "announcement": {
+      "id": "courses-2026-09",
+      "eoi": "Las inscripciones para los próximos cursos todavía no abrieron. Dejá tu email y te avisamos cuando abran.",
+      "open": "Las inscripciones para nuestros cursos están abiertas.",
+      "cta": "Ver cursos",
+      "dismiss": "Cerrar aviso"
+    },
+    "band": {
+      "home": "BAISH"
+    },
+    "footer": {
+      "cta": "Sumate al grupo de WhatsApp",
+      "columns": {
+        "programs": "Programas",
+        "organization": "Organización",
+        "community": "Comunidad"
+      },
+      "links": {
+        "courses": "Cursos",
+        "aisar": "Beca AISAR",
+        "labs": "BAISH Labs",
+        "newsletter": "Newsletter",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram",
+        "linkedin": "LinkedIn"
+      },
+      "supportedBy": "Con el apoyo de"
+    },
+    "aboutPage": {
+      "jump": "En esta página",
+      "approachTitle": "En qué nos enfocamos",
+      "fullTimeOrgs": "Dónde trabajan hoy nuestros miembros",
+      "fellowships": "Fellowships y programas",
+      "readBio": "Leer bio",
+      "close": "Cerrar"
+    },
+    "contactPage": {
+      "routingTitle": "Con quién hablar",
+      "columns": {
+        "purpose": "Si querés",
+        "how": "La mejor forma"
+      },
+      "purposes": {
+        "course": {
+          "title": "Hacer un curso",
+          "text": "Cursos presenciales y gratuitos de BlueDot en Buenos Aires."
+        },
+        "community": {
+          "title": "Conocer a la comunidad",
+          "text": "Encuentros mensuales y un grupo de WhatsApp de {communityMembers} miembros."
+        },
+        "career": {
+          "title": "Pedir consejo de carrera"
+        },
+        "research": {
+          "title": "Colaborar en investigación"
+        },
+        "press": {
+          "title": "Prensa o alianzas",
+          "text": "Hablamos con periodistas sobre AI safety y el ecosistema argentino, y trabajamos con universidades, empresas y otras comunidades."
+        },
+        "follow": {
+          "title": "Seguirnos",
+          "text": "Eventos, oportunidades y novedades de la comunidad."
+        }
+      },
+      "writeToUs": "Escribinos"
+    }
   }
 }
