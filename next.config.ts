@@ -7,6 +7,10 @@ const withBundleAnalyzer = bundleAnalyzer({
 const projectRoot = process.cwd();
 
 const nextConfig: NextConfig = {
+  // Dev only: let Orca's per-worktree hosts (e.g. nextbaish.orca.localhost)
+  // load /_next dev resources. Without this the page renders without JS.
+  allowedDevOrigins: ["*.orca.localhost"],
+
   // Production optimizations
   // Note: Next.js 16+ uses SWC minification by default (no config needed)
   compiler: {
