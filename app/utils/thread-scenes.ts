@@ -125,10 +125,21 @@ const sceneY = (
     }
     // Threads converge into one twisted rope. "rope" is the same shape
     // without a stage accent, for page title bands.
-    case "braid":
-    case "rope": {
+    case "braid": {
       const rope = 0.5 + twist(0.035, 1.25, 0.7);
       return lerp(edgeLane, rope, smooth((a + 0.02) / 0.5));
+    }
+    // For wide, short bands (page titles): threads enter spread over the
+    // full height, twist into a thick rope across the middle, and fan out
+    // again on the right in a different order, so they visibly cross.
+    case "rope": {
+      const left = 0.08 + 0.84 * s + 0.03 * Math.sin(TAU * (0.5 * a + r1));
+      const right = 0.08 + 0.84 * r2 + 0.03 * Math.sin(TAU * (0.5 * a + r2));
+      const rope = 0.5 + (s - 0.5) * 0.14 + twist(0.09, 1.6, 0.7);
+      const tight =
+        smooth((a + 0.05) / 0.35) * (1 - smooth((a - 0.62) / 0.35));
+      const side = a < 0.5 ? left : right;
+      return lerp(side, rope, tight);
     }
     // A rope rises from below the copy and splits into three strands. Left
     // of the box it runs along the bottom edge, below the copy beside it.
@@ -152,8 +163,9 @@ const sceneY = (
     case "horizon": {
       return (
         0.5 +
-        (s - 0.5) * 0.5 +
-        0.03 * Math.sin(TAU * (0.6 * a + r1) + 0.2 * t)
+        (s - 0.5) * 0.6 +
+        0.08 * Math.sin(TAU * (0.7 * a + r1) + 0.2 * t) +
+        0.04 * Math.sin(TAU * (1.9 * a + r2))
       );
     }
     // A rope runs in below the box, rises into a knot near its left edge

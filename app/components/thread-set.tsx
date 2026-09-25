@@ -16,8 +16,7 @@ import type { SceneId } from "../utils/thread-scenes";
  * time on phones.
  */
 const SCENE_THREAD_SCALE: Partial<Record<SceneId, number>> = {
-  horizon: 0.45,
-  rope: 0.5,
+  horizon: 0.6,
 };
 import { setActiveStep, stepState } from "../utils/thread-steps";
 

@@ -4,9 +4,10 @@ import { SmartLink } from "./smart-link";
 import type { AppLocale } from "@/i18n.config";
 
 /**
- * Opening band shared by the inner lab pages: breadcrumb, serif title, lede,
- * optional jump links, and a strip below where the threads twist into a
- * rope, so every page opens with the same signature.
+ * Opening band shared by the inner lab pages: breadcrumb, serif title, lede
+ * and optional jump links on the left, and the signature thread animation in
+ * the right column, like the home hero. On phones the threads take a band
+ * below the text.
  */
 export function TitleBand({
   locale,
@@ -27,8 +28,9 @@ export function TitleBand({
 }) {
   return (
     <section className="lab-title-band">
-      <ThreadSet scene="rope" />
-      <div className="lab-wrap">
+      <ThreadSet scene="free" />
+      <div className="lab-wrap lab-title-grid">
+        <div className="lab-title-copy lab-veil">
         <p className="lab-kicker">
           <SmartLink href="/lab" locale={locale} className="lab-crumb">
             {homeLabel}
@@ -48,8 +50,18 @@ export function TitleBand({
             ))}
           </nav>
         )}
+        </div>
+        <div
+          className="lab-title-box lab-box-wide"
+          data-thread-box
+          aria-hidden="true"
+        />
       </div>
-      <div className="lab-band lab-band-title" data-thread-box aria-hidden="true" />
+      <div
+        className="lab-title-band-narrow lab-box-narrow"
+        data-thread-box
+        aria-hidden="true"
+      />
     </section>
   );
 }
