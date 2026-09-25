@@ -33,6 +33,7 @@ import {
   DEFAULT_OFFSET_X_MULTIPLIER,
   DEFAULT_OFFSET_Y_MULTIPLIER,
   PULSE_WIDTH,
+  PULSE_DEEPEN,
   GRAIN_AMPLITUDE,
   hslToRgb,
   computeLinearGaussianWeights,
@@ -125,6 +126,7 @@ const QUADS: u32 = ${quadsPerThread}u;
 const BEZ_F: f32 = ${BEZIER_CONTROL_FACTOR};
 const SHIMMER_AMP: f32 = ${SHIMMER_AMPLITUDE};
 const PULSE_W: f32 = ${PULSE_WIDTH};
+const PULSE_DEEPEN: f32 = ${PULSE_DEEPEN};
 
 fn threadPoint(t: u32, i: u32) -> vec2f {
   let flat = t * N + i;
@@ -219,9 +221,18 @@ ${GRADIENT_WGSL}
   let shimmer = 1.0 + SHIMMER_AMP * sin(in.lengthPos * 9.0 - globals.g0.w * 1.6 + m.info1.y);
   color *= shimmer;
 
-  // Flip pulse: a brief highlight traveling the thread after a direction flip.
+  // Pulse traveling the thread: positive intensity brightens (direction
+  // flips), negative deepens and turns opaque (pulses the page asks for).
   let pd = (in.lengthPos - m.info1.z) / PULSE_W;
-  color *= 1.0 + m.info1.w * exp(-pd * pd);
+  let pulse = exp(-pd * pd);
+  var alpha = m.info0.y;
+  if (m.info1.w >= 0.0) {
+    color *= 1.0 + m.info1.w * pulse;
+  } else {
+    let k = -m.info1.w * pulse;
+    color = mix(color, color * PULSE_DEEPEN, k);
+    alpha = mix(alpha, 1.0, k);
+  }
 
   // Feathered ribbon edges: a half-pixel coverage ramp in screen space.
   // (1 - |edge|) / fwidth(edge) is the distance to the ribbon edge in pixels;
@@ -231,7 +242,7 @@ ${GRADIENT_WGSL}
   let fw = max(fwidth(in.edge), 1e-4);
   let edgeAlpha = clamp((1.0 - abs(in.edge)) / fw + 0.5, 0.0, 1.0);
 
-  return vec4f(color, m.info0.y * edgeAlpha);
+  return vec4f(color, alpha * edgeAlpha);
 }
 `;
 };

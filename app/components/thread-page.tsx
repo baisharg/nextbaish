@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { pulseAll } from "../utils/thread-director";
 import { stepScrollY } from "../utils/thread-steps";
 
-const PULSE_THREADS = 8;
+const PULSE_THREADS = 14;
 
 /**
  * Page-level wiring for pages whose sections carry their own ThreadSets.

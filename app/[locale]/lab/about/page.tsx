@@ -116,6 +116,7 @@ export default async function LabAboutPage({
         <li key={member.id}>
           <BioDialog
             card={face}
+            label={member.name}
             openLabel={lab.aboutPage.readBio}
             closeLabel={lab.aboutPage.close}
           >

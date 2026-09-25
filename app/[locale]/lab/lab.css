@@ -579,7 +579,7 @@ html[data-threads="sections"] .timeline-background {
   transition: background-color 200ms ease;
 }
 
-.lab-trow[data-thread-pulse]:hover {
+.lab-trow:not(.lab-trow-head, .lab-trow-call):hover {
   background: rgb(255 255 255 / 0.55);
 }
 
@@ -1311,7 +1311,7 @@ html[data-threads="sections"] .timeline-background {
   transition: background-color 200ms ease;
 }
 
-.lab-route[data-thread-pulse]:hover {
+.lab-route:not(.lab-trow-head):hover {
   background: rgb(255 255 255 / 0.55);
 }
 

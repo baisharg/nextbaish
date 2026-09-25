@@ -9,11 +9,14 @@ import { useRef, type ReactNode } from "react";
  */
 export function BioDialog({
   card,
+  label,
   closeLabel,
   openLabel,
   children,
 }: {
   card: ReactNode;
+  /** Accessible name of the dialog, e.g. the person's name */
+  label: string;
   closeLabel: string;
   openLabel: string;
   children: ReactNode;
@@ -36,6 +39,7 @@ export function BioDialog({
       <dialog
         ref={ref}
         className="lab-dialog"
+        aria-label={label}
         onClick={(event) => {
           if (event.target === ref.current) ref.current.close();
         }}

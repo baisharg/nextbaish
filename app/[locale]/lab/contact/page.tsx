@@ -143,7 +143,6 @@ export default async function LabContactPage({
                 key={row.title}
                 className="lab-route"
                 role="row"
-                data-thread-pulse
               >
                 <div role="cell">
                   <h3 className="lab-trow-title">{row.title}</h3>

@@ -245,7 +245,6 @@ export default async function LabPage({
                   key={course.id}
                   className="lab-trow"
                   role="row"
-                  data-thread-pulse
                 >
                   <div role="cell">
                     <span className="lab-cell-eyebrow">{copy.eyebrow}</span>
@@ -290,7 +289,7 @@ export default async function LabPage({
               );
             })}
 
-            <div className="lab-trow" role="row" data-thread-pulse>
+            <div className="lab-trow" role="row">
               <div role="cell">
                 <span className="lab-cell-eyebrow">{t.aisar.eyebrow}</span>
                 <h3 className="lab-trow-title">{t.aisar.title}</h3>
@@ -352,7 +351,7 @@ export default async function LabPage({
             <p className="lab-section-desc">{t.successStories.description}</p>
           </header>
           <div className="lab-band" data-thread-box aria-hidden="true" />
-          <StoryList stories={stories} glossary={glossary} />
+          <StoryList stories={stories} glossary={glossary} pulse />
           <TransitionLink
             className="lab-link"
             href={withLocale(currentLocale, "/lab/about#impact")}

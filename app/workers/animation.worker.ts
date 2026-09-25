@@ -24,6 +24,7 @@ import {
   POINTER_STRENGTH_TAU_MS,
   PULSE_TRAVEL_MS,
   PULSE_AMPLITUDE,
+  DEEPEN_PULSE_AMPLITUDE,
   OVERLAY_OPACITY,
   SCENE_OVERLAY_OPACITY,
   PIVOT_X,
@@ -324,6 +325,25 @@ let pointerY = 0.5;
 let pointerStrength = 0;
 let lastAnimateNow = 0;
 
+// Reduced motion: time stands still, nothing flips or pulses, scene weights
+// snap to their targets, and a frame is drawn only when something changes.
+let stillMode = false;
+const STILL_TIME = 0;
+
+/** Finish any direction change in progress, so still frames are settled */
+const settleThreads = () => {
+  for (const thread of threads) {
+    thread.direction = thread.targetDirection;
+    thread.transitionStartTime = 0;
+    thread.manualPulseAt = 0;
+  }
+  transitioningThreadIds.clear();
+};
+
+const drawStill = () => {
+  if (stillMode && renderer) animate(STILL_TIME);
+};
+
 // Scene state, one per scene per page section. Weights ease toward the
 // targets sent by the page; boxes are taken as sent, so threads stay locked to
 // the DOM while scrolling. With no scenes the free animation runs untouched.
@@ -346,7 +366,7 @@ const sceneScratch = new Float32Array(SEGMENT_FACTORS.length * 2);
 const sceneAccum = new Float32Array(SEGMENT_FACTORS.length * 2);
 
 const advanceScenes = (dt: number) => {
-  const weightBlend = 1 - Math.exp(-dt / SCENE_WEIGHT_TAU_MS);
+  const weightBlend = stillMode ? 1 : 1 - Math.exp(-dt / SCENE_WEIGHT_TAU_MS);
   for (const scene of scenes) {
     scene.weight += (scene.targetWeight - scene.weight) * weightBlend;
   }
@@ -491,6 +511,7 @@ function animate(now: number) {
   if (isPaused || threads.length === 0) {
     return;
   }
+  if (stillMode) now = STILL_TIME;
 
   // Advance pointer easing (frame-rate independent)
   const dt = lastAnimateNow > 0 ? Math.min(now - lastAnimateNow, 100) : 16;
@@ -507,7 +528,7 @@ function animate(now: number) {
   if (scenes.length || sceneCoverage > 0) advanceScenes(dt);
 
   // Flip decision on interval
-  if (now - lastFlipCheck >= FLIP_INTERVAL_MS) {
+  if (!stillMode && now - lastFlipCheck >= FLIP_INTERVAL_MS) {
     lastFlipCheck = now;
     const decision = selectThreadToFlip(threads, now);
     if (decision) {
@@ -598,7 +619,10 @@ function animate(now: number) {
       const p = pulseElapsed / PULSE_TRAVEL_MS;
       pulseEnvelope = Math.sin(Math.PI * p);
       frame.pulsePos = p;
-      frame.pulseIntensity = PULSE_AMPLITUDE * pulseEnvelope;
+      frame.pulseIntensity =
+        pulseStart === thread.manualPulseAt
+          ? -DEEPEN_PULSE_AMPLITUDE * pulseEnvelope
+          : PULSE_AMPLITUDE * pulseEnvelope;
     } else {
       frame.pulsePos = 0;
       frame.pulseIntensity = 0;
@@ -698,6 +722,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
             kind: result.kind,
           };
           self.postMessage(ready);
+          drawStill();
         })
         .catch((error) => {
           console.error("[Timeline] Worker renderer init failed", error);
@@ -707,6 +732,8 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       // Initialize state (main thread will drive frames via "tick" messages)
       lastFlipCheck = performance.now();
       isPaused = false;
+      stillMode = data.still;
+      if (stillMode) settleThreads();
       break;
     }
 
@@ -759,14 +786,28 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
         }
       }
       scenes = next;
+      drawStill();
       break;
     }
 
     case "pulse": {
+      if (stillMode) break;
       // Worker and page clocks have different origins; use the tick clock.
       for (let n = 0; n < data.count && threads.length; n++) {
         threads[(Math.random() * threads.length) | 0].manualPulseAt =
           lastAnimateNow;
+      }
+      break;
+    }
+
+    case "still": {
+      stillMode = data.still;
+      if (stillMode) {
+        settleThreads();
+        drawStill();
+      } else {
+        lastAnimateNow = 0;
+        lastFlipCheck = performance.now();
       }
       break;
     }

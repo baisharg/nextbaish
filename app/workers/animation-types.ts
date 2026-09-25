@@ -39,6 +39,8 @@ export type InitMessage = {
     duration: number;
   }>;
   frameInterval: number;
+  /** Reduced motion: draw still frames only when something changes */
+  still: boolean;
 };
 
 export type WorkerMessage =
@@ -66,7 +68,9 @@ export type WorkerMessage =
       verticalEdges: [number, number];
     }
   // Send a highlight along `count` random threads
-  | { type: "pulse"; count: number };
+  | { type: "pulse"; count: number }
+  // Reduced motion on/off (see InitMessage.still)
+  | { type: "still"; still: boolean };
 
 // Worker -> main thread: which renderer backend was initialized.
 export type RendererReadyMessage = {

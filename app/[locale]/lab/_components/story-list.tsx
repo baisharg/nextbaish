@@ -17,14 +17,21 @@ function withGlossary(text: string, glossary: Record<string, string>) {
 export function StoryList({
   stories,
   glossary,
+  pulse = false,
 }: {
   stories: SuccessStory[];
   glossary: Record<string, string>;
+  /** Hovering a story pulses the threads; only where a set is in view */
+  pulse?: boolean;
 }) {
   return (
     <ul className="lab-stories">
       {stories.map((story) => (
-        <li key={story.id} className="lab-story" data-thread-pulse>
+        <li
+          key={story.id}
+          className="lab-story"
+          data-thread-pulse={pulse || undefined}
+        >
           <h3 className="lab-story-name">
             {story.link ? (
               <a href={story.link} target="_blank" rel="noopener noreferrer">

@@ -23,6 +23,7 @@ import {
   DEFAULT_OFFSET_X_MULTIPLIER,
   DEFAULT_OFFSET_Y_MULTIPLIER,
   PULSE_WIDTH,
+  PULSE_DEEPEN,
   GRAIN_AMPLITUDE,
   hslToRgb,
   computeLinearGaussianWeights,
@@ -68,9 +69,19 @@ const FRAGMENT_SHADER = `
     float clampedPos = clamp(v_gradientPos, 0.0, 1.0);
     float shade = smoothstep(0.93, 1.0, clampedPos) * 0.35;
     vec3 finalColor = mix(baseColor, vec3(0.0), shade);
+    // Positive intensity brightens (direction flips), negative deepens and
+    // turns opaque (pulses the page asks for); same as the WebGPU shader.
     float pd = (v_lengthPos - u_pulsePos) / ${PULSE_WIDTH};
-    finalColor *= 1.0 + u_pulseIntensity * exp(-pd * pd);
-    return vec4(finalColor, u_opacity);
+    float pulse = exp(-pd * pd);
+    float alpha = u_opacity;
+    if (u_pulseIntensity >= 0.0) {
+      finalColor *= 1.0 + u_pulseIntensity * pulse;
+    } else {
+      float k = -u_pulseIntensity * pulse;
+      finalColor = mix(finalColor, finalColor * ${PULSE_DEEPEN.toFixed(3)}, k);
+      alpha = mix(alpha, 1.0, k);
+    }
+    return vec4(finalColor, alpha);
   }
 
   void main() {

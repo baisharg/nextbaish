@@ -9,6 +9,16 @@ import {
   type SceneTarget,
 } from "../utils/thread-director";
 import type { SceneId } from "../utils/thread-scenes";
+
+/**
+ * Thread count per scene, relative to the device's full count. Thin divider
+ * bands read the same with far fewer threads, and every thread costs GPU
+ * time on phones.
+ */
+const SCENE_THREAD_SCALE: Partial<Record<SceneId, number>> = {
+  horizon: 0.45,
+  rope: 0.5,
+};
 import { setActiveStep, stepState } from "../utils/thread-steps";
 
 const TimelineThreads = dynamic(() => import("./timeline-threads"), {
@@ -53,7 +63,7 @@ export function ThreadSet({
           observer.disconnect();
         }
       },
-      { rootMargin: "100% 0px" },
+      { rootMargin: "50% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -97,6 +107,12 @@ export function ThreadSet({
       if (stepped) {
         const state = stepState(stepped.getBoundingClientRect(), stepIds.length);
         setActiveStep(stepped, state.active);
+        // Reduced motion: switch shapes at the step boundary instead of
+        // morphing as the page scrolls.
+        if (reducedMotion.matches) {
+          state.index = state.active;
+          state.morph = 0;
+        }
         targets = stepIds.map((id, i) => ({
           key: id,
           id,
@@ -116,6 +132,8 @@ export function ThreadSet({
       channel.setTargets(targets);
     };
 
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotion.addEventListener("change", update);
     update();
     const resize = new ResizeObserver(update);
     resize.observe(section);
@@ -128,6 +146,7 @@ export function ThreadSet({
       resize.disconnect();
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update);
+      reducedMotion.removeEventListener("change", update);
     };
   }, [channel, scene, stepsKey]);
 
@@ -139,7 +158,11 @@ export function ThreadSet({
       style={bleed ? ({ "--thread-bleed": bleed } as CSSProperties) : undefined}
     >
       {near && (
-        <TimelineThreads className="absolute inset-0" channel={channel} />
+        <TimelineThreads
+          className="absolute inset-0"
+          channel={channel}
+          threadScale={scene ? (SCENE_THREAD_SCALE[scene] ?? 1) : 1}
+        />
       )}
     </div>
   );

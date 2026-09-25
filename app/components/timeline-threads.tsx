@@ -264,6 +264,8 @@ type TimelineThreadsProps = {
    * site-wide background with the free animation and scroll parallax.
    */
   channel?: ThreadChannel;
+  /** Multiplier on the device's thread count, for small or faint sets */
+  threadScale?: number;
 };
 
 function TimelineThreadsComponent({
@@ -271,8 +273,28 @@ function TimelineThreadsComponent({
   style,
   overrideParams,
   channel,
+  threadScale = 1,
 }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  // Read by the tick loop, which is created once per renderer.
+  const stillRef = useRef(prefersReducedMotion);
+
+  // The site-wide background stays off while a page draws its own thread
+  // sets (ThreadPage sets html[data-threads="sections"]), instead of running
+  // a hidden worker and GPU context.
+  const [suppressed, setSuppressed] = useState(false);
+  useEffect(() => {
+    if (channel) return;
+    const root = document.documentElement;
+    const check = () => setSuppressed(root.dataset.threads === "sections");
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-threads"],
+    });
+    return () => observer.disconnect();
+  }, [channel]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const isVisibleRef = useRef(true);
@@ -288,7 +310,8 @@ function TimelineThreadsComponent({
 
   // Apply override parameters if provided
   const threadCount =
-    overrideParams?.threadCount ?? performanceProfile.threadCount;
+    overrideParams?.threadCount ??
+    Math.max(8, Math.round(performanceProfile.threadCount * threadScale));
   const blurStdDeviation =
     overrideParams?.blurStdDeviation ?? performanceProfile.blurStdDeviation;
   const effectiveEnableBlur = overrideParams?.enableBlur ?? true;
@@ -467,10 +490,34 @@ function TimelineThreadsComponent({
     isVisibleRef.current = isVisible;
   }, [isVisible]);
 
+  // Reduced motion: the worker draws still frames on its own, so the tick
+  // loop stops; turning it off again restarts the loop.
+  useEffect(() => {
+    stillRef.current = prefersReducedMotion;
+    const message: WorkerMessage = {
+      type: "still",
+      still: prefersReducedMotion,
+    };
+    animationWorkerRef.current?.postMessage(message);
+    if (
+      !prefersReducedMotion &&
+      isVisibleRef.current &&
+      tickFnRef.current &&
+      !rafIdRef.current
+    ) {
+      rafIdRef.current = requestAnimationFrame(tickFnRef.current);
+    }
+  }, [prefersReducedMotion]);
+
   // Restart or pause main-thread rAF loop when visibility changes
   useEffect(() => {
     if (!shouldAnimate) return;
-    if (isVisible && tickFnRef.current && !rafIdRef.current) {
+    if (
+      isVisible &&
+      !stillRef.current &&
+      tickFnRef.current &&
+      !rafIdRef.current
+    ) {
       rafIdRef.current = requestAnimationFrame(tickFnRef.current);
     }
     if (!isVisible && rafIdRef.current) {
@@ -573,6 +620,7 @@ function TimelineThreadsComponent({
     if (
       !canvasRef.current ||
       !shouldAnimate ||
+      suppressed ||
       threadsRef.current.length === 0
     ) {
       return;
@@ -675,6 +723,7 @@ function TimelineThreadsComponent({
           },
           threads: workerThreads,
           frameInterval,
+          still: stillRef.current,
         };
 
         worker.postMessage(initMessage, [offscreen]);
@@ -686,7 +735,7 @@ function TimelineThreadsComponent({
         const tick = (now: number) => {
           if (!mounted) return;
 
-          if (!isVisibleRef.current) {
+          if (!isVisibleRef.current || stillRef.current) {
             rafIdRef.current = null;
             return;
           }
@@ -737,7 +786,14 @@ function TimelineThreadsComponent({
     // resize crossing a width threshold, including a phone rotation) resets
     // threads to [], which unmounts the canvas. The replacement element needs a
     // fresh transferControlToOffscreen() or nothing ever draws on it again.
-  }, [shouldAnimate, blurStdDeviation, frameInterval, threads.length, rendererEpoch]);
+  }, [
+    shouldAnimate,
+    suppressed,
+    blurStdDeviation,
+    frameInterval,
+    threads.length,
+    rendererEpoch,
+  ]);
 
   const offsetXMultiplier = overrideParams?.offsetXMultiplier;
   const offsetYMultiplier = overrideParams?.offsetYMultiplier;
@@ -899,7 +955,7 @@ function TimelineThreadsComponent({
 
   // Keyed on the renderer's inputs so every re-initialization mounts a fresh
   // canvas: transferControlToOffscreen() can only be called once per element.
-  const rendererKey = `${threads.length}:${blurStdDeviation}:${frameInterval}:${rendererEpoch}`;
+  const rendererKey = `${threads.length}:${blurStdDeviation}:${frameInterval}:${rendererEpoch}:${suppressed}`;
 
   return (
     <div
