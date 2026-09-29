@@ -460,7 +460,10 @@ const writeFreePlaced = (
 };
 
 /** Width multiplier for a fully risen thread in the free scene */
-const RISING_WIDTH_BOOST = 2.2;
+const RISING_WIDTH_BOOST = 1.5;
+
+/** Thread sets draw thinner lines than the site-wide background */
+const SCENE_WIDTH_SCALE = 0.75;
 
 /** 0 = falling, 1 = rising, in between while a thread changes direction */
 const risingAmount = (thread: WorkerThreadState, now: number) => {
@@ -636,7 +639,7 @@ function animate(now: number) {
     // Update reusable frame entry (no allocations)
     const frame = threadFrames[i];
     frame.points = thread.floatingPoints;
-    frame.width = thread.weight;
+    frame.width = scenes.length ? thread.weight * SCENE_WIDTH_SCALE : thread.weight;
     if (freeScene) {
       // The free animation keeps its meaning: falling futures fade to dark at
       // the floor, rising ones stay bright. Gradient bounds follow the same
@@ -683,10 +686,11 @@ function animate(now: number) {
       thread.opacity * (opacityScale + (1 - opacityScale) * pulseEnvelope);
 
     // In the free scene the rising threads are the hopeful futures, so they
-    // stand out: thicker and fully opaque, easing in as a thread turns up.
+    // stand out: a little thicker and fully opaque, easing in as a thread
+    // turns up.
     if (freeScene) {
       const rising = risingAmount(thread, now);
-      frame.width = thread.weight * (1 + (RISING_WIDTH_BOOST - 1) * rising);
+      frame.width *= 1 + (RISING_WIDTH_BOOST - 1) * rising;
       frame.opacity += (1 - frame.opacity) * rising;
     }
   }
