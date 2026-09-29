@@ -353,11 +353,6 @@ html[data-threads="sections"] .timeline-background {
   padding: 1rem 1.25rem 1.25rem;
 }
 
-/* First column lines up with the heading above; the rest sit off the rule */
-.lab-router li:first-child .lab-router-link {
-  padding-left: 0;
-}
-
 /* Hover: the cell's stretch of the top rule turns accent, like the rail */
 .lab-router-link::before {
   content: "";
@@ -936,8 +931,8 @@ html[data-threads="sections"] .timeline-background {
     border-top: 1px solid var(--lab-rule);
   }
 
-  .lab-router li:nth-child(3) .lab-router-link {
-    padding-left: 0;
+  .lab-router-link {
+    padding-inline: 1rem;
   }
 
   .lab-row-item {
