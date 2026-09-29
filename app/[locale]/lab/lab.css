@@ -295,11 +295,9 @@ html[data-threads="sections"] .timeline-background {
 /* ---------- hero ---------- */
 
 .lab-hero {
-  min-height: calc(100svh - 80px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 2.5rem;
+  gap: clamp(2.5rem, 6vh, 4.5rem);
   padding-block: clamp(2rem, 7vh, 5rem) 2rem;
 }
 
@@ -336,6 +334,10 @@ html[data-threads="sections"] .timeline-background {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top: 1px solid var(--lab-ink);
+  /* Frosted, like the story cards: the hero threads run behind it softly */
+  background: rgb(var(--lab-bg) / 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .lab-router li + li {

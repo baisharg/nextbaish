@@ -461,8 +461,12 @@ const writeFreePlaced = (
 /** Width multiplier for a fully risen thread in the free scene */
 const RISING_WIDTH_BOOST = 1.5;
 
-/** Thread sets draw thinner lines than the site-wide background */
+/**
+ * Thread sets draw thinner lines than the site-wide background; the free
+ * animation (hero and title bands) stays closer to the background's weight.
+ */
 const SCENE_WIDTH_SCALE = 0.75;
+const FREE_WIDTH_SCALE = 0.9;
 
 /** 0 = falling, 1 = rising, in between while a thread changes direction */
 const risingAmount = (thread: WorkerThreadState, now: number) => {
@@ -638,7 +642,11 @@ function animate(now: number) {
     // Update reusable frame entry (no allocations)
     const frame = threadFrames[i];
     frame.points = thread.floatingPoints;
-    frame.width = scenes.length ? thread.weight * SCENE_WIDTH_SCALE : thread.weight;
+    frame.width = freeScene
+      ? thread.weight * FREE_WIDTH_SCALE
+      : scenes.length
+        ? thread.weight * SCENE_WIDTH_SCALE
+        : thread.weight;
     if (freeScene) {
       // The free animation keeps its meaning: falling futures fade to dark at
       // the floor, rising ones stay bright. Gradient bounds follow the same

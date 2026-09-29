@@ -17,7 +17,17 @@ import type { SceneId } from "../utils/thread-scenes";
  */
 const SCENE_THREAD_SCALE: Partial<Record<SceneId, number>> = {
   horizon: 0.6,
+  // The hero and title bands: a fuller bundle, like the old background
+  free: 1.4,
 };
+
+/**
+ * On wide layouts the free animation spans most of its section's height
+ * instead of only its box (the square beside the copy): 0 keeps the box's
+ * edge, 1 reaches the section's. Phones keep the band under the copy.
+ */
+const FREE_FILL_TOP = 0.85;
+const FREE_FILL_BOTTOM = 0.7;
 import { setActiveStep, stepState } from "../utils/thread-steps";
 
 const TimelineThreads = dynamic(() => import("./timeline-threads"), {
@@ -95,7 +105,14 @@ export function ThreadSet({
         "[data-thread-box]",
       )) {
         const r = box.getBoundingClientRect();
-        if (r.width > 0 && r.height > 0) return rel(r);
+        if (r.width > 0 && r.height > 0) {
+          const b = rel(r);
+          if (scene === "free" && box.classList.contains("lab-box-wide")) {
+            b[1] -= b[1] * FREE_FILL_TOP;
+            b[3] += (1 - b[3]) * FREE_FILL_BOTTOM;
+          }
+          return b;
+        }
       }
       return rel(section.getBoundingClientRect());
     };
