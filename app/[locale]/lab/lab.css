@@ -148,8 +148,9 @@ html[data-threads="sections"] .timeline-background {
 .lab-display {
   font-family: var(--font-source-serif), Georgia, serif;
   font-weight: 600;
-  font-size: clamp(3rem, 7.2vw, 6.25rem);
-  line-height: 0.98;
+  /* Sized for a full-sentence headline (about 7-10 words) */
+  font-size: clamp(2.6rem, 5.3vw, 4.75rem);
+  line-height: 1;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
