@@ -2,6 +2,7 @@
 "use no memo";
 
 import Image from "next/image";
+import Link from "next/link";
 import { TransitionLink } from "./transition-link";
 import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useRef, useState, type RefObject } from "react";
@@ -255,7 +256,8 @@ export default function MobileMenu({
             {LANGUAGES.map((lang) => {
               const active = lang.code === locale;
               return (
-                <TransitionLink
+                // Plain link: see the language switch in header.tsx
+                <Link
                   key={lang.code}
                   href={buildLangSwitchHref(pathname, lang.code)}
                   className="mm-lang-option"
@@ -265,7 +267,7 @@ export default function MobileMenu({
                   onClick={onClose}
                 >
                   {lang.label}
-                </TransitionLink>
+                </Link>
               );
             })}
           </div>

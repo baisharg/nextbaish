@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { TransitionLink } from "./transition-link";
 import { ScrollToButton } from "./scroll-to-button";
 import { useEffect, useRef, useState } from "react";
@@ -306,8 +307,12 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               {LANGUAGES.map((lang) => {
                 const active = lang.code === locale;
                 const langHref = buildLangSwitchHref(pathname, lang.code);
+                // A plain link, not a view transition: switching locale
+                // remounts the [locale] layout, including the ViewTransitions
+                // provider, so the transition never finishes and the browser
+                // shows the old page until it times out (4s in Chrome).
                 return (
-                  <TransitionLink
+                  <Link
                     key={lang.code}
                     href={langHref}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
@@ -317,7 +322,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                     }`}
                   >
                     {t.languages[lang.code]}
-                  </TransitionLink>
+                  </Link>
                 );
               })}
             </div>

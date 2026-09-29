@@ -775,6 +775,7 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       createRenderer({
         canvas: data.canvas,
         config: data.config,
+        skipWebGPU: data.skipWebGPU,
       })
         .then((result) => {
           renderer?.dispose();

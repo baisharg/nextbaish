@@ -41,6 +41,8 @@ export type InitMessage = {
   frameInterval: number;
   /** Reduced motion: draw still frames only when something changes */
   still: boolean;
+  /** An earlier canvas in this page fell back to WebGL; don't retry WebGPU */
+  skipWebGPU?: boolean;
 };
 
 export type WorkerMessage =

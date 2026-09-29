@@ -208,6 +208,22 @@ const createThread = (id: number, totalThreads: number): ThreadState => {
 };
 
 // Worker → ThreadState (minimal conversion for worker handoff)
+/**
+ * Kept for the life of the document: generated thread data per thread count,
+ * and whether any canvas has started animating. Client navigations remount
+ * the canvases (switching language remounts the whole tree), and with these
+ * they redraw straight away instead of regenerating threads and waiting for
+ * the browser to go idle again. The idle wait only protects the first load.
+ */
+const generatedThreads = new Map<number, WorkerThreadData[]>();
+let startedOnce = false;
+/**
+ * Some browsers expose WebGPU but have no usable adapter (headless Chrome,
+ * many Android GPUs). Finding out takes a second per canvas, so after the
+ * first fallback the other canvases go straight to WebGL.
+ */
+let webgpuFailed = false;
+
 const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
   const profile: PathProfile = {
     neutral: data.profileNeutral,
@@ -408,6 +424,14 @@ function TimelineThreadsComponent({
       syncThreads(mainThreads);
     };
 
+    const cached = generatedThreads.get(totalThreads);
+    if (cached) {
+      syncThreads(cached.map(workerDataToThreadState));
+      return () => {
+        mounted = false;
+      };
+    }
+
     try {
       worker = new Worker(
         new URL("../workers/thread-generator.worker.ts", import.meta.url),
@@ -421,6 +445,7 @@ function TimelineThreadsComponent({
         if (!mounted) return;
         if (event.data.type === "threadsGenerated") {
           if (fallbackTimeout) clearTimeout(fallbackTimeout);
+          generatedThreads.set(totalThreads, event.data.threads);
           const workerThreads = event.data.threads.map(workerDataToThreadState);
           syncThreads(workerThreads);
         }
@@ -445,6 +470,15 @@ function TimelineThreadsComponent({
   // Defer animation until page is fully loaded / idle
   useEffect(() => {
     if (threads.length === 0) return;
+    if (startedOnce) {
+      setShouldAnimate(true);
+      return;
+    }
+
+    const start = () => {
+      startedOnce = true;
+      setShouldAnimate(true);
+    };
 
     const enable = () => {
       const requestIdle =
@@ -460,9 +494,9 @@ function TimelineThreadsComponent({
           : undefined;
 
       if (typeof requestIdle === "function") {
-        requestIdle(() => setShouldAnimate(true), { timeout: 2000 });
+        requestIdle(start, { timeout: 2000 });
       } else {
-        setTimeout(() => setShouldAnimate(true), 100);
+        setTimeout(start, 100);
       }
     };
 
@@ -674,6 +708,7 @@ function TimelineThreadsComponent({
         // container so the active renderer is inspectable in DevTools.
         worker.onmessage = (event: MessageEvent<RendererReadyMessage>) => {
           if (event.data?.type === "rendererReady") {
+            if (event.data.kind === "webgl") webgpuFailed = true;
             containerRef.current?.setAttribute("data-renderer", event.data.kind);
             logTimelineDebug("Renderer:", event.data.kind);
           }
@@ -724,6 +759,7 @@ function TimelineThreadsComponent({
           threads: workerThreads,
           frameInterval,
           still: stillRef.current,
+          skipWebGPU: webgpuFailed,
         };
 
         worker.postMessage(initMessage, [offscreen]);
