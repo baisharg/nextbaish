@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { withLocale, buildLangSwitchHref } from "@/app/utils/locale";
+import { publicPathname } from "@/app/lab-routes";
 import { useIsomorphicLayoutEffect } from "@/app/hooks/use-isomorphic-layout-effect";
 import { usePrefersReducedMotion } from "@/app/hooks/use-prefers-reduced-motion";
 import { usePrefetchAlternateLocale } from "@/app/hooks/use-prefetch-alternate-locale";
@@ -52,8 +53,16 @@ const rafThrottle = <T extends (...args: unknown[]) => void>(
   };
 };
 
+/** How far down the page the reader is, for the progress thread (0 to 1) */
+const setScrollProgress = (header: HTMLElement | null) => {
+  if (!header) return;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+  header.style.setProperty("--scroll-progress", progress.toFixed(4));
+};
+
 const HeaderComponent = ({ locale, t }: HeaderProps) => {
-  const pathname = usePathname() ?? "/";
+  const pathname = publicPathname(usePathname() ?? "/");
   const restRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const firstRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [restWidths, setRestWidths] = useState<number[]>([]);
@@ -64,6 +73,8 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
   const [isNarrow, setIsNarrow] = useState(false);
   const [isCramped, setIsCramped] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -77,6 +88,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
+          setScrollProgress(headerRef.current);
           const direction =
             currentScrollY > lastScrollY.current ? "down" : "up";
 
@@ -100,6 +112,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
       }
     };
 
+    setScrollProgress(headerRef.current);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrolled]);
@@ -171,6 +184,23 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
     setMobileMenuOpen(false);
   };
 
+  // A single highlight slides to whichever link is hovered or focused. It
+  // appears in place (only opacity animates) and slides once visible.
+  const moveIndicator = (event: { currentTarget: HTMLElement }) => {
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
+    const link = event.currentTarget;
+    indicator.style.transitionProperty =
+      indicator.dataset.visible === "true" ? "" : "opacity";
+    indicator.style.setProperty("--x", `${link.offsetLeft}px`);
+    indicator.style.setProperty("--w", `${link.offsetWidth}px`);
+    indicator.dataset.visible = "true";
+  };
+
+  const hideIndicator = () => {
+    if (indicatorRef.current) indicatorRef.current.dataset.visible = "false";
+  };
+
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
     { href: withLocale(locale, "/activities"), label: t.nav.activities },
@@ -181,14 +211,13 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
 
   return (
     <header
+      ref={headerRef}
       className="header-container sticky top-0 z-20 px-6 sm:px-10"
       data-scrolled={scrolled}
       data-reduced-motion={prefersReducedMotion}
     >
-      <div
-        className="header-inner mx-auto border-slate-200"
-        data-scrolled={scrolled}
-      >
+      <div className="header-inner mx-auto" data-scrolled={scrolled}>
+        <span className="header-progress" aria-hidden="true" />
         <div className="flex items-center justify-between gap-6">
           <TransitionLink
             href={withLocale(locale, "/")}
@@ -219,7 +248,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
               }}
             >
               <div
-                className="title-words flex items-center font-semibold text-slate-900 text-base sm:text-lg"
+                className="title-words flex items-center font-semibold text-base sm:text-lg"
                 data-collapsed={scrolled || isNarrow || isCramped}
               >
                 {TITLE_WORDS.map((word, index) => {
@@ -275,23 +304,30 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             </div>
           </TransitionLink>
           <nav
-            className="header-nav hidden md:flex items-center text-sm font-medium text-slate-600"
+            className="header-nav hidden md:flex items-center"
             data-scrolled={scrolled}
+            onMouseLeave={hideIndicator}
+            onBlur={hideIndicator}
           >
+            <span
+              ref={indicatorRef}
+              className="header-nav-indicator"
+              aria-hidden="true"
+            />
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                pathname === link.href || pathname.startsWith(`${link.href}/`);
               const pathSegment =
                 link.href.split("/").filter(Boolean).pop() || "";
               const transitionClass = `header-nav-${pathSegment}`;
               return (
                 <TransitionLink
                   key={link.href}
-                  className={`relative transition-colors after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-[var(--color-accent-primary)] after:transition-all after:duration-300 ${transitionClass} ${
-                    isActive
-                      ? "text-[var(--color-accent-primary)] font-semibold after:w-full"
-                      : "hover:text-slate-900 after:w-0 hover:after:w-full"
-                  }`}
+                  className={`header-nav-link ${transitionClass}`}
+                  aria-current={isActive ? "page" : undefined}
                   href={link.href}
+                  onMouseEnter={moveIndicator}
+                  onFocus={moveIndicator}
                 >
                   {link.label}
                 </TransitionLink>
@@ -300,7 +336,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
           </nav>
           <div className="flex items-center gap-3 flex-shrink-0">
             <div
-              className={`rounded-full border border-slate-200 bg-white/70 p-1 transition-all duration-500 ${
+              className={`header-lang ${
                 scrolled ? "hidden sm:flex" : "hidden md:flex"
               }`}
             >
@@ -315,29 +351,31 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                   <Link
                     key={lang.code}
                     href={langHref}
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                      active
-                        ? "bg-[var(--color-accent-primary)] text-white shadow-sm pointer-events-none"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
+                    className="header-lang-option"
+                    aria-current={active ? "true" : undefined}
+                    aria-label={t.languages[lang.code]}
+                    lang={lang.code}
                   >
-                    {t.languages[lang.code]}
+                    {lang.code.toUpperCase()}
                   </Link>
                 );
               })}
             </div>
             <ScrollToButton
-              className="header-cta hidden sm:inline-flex rounded-full bg-[var(--color-accent-primary)] font-semibold text-white shadow-md hover:bg-[var(--color-accent-primary-hover)] whitespace-nowrap"
+              className="header-cta hidden sm:inline-flex"
               data-scrolled={scrolled}
               targetId="get-involved"
               navigateTo={withLocale(locale, "/")}
             >
               {t.cta}
+              <span className="header-cta-arrow" aria-hidden="true">
+                →
+              </span>
             </ScrollToButton>
 
             <button
               ref={mobileMenuButtonRef}
-              className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 header-menu-btn"
+              className="header-menu-btn md:hidden flex flex-col justify-center items-center"
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu}
               aria-expanded={mobileMenuOpen}
@@ -345,7 +383,7 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
             >
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span
-                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  className="header-menu-line"
                   style={{
                     transform: mobileMenuOpen
                       ? "rotate(45deg) translateY(7px)"
@@ -353,13 +391,13 @@ const HeaderComponent = ({ locale, t }: HeaderProps) => {
                   }}
                 />
                 <span
-                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  className="header-menu-line"
                   style={{
                     opacity: mobileMenuOpen ? 0 : 1,
                   }}
                 />
                 <span
-                  className="w-full h-0.5 bg-slate-900 transition-all duration-300"
+                  className="header-menu-line"
                   style={{
                     transform: mobileMenuOpen
                       ? "rotate(-45deg) translateY(-7px)"

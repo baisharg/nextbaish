@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { LAB_ROUTES, SERVE_LAB_AT_MAIN_ROUTES } from "./app/lab-routes";
 const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const withBundleAnalyzer = bundleAnalyzer({
@@ -6,25 +7,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 const projectRoot = process.cwd();
 
-/**
- * Redesign prototype: while this is on, the main routes serve the pages in
- * app/[locale]/lab (the original pages stay in the code, unused). Set to
- * false to get the original pages back at the main routes; /lab keeps
- * working either way.
- */
-const SERVE_LAB_AT_MAIN_ROUTES = true;
-
-const LAB_ROUTES: [live: string, lab: string][] = [
-  ["", "/lab"],
-  ["/about", "/lab/about"],
-  ["/activities", "/lab/programs"],
-  ["/research", "/lab/research"],
-  ["/resources", "/lab/resources"],
-  ["/contact", "/lab/contact"],
-];
-
 const nextConfig: NextConfig = {
-  // beforeFiles, because app/[locale]/* would otherwise match first
+  // Redesign prototype routes (app/lab-routes.ts). beforeFiles, because
+  // app/[locale]/* would otherwise match first.
   async rewrites() {
     return {
       beforeFiles: SERVE_LAB_AT_MAIN_ROUTES
