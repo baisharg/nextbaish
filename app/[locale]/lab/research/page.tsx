@@ -309,13 +309,13 @@ export default async function LabResearchPage({
         <div className="lab-wrap lab-join-grid">
           <div className="lab-join-copy lab-veil">
             <p className="lab-kicker">{t.expressInterest.eyebrow}</p>
-            <h2 className="lab-h2">{labs.ctaTitle}</h2>
-            <p className="lab-section-desc">{labs.ctaDescription}</p>
+            <h2 className="lab-h2">{page.closingTitle}</h2>
+            <p className="lab-section-desc">{page.closingDesc}</p>
             <ol className="lab-ladder">
               <li>
                 <span className="lab-ladder-num" aria-hidden="true">01</span>
                 <div>
-                  <h3>{t.expressInterest.title}</h3>
+                  <h3>{page.interestTitle}</h3>
                   <p>{t.expressInterest.description}</p>
                 </div>
                 <SmartLink
@@ -330,7 +330,7 @@ export default async function LabResearchPage({
               <li>
                 <span className="lab-ladder-num" aria-hidden="true">02</span>
                 <div>
-                  <h3>{t.cta.title}</h3>
+                  <h3>{page.callTitle}</h3>
                   <p>{t.cta.description}</p>
                 </div>
                 <span className="lab-ladder-links">

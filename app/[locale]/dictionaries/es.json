@@ -2061,8 +2061,8 @@
           "text": "Argentina tiene el talento, las universidades y la cultura de investigación. Lo que faltaba era un lugar donde entrar a AI safety, y seguir haciéndolo, sin tener que irse del país."
         },
         {
-          "label": "Cómo trabajamos",
-          "text": "Cursos presenciales gratuitos, encuentros mensuales, un laboratorio de investigación y acompañamiento 1 a 1 de carrera. Fundado en 2024, con un equipo de voluntarios y un pequeño staff pago, junto a nuestra beca hermana, AISAR."
+          "label": "Quién lo lleva adelante",
+          "text": "Fundado en 2024. Lo sostienen voluntarios y un pequeño equipo rentado, junto a nuestra beca hermana, AISAR."
         }
       ]
     },
@@ -2071,7 +2071,7 @@
       "steps": [
         {
           "label": "Aprender",
-          "line": "Cada persona arranca desde un lugar distinto.",
+          "line": "Cada persona llega desde un lugar distinto.",
           "headline": "Cursos presenciales gratuitos, con BlueDot",
           "stats": [
             {
@@ -2082,11 +2082,12 @@
               "key": "courseRecommendScore",
               "label": "de probabilidad de recomendar"
             }
-          ]
+          ],
+          "body": "Technical AI Safety, el Technical AI Safety Project y Frontier AI Governance, dictados en persona en Buenos Aires."
         },
         {
           "label": "Pertenecer",
-          "line": "Después, los hilos se encuentran.",
+          "line": "Acá, los hilos se encuentran.",
           "headline": "Una comunidad que se junta todos los meses",
           "stats": [
             {
@@ -2097,7 +2098,8 @@
               "key": "socialAttendance",
               "label": "personas en cada encuentro mensual"
             }
-          ]
+          ],
+          "body": "Encuentros mensuales, un retiro anual, hackathons y un grupo de WhatsApp donde se comparten oportunidades y papers."
         },
         {
           "label": "Investigar",
@@ -2108,7 +2110,8 @@
               "key": "publications",
               "label": "publicaciones de investigadores vinculados a BAISH"
             }
-          ]
+          ],
+          "body": "Nuestro brazo de investigación: un grupo con base en Buenos Aires que trabaja en interpretabilidad y control, junto a la beca AISAR."
         },
         {
           "label": "Despegar",
@@ -2123,7 +2126,8 @@
               "key": "fullTimeRoles",
               "label": "puestos de tiempo completo en AI safety"
             }
-          ]
+          ],
+          "body": "Acompañamiento de carrera 1 a 1, ayuda para preparar postulaciones y viajes a conferencias como EAG."
         }
       ]
     },
@@ -2172,7 +2176,8 @@
       "call": {
         "title": "¿No sabés cuál te conviene?",
         "cta": "Agendá una llamada"
-      }
+      },
+      "description": "Cursos presenciales gratuitos junto a BlueDot Impact y una beca de investigación con estipendio. Los cursos seleccionan participantes mediante una postulación corta."
     },
     "stories": {
       "eyebrow": "Adónde llevan los hilos",
@@ -2183,7 +2188,8 @@
         "SPAR": "Supervised Program for Alignment Research",
         "MARS": "Mentorship for Alignment Research Students",
         "CLR": "Center on Long-Term Risk"
-      }
+      },
+      "title": "Dónde están hoy nuestros miembros"
     },
     "join": {
       "eyebrow": "Tu hilo",
@@ -2192,7 +2198,7 @@
       "steps": [
         {
           "title": "Vení a un encuentro mensual",
-          "text": "Eventos de networking y sociales de {socialAttendance} personas.",
+          "text": "Todos los meses en Buenos Aires, con {socialAttendance} personas.",
           "cta": "Ver el calendario en Luma",
           "link": "https://luma.com/BAISH"
         },
@@ -2285,10 +2291,14 @@
       "writeToUs": "Escribinos"
     },
     "researchPage": {
-      "baishAuthor": "Investigador/a vinculado/a a BAISH",
+      "baishAuthor": "Persona investigadora vinculada a BAISH",
       "jumpLabs": "BAISH Labs",
       "jumpDirections": "Líneas de investigación",
-      "jumpPublications": "Publicaciones"
+      "jumpPublications": "Publicaciones",
+      "closingTitle": "Participá en la investigación",
+      "closingDesc": "Ya sea que quieras investigar con nosotros o apoyar el trabajo del lab.",
+      "interestTitle": "Contanos tus intereses de investigación",
+      "callTitle": "Charlalo con uno de los directores"
     },
     "programsPage": {
       "jumpCourses": "Cursos",
@@ -2301,8 +2311,9 @@
     "resourcesPage": {
       "jumpEvidence": "La evidencia",
       "jumpRisks": "Los riesgos",
-      "jumpStudy": "Autoestudio",
-      "nextTitle": "Por dónde seguir"
+      "jumpStudy": "Para profundizar",
+      "nextTitle": "Por dónde seguir",
+      "studyTitle": "Para profundizar"
     }
   }
 }

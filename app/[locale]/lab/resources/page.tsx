@@ -59,7 +59,6 @@ export default async function LabResourcesPage({
   const relatedItems: Related[] = [
     related.eventsTraining,
     related.aiDigest,
-    related.agenticCoding,
   ];
 
   return (
@@ -183,9 +182,8 @@ export default async function LabResourcesPage({
       <section className="lab-section lab-section-tight" id="study">
         <div className="lab-wrap">
           <header className="lab-section-head">
-            <h2 className="lab-h2">{study.title}</h2>
+            <h2 className="lab-h2">{page.studyTitle}</h2>
             <p className="lab-section-desc">{study.description}</p>
-            <p className="lab-legend">{study.lastUpdated}</p>
           </header>
           <div className="lab-study">
             <div>

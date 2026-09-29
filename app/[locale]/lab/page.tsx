@@ -191,7 +191,7 @@ export default async function LabPage({
                     <p className="lab-step-line">{steps[i].line}</p>
                     <h3 className="lab-step-title">{steps[i].headline}</h3>
                     <p className="lab-step-body">
-                      {fillImpact(item.description)}
+                      {steps[i].body}
                     </p>
                     <dl className="lab-step-stats">
                       {steps[i].stats.map((stat) => (
@@ -228,7 +228,7 @@ export default async function LabPage({
             <p className="lab-kicker">{t.activities.eyebrow}</p>
             <h2 className="lab-h2">{lab.programs.title}</h2>
             <p className="lab-section-desc">
-              {dict.activities.courses.description}
+              {lab.programs.description}
             </p>
           </header>
           <div className="lab-table" role="table">
@@ -347,7 +347,7 @@ export default async function LabPage({
         <div className="lab-wrap">
           <header className="lab-section-head">
             <p className="lab-kicker">{lab.stories.eyebrow}</p>
-            <h2 className="lab-h2">{t.successStories.title}</h2>
+            <h2 className="lab-h2">{lab.stories.title}</h2>
             <p className="lab-section-desc">{t.successStories.description}</p>
           </header>
           <div className="lab-band" data-thread-box aria-hidden="true" />

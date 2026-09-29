@@ -116,7 +116,7 @@ export default async function LabAboutPage({
           <header className="lab-section-head">
             <p className="lab-kicker">{t.impact.eyebrow}</p>
             <h2 className="lab-h2">{t.impact.title}</h2>
-            <p className="lab-section-desc">{fillImpact(t.whoWeAre.paragraph2)}</p>
+            <p className="lab-section-desc">{t.impact.description}</p>
           </header>
 
           <dl className="lab-ledger">
@@ -241,7 +241,7 @@ export default async function LabAboutPage({
             <h2 className="lab-h2">{lab.aboutPage.approachTitle}</h2>
           </header>
           <dl className="lab-rows">
-            {[t.ourApproach.focusAreas, t.ourApproach.contribution].map(
+            {[t.ourApproach.focusAreas].map(
               (block) => (
                 <div key={block.title} className="lab-row-item">
                   <dt>{block.title}</dt>
