@@ -134,3 +134,18 @@
 .header-container[data-reduced-motion="true"] {
   transition-duration: 0.01s !important;
 }
+
+/* Shown while the mobile menu's code loads on first open; matches its
+   background (mobile-menu.css) */
+.mm-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: #f2eff8;
+}
+
+@media (min-width: 768px) {
+  .mm-loading {
+    display: none;
+  }
+}

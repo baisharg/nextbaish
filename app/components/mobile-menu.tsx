@@ -9,13 +9,25 @@ import { createPortal } from "react-dom";
 import type { AppLocale } from "@/i18n.config";
 import type { Dictionary } from "@/app/[locale]/dictionaries";
 import { buildLangSwitchHref, withLocale } from "@/app/utils/locale";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import "./mobile-menu.css";
 
 const LANGUAGES = [
-  { code: "en", label: "English" },
-  { code: "es", label: "Español" },
+  { code: "en", label: "EN" },
+  { code: "es", label: "ES" },
 ] as const;
+
+/**
+ * The site's thread motif, drawn once as a still: threads cross at "today",
+ * most fall away and one rises. viewBox units; stretched to the menu width.
+ */
+const FALLING = Array.from({ length: 14 }, (_, i) => {
+  const t = i / 13;
+  const y0 = 16 + t * 20;
+  const kink = 29 + ((i * 7) % 5) - 2;
+  const end = 48 + t * 10;
+  return `M0 ${y0.toFixed(1)} C18 ${y0.toFixed(1)} 26 ${kink} 40 ${kink} C58 ${kink} 70 ${end.toFixed(1)} 100 ${end.toFixed(1)}`;
+});
+const RISING = "M0 24 C18 24 26 29 40 29 C60 29 74 6 100 3";
 
 interface MobileMenuProps {
   locale: AppLocale;
@@ -64,8 +76,10 @@ export default function MobileMenu({
     });
   };
 
-  // Focus trap, escape handling, and focus return
+  // Focus trap, escape handling, and focus return. Waits for the portal to
+  // mount, so the close button exists on the first open too.
   useEffect(() => {
+    if (!mounted) return;
     if (isOpen) {
       wasOpenRef.current = true;
       previousFocusedRef.current =
@@ -122,9 +136,9 @@ export default function MobileMenu({
       wasOpenRef.current = false;
       previousFocusedRef.current = null;
     }
-  }, [isOpen, onClose, triggerRef]);
+  }, [mounted, isOpen, onClose, triggerRef]);
 
-  // Trigger animation after mount for smooth slide-in
+  // Trigger animation after mount for smooth entry
   useEffect(() => {
     if (isOpen) {
       requestAnimationFrame(() => {
@@ -147,6 +161,7 @@ export default function MobileMenu({
     };
   }, [isOpen]);
 
+  const homeHref = withLocale(locale, "/");
   const navLinks = [
     { href: withLocale(locale, "/about"), label: t.nav.about },
     { href: withLocale(locale, "/activities"), label: t.nav.activities },
@@ -158,154 +173,114 @@ export default function MobileMenu({
   if (!mounted) return null;
 
   const menuContent = (
-    <>
-      {/* Backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-slate-900/20 backdrop-blur-sm md:hidden"
+    <div
+      ref={dialogRef}
+      className="mm-sheet"
+      data-open={shouldAnimate || undefined}
+      role="dialog"
+      aria-modal={isOpen ? true : undefined}
+      aria-labelledby="mobile-menu-title"
+      aria-hidden={!isOpen}
+      tabIndex={-1}
+      style={{
+        pointerEvents: isOpen ? "auto" : "none",
+        visibility: isOpen ? "visible" : "hidden",
+      }}
+    >
+      <div className="mm-top">
+        <TransitionLink href={homeHref} className="mm-brand" onClick={onClose}>
+          <Image src="/images/logo.svg" alt="" width={32} height={32} />
+          <span>BAISH</span>
+        </TransitionLink>
+        <h2 id="mobile-menu-title" className="mm-sr-only">
+          {t.menu}
+        </h2>
+        <button
+          ref={closeButtonRef}
+          className="mm-close"
           onClick={onClose}
-          aria-hidden="true"
-          style={{
-            animation: "fadeIn 0.3s ease-out",
-          }}
-        />
-      )}
-
-      {/* Menu Panel */}
-      <div
-        ref={dialogRef}
-        className="fixed top-0 right-0 z-40 h-[100dvh] w-full overflow-y-auto rounded-l-3xl border-t border-r-0 border-b border-l border-slate-200 bg-gradient-to-br from-[#EDE7FC] via-[#f5f5f5] to-[#A8C5FFE6] shadow-xl md:hidden"
-        role="dialog"
-        aria-modal={isOpen ? true : undefined}
-        aria-labelledby="mobile-menu-title"
-        aria-hidden={!isOpen}
-        tabIndex={-1}
-        style={{
-          transform: shouldAnimate ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          pointerEvents: isOpen ? "auto" : "none",
-          visibility: isOpen ? "visible" : "hidden",
-        }}
-      >
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between border-b border-slate-200 p-4 sm:p-6">
-            <span id="mobile-menu-title" className="text-lg font-semibold text-slate-900">
-              {t.menu}
-            </span>
-            <button
-              ref={closeButtonRef}
-              className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2"
-              onClick={onClose}
-              aria-label={t.closeMenu}
-              type="button"
-            >
-              <HugeiconsIcon icon={Cancel01Icon} size={20} />
-            </button>
-          </div>
-
-          <nav className="px-4 py-6 sm:px-6">
-            <TransitionLink
-              href={withLocale(locale, "/")}
-              className={`mb-6 flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-                pathname === withLocale(locale, "/")
-                  ? "bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-                  : "hover:bg-white/60"
-              }`}
-              onClick={onClose}
-            >
-              <Image
-                src="/images/logo.svg"
-                alt="BAISH Logo"
-                width={32}
-                height={32}
-                className="object-contain flex-shrink-0"
-              />
-              <span
-                className={`text-lg font-semibold ${
-                  pathname === withLocale(locale, "/")
-                    ? "text-[var(--color-accent-primary)]"
-                    : "text-slate-900"
-                }`}
-              >
-                BAISH
-              </span>
-            </TransitionLink>
-
-            <ul className="space-y-2">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                const pathSegment =
-                  link.href.split("/").filter(Boolean).pop() || "";
-                const transitionClass = `header-nav-${pathSegment}`;
-                return (
-                  <li key={link.href}>
-                    <TransitionLink
-                      href={link.href}
-                      className={`block rounded-lg px-4 py-4 text-lg font-medium transition-colors ${transitionClass} ${
-                        isActive
-                          ? "bg-[var(--color-accent-primary)]/10 font-semibold text-[var(--color-accent-primary)]"
-                          : "text-slate-700 hover:bg-white/60 hover:text-slate-900"
-                      }`}
-                      onClick={onClose}
-                    >
-                      {link.label}
-                    </TransitionLink>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="mt-8 border-t border-slate-200 pt-8">
-              <p className="mb-4 px-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
-                {t.language}
-              </p>
-              <div className="flex gap-3">
-                {LANGUAGES.map((lang) => {
-                  const active = lang.code === locale;
-                  const langHref = buildLangSwitchHref(pathname, lang.code);
-                  return (
-                    <TransitionLink
-                      key={lang.code}
-                      href={langHref}
-                      className={`flex-1 rounded-lg px-4 py-3 text-center text-base font-medium transition ${
-                        active
-                          ? "pointer-events-none bg-[var(--color-accent-primary)] text-white shadow-sm"
-                          : "bg-white/60 text-slate-700 hover:bg-white"
-                      }`}
-                      onClick={onClose}
-                    >
-                      {t.languages[lang.code]}
-                    </TransitionLink>
-                  );
-                })}
-              </div>
-            </div>
-          </nav>
-
-          <div className="border-t border-slate-200 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
-            <ScrollToButton
-              className="flex w-full items-center justify-center rounded-full bg-[var(--color-accent-primary)] px-6 py-3 text-base font-semibold text-white shadow-md transition hover:bg-[var(--color-accent-primary-hover)]"
-              targetId="get-involved"
-              navigateTo={withLocale(locale, "/")}
-              onClick={onClose}
-            >
-              {t.cta}
-            </ScrollToButton>
-          </div>
-        </div>
+          aria-label={t.closeMenu}
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" />
+          </svg>
+        </button>
       </div>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </>
+      <nav className="mm-nav" aria-label={t.menu}>
+        <ol>
+          {navLinks.map((link, i) => {
+            const isActive = pathname === link.href;
+            const pathSegment =
+              link.href.split("/").filter(Boolean).pop() || "";
+            return (
+              <li key={link.href} style={{ "--mm-i": i } as React.CSSProperties}>
+                <TransitionLink
+                  href={link.href}
+                  className={`mm-link header-nav-${pathSegment}`}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={onClose}
+                >
+                  <span className="mm-index" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mm-label">{link.label}</span>
+                  <span className="mm-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </TransitionLink>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+
+      <svg
+        className="mm-threads"
+        viewBox="0 0 100 60"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        {FALLING.map((d) => (
+          <path key={d} d={d} className="mm-fall" />
+        ))}
+        <path d={RISING} className="mm-rise" />
+      </svg>
+
+      <div className="mm-foot">
+        <div className="mm-lang">
+          <span className="mm-kicker">{t.language}</span>
+          <div className="mm-lang-toggle">
+            {LANGUAGES.map((lang) => {
+              const active = lang.code === locale;
+              return (
+                <TransitionLink
+                  key={lang.code}
+                  href={buildLangSwitchHref(pathname, lang.code)}
+                  className="mm-lang-option"
+                  aria-current={active ? "true" : undefined}
+                  aria-label={t.languages[lang.code]}
+                  lang={lang.code}
+                  onClick={onClose}
+                >
+                  {lang.label}
+                </TransitionLink>
+              );
+            })}
+          </div>
+        </div>
+        <ScrollToButton
+          className="mm-cta"
+          targetId="get-involved"
+          navigateTo={homeHref}
+          onClick={onClose}
+        >
+          {t.cta}
+          <span aria-hidden="true">→</span>
+        </ScrollToButton>
+      </div>
+    </div>
   );
 
   return createPortal(menuContent, document.body);

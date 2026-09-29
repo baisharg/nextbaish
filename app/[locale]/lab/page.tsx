@@ -373,7 +373,8 @@ export default async function LabPage({
       </section>
 
       {/* Join: from lowest to highest commitment; the knot points at it */}
-      <section className="lab-section lab-join">
+      {/* The header, menu and footer "Join Us" buttons scroll here */}
+      <section className="lab-section lab-join" id="get-involved">
         <ThreadSet scene="knot" />
         <div className="lab-wrap lab-join-grid">
           <div className="lab-join-copy lab-veil">
