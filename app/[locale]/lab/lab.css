@@ -398,6 +398,11 @@ html[data-threads="sections"] .timeline-background {
   padding-top: clamp(2rem, 5vh, 3rem);
 }
 
+/* Ends in a band of threads, which already separates it from what follows */
+.lab-section-banded {
+  padding-bottom: clamp(1rem, 3vh, 2rem);
+}
+
 .lab-section-head {
   max-width: 44rem;
   margin-bottom: 2.5rem;
@@ -462,14 +467,20 @@ html[data-threads="sections"] .timeline-background {
 
 /* ---------- path (pinned, scrubbed) ---------- */
 
+/* Pinned while its steps scroll past. The pinned frame is only as tall as
+ * its content (--pin-h) and sticks centred in the viewport, so there is no
+ * empty half-screen above it on the way in. thread-steps.ts reads the
+ * frame's top and height for the scroll maths. */
 .lab-path {
+  --pin-h: min(78svh, 720px);
   position: relative;
+  height: calc(var(--steps, 4) * 65svh + var(--pin-h));
 }
 
 .lab-path-sticky {
   position: sticky;
-  top: 0;
-  height: 100svh;
+  top: calc((100svh - var(--pin-h)) / 2);
+  height: var(--pin-h);
   display: flex;
   align-items: center;
 }
@@ -479,7 +490,7 @@ html[data-threads="sections"] .timeline-background {
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
   gap: 4rem;
   width: 100%;
-  height: min(78svh, 720px);
+  height: 100%;
 }
 
 .lab-path-copy {
@@ -947,6 +958,10 @@ html[data-threads="sections"] .timeline-background {
     gap: 1rem;
     height: calc(100svh - 88px);
     padding-top: 0.5rem;
+  }
+
+  .lab-path {
+    --pin-h: 100svh;
   }
 
   .lab-path-sticky {

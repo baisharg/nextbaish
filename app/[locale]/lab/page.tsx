@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { TransitionLink } from "@/app/components/transition-link";
@@ -139,7 +140,7 @@ export default async function LabPage({
       </section>
 
       {/* Why: labelled rows, with a calm band of threads as the divider */}
-      <section className="lab-section">
+      <section className="lab-section lab-section-banded">
         <ThreadSet scene="horizon" />
         <div className="lab-wrap lab-about">
           <header>
@@ -177,9 +178,9 @@ export default async function LabPage({
         className="lab-path"
         data-thread-steps="scatter,braid,strands,fan"
         data-active-step="0"
-        style={{ height: `${steps.length * 65 + 100}svh` }}
+        style={{ "--steps": steps.length } as CSSProperties}
       >
-        <div className="lab-path-sticky">
+        <div className="lab-path-sticky" data-step-pin>
           <ThreadSet steps={["scatter", "braid", "strands", "fan"]} />
           <div className="lab-wrap lab-path-grid">
             <div className="lab-path-copy lab-panel">

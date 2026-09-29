@@ -22,11 +22,26 @@ export type StepState = {
   active: number;
 };
 
-/** Where a stepped section is, given its bounding rect and the viewport */
-export function stepState(rect: DOMRect, count: number): StepState {
-  const vh = window.innerHeight;
-  const travel = Math.max(rect.height - vh, 1);
-  const progress = clamp01(-rect.top / travel) * count;
+/**
+ * The pinned frame inside a stepped section (`[data-step-pin]`): where it
+ * sticks (its CSS `top`) and how tall it is. Without one, the section pins
+ * a full viewport at the top.
+ */
+function pinOf(section: HTMLElement) {
+  const pin = section.querySelector<HTMLElement>("[data-step-pin]");
+  if (!pin) return { top: 0, height: window.innerHeight };
+  return {
+    top: parseFloat(getComputedStyle(pin).top) || 0,
+    height: pin.offsetHeight,
+  };
+}
+
+/** Where a stepped section is in its scroll, as a step and a morph */
+export function stepState(section: HTMLElement, count: number): StepState {
+  const rect = section.getBoundingClientRect();
+  const pin = pinOf(section);
+  const travel = Math.max(rect.height - pin.height, 1);
+  const progress = clamp01((pin.top - rect.top) / travel) * count;
   const index = Math.min(Math.floor(progress), count - 1);
   const within = progress - index;
   const morph =
@@ -40,8 +55,9 @@ export function stepScrollY(
   index: number,
   count: number,
 ) {
-  const top = section.getBoundingClientRect().top + window.scrollY;
-  const travel = Math.max(section.offsetHeight - window.innerHeight, 1);
+  const pin = pinOf(section);
+  const top = section.getBoundingClientRect().top + window.scrollY - pin.top;
+  const travel = Math.max(section.offsetHeight - pin.height, 1);
   return top + (travel * (index + STEP_HOLD / 2)) / count;
 }
 

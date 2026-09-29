@@ -121,7 +121,7 @@ export function ThreadSet({
       const box = boxOf();
       let targets: SceneTarget[];
       if (stepped) {
-        const state = stepState(stepped.getBoundingClientRect(), stepIds.length);
+        const state = stepState(stepped, stepIds.length);
         setActiveStep(stepped, state.active);
         // Reduced motion: switch shapes at the step boundary instead of
         // morphing as the page scrolls.
