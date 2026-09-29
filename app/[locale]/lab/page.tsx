@@ -106,6 +106,13 @@ export default async function LabPage({
           />
         </div>
 
+        {/* On phones the threads take a band under the copy, above the fold */}
+        <div
+          className="lab-hero-band lab-box-narrow"
+          data-thread-box
+          aria-hidden="true"
+        />
+
         {/* One entry point per kind of visitor */}
         <nav className="lab-wrap" aria-label={lab.router.title}>
           <p className="lab-router-title">{lab.router.title}</p>
@@ -129,11 +136,6 @@ export default async function LabPage({
             ))}
           </ul>
         </nav>
-        <div
-          className="lab-hero-band lab-box-narrow"
-          data-thread-box
-          aria-hidden="true"
-        />
       </section>
 
       {/* Why: labelled rows, with a calm band of threads as the divider */}

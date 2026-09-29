@@ -16,6 +16,9 @@ type MetrPoint = {
   dyLog?: number;
   /** also labeled on the sparse mobile layer */
   mobile?: boolean;
+  /** on the linear scale, the mobile label starts at the point instead of
+   * centring on it, clear of the "30 min" tick */
+  mobileStart?: boolean;
   /** sits in the >16h zone: hollow marker, not part of the line */
   unreliable?: boolean;
 };
@@ -23,7 +26,7 @@ type MetrPoint = {
 // 50%-success time horizons, approximated from METR's published chart
 // (metr.org). Model names are proper nouns — not translated.
 const POINTS: MetrPoint[] = [
-  { year: 2019.1, minutes: 0.03, label: "GPT-2", anchor: "above", mobile: true },
+  { year: 2019.1, minutes: 0.03, label: "GPT-2", anchor: "above", mobile: true, mobileStart: true },
   { year: 2020.5, minutes: 0.15, label: "GPT-3", anchor: "above" },
   { year: 2022.2, minutes: 0.6, label: "GPT-3.5", anchor: "above", dyLog: -8 },
   { year: 2023.2, minutes: 5, label: "GPT-4", anchor: "above", mobile: true },
@@ -44,14 +47,6 @@ const POINTS: MetrPoint[] = [
   },
 ];
 
-const VB_W = 800;
-const VB_H = 460;
-const MARGIN = { top: 24, right: 96, bottom: 56, left: 64 };
-const PLOT_W = VB_W - MARGIN.left - MARGIN.right;
-const PLOT_H = VB_H - MARGIN.top - MARGIN.bottom;
-const PLOT_BOTTOM = MARGIN.top + PLOT_H;
-const PLOT_RIGHT = MARGIN.left + PLOT_W;
-
 const YEAR_MIN = 2018.9;
 const YEAR_MAX = 2026.6;
 const LINEAR_MAX = 1150;
@@ -59,17 +54,42 @@ const LOG_MIN = 0.02;
 const LOG_MAX = 2400;
 const UNRELIABLE_MIN = 960; // 16 hrs in minutes
 
-const xPos = (year: number) =>
-  MARGIN.left + ((year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN)) * PLOT_W;
-
-const yPos = (minutes: number, mode: ScaleMode) => {
-  const t =
-    mode === "linear"
-      ? minutes / LINEAR_MAX
-      : (Math.log10(minutes) - Math.log10(LOG_MIN)) /
-        (Math.log10(LOG_MAX) - Math.log10(LOG_MIN));
-  return MARGIN.top + PLOT_H * (1 - t);
+/**
+ * Chart geometry in viewBox units. Phones get a narrower viewBox so the
+ * labels stay readable once the SVG is scaled down to the screen.
+ */
+const makeGeometry = (
+  width: number,
+  height: number,
+  margin: { top: number; right: number; bottom: number; left: number },
+) => {
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  return {
+    VB_W: width,
+    VB_H: height,
+    MARGIN: margin,
+    PLOT_W: plotW,
+    PLOT_H: plotH,
+    PLOT_BOTTOM: margin.top + plotH,
+    PLOT_RIGHT: margin.left + plotW,
+    xPos: (year: number) =>
+      margin.left + ((year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN)) * plotW,
+    yPos: (minutes: number, mode: ScaleMode) => {
+      const t =
+        mode === "linear"
+          ? minutes / LINEAR_MAX
+          : (Math.log10(minutes) - Math.log10(LOG_MIN)) /
+            (Math.log10(LOG_MAX) - Math.log10(LOG_MIN));
+      return margin.top + plotH * (1 - t);
+    },
+  };
 };
+
+const WIDE = makeGeometry(800, 460, { top: 24, right: 96, bottom: 56, left: 64 });
+/** Below Tailwind's sm breakpoint, matching the max-sm: label sizes */
+const COMPACT = makeGeometry(480, 400, { top: 20, right: 20, bottom: 52, left: 80 });
+const COMPACT_QUERY = "(max-width: 639px)";
 
 const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
 
@@ -108,8 +128,18 @@ export function MetrChart({
   // shows the finished chart and there is no hydration mismatch.
   const [phase, setPhase] = useState<"static" | "hidden" | "drawing">("static");
   const [fast, setFast] = useState(false);
+  const [compact, setCompact] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const reducedRef = useRef(false);
+
+  useEffect(() => {
+    const query = window.matchMedia?.(COMPACT_QUERY);
+    if (!query) return;
+    const update = () => setCompact(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     reducedRef.current =
@@ -146,6 +176,9 @@ export function MetrChart({
       );
     }
   };
+
+  const { VB_W, VB_H, MARGIN, PLOT_W, PLOT_H, PLOT_BOTTOM, PLOT_RIGHT, xPos, yPos } =
+    compact ? COMPACT : WIDE;
 
   const hidden = phase === "hidden";
   const drawing = phase === "drawing";
@@ -222,8 +255,7 @@ export function MetrChart({
 
       <div
         ref={wrapRef}
-        className="mt-3 w-full"
-        style={{ aspectRatio: "800 / 460" }}
+        className="mt-3 aspect-[800/460] w-full max-sm:aspect-[480/400]"
       >
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -385,9 +417,21 @@ export function MetrChart({
                 c.mobile && (
                   <text
                     key={c.label}
-                    x={c.anchor === "left" ? c.x - 14 : c.x}
+                    x={
+                      c.anchor === "left"
+                        ? c.x - 14
+                        : c.mobileStart && scale === "linear"
+                          ? c.x - 6
+                          : c.x
+                    }
                     y={c.anchor === "left" ? c.y + 6 : c.y - 14}
-                    textAnchor={c.anchor === "left" ? "end" : "middle"}
+                    textAnchor={
+                      c.anchor === "left"
+                        ? "end"
+                        : c.mobileStart && scale === "linear"
+                          ? "start"
+                          : "middle"
+                    }
                     className="fill-slate-600 text-[16px] font-medium"
                     style={pointStyle(fractions[i])}
                   >
