@@ -516,9 +516,8 @@
     },
     "callToAction": {
       "title": "Want to chat?",
-      "description": "Anyone interested in AI safety can book a call with one of our directors.",
-      "bookWithEitan": "Book with Eitan",
-      "bookWithLuca": "Book with Luca"
+      "description": "Anyone interested in AI safety can book a call with Eitan, one of our directors.",
+      "bookWithEitan": "Book with Eitan"
     }
   },
   "activities": {
@@ -583,8 +582,8 @@
           "id": "careers",
           "title": "Career support",
           "description": "One-on-ones with the directors, help with fellowship applications like MARS, and travel support for EA Global. {eagDelegation} members went to EAG London 2026.",
-          "cta": "Book a call",
-          "link": "/about#book-a-call",
+          "cta": "Write to us",
+          "link": "/contact#contact-form",
           "external": false
         },
         {
@@ -1156,16 +1155,14 @@
       "description": "Want to contribute to AI safety research? Let us know your background and interests, and we'll connect you with relevant projects and collaborators.",
       "formLabel": "Use our contact form to tell us about your background and research interests.",
       "cta": "Contact us",
-      "link": "/contact",
+      "link": "/contact#contact-form",
       "note": "We review messages regularly and reach out when there's a good fit."
     },
     "cta": {
       "title": "Ready to start your research journey?",
-      "description": "Book a call with one of our directors to discuss your interests and find the right path.",
+      "description": "Book a call with Eitan, one of our directors, to discuss your interests and find the right path.",
       "bookWithEitan": "Book with Eitan",
-      "bookWithLuca": "Book with Luca",
-      "eitanSpecialty": "Interpretability & Evaluations",
-      "lucaSpecialty": "Operations & Strategy"
+      "eitanSpecialty": "Interpretability & Evaluations"
     },
     "ctaLabs": "Meet BAISH Labs"
   },
@@ -2175,7 +2172,8 @@
       },
       "call": {
         "title": "Not sure which one fits?",
-        "cta": "Book a call"
+        "text": "Tell us a bit about yourself through the contact form and we'll point you to the right one.",
+        "cta": "Write to us"
       },
       "description": "Free in-person courses run with BlueDot Impact, and a research fellowship with a stipend. Courses select participants through a short application."
     },
@@ -2259,7 +2257,7 @@
       "close": "Close"
     },
     "contactPage": {
-      "routingTitle": "Who to talk to",
+      "routingTitle": "Other ways to reach us",
       "columns": {
         "purpose": "If you want to",
         "how": "Best way"
@@ -2274,7 +2272,8 @@
           "text": "Monthly socials and a WhatsApp group of {communityMembers} members."
         },
         "career": {
-          "title": "Get career advice"
+          "title": "Get career advice",
+          "text": "Tell us where you are and what you're considering, and we'll help you work out next steps."
         },
         "research": {
           "title": "Collaborate on research"
@@ -2298,7 +2297,8 @@
       "closingTitle": "Get involved in research",
       "closingDesc": "Whether you want to do research with us or support the lab's work.",
       "interestTitle": "Tell us your research interests",
-      "callTitle": "Talk it through with a director"
+      "callTitle": "Prefer to talk?",
+      "callText": "After you've written to us, you can also book a call with Eitan."
     },
     "programsPage": {
       "jumpCourses": "Courses",
@@ -2314,6 +2314,12 @@
       "jumpStudy": "Go deeper",
       "nextTitle": "Where to go from here",
       "studyTitle": "Go deeper"
+    },
+    "contactFirst": {
+      "title": "Want to talk to us?",
+      "text": "Start with the contact form: tell us a bit about yourself and what you're looking for, and we'll point you to the right person or program.",
+      "cta": "Write to us",
+      "call": "Or book a call with Eitan"
     }
   }
 }

@@ -265,14 +265,6 @@ export default async function AboutPage({
                     >
                       {callToAction.bookWithEitan}
                     </a>
-                    <a
-                      href="https://lvca.dev/meet"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="button-primary inline-flex items-center justify-center gap-2"
-                    >
-                      {callToAction.bookWithLuca}
-                    </a>
                   </div>
                 </div>
               </div>

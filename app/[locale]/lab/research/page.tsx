@@ -16,10 +16,7 @@ import { SmartLink, isExternal } from "../_components/smart-link";
 import { TitleBand } from "../_components/title-band";
 import "../lab.css";
 
-const BOOKING_LINKS = {
-  eitan: "https://calendly.com/eitusprejer",
-  luca: "https://lvca.dev/meet",
-};
+const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
 
 type PathwayStep = {
   number: string;
@@ -331,29 +328,18 @@ export default async function LabResearchPage({
                 <span className="lab-ladder-num" aria-hidden="true">02</span>
                 <div>
                   <h3>{page.callTitle}</h3>
-                  <p>{t.cta.description}</p>
+                  <p>{page.callText}</p>
                 </div>
                 <span className="lab-ladder-links">
                   <SmartLink
-                    href={BOOKING_LINKS.eitan}
+                    href={EITAN_BOOKING_URL}
                     locale={currentLocale}
                     className="lab-link lab-link-sm"
-                    data-thread-pulse
                   >
                     {t.cta.bookWithEitan}
                     <span aria-hidden="true">↗</span>
                   </SmartLink>
                   <span className="lab-ladder-note">{t.cta.eitanSpecialty}</span>
-                  <SmartLink
-                    href={BOOKING_LINKS.luca}
-                    locale={currentLocale}
-                    className="lab-link lab-link-sm"
-                    data-thread-pulse
-                  >
-                    {t.cta.bookWithLuca}
-                    <span aria-hidden="true">↗</span>
-                  </SmartLink>
-                  <span className="lab-ladder-note">{t.cta.lucaSpecialty}</span>
                 </span>
               </li>
             </ol>

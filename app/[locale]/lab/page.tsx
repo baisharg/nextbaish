@@ -322,14 +322,12 @@ export default async function LabPage({
             <div className="lab-trow lab-trow-call" role="row">
               <div role="cell" className="lab-call-copy">
                 <h3 className="lab-trow-title">{lab.programs.call.title}</h3>
-                <p className="lab-trow-desc">
-                  {dict.about.callToAction.description}
-                </p>
+                <p className="lab-trow-desc">{lab.programs.call.text}</p>
               </div>
               <div role="cell" className="lab-cell-cta">
                 <TransitionLink
                   className="lab-link"
-                  href={withLocale(currentLocale, "/about#book-a-call")}
+                  href={withLocale(currentLocale, "/contact#contact-form")}
                 >
                   {lab.programs.call.cta}
                   <span aria-hidden="true">→</span>

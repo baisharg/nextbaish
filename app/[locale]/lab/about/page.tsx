@@ -21,16 +21,14 @@ import {
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { MemberCard } from "../_components/member-card";
+import { SmartLink } from "../_components/smart-link";
 import { LabAnnouncement } from "../_components/lab-announcement";
 import { LabFooter } from "../_components/lab-footer";
 import { StoryList } from "../_components/story-list";
 import { TitleBand } from "../_components/title-band";
 import "../lab.css";
 
-const BOOKING_LINKS = {
-  eitan: "https://calendly.com/eitusprejer",
-  luca: "https://lvca.dev/meet",
-};
+const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
 
 export async function generateMetadata({
   params,
@@ -190,27 +188,27 @@ export default async function LabAboutPage({
               </ul>
 
               {i === 0 && (
-                <div className="lab-trow lab-trow-call" id="book-a-call">
+                <div className="lab-trow lab-trow-call" id="get-in-touch">
                   <div className="lab-call-copy">
-                    <h3 className="lab-trow-title">{t.callToAction.title}</h3>
-                    <p className="lab-trow-desc">{t.callToAction.description}</p>
+                    <h3 className="lab-trow-title">{lab.contactFirst.title}</h3>
+                    <p className="lab-trow-desc">{lab.contactFirst.text}</p>
                   </div>
                   <div className="lab-call-actions">
-                    <a
+                    <SmartLink
+                      href="/contact#contact-form"
+                      locale={currentLocale}
                       className="lab-button lab-button-sm"
-                      href={BOOKING_LINKS.eitan}
+                    >
+                      {lab.contactFirst.cta}
+                    </SmartLink>
+                    <a
+                      className="lab-link lab-link-sm"
+                      href={EITAN_BOOKING_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {t.callToAction.bookWithEitan}
-                    </a>
-                    <a
-                      className="lab-button lab-button-sm"
-                      href={BOOKING_LINKS.luca}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {t.callToAction.bookWithLuca}
+                      {lab.contactFirst.call}
+                      <span aria-hidden="true">↗</span>
                     </a>
                   </div>
                 </div>

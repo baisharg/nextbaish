@@ -516,9 +516,8 @@
     },
     "callToAction": {
       "title": "¿Querés charlar?",
-      "description": "Cualquier persona interesada en AI safety puede agendar una llamada con uno de nuestros directores.",
-      "bookWithEitan": "Reservá con Eitan",
-      "bookWithLuca": "Reservá con Luca"
+      "description": "Cualquier persona interesada en AI safety puede agendar una llamada con Eitan, uno de nuestros directores.",
+      "bookWithEitan": "Reservá con Eitan"
     }
   },
   "activities": {
@@ -583,8 +582,8 @@
           "id": "careers",
           "title": "Acompañamiento de carrera",
           "description": "Reuniones 1 a 1 con los directores, ayuda para postularse a fellowships como MARS y apoyo para viajar a EA Global. {eagDelegation} miembros fueron a EAG London 2026.",
-          "cta": "Agendar una llamada",
-          "link": "/about#book-a-call",
+          "cta": "Escribinos",
+          "link": "/contact#contact-form",
           "external": false
         },
         {
@@ -1156,16 +1155,14 @@
       "description": "¿Querés contribuir a investigación en AI safety? Contanos tu formación e intereses, y te conectamos con proyectos y colaboradores relevantes.",
       "formLabel": "Usá nuestro formulario de contacto para contarnos sobre tu formación e intereses de investigación.",
       "cta": "Contactanos",
-      "link": "/contact",
+      "link": "/contact#contact-form",
       "note": "Revisamos los mensajes regularmente y te escribimos cuando hay algo que encaja."
     },
     "cta": {
       "title": "¿Querés empezar tu camino en investigación?",
-      "description": "Agendá una llamada con uno de nuestros directores para discutir tus intereses y encontrar el camino correcto.",
+      "description": "Agendá una llamada con Eitan, uno de nuestros directores, para charlar sobre tus intereses y encontrar el camino indicado.",
       "bookWithEitan": "Agendar con Eitan",
-      "bookWithLuca": "Agendar con Luca",
-      "eitanSpecialty": "Interpretabilidad y evaluaciones",
-      "lucaSpecialty": "Operaciones y estrategia"
+      "eitanSpecialty": "Interpretabilidad y evaluaciones"
     },
     "ctaLabs": "Conocé BAISH Labs"
   },
@@ -2175,7 +2172,8 @@
       },
       "call": {
         "title": "¿No sabés cuál te conviene?",
-        "cta": "Agendá una llamada"
+        "text": "Contanos un poco sobre vos en el formulario de contacto y te orientamos hacia el indicado.",
+        "cta": "Escribinos"
       },
       "description": "Cursos presenciales gratuitos junto a BlueDot Impact y una beca de investigación con estipendio. Los cursos seleccionan participantes mediante una postulación corta."
     },
@@ -2259,7 +2257,7 @@
       "close": "Cerrar"
     },
     "contactPage": {
-      "routingTitle": "Con quién hablar",
+      "routingTitle": "Otras formas de contactarnos",
       "columns": {
         "purpose": "Si querés",
         "how": "La mejor forma"
@@ -2274,7 +2272,8 @@
           "text": "Encuentros mensuales y un grupo de WhatsApp de {communityMembers} miembros."
         },
         "career": {
-          "title": "Pedir consejo de carrera"
+          "title": "Pedir consejo de carrera",
+          "text": "Contanos dónde estás y qué estás pensando, y te ayudamos a definir los próximos pasos."
         },
         "research": {
           "title": "Colaborar en investigación"
@@ -2298,7 +2297,8 @@
       "closingTitle": "Participá en la investigación",
       "closingDesc": "Ya sea que quieras investigar con nosotros o apoyar el trabajo del lab.",
       "interestTitle": "Contanos tus intereses de investigación",
-      "callTitle": "Charlalo con uno de los directores"
+      "callTitle": "¿Preferís hablar?",
+      "callText": "Después de escribirnos, también podés agendar una llamada con Eitan."
     },
     "programsPage": {
       "jumpCourses": "Cursos",
@@ -2314,6 +2314,12 @@
       "jumpStudy": "Para profundizar",
       "nextTitle": "Por dónde seguir",
       "studyTitle": "Para profundizar"
+    },
+    "contactFirst": {
+      "title": "¿Querés hablar con nosotros?",
+      "text": "Empezá por el formulario de contacto: contanos un poco sobre vos y qué estás buscando, y te orientamos hacia la persona o el programa indicado.",
+      "cta": "Escribinos",
+      "call": "O agendá una llamada con Eitan"
     }
   }
 }

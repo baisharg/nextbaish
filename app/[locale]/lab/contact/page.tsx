@@ -49,6 +49,7 @@ export default async function LabContactPage({
   const page = lab.contactPage;
   const p = page.purposes;
   const cta = dict.about.callToAction;
+  const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
 
   // One row per reason to get in touch, each with the channel that fits it.
   const rows: { title: string; text: string; actions: Action[] }[] = [
@@ -69,10 +70,10 @@ export default async function LabContactPage({
     },
     {
       title: p.career.title,
-      text: cta.description,
+      text: p.career.text,
       actions: [
-        { label: cta.bookWithEitan, href: "https://calendly.com/eitusprejer" },
-        { label: cta.bookWithLuca, href: "https://lvca.dev/meet" },
+        { label: page.writeToUs, href: "#contact-form", primary: true },
+        { label: cta.bookWithEitan, href: EITAN_BOOKING_URL },
       ],
     },
     {
@@ -127,7 +128,45 @@ export default async function LabContactPage({
         lede={<p>{t.description}</p>}
       />
 
-      {/* Routing table: purpose → channel */}
+      {/* The form comes first: it's where we want people to start */}
+      <section
+        className="lab-section lab-join"
+        id="contact-form"
+      >
+        <ThreadSet scene="knot" />
+        <div className="lab-wrap lab-join-grid">
+          <div className="lab-join-copy lab-veil">
+            <p className="lab-kicker">{t.form.eyebrow}</p>
+            <h2 className="lab-h2">{t.form.title}</h2>
+            <p className="lab-section-desc">{t.form.description}</p>
+            <form action={FORM_ACTION} method="POST" className="lab-form">
+              <label>
+                <span>{t.form.nameLabel}</span>
+                <input type="text" name="name" autoComplete="name" required />
+              </label>
+              <label>
+                <span>{t.form.emailLabel}</span>
+                <input type="email" name="email" autoComplete="email" required />
+              </label>
+              <label>
+                <span>{t.form.messageLabel}</span>
+                <textarea name="message" rows={5} required />
+              </label>
+              <div className="lab-form-actions">
+                <button type="submit" className="lab-button">
+                  {t.form.submit}
+                </button>
+                <button type="reset" className="lab-link lab-link-sm">
+                  {t.form.clearForm}
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="lab-join-knot" data-thread-box aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* Other ways in: purpose → channel */}
       <section className="lab-section lab-section-tight">
         <div className="lab-wrap">
           <header className="lab-section-head">
@@ -165,7 +204,7 @@ export default async function LabContactPage({
                         {isExternal(action.href)
                           ? "↗"
                           : action.href.startsWith("#")
-                            ? "↓"
+                            ? "↑"
                             : "→"}
                       </span>
                     </SmartLink>
@@ -174,44 +213,6 @@ export default async function LabContactPage({
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Form: the threads knot beside it */}
-      <section
-        className="lab-section lab-join"
-        id="contact-form"
-      >
-        <ThreadSet scene="knot" />
-        <div className="lab-wrap lab-join-grid">
-          <div className="lab-join-copy lab-veil">
-            <p className="lab-kicker">{t.form.eyebrow}</p>
-            <h2 className="lab-h2">{t.form.title}</h2>
-            <p className="lab-section-desc">{t.form.description}</p>
-            <form action={FORM_ACTION} method="POST" className="lab-form">
-              <label>
-                <span>{t.form.nameLabel}</span>
-                <input type="text" name="name" autoComplete="name" required />
-              </label>
-              <label>
-                <span>{t.form.emailLabel}</span>
-                <input type="email" name="email" autoComplete="email" required />
-              </label>
-              <label>
-                <span>{t.form.messageLabel}</span>
-                <textarea name="message" rows={5} required />
-              </label>
-              <div className="lab-form-actions">
-                <button type="submit" className="lab-button">
-                  {t.form.submit}
-                </button>
-                <button type="reset" className="lab-link lab-link-sm">
-                  {t.form.clearForm}
-                </button>
-              </div>
-            </form>
-          </div>
-          <div className="lab-join-knot" data-thread-box aria-hidden="true" />
         </div>
       </section>
 
