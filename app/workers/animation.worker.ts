@@ -28,7 +28,6 @@ import {
   OVERLAY_OPACITY,
   SCENE_OVERLAY_OPACITY,
   PIVOT_X,
-  PIVOT_Y,
   X_START,
   X_END,
   adjustColor,
