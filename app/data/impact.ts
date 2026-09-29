@@ -29,7 +29,7 @@ export const IMPACT = {
   courseParticipants: "89",
   courseRecommendScore: "9.4/10",
   /** Typical in-person attendance at a monthly social event. */
-  socialAttendance: "50-80",
+  socialAttendance: "50–80",
   /** Argentine delegation to EAG London 2026 supported by BAISH. */
   eagDelegation: "16",
 } as const;

@@ -53,8 +53,8 @@
       "secondaryCta": "Sumate a la comunidad",
       "stats": {
         "communityMembers": "Miembros de la comunidad",
-        "fellowshipPlacements": "Placements en fellowships",
-        "fullTimeRoles": "Roles full-time en AI safety",
+        "fellowshipPlacements": "Ingresos a fellowships",
+        "fullTimeRoles": "Puestos de tiempo completo en AI safety",
         "publications": "Publicaciones"
       }
     },
@@ -90,7 +90,7 @@
           "id": "courses",
           "eyebrow": "Cursos",
           "title": "Cursos presenciales de BlueDot",
-          "description": "Technical AI Safety, el Projects Sprint y Frontier AI Governance, facilitados en persona. Seis cohortes desde marzo de 2026.",
+          "description": "Technical AI Safety, el Technical AI Safety Project y Frontier AI Governance, facilitados en persona. Seis cohortes desde marzo de 2026.",
           "cta": "Ver cursos",
           "link": "/activities#courses"
         },
@@ -113,9 +113,9 @@
         {
           "id": "careers",
           "eyebrow": "Carreras",
-          "title": "Fellowships y placements",
-          "description": "Acompañamiento 1 a 1, sprints de aplicación y delegaciones a conferencias. {fellowshipPlacements} placements en fellowships y {fullTimeRoles} roles full-time hasta ahora.",
-          "cta": "Ver placements e historias",
+          "title": "Fellowships y trabajo",
+          "description": "Acompañamiento 1 a 1, ayuda para preparar postulaciones y delegaciones a conferencias. {fellowshipPlacements} ingresos a fellowships y {fullTimeRoles} puestos de tiempo completo hasta ahora.",
+          "cta": "Ver historias",
           "link": "/about#impact"
         }
       ]
@@ -176,13 +176,13 @@
         "technical-ai-safety-project": {
           "eyebrow": "Curso de proyectos",
           "title": "Technical AI Safety Project",
-          "description": "Sprint de proyectos para hacer una primera contribución concreta a investigación o ingeniería de seguridad en IA, facilitado presencialmente por BAISH.",
+          "description": "Curso de proyectos para hacer una primera contribución concreta a investigación o ingeniería de seguridad en IA, facilitado presencialmente por BAISH.",
           "duration": "5 semanas · 30 horas"
         },
         "frontier-ai-governance": {
           "eyebrow": "Curso de gobernanza",
           "title": "Frontier AI Governance",
-          "description": "Explorá desafíos de gobernanza de sistemas de IA de frontera: coordinación, gobernanza de compute, accountability y evaluación de riesgos.",
+          "description": "Explorá desafíos de gobernanza de sistemas de IA de frontera: coordinación, gobernanza del cómputo, rendición de cuentas y evaluación de riesgos.",
           "duration": "6 semanas"
         }
       },
@@ -193,19 +193,19 @@
     "successStories": {
       "eyebrow": "Impacto",
       "title": "Nuestro impacto hasta ahora",
-      "description": "Miembros de BAISH pasaron a roles full-time en AI safety, fellowships internacionales e investigación publicada.",
-      "cta": "Ver todos los placements e historias",
+      "description": "Miembros de BAISH consiguieron puestos de tiempo completo en AI safety, entraron a fellowships internacionales y publicaron investigación.",
+      "cta": "Ver todas las historias",
       "ctaLink": "/about#impact",
       "statLabels": {
-        "fullTimeRoles": "Roles full-time en AI safety",
-        "fellowshipPlacements": "Placements en fellowships",
+        "fullTimeRoles": "Puestos de tiempo completo en AI safety",
+        "fellowshipPlacements": "Ingresos a fellowships",
         "publications": "Publicaciones"
       }
     },
     "aisar": {
-      "eyebrow": "Proyecto Hermano",
+      "eyebrow": "Proyecto hermano",
       "title": "Beca AISAR",
-      "description": "Beca de investigación en AI safety de seis meses con mentoría, en Buenos Aires, financiada por Coefficient Giving. Estipendio de USD 700/mes part-time o 1.400 full-time más presupuesto de cómputo. Los 6 becarios de la primera cohorte produjeron 3 papers en workshops de ICLR 2026; la segunda cohorte empieza en octubre de 2026.",
+      "description": "Beca de investigación en AI safety de seis meses con mentoría, en Buenos Aires, financiada por Coefficient Giving. Estipendio de USD 700/mes a media jornada o 1.400 a jornada completa más presupuesto de cómputo. Los 6 becarios de la primera cohorte produjeron 3 papers en workshops de ICLR 2026; la segunda cohorte empieza en octubre de 2026.",
       "duration": "6 meses",
       "commitment": "20 o 40 hs/semana",
       "visitWebsite": "Visitar sitio web"
@@ -239,10 +239,10 @@
     "getInvolved": {
       "eyebrow": "Empezá",
       "sectionTitle": "Unite a la Comunidad",
-      "sectionDescription": "Conectá con investigadores, mantenete al día y empezá tu camino en AI safety",
+      "sectionDescription": "Conectá con gente que investiga, mantenete al día y empezá tu camino en AI safety",
       "communityEyebrow": "Comunidad",
       "communityTitle": "Comunidad de WhatsApp",
-      "communityDescription": "Conectá con {communityMembers} estudiantes, investigadores y profesionales interesados en AI safety.",
+      "communityDescription": "Conectá con una comunidad de {communityMembers} estudiantes, profesionales y gente que investiga en AI safety.",
       "whatsappCta": "Comunidad BAISH",
       "whatsappMembers": "{communityMembers} miembros"
     },
@@ -300,20 +300,20 @@
     "whoWeAre": {
       "eyebrow": "Fundado en 2024 · Buenos Aires",
       "title": "El hub de AI Safety más grande de Latinoamérica",
-      "paragraph1": "BAISH es una comunidad de {communityMembers} estudiantes, investigadores y profesionales de Buenos Aires que trabaja para que la IA avanzada salga bien. Organizamos cursos presenciales, un laboratorio de investigación, eventos mensuales y acompañamiento 1 a 1 de carrera, para que el talento de acá pueda entrar a AI safety sin tener que irse del país para hacerlo.",
-      "paragraph2": "Desde 2024 ayudamos a {fullTimeRoles} miembros a conseguir roles full-time en AI safety y a {fellowshipPlacements} a entrar en fellowships y programas de investigación externos, e investigadores conectados a BAISH publicaron en workshops de NeurIPS e ICLR. Nos sostiene un equipo de voluntarios y un pequeño staff pago, y trabajamos junto a nuestra beca hermana, AISAR."
+      "paragraph1": "BAISH es una comunidad de {communityMembers} estudiantes, investigadores y profesionales de Buenos Aires que trabaja para que la IA avanzada salga bien. Organizamos cursos presenciales, un laboratorio de investigación, encuentros mensuales y acompañamiento 1 a 1 de carrera, para que el talento de acá pueda entrar a AI safety sin tener que irse del país para hacerlo.",
+      "paragraph2": "Desde 2024 ayudamos a {fullTimeRoles} miembros a conseguir puestos de tiempo completo en AI safety y a {fellowshipPlacements} a entrar en fellowships y programas de investigación externos, y personas vinculadas a BAISH publicaron en workshops de NeurIPS e ICLR. Nos sostiene un equipo de voluntarios y un pequeño equipo rentado, y trabajamos junto a nuestra beca hermana, AISAR."
     },
     "impact": {
       "eyebrow": "Impacto",
       "title": "Nuestra trayectoria",
       "description": "Qué hicieron después los miembros de BAISH, y qué produjo la comunidad hasta ahora.",
       "fullTime": {
-        "title": "Roles full-time en AI safety",
-        "description": "{fullTimeRoles} miembros trabajan hoy full-time en AI safety en organizaciones como:"
+        "title": "Puestos de tiempo completo en AI safety",
+        "description": "{fullTimeRoles} miembros trabajan hoy a tiempo completo en AI safety en organizaciones como:"
       },
       "fellowships": {
         "title": "Fellowships y programas externos",
-        "description": "{fellowshipPlacements} placements entre unas 21 personas desde 2024."
+        "description": "{fellowshipPlacements} ingresos entre unas 21 personas desde 2024."
       },
       "research": {
         "title": "Producción de investigación",
@@ -348,7 +348,7 @@
       "stories": {
         "tobias-bersia": {
           "path": "TAIS Intensivo → ARENA → BAISH Labs",
-          "text": "Hizo el curso intensivo en marzo de 2026 y dos meses después entró a ARENA, donde el proyecto de su grupo ganó el primer puesto. Hoy lidera investigación en BAISH Labs y es owner del Projects Sprint."
+          "text": "Hizo el curso intensivo en marzo de 2026 y dos meses después entró a ARENA, donde el proyecto de su grupo ganó el primer puesto. Hoy lidera investigación en BAISH Labs y coordina el Technical AI Safety Project."
         },
         "julian-szere": {
           "path": "EAG London → Iliad → BAISH Labs",
@@ -417,29 +417,29 @@
       }
     },
     "ourApproach": {
-      "title": "Nuestro Enfoque",
+      "title": "Nuestro enfoque",
       "focusAreas": {
-        "title": "Areas de Enfoque",
+        "title": "Áreas de enfoque",
         "intro": "En BAISH - Buenos Aires AI Safety Hub, nos enfocamos en varias áreas clave dentro de la investigación de seguridad en IA:",
         "items": [
-          "Interpretabilidad mecanística y control de IA",
-          "Evaluaciones y monitoreo de LLMs",
-          "Gobernanza de IA de frontera"
+          "Interpretabilidad y control",
+          "Evaluaciones y monitoreo",
+          "Gobernanza y estrategia"
         ]
       },
       "contribution": {
-        "title": "Nuestra Contribucion",
+        "title": "Nuestra contribución",
         "intro": "Contribuimos al campo a través de:",
         "items": [
           "Cursos presenciales que llevan a las personas del primer contacto a una primera contribución de investigación",
           "Un laboratorio de investigación en Buenos Aires, BAISH Labs, junto a la beca AISAR",
-          "Una comunidad de {communityMembers} miembros con eventos mensuales, retiros y hackathons",
-          "Acompañamiento de carrera: 1 a 1, sprints de aplicación, delegaciones a conferencias y placements"
+          "Una comunidad de {communityMembers} miembros con encuentros mensuales, retiros y hackathons",
+          "Acompañamiento de carrera: 1 a 1, ayuda con postulaciones y delegaciones a conferencias"
         ]
       }
     },
     "team": {
-      "title": "Nuestro Equipo",
+      "title": "El equipo",
       "advisorsTitle": "Asesores",
       "roles": {
         "eitan-sprejer": "Director cofundador · Research Manager Lead, Apart Research",
@@ -450,7 +450,7 @@
         "marina-romanisio": "Lead de comunidad",
         "rocio-monjes": "Lead de operaciones",
         "augusto-esquivel-masciotta": "Lead de cursos · Frontier AI Governance",
-        "tobias-bersia": "Owner del Projects Sprint · Research Lead, BAISH Labs",
+        "tobias-bersia": "Coordinador del Technical AI Safety Project · Research Lead, BAISH Labs",
         "gonzalo-heredia": "Owner del Technical AI Safety course · BAISH Labs",
         "gaspar-labastie": "Facilitador · Plataforma ASTN · BAISH Labs",
         "tomas-korenblit": "Facilitador · BAISH Labs",
@@ -498,7 +498,7 @@
       "bluedot": {
         "name": "BlueDot Impact",
         "program": "Rapid grants",
-        "description": "BlueDot financia nuestras cohortes presenciales mediante rapid grants por cohorte, y otorgó career transition grants a dos de nuestros miembros."
+        "description": "BlueDot financia nuestras cohortes presenciales mediante subsidios por cohorte, y otorgó becas de transición de carrera a dos de nuestros miembros."
       },
       "grantmaking": {
         "name": "grantmaking.ai",
@@ -526,12 +526,12 @@
       "home": "Inicio",
       "current": "Programas"
     },
-    "title": "Nuestros Programas",
-    "description": "Cursos, comunidad y programas de investigación para pasar de curioso a investigador, presenciales en Buenos Aires.",
+    "title": "Cursos, comunidad e investigación",
+    "description": "Todo lo que hacemos, en persona en Buenos Aires. Los cursos y los eventos son gratuitos.",
     "subscribeCalendar": "Suscribite al calendario de eventos",
     "courses": {
       "eyebrow": "Cursos",
-      "title": "Nuestros Cursos",
+      "title": "Cursos",
       "description": "Versiones presenciales de los cursos de BlueDot Impact, facilitadas por BAISH. Gratuitos, selectivos y el primer paso estructurado para entrar al campo.",
       "trackRecord": "Desde marzo de 2026: {courseCohorts} cohortes, {courseApplications} postulaciones para {courseParticipants} lugares, {courseRecommendScore} de probabilidad de recomendar.",
       "upcomingTitle": "Próximamente",
@@ -557,8 +557,8 @@
       "items": [
         {
           "id": "socials",
-          "title": "Eventos sociales mensuales",
-          "description": "Eventos de networking y sociales de {socialAttendance} personas, la mitad nuevas. Todos los eventos están en nuestro calendario de Luma.",
+          "title": "Encuentros mensuales",
+          "description": "Encuentros sociales de {socialAttendance} personas, la mitad nuevas. Todos están en nuestro calendario de Luma.",
           "cta": "Calendario en Luma",
           "link": "https://luma.com/BAISH",
           "external": true
@@ -582,7 +582,7 @@
         {
           "id": "careers",
           "title": "Acompañamiento de carrera",
-          "description": "Reuniones 1 a 1 con los directores, sprints de aplicación a fellowships como MARS y apoyo para viajar a EA Global. {eagDelegation} miembros fueron a EAG London 2026.",
+          "description": "Reuniones 1 a 1 con los directores, ayuda para postularse a fellowships como MARS y apoyo para viajar a EA Global. {eagDelegation} miembros fueron a EAG London 2026.",
           "cta": "Agendar una llamada",
           "link": "/about#book-a-call",
           "external": false
@@ -707,8 +707,8 @@
     },
     "gallery": {
       "eyebrow": "Comunidad",
-      "title": "Eventos Pasados",
-      "description": "Momentos de nuestros encuentros y actividades recientes"
+      "title": "Eventos pasados",
+      "description": "Fotos de encuentros recientes"
     },
     "pastPrograms": {
       "title": "Programas anteriores",
@@ -727,21 +727,21 @@
       ]
     },
     "sisterProjects": {
-      "title": "Proyectos Hermanos",
-      "description": "Iniciativas colaborativas que avanzan la seguridad de IA en América Latina"
+      "title": "Proyectos hermanos",
+      "description": "Grupos con los que trabajamos en Buenos Aires y en América Latina"
     },
     "lanais": {
-      "eyebrow": "Proyecto Hermano",
+      "eyebrow": "Proyecto hermano",
       "title": "LANAIS",
       "subtitle": "Red Latinoamericana de Seguridad en IA",
       "description": "Conectando investigadores y responsables de políticas para el desarrollo seguro de inteligencia artificial en América Latina. LANAIS mantiene un directorio de expertos en seguridad de IA en toda la región y opera en inglés, español y portugués.",
       "visitWebsite": "Visitar sitio web"
     },
     "fair": {
-      "eyebrow": "Proyecto Hermano",
+      "eyebrow": "Proyecto hermano",
       "title": "FAIR",
       "subtitle": "Frontier Artificial Intelligence Research",
-      "description": "Organización de investigación en seguridad de IA de la Universidad de Buenos Aires que avanza la seguridad de IA de frontera mediante investigación de alto impacto. Áreas de enfoque incluyen alineamiento de IA, riesgos existenciales, gobernanza y evaluaciones de sistemas.",
+      "description": "Organización de investigación en seguridad de IA de la Universidad de Buenos Aires. Sus áreas de enfoque incluyen alineamiento de IA, riesgos existenciales, gobernanza y evaluaciones de sistemas.",
       "visitWebsite": "Visitar sitio web"
     }
   },
@@ -771,13 +771,13 @@
     },
     "form": {
       "eyebrow": "Contacto",
-      "title": "Contactanos",
-      "description": "Comunicate con la comunidad de BAISH",
-      "nameLabel": "¿Cuál es tu nombre?",
-      "emailLabel": "¿Cuál es tu correo electrónico?",
+      "title": "Escribinos",
+      "description": "Contanos quién sos y qué necesitás.",
+      "nameLabel": "Nombre",
+      "emailLabel": "Email",
       "messageLabel": "Mensaje",
       "clearForm": "Limpiar formulario",
-      "submit": "Enviá"
+      "submit": "Enviar mensaje"
     },
     "getInvolved": {
       "title": "Sumate",
@@ -788,27 +788,27 @@
       }
     },
     "faq": {
-      "title": "Preguntas Frecuentes",
+      "title": "Preguntas frecuentes",
       "items": [
         {
-          "question": "¿Necesito ser estudiante universitario para participar?",
-          "answer": "¡No! Nuestras actividades están abiertas a todos los interesados en la seguridad de la IA, sin importar afiliación universitaria o formación previa."
+          "question": "¿Hay que estar en la universidad para participar?",
+          "answer": "No. Nuestras actividades están abiertas a cualquier persona interesada en la seguridad de la IA, sin importar afiliación universitaria o formación previa."
         },
         {
           "question": "¿Qué formación necesito para unirme a sus actividades?",
-          "answer": "Depende de la actividad. Algunas, como nuestros grupos de discusión, están abiertas a cualquier persona independientemente de su formación técnica. Otras, como nuestros cursos técnicos, pueden requerir conocimientos de programación o familiaridad con conceptos de aprendizaje automático."
+          "answer": "Los eventos están abiertos a cualquier persona. Los cursos piden un buen nivel de inglés y tiempo para las lecturas; el Technical AI Safety Project además requiere el curso Technical AI Safety o equivalente."
         },
         {
           "question": "¿Sus actividades se realizan en inglés o español?",
-          "answer": "La mayoría de nuestras actividades se realizan en español, pero ocasionalmente tenemos sesiones en inglés, especialmente cuando recibimos oradores internacionales. Verifica los detalles del evento específico para obtener información sobre el idioma."
+          "answer": "Los eventos y las discusiones son mayormente en español, con algunas sesiones en inglés cuando recibimos oradores internacionales. Los materiales de los cursos están en inglés."
         },
         {
-          "question": "¿Cómo puedo empezar a aprender sobre seguridad de IA si soy completamente nuevo en el campo?",
-          "answer": "Recomendamos empezar por nuestra {resourcesLink}, que presenta la evidencia y los mejores lugares por donde empezar. Después sumate a la comunidad de WhatsApp y vení a uno de nuestros eventos mensuales."
+          "question": "¿Cómo puedo empezar a aprender sobre seguridad de IA si nunca estudié el tema?",
+          "answer": "Recomendamos empezar por nuestra {resourcesLink}, que presenta la evidencia y los mejores lugares por donde empezar. Después sumate a la comunidad de WhatsApp y vení a uno de nuestros encuentros mensuales."
         },
         {
           "question": "¿Puedo proponer una nueva actividad o dirección de investigación?",
-          "answer": "¡Por supuesto! Siempre estamos abiertos a nuevas ideas y colaboraciones. Por favor completa el formulario de contacto arriba con tu propuesta."
+          "answer": "¡Por supuesto! Siempre estamos abiertos a nuevas ideas y colaboraciones. Completá el formulario de contacto de arriba con tu propuesta."
         },
         {
           "question": "¿Participar es gratis?",
@@ -816,7 +816,7 @@
         },
         {
           "question": "¿Cómo puedo investigar con BAISH?",
-          "answer": "El camino habitual es el Technical AI Safety course seguido del Projects Sprint. Si ya tenés experiencia en investigación, contactanos por BAISH Labs, nuestro brazo de investigación."
+          "answer": "El camino habitual es el Technical AI Safety course seguido del Technical AI Safety Project. Si ya tenés experiencia en investigación, contactanos por BAISH Labs, nuestro brazo de investigación."
         },
         {
           "question": "Soy periodista o represento a una organización. ¿Con quién hablo?",
@@ -832,12 +832,12 @@
     },
     "title": "Investigación en BAISH",
     "intro": "BAISH lleva a personas de Buenos Aires desde su primer curso de AI safety hasta investigación publicada. Desde 2026 ese trabajo tiene una casa: BAISH Labs, nuestro brazo de investigación.",
-    "ctaPublications": "Ver Publicaciones",
-    "ctaLearnMore": "Conocé Más",
+    "ctaPublications": "Ver publicaciones",
+    "ctaLearnMore": "Conocé más",
     "labs": {
       "eyebrow": "BAISH Labs · Brazo de investigación",
       "title": "Investigación en AI safety, hecha en Buenos Aires",
-      "paragraph1": "BAISH Labs es un grupo de investigación con raíces locales donde investigadores talentosos pueden hacer contribuciones de alto impacto a AI safety sin mudarse al exterior. Argentina tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
+      "paragraph1": "BAISH Labs es un grupo de investigación con raíces en Buenos Aires, donde se puede investigar en AI safety sin mudarse al exterior. Argentina tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
       "paragraph2": "El lab nació de la comunidad de BAISH: su equipo fundador hizo nuestros cursos, los facilitó, o llegó a través de ARENA e Iliad. Trabaja junto a la beca AISAR, que financia a investigadores junior durante seis meses, y busca darles continuidad a los más fuertes después.",
       "agendaTitle": "Agenda de investigación",
       "agendaIntro": "Nuestro foco inicial es interpretabilidad y control:",
@@ -860,8 +860,8 @@
       "ctaLink": "/contact"
     },
     "pathway": {
-      "title": "Tu Camino en Investigación",
-      "subtitle": "De los primeros pasos a investigador publicado — así funciona",
+      "title": "Tu camino en investigación",
+      "subtitle": "De tu primer curso a la investigación publicada.",
       "steps": [
         {
           "number": "01",
@@ -895,7 +895,7 @@
           "number": "04",
           "title": "Lanzarte",
           "program": "BAISH Labs y carreras",
-          "description": "Sumate a BAISH Labs, nuestro laboratorio de investigación en Buenos Aires, o pasá a un rol full-time en AI safety.",
+          "description": "Sumate a BAISH Labs, nuestro laboratorio de investigación en Buenos Aires, o pasá a un puesto de tiempo completo en AI safety.",
           "duration": "Continuo",
           "link": "/research#labs",
           "icon": "rocket"
@@ -903,7 +903,7 @@
       ]
     },
     "focusAreas": {
-      "title": "En Qué Podrías Trabajar",
+      "title": "En qué podrías trabajar",
       "subtitle": "Direcciones de investigación en BAISH Labs y en nuestra comunidad",
       "areas": [
         {
@@ -924,7 +924,7 @@
       ]
     },
     "publications": {
-      "title": "Publicaciones de la Comunidad",
+      "title": "Publicaciones de la comunidad",
       "subtitle": "Trabajo de investigadores conectados a BAISH, de más reciente a más antiguo",
       "items": [
         {
@@ -1152,20 +1152,20 @@
     },
     "expressInterest": {
       "eyebrow": "Participá",
-      "title": "Expresá tu Interés en Investigación",
-      "description": "¿Querés contribuir a investigación en AI safety? Contanos tu background e intereses, y te conectamos con proyectos y colaboradores relevantes.",
-      "formLabel": "Usá nuestro formulario de contacto para contarnos sobre tu background e intereses de investigación.",
+      "title": "Expresá tu interés en investigación",
+      "description": "¿Querés contribuir a investigación en AI safety? Contanos tu formación e intereses, y te conectamos con proyectos y colaboradores relevantes.",
+      "formLabel": "Usá nuestro formulario de contacto para contarnos sobre tu formación e intereses de investigación.",
       "cta": "Contactanos",
       "link": "/contact",
-      "note": "Revisamos los mensajes regularmente y nos contactamos cuando hay un buen fit."
+      "note": "Revisamos los mensajes regularmente y te escribimos cuando hay algo que encaja."
     },
     "cta": {
-      "title": "¿Listo para empezar tu camino en investigación?",
-      "description": "Agendá una llamada con uno de nuestros co-fundadores para discutir tus intereses y encontrar el camino correcto.",
+      "title": "¿Querés empezar tu camino en investigación?",
+      "description": "Agendá una llamada con uno de nuestros directores para discutir tus intereses y encontrar el camino correcto.",
       "bookWithEitan": "Agendar con Eitan",
       "bookWithLuca": "Agendar con Luca",
-      "eitanSpecialty": "Interpretabilidad y Evaluaciones",
-      "lucaSpecialty": "Operaciones y Estrategia"
+      "eitanSpecialty": "Interpretabilidad y evaluaciones",
+      "lucaSpecialty": "Operaciones y estrategia"
     },
     "ctaLabs": "Conocé BAISH Labs"
   },
