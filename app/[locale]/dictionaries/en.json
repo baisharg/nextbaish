@@ -74,7 +74,7 @@
     },
     "mission": {
       "eyebrow": "Buenos Aires AI Safety Hub",
-      "title": "From curious to contributing",
+      "title": "Work on AI safety from Argentina",
       "tagline": "Supporting your path into AI safety research",
       "paragraph1": "AI is moving fast{footnote1}, and it's likely to keep reshaping the things we care about{footnote2}. If it works out, the upside is real: better science, better medicine, less drudgery. If it doesn't, the damage could be hard to undo. Either way, we think it matters that the systems being built are ones humans can still inspect and hold accountable{footnote3}.",
       "paragraph2": "We think this is one of the most important open problems anyone could work on right now{footnote4}. We're not certain — nobody is{footnote5} — and serious people disagree about timelines, failure modes, even whether 'risk' is the right framing. But the field is small. Most of the important questions don't have anyone working on them yet. That's the kind of situation a careful person can actually change{footnote6}.",
@@ -2049,12 +2049,12 @@
       "rows": [
         {
           "label": "Why it matters",
-          "text": "If AI goes well, it could help with problems that have been stuck for decades. If it doesn't, the harm could be very hard to reverse. Nobody has a reliable map, and some researchers we respect aren't convinced there's a serious risk at all. We think it is plausible enough, and the work neglected enough, that careful people can change the outcome.",
+          "text": "If AI goes well, it could help with problems that have been stuck for decades. If it doesn't, the harm could be very hard to reverse. Nobody knows how it will go, and some researchers we respect aren't convinced there's a serious risk at all. We think it is plausible enough, and the work neglected enough, that the people working on it can change the outcome.",
           "linkLabel": "The case for taking AI seriously",
           "link": "/resources"
         },
         {
-          "label": "Why Buenos Aires",
+          "label": "Why Argentina",
           "text": "Argentina has the talent, the universities and the research culture. What was missing was a place where people could get into AI safety, and keep doing it, without leaving the country."
         },
         {
@@ -2068,7 +2068,6 @@
       "steps": [
         {
           "label": "Learn",
-          "line": "Everyone arrives from somewhere different.",
           "headline": "Free in-person courses, run with BlueDot",
           "stats": [
             {
@@ -2084,7 +2083,6 @@
         },
         {
           "label": "Belong",
-          "line": "Here, the threads meet.",
           "headline": "A community that meets every month",
           "stats": [
             {
@@ -2100,7 +2098,6 @@
         },
         {
           "label": "Research",
-          "line": "Some become research.",
           "headline": "Research at BAISH Labs, in Buenos Aires",
           "stats": [
             {
@@ -2112,7 +2109,6 @@
         },
         {
           "label": "Launch",
-          "line": "And lead out into the field.",
           "headline": "Fellowships and full-time roles",
           "stats": [
             {
@@ -2178,7 +2174,7 @@
       "description": "Free in-person courses run with BlueDot Impact, and a research fellowship with a stipend. Courses select participants through a short application."
     },
     "stories": {
-      "eyebrow": "Where the threads lead",
+      "eyebrow": "Members",
       "glossary": {
         "TAIS": "Technical AI Safety course",
         "EAG": "Effective Altruism Global conference",
@@ -2190,8 +2186,8 @@
       "title": "Where our members are now"
     },
     "join": {
-      "eyebrow": "Your thread",
-      "title": "Start where you are",
+      "eyebrow": "Community",
+      "title": "Ways to get involved",
       "description": "About half the people at our monthly socials are newcomers.",
       "steps": [
         {

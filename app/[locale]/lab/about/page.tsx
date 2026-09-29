@@ -190,7 +190,12 @@ export default async function LabAboutPage({
           </div>
 
           <h3 className="lab-h3 lab-stories-title">{t.impact.storiesTitle}</h3>
-          <StoryList stories={stories} glossary={lab.stories.glossary} swipe />
+          <StoryList
+            stories={stories}
+            glossary={lab.stories.glossary}
+            roles={roles}
+            swipe
+          />
         </div>
       </section>
 

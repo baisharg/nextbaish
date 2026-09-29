@@ -199,7 +199,6 @@ export default async function LabPage({
               <ol className="lab-steps">
                 {pillars.map((item, i) => (
                   <li key={item.id} className="lab-step" data-step={i}>
-                    <p className="lab-step-line">{steps[i].line}</p>
                     <h3 className="lab-step-title">{steps[i].headline}</h3>
                     <p className="lab-step-body">
                       {steps[i].body}
@@ -367,7 +366,12 @@ export default async function LabPage({
           </header>
           <div className="lab-stories-stage" data-thread-box>
             <div className="lab-band" aria-hidden="true" />
-            <StoryList stories={stories} glossary={glossary} pulse />
+            <StoryList
+              stories={stories}
+              glossary={glossary}
+              roles={dict.about.team.roles}
+              pulse
+            />
           </div>
         </div>
       </section>

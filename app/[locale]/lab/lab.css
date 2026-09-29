@@ -570,14 +570,6 @@ html[data-threads="sections"] .timeline-background {
   --lab-step-accent: #a8391c;
 }
 
-.lab-step-line {
-  font-family: var(--font-source-serif), Georgia, serif;
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--lab-step-accent);
-  transition: color 300ms ease;
-}
-
 .lab-step-title {
   margin-top: 0.5rem;
   font-family: var(--font-source-serif), Georgia, serif;
@@ -760,7 +752,10 @@ html[data-threads="sections"] .timeline-background {
 
 /* Frosted cards: threads that run behind them stay visible but soft */
 .lab-story {
-  padding: 1.5rem 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 1.5rem 1.35rem;
   border: 1px solid rgb(255 255 255 / 0.7);
   border-radius: 0.75rem;
   background: rgb(255 255 255 / 0.62);
@@ -774,10 +769,49 @@ html[data-threads="sections"] .timeline-background {
   background: rgb(255 255 255 / 0.8);
 }
 
+.lab-story-lead {
+  color: var(--lab-ink-2);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* The person, pinned to the bottom so cards in a row line up */
+.lab-story-person {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: auto;
+}
+
+.lab-story-photo {
+  width: 3rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e9e5f7;
+  display: grid;
+  place-items: center;
+}
+
+.lab-story-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lab-story-photo span {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--lab-accent-ink);
+}
+
 .lab-story-name {
   font-family: var(--font-source-serif), Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   font-weight: 600;
+  line-height: 1.25;
 }
 
 .lab-story-name a {
@@ -790,12 +824,21 @@ html[data-threads="sections"] .timeline-background {
   text-decoration-color: currentColor;
 }
 
-.lab-story-path {
-  margin-top: 0.4rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.5;
+.lab-story-now {
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   color: var(--lab-accent-ink);
+  font-weight: 600;
+}
+
+.lab-story-path {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--lab-rule);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--lab-ink-3);
 }
 
 .lab-story-path abbr {
@@ -806,14 +849,6 @@ html[data-threads="sections"] .timeline-background {
 
 .lab-story-arrow {
   color: var(--lab-ink-3);
-  font-weight: 400;
-}
-
-.lab-story-text {
-  margin-top: 0.6rem;
-  color: var(--lab-ink-2);
-  font-size: 0.95rem;
-  line-height: 1.55;
 }
 
 /* ---------- join ---------- */
@@ -1182,10 +1217,11 @@ html[data-threads="sections"] .timeline-background {
 }
 
 .lab-story-quote {
-  margin-top: 0.6rem;
   font-family: var(--font-source-serif), Georgia, serif;
-  font-style: italic;
-  line-height: 1.45;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--lab-ink);
 }
 
 /* ---------- team ---------- */
