@@ -2042,7 +2042,7 @@
         {
           "who": "Press, partners or funders?",
           "label": "Get in touch",
-          "link": "/lab/contact"
+          "link": "/contact"
         }
       ]
     },
@@ -2218,7 +2218,7 @@
           "title": "Press, universities or partners?",
           "text": "We talk to journalists and work with universities, companies and other communities.",
           "cta": "Write to us",
-          "link": "/lab/contact"
+          "link": "/contact"
         }
       ]
     },

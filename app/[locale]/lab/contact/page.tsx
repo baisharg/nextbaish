@@ -56,7 +56,7 @@ export default async function LabContactPage({
       title: p.course.title,
       text: p.course.text,
       actions: [
-        { label: lab.hero.seeCourses, href: "/lab#programs", primary: true },
+        { label: lab.hero.seeCourses, href: "/#programs", primary: true },
       ],
     },
     {

@@ -23,7 +23,7 @@ export async function LabAnnouncement({
   return (
     <AnnouncementBar id={`${t.id}-open`} dismissLabel={t.dismiss}>
       {t.open}{" "}
-      <SmartLink href="/lab#programs" locale={locale} className="lab-link">
+      <SmartLink href="/#programs" locale={locale} className="lab-link">
         {t.cta}
         <span aria-hidden="true">→</span>
       </SmartLink>

@@ -6,7 +6,38 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 const projectRoot = process.cwd();
 
+/**
+ * Redesign prototype: while this is on, the main routes serve the pages in
+ * app/[locale]/lab (the original pages stay in the code, unused). Set to
+ * false to get the original pages back at the main routes; /lab keeps
+ * working either way.
+ */
+const SERVE_LAB_AT_MAIN_ROUTES = true;
+
+const LAB_ROUTES: [live: string, lab: string][] = [
+  ["", "/lab"],
+  ["/about", "/lab/about"],
+  ["/activities", "/lab/programs"],
+  ["/research", "/lab/research"],
+  ["/resources", "/lab/resources"],
+  ["/contact", "/lab/contact"],
+];
+
 const nextConfig: NextConfig = {
+  // beforeFiles, because app/[locale]/* would otherwise match first
+  async rewrites() {
+    return {
+      beforeFiles: SERVE_LAB_AT_MAIN_ROUTES
+        ? LAB_ROUTES.map(([live, lab]) => ({
+            source: `/:locale(en|es)${live}`,
+            destination: `/:locale${lab}`,
+          }))
+        : [],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+
   // Dev only: let Orca's per-worktree hosts (e.g. nextbaish.orca.localhost)
   // load /_next dev resources. Without this the page renders without JS.
   allowedDevOrigins: ["*.orca.localhost"],

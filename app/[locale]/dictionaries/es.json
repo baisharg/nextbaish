@@ -2042,7 +2042,7 @@
         {
           "who": "¿Prensa, aliados o financiadores?",
           "label": "Escribinos",
-          "link": "/lab/contact"
+          "link": "/contact"
         }
       ]
     },
@@ -2218,7 +2218,7 @@
           "title": "¿Prensa, universidades o aliados?",
           "text": "Hablamos con periodistas y trabajamos con universidades, empresas y otras comunidades.",
           "cta": "Escribinos",
-          "link": "/lab/contact"
+          "link": "/contact"
         }
       ]
     },

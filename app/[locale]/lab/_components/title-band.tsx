@@ -32,7 +32,7 @@ export function TitleBand({
       <div className="lab-wrap lab-title-grid">
         <div className="lab-title-copy lab-veil">
         <p className="lab-kicker">
-          <SmartLink href="/lab" locale={locale} className="lab-crumb">
+          <SmartLink href="/" locale={locale} className="lab-crumb">
             {homeLabel}
           </SmartLink>
           <span aria-hidden="true"> / </span>

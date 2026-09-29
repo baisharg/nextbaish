@@ -29,7 +29,7 @@ export function LabFooter({
     {
       title: t.columns.programs,
       links: [
-        { label: t.links.courses, href: "/lab#programs" },
+        { label: t.links.courses, href: "/#programs" },
         { label: t.links.aisar, href: "https://scholarship.aisafety.ar/" },
         { label: t.links.labs, href: "/research#labs" },
         { label: nav.resources, href: "/resources" },
@@ -38,9 +38,9 @@ export function LabFooter({
     {
       title: t.columns.organization,
       links: [
-        { label: nav.about, href: "/lab/about" },
+        { label: nav.about, href: "/about" },
         { label: nav.research, href: "/research" },
-        { label: nav.contact, href: "/lab/contact" },
+        { label: nav.contact, href: "/contact" },
         { label: nav.privacyPolicy, href: "/privacy-policy" },
       ],
     },
