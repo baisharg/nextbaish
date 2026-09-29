@@ -2016,13 +2016,7 @@
     "hero": {
       "tagline": "Cursos presenciales, un laboratorio de investigación y una comunidad de {communityMembers} personas en Buenos Aires, para quien quiera ayudar a que la IA salga bien.",
       "seeCourses": "Ver cursos",
-      "whatsapp": "Sumate al grupo de WhatsApp",
-      "futures": {
-        "now": "Hoy",
-        "good": "Futuros que salen bien",
-        "bad": "Futuros que no",
-        "caption": "Cada línea es un futuro posible. La mayoría termina mal. No tiene por qué ser así."
-      }
+      "whatsapp": "Sumate al grupo de WhatsApp"
     },
     "router": {
       "title": "¿Por dónde querés empezar?",

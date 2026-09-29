@@ -2016,13 +2016,7 @@
     "hero": {
       "tagline": "In-person courses, a research lab and a community of {communityMembers} in Buenos Aires, for anyone who wants to help AI go well.",
       "seeCourses": "See courses",
-      "whatsapp": "Join the WhatsApp community",
-      "futures": {
-        "now": "Today",
-        "good": "Futures that go well",
-        "bad": "Futures that don't",
-        "caption": "Each line is a possible future. Most of them end badly. It doesn't have to be that way."
-      }
+      "whatsapp": "Join the WhatsApp community"
     },
     "router": {
       "title": "Where do you want to start?",

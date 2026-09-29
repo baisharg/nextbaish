@@ -98,23 +98,12 @@ export default async function LabPage({
                 <span aria-hidden="true">↗</span>
               </a>
             </div>
-            <p className="lab-futures-caption">{lab.hero.futures.caption}</p>
           </div>
           <div
             className="lab-hero-knot lab-box-wide"
             data-thread-box
             aria-hidden="true"
-          >
-            <span className="lab-futures-label lab-futures-good">
-              {lab.hero.futures.good}
-            </span>
-            <span className="lab-futures-label lab-futures-now">
-              {lab.hero.futures.now}
-            </span>
-            <span className="lab-futures-label lab-futures-bad">
-              {lab.hero.futures.bad}
-            </span>
-          </div>
+          />
         </div>
 
         {/* One entry point per kind of visitor */}
