@@ -18,14 +18,17 @@ export function StoryList({
   stories,
   glossary,
   pulse = false,
+  swipe = false,
 }: {
   stories: SuccessStory[];
   glossary: Record<string, string>;
   /** Hovering a story pulses the threads; only where a set is in view */
   pulse?: boolean;
+  /** On phones, a horizontal swipe row instead of a long stack */
+  swipe?: boolean;
 }) {
   return (
-    <ul className="lab-stories">
+    <ul className={swipe ? "lab-stories lab-stories-swipe" : "lab-stories"}>
       {stories.map((story) => (
         <li
           key={story.id}

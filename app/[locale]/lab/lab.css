@@ -2119,3 +2119,99 @@ html:has(.lab-dialog[open]) {
     transition: none;
   }
 }
+
+/* ---------- about: focus areas in the title band ---------- */
+
+.lab-focus {
+  margin-top: 1.5rem;
+}
+
+.lab-focus-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--lab-mono-size);
+  text-transform: uppercase;
+  color: var(--lab-ink-3);
+}
+
+.lab-focus .lab-chips {
+  padding-top: 0.6rem;
+}
+
+/* ---------- about: shorter on phones ---------- */
+
+@media (max-width: 820px) {
+  /* Stories: a swipe row, with the next card peeking in */
+  .lab-stories-swipe {
+    display: flex;
+    gap: 0.75rem;
+    margin-inline: calc(-1 * var(--lab-gutter));
+    padding: 0.25rem var(--lab-gutter) 1.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--lab-gutter);
+    scrollbar-width: none;
+  }
+
+  .lab-stories-swipe::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lab-stories-swipe > .lab-story {
+    flex: 0 0 min(84%, 22rem);
+    scroll-snap-align: start;
+  }
+
+  /* Team: one row per person, small round photo, links on the right */
+  .lab-team-compact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .lab-team-compact > li {
+    border-bottom: 1px solid var(--lab-rule);
+  }
+
+  .lab-team-compact .lab-member {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto;
+    column-gap: 0.9rem;
+    align-items: center;
+    padding: 0.7rem 0;
+  }
+
+  .lab-team-compact .lab-member-photo {
+    grid-row: 1 / span 2;
+    width: 3.25rem;
+    margin: 0;
+    border-radius: 999px;
+  }
+
+  .lab-team-compact .lab-member-photo span {
+    font-size: 1rem;
+  }
+
+  .lab-team-compact .lab-member-name {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    font-size: 1rem;
+  }
+
+  .lab-team-compact .lab-member-role {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+  }
+
+  .lab-team-compact .lab-member > div:not(.lab-member-photo) {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    margin: 0;
+  }
+
+  .lab-advisors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 1rem;
+  }
+}

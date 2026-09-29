@@ -72,7 +72,8 @@ export default async function LabAboutPage({
   const groups = [
     { title: t.team.directorsTitle, members: teamByGroup("directors") },
     { title: t.team.leadsTitle, members: teamByGroup("leads") },
-    { title: t.team.teamTitle, members: teamByGroup("team") },
+    // The largest group: rows with small photos on phones
+    { title: t.team.teamTitle, members: teamByGroup("team"), compact: true },
   ];
   const advisors = teamByGroup("advisors");
 
@@ -107,7 +108,19 @@ export default async function LabAboutPage({
         homeLabel={lab.band.home}
         eyebrow={t.title}
         title={t.whoWeAre.title}
-        lede={<p>{fillImpact(t.whoWeAre.paragraph1)}</p>}
+        lede={
+          <>
+            <p>{fillImpact(t.whoWeAre.paragraph1)}</p>
+            <div className="lab-focus">
+              <p className="lab-focus-label">{t.ourApproach.focusAreas.title}</p>
+              <ul className="lab-chips">
+                {t.ourApproach.focusAreas.items.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        }
         jumpLabel={lab.aboutPage.jump}
         jumps={[
           { href: "#impact", label: t.impact.title },
@@ -177,7 +190,7 @@ export default async function LabAboutPage({
           </div>
 
           <h3 className="lab-h3 lab-stories-title">{t.impact.storiesTitle}</h3>
-          <StoryList stories={stories} glossary={lab.stories.glossary} />
+          <StoryList stories={stories} glossary={lab.stories.glossary} swipe />
         </div>
       </section>
 
@@ -191,7 +204,15 @@ export default async function LabAboutPage({
           {groups.map((group, i) => (
             <div key={group.title} className="lab-team-group">
               <h3 className="lab-team-heading">{group.title}</h3>
-              <ul className={i === 0 ? "lab-team lab-team-lg" : "lab-team"}>
+              <ul
+                className={
+                  group.compact
+                    ? "lab-team lab-team-compact"
+                    : i === 0
+                      ? "lab-team lab-team-lg"
+                      : "lab-team"
+                }
+              >
                 {group.members.map(memberCard)}
               </ul>
 
@@ -238,32 +259,6 @@ export default async function LabAboutPage({
               ))}
             </ul>
           </div>
-        </div>
-      </section>
-
-      {/* What we focus on: labelled rows */}
-      <section className="lab-section lab-section-tight">
-        <div className="lab-wrap lab-about">
-          <header>
-            <p className="lab-kicker">{t.ourApproach.title}</p>
-            <h2 className="lab-h2">{lab.aboutPage.approachTitle}</h2>
-          </header>
-          <dl className="lab-rows">
-            {[t.ourApproach.focusAreas].map(
-              (block) => (
-                <div key={block.title} className="lab-row-item">
-                  <dt>{block.title}</dt>
-                  <dd>
-                    <ul className="lab-list">
-                      {block.items.map((item: string) => (
-                        <li key={item}>{fillImpact(item)}</li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-              ),
-            )}
-          </dl>
         </div>
       </section>
 
