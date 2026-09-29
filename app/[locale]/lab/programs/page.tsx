@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BreadcrumbJsonLd, ActivitiesEventsJsonLd } from "@/app/components/json-ld";
 import Image from "next/image";
 import { ThreadPage } from "@/app/components/thread-page";
 import { ThreadSet } from "@/app/components/thread-set";
@@ -14,6 +15,7 @@ import { LabAnnouncement } from "../_components/lab-announcement";
 import { LabFooter } from "../_components/lab-footer";
 import { SmartLink, isExternal } from "../_components/smart-link";
 import { TitleBand } from "../_components/title-band";
+import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
 import "../lab.css";
 
 const AISAR_URL = "https://scholarship.aisafety.ar/";
@@ -84,11 +86,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
-  return {
-    title: `${dict.activities.title} · ${dict.lab.metaTitle}`,
-    robots: { index: false, follow: false },
-  };
+  return labPageMetadata("activities", currentLocale);
 }
 
 export default async function LabProgramsPage({
@@ -116,6 +114,16 @@ export default async function LabProgramsPage({
     <div className="lab">
       <ThreadPage />
       <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <ActivitiesEventsJsonLd locale={currentLocale} />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.activities.breadcrumb.home, url: "" },
+            { name: dict.activities.breadcrumb.current, url: LAB_PAGE_PATHS.activities },
+          ]}
+          locale={currentLocale}
+        />
 
       <TitleBand
         locale={currentLocale}
@@ -377,6 +385,7 @@ export default async function LabProgramsPage({
         </div>
       </section>
 
+      </main>
       <LabFooter locale={currentLocale} dict={dict} />
     </div>
   );

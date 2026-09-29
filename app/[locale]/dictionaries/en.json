@@ -53,7 +53,7 @@
       "secondaryCta": "Join the community",
       "stats": {
         "communityMembers": "Community members",
-        "fellowshipPlacements": "Fellowship acceptances",
+        "fellowshipPlacements": "Fellowships joined",
         "fullTimeRoles": "Full-time AI safety roles",
         "publications": "Publications"
       }
@@ -114,7 +114,7 @@
           "id": "careers",
           "eyebrow": "Careers",
           "title": "Fellowships and jobs",
-          "description": "One-on-one career support, help preparing applications and trips to conferences. {fellowshipPlacements} fellowship acceptances and {fullTimeRoles} full-time roles so far.",
+          "description": "One-on-one career support, help preparing applications and trips to conferences. {fellowshipPlacements} fellowships joined and {fullTimeRoles} full-time roles so far.",
           "cta": "See stories",
           "link": "/about#impact"
         }
@@ -198,7 +198,7 @@
       "ctaLink": "/about#impact",
       "statLabels": {
         "fullTimeRoles": "Full-time AI safety roles",
-        "fellowshipPlacements": "Fellowship acceptances",
+        "fellowshipPlacements": "Fellowships joined",
         "publications": "Publications"
       }
     },
@@ -313,7 +313,7 @@
       },
       "fellowships": {
         "title": "External fellowships and programs",
-        "description": "{fellowshipPlacements} acceptances across about 21 people since 2024."
+        "description": "{fellowshipPlacements} fellowships joined by about 21 people since 2024."
       },
       "research": {
         "title": "Research output",
@@ -589,7 +589,7 @@
         {
           "id": "retreat",
           "title": "Annual retreat",
-          "description": "A weekend for the organizing team and members who want to join: strategy, one-on-ones and planning the year ahead.",
+          "description": "A weekend for the organizing team and members joining it: strategy, one-on-ones and planning the year ahead.",
           "cta": null,
           "link": null,
           "external": false
@@ -2049,7 +2049,7 @@
       "rows": [
         {
           "label": "Why it matters",
-          "text": "If AI goes well, it could help with problems that have been stuck for decades. If it doesn't, the harm could be very hard to reverse. Nobody has a reliable map, and researchers we respect disagree about the risk. We think it is plausible enough, and the work neglected enough, that careful people can change the outcome.",
+          "text": "If AI goes well, it could help with problems that have been stuck for decades. If it doesn't, the harm could be very hard to reverse. Nobody has a reliable map, and some researchers we respect aren't convinced there's a serious risk at all. We think it is plausible enough, and the work neglected enough, that careful people can change the outcome.",
           "linkLabel": "The case for taking AI seriously",
           "link": "/resources"
         },
@@ -2093,7 +2093,7 @@
             },
             {
               "key": "socialAttendance",
-              "label": "people at each monthly social"
+              "label": "people at a typical monthly social"
             }
           ],
           "body": "Monthly socials, an annual retreat, hackathons and a WhatsApp group where members share opportunities and papers."
@@ -2117,7 +2117,7 @@
           "stats": [
             {
               "key": "fellowshipPlacements",
-              "label": "fellowship acceptances"
+              "label": "fellowships joined"
             },
             {
               "key": "fullTimeRoles",
@@ -2164,8 +2164,8 @@
       "aisar": {
         "description": "Six-month mentored research fellowship in Buenos Aires, funded by Coefficient Giving.",
         "chips": [
-          "Stipend: USD 700 or 1,400 a month",
-          "20 or 40 hours a week",
+          "USD 700/month for 20 hours a week",
+          "USD 1,400/month for 40 hours a week",
           "Compute budget"
         ],
         "status": "Second cohort starts October 2026"
@@ -2192,11 +2192,11 @@
     "join": {
       "eyebrow": "Your thread",
       "title": "Start where you are",
-      "description": "About half the people at our monthly socials are new to AI safety.",
+      "description": "About half the people at our monthly socials are newcomers.",
       "steps": [
         {
           "title": "Come to a monthly social",
-          "text": "Every month in Buenos Aires, with {socialAttendance} people.",
+          "text": "Every month in Buenos Aires, typically with {socialAttendance} people.",
           "cta": "See the Luma calendar",
           "link": "https://luma.com/BAISH"
         },

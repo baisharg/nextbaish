@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { TransitionLink } from "@/app/components/transition-link";
 import { ThreadPage } from "@/app/components/thread-page";
 import { ThreadSet } from "@/app/components/thread-set";
@@ -16,6 +17,7 @@ import { LabAnnouncement } from "./_components/lab-announcement";
 import { LabFooter } from "./_components/lab-footer";
 import { SmartLink, isExternal } from "./_components/smart-link";
 import { StoryList } from "./_components/story-list";
+import { labPageMetadata } from "./_components/lab-seo";
 import "./lab.css";
 
 const WHATSAPP_URL = "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P";
@@ -37,11 +39,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
-  return {
-    title: `${dict.lab.metaTitle} · BAISH`,
-    robots: { index: false, follow: false },
-  };
+  return labPageMetadata("home", currentLocale);
 }
 
 export default async function LabPage({
@@ -65,6 +63,15 @@ export default async function LabPage({
     <div className="lab">
       <ThreadPage />
       <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <OrganizationJsonLd />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.home.breadcrumb.home, url: "" },
+          ]}
+          locale={currentLocale}
+        />
 
       {/* Hero: the free animation, knotted in the right column */}
       <section className="lab-hero">
@@ -318,21 +325,20 @@ export default async function LabPage({
                 </a>
               </div>
             </div>
-
-            <div className="lab-trow lab-trow-call" role="row">
-              <div role="cell" className="lab-call-copy">
-                <h3 className="lab-trow-title">{lab.programs.call.title}</h3>
-                <p className="lab-trow-desc">{lab.programs.call.text}</p>
-              </div>
-              <div role="cell" className="lab-cell-cta">
-                <TransitionLink
-                  className="lab-link"
-                  href={withLocale(currentLocale, "/contact#contact-form")}
-                >
-                  {lab.programs.call.cta}
-                  <span aria-hidden="true">→</span>
-                </TransitionLink>
-              </div>
+          </div>
+          <div className="lab-trow lab-trow-call">
+            <div className="lab-call-copy">
+              <h3 className="lab-trow-title">{lab.programs.call.title}</h3>
+              <p className="lab-trow-desc">{lab.programs.call.text}</p>
+            </div>
+            <div className="lab-cell-cta">
+              <TransitionLink
+                className="lab-link"
+                href={withLocale(currentLocale, "/contact#contact-form")}
+              >
+                {lab.programs.call.cta}
+                <span aria-hidden="true">→</span>
+              </TransitionLink>
             </div>
           </div>
           <div className="lab-band" data-thread-box aria-hidden="true" />
@@ -401,6 +407,7 @@ export default async function LabPage({
         </div>
       </section>
 
+      </main>
       <LabFooter locale={currentLocale} dict={dict} />
     </div>
   );

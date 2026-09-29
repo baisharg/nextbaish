@@ -332,6 +332,11 @@ const STILL_TIME = 0;
 
 /** Finish any direction change in progress, so still frames are settled */
 const settleThreads = () => {
+  // Restart the clock so the next frame doesn't step backwards in time, and
+  // drop any pointer push: still frames don't react to the pointer.
+  lastAnimateNow = 0;
+  pointerStrength = 0;
+  pointerTargetActive = false;
   for (const thread of threads) {
     thread.direction = thread.targetDirection;
     thread.transitionStartTime = 0;
@@ -513,8 +518,12 @@ function animate(now: number) {
   }
   if (stillMode) now = STILL_TIME;
 
-  // Advance pointer easing (frame-rate independent)
-  const dt = lastAnimateNow > 0 ? Math.min(now - lastAnimateNow, 100) : 16;
+  // Advance pointer easing (frame-rate independent). Clamped to >= 0: still
+  // mode pins time at 0, and a negative step makes the easing blow up to NaN.
+  const dt =
+    lastAnimateNow > 0
+      ? Math.min(Math.max(now - lastAnimateNow, 0), 100)
+      : 16;
   lastAnimateNow = now;
   const posBlend = 1 - Math.exp(-dt / POINTER_POS_TAU_MS);
   const strengthBlend = 1 - Math.exp(-dt / POINTER_STRENGTH_TAU_MS);

@@ -43,7 +43,13 @@ export function ThreadPage() {
       if (Number.isNaN(index)) return false;
       if (section.dataset.activeStep === String(index)) return true;
       const count = section.dataset.threadSteps?.split(",").length ?? 1;
-      window.scrollTo({ top: stepScrollY(section, index, count) });
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      window.scrollTo({
+        top: stepScrollY(section, index, count),
+        behavior: reduced ? "instant" : "smooth",
+      });
       return true;
     };
 

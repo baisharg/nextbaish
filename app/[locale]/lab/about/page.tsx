@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { ThreadPage } from "@/app/components/thread-page";
 import { ThreadSet } from "@/app/components/thread-set";
 import { TeamLinksRow } from "@/app/components/team-card";
@@ -26,6 +27,7 @@ import { LabAnnouncement } from "../_components/lab-announcement";
 import { LabFooter } from "../_components/lab-footer";
 import { StoryList } from "../_components/story-list";
 import { TitleBand } from "../_components/title-band";
+import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
 import "../lab.css";
 
 const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
@@ -37,11 +39,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
-  return {
-    title: `${dict.about.title} · ${dict.lab.metaTitle}`,
-    robots: { index: false, follow: false },
-  };
+  return labPageMetadata("about", currentLocale);
 }
 
 export default async function LabAboutPage({
@@ -93,6 +91,16 @@ export default async function LabAboutPage({
     <div className="lab">
       <ThreadPage />
       <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <OrganizationJsonLd />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.about.breadcrumb.home, url: "" },
+            { name: dict.about.breadcrumb.current, url: LAB_PAGE_PATHS.about },
+          ]}
+          locale={currentLocale}
+        />
 
       <TitleBand
         locale={currentLocale}
@@ -189,6 +197,8 @@ export default async function LabAboutPage({
 
               {i === 0 && (
                 <div className="lab-trow lab-trow-call" id="get-in-touch">
+                  {/* Older links point at #book-a-call */}
+                  <span id="book-a-call" aria-hidden="true" />
                   <div className="lab-call-copy">
                     <h3 className="lab-trow-title">{lab.contactFirst.title}</h3>
                     <p className="lab-trow-desc">{lab.contactFirst.text}</p>
@@ -310,6 +320,7 @@ export default async function LabAboutPage({
         </div>
       </section>
 
+      </main>
       <LabFooter locale={currentLocale} dict={dict} />
     </div>
   );

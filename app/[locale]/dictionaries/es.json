@@ -2049,7 +2049,7 @@
       "rows": [
         {
           "label": "Por qué importa",
-          "text": "Si la IA sale bien, podría ayudarnos con problemas estancados desde hace décadas. Si no, el daño podría ser muy difícil de revertir. Nadie tiene un mapa confiable, y hay investigadores que respetamos que no están convencidos del riesgo. Creemos que es lo suficientemente plausible, y el trabajo lo suficientemente desatendido, como para que gente cuidadosa pueda cambiar el resultado.",
+          "text": "Si la IA sale bien, podría ayudarnos con problemas estancados desde hace décadas. Si no, el daño podría ser muy difícil de revertir. Nadie tiene un mapa confiable, y hay investigadores que respetamos que no están convencidos de que haya un riesgo serio. Creemos que es lo suficientemente plausible, y el trabajo lo suficientemente desatendido, como para que gente cuidadosa pueda cambiar el resultado.",
           "linkLabel": "Por qué tomarse la IA en serio",
           "link": "/resources"
         },
@@ -2093,7 +2093,7 @@
             },
             {
               "key": "socialAttendance",
-              "label": "personas en cada encuentro mensual"
+              "label": "personas en un encuentro mensual típico"
             }
           ],
           "body": "Encuentros mensuales, un retiro anual, hackathons y un grupo de WhatsApp donde se comparten oportunidades y papers."
@@ -2164,8 +2164,8 @@
       "aisar": {
         "description": "Beca de investigación de seis meses con mentoría, en Buenos Aires, financiada por Coefficient Giving.",
         "chips": [
-          "Estipendio: USD 700 o 1.400 por mes",
-          "20 o 40 horas por semana",
+          "USD 700/mes por 20 horas semanales",
+          "USD 1.400/mes por 40 horas semanales",
           "Presupuesto de cómputo"
         ],
         "status": "La segunda cohorte empieza en octubre de 2026"
@@ -2192,11 +2192,11 @@
     "join": {
       "eyebrow": "Tu hilo",
       "title": "Empezá desde donde estás",
-      "description": "Cerca de la mitad de la gente en nuestros encuentros mensuales es nueva en AI safety.",
+      "description": "Cerca de la mitad de quienes vienen a nuestros encuentros mensuales son nuevos.",
       "steps": [
         {
           "title": "Vení a un encuentro mensual",
-          "text": "Todos los meses en Buenos Aires, con {socialAttendance} personas.",
+          "text": "Todos los meses en Buenos Aires, en general con {socialAttendance} personas.",
           "cta": "Ver el calendario en Luma",
           "link": "https://luma.com/BAISH"
         },

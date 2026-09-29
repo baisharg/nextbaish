@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
 import { ThreadPage } from "@/app/components/thread-page";
 import { ThreadSet } from "@/app/components/thread-set";
 import { getDictionary } from "../../dictionaries";
@@ -13,6 +14,7 @@ import { LabAnnouncement } from "../_components/lab-announcement";
 import { LabFooter } from "../_components/lab-footer";
 import { SmartLink, isExternal } from "../_components/smart-link";
 import { TitleBand } from "../_components/title-band";
+import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
 import "../lab.css";
 
 const WHATSAPP_URL = "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P";
@@ -29,11 +31,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
-  const dict = await getDictionary(currentLocale);
-  return {
-    title: `${dict.contact.title} · ${dict.lab.metaTitle}`,
-    robots: { index: false, follow: false },
-  };
+  return labPageMetadata("contact", currentLocale);
 }
 
 export default async function LabContactPage({
@@ -52,7 +50,7 @@ export default async function LabContactPage({
   const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
 
   // One row per reason to get in touch, each with the channel that fits it.
-  const rows: { title: string; text: string; actions: Action[] }[] = [
+  const rows: { id?: string; title: string; text: string; actions: Action[] }[] = [
     {
       title: p.course.title,
       text: p.course.text,
@@ -82,6 +80,8 @@ export default async function LabContactPage({
       actions: [{ label: page.writeToUs, href: "#contact-form" }],
     },
     {
+      // Older links point at /contact#press
+      id: "press",
       title: p.press.title,
       text: p.press.text,
       actions: [{ label: page.writeToUs, href: "#contact-form" }],
@@ -96,6 +96,14 @@ export default async function LabContactPage({
       ],
     },
   ];
+
+  // Plain-text FAQ for structured data (template variables spelled out)
+  const faqItems = t.faq.items.map((faq) => ({
+    question: faq.question,
+    answer: faq.answer
+      .replace("{resourcesLink}", "our resources page")
+      .replace("{email}", "our email"),
+  }));
 
   // FAQ answers may reference the resources page as {resourcesLink}.
   const renderAnswer = (answer: string) =>
@@ -119,6 +127,16 @@ export default async function LabContactPage({
     <div className="lab">
       <ThreadPage />
       <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <FAQJsonLd faqs={faqItems} />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.contact.breadcrumb.home, url: "" },
+            { name: dict.contact.breadcrumb.current, url: LAB_PAGE_PATHS.contact },
+          ]}
+          locale={currentLocale}
+        />
 
       <TitleBand
         locale={currentLocale}
@@ -180,6 +198,7 @@ export default async function LabContactPage({
             {rows.map((row) => (
               <div
                 key={row.title}
+                id={row.id}
                 className="lab-route"
                 role="row"
               >
@@ -233,6 +252,7 @@ export default async function LabContactPage({
         </div>
       </section>
 
+      </main>
       <LabFooter locale={currentLocale} dict={dict} />
     </div>
   );
