@@ -10,16 +10,51 @@ html[data-threads="sections"] .timeline-background {
   display: none;
 }
 
+/* Page texture, three layers behind the threads:
+ * 1. soft colour washes and grain, fixed to the screen (::before),
+ * 2. a fine dot grid that scrolls with the content (::after).
+ * All CSS, so it costs nothing per frame. */
 .lab::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(
-    180deg,
-    #efebf8 0%,
-    #f3f1f7 45%,
-    #ebeaee 100%
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0 0.17 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 220px 220px,
+    radial-gradient(60vmax 45vmax at 88% 8%, rgb(199 125 218 / 0.16), transparent 70%),
+    radial-gradient(55vmax 45vmax at 6% 42%, rgb(168 197 255 / 0.22), transparent 70%),
+    radial-gradient(50vmax 40vmax at 70% 96%, rgb(146 117 229 / 0.14), transparent 70%),
+    linear-gradient(180deg, #efebf8 0%, #f3f1f7 45%, #ebeaee 100%);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.lab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(
+    circle at center,
+    rgb(22 18 43 / 0.09) 1px,
+    transparent 1.4px
+  );
+  background-size: 22px 22px;
+  background-position: center top;
+  /* Fade the grid toward the sides so it reads as texture, not a grid */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 18%,
+    #000 82%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 18%,
+    #000 82%,
+    transparent
   );
   pointer-events: none;
 }
@@ -57,7 +92,8 @@ html[data-threads="sections"] .timeline-background {
 }
 
 .lab {
-  --lab-bg: 245 245 245;
+  /* Tint of the veils behind copy; matches the page wash */
+  --lab-bg: 242 239 248;
   --lab-ink: #16122b;
   --lab-ink-2: #4a4560;
   /* ≥ 5:1 on the page background (WCAG AA for the small mono labels) */
