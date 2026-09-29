@@ -341,7 +341,7 @@ export default async function LabPage({
         </div>
       </section>
 
-      {/* Stories: the threads fan out through a band above the list */}
+      {/* Stories: the threads fan out above the list and on behind it */}
       <section className="lab-section lab-section-tight">
         <ThreadSet scene="fan" />
         <div className="lab-wrap">
@@ -349,16 +349,18 @@ export default async function LabPage({
             <p className="lab-kicker">{lab.stories.eyebrow}</p>
             <h2 className="lab-h2">{lab.stories.title}</h2>
             <p className="lab-section-desc">{t.successStories.description}</p>
+            <TransitionLink
+              className="lab-link lab-head-link"
+              href={withLocale(currentLocale, "/lab/about#impact")}
+            >
+              {t.successStories.cta}
+              <span aria-hidden="true">→</span>
+            </TransitionLink>
           </header>
-          <div className="lab-band" data-thread-box aria-hidden="true" />
-          <StoryList stories={stories} glossary={glossary} pulse />
-          <TransitionLink
-            className="lab-link"
-            href={withLocale(currentLocale, "/lab/about#impact")}
-          >
-            {t.successStories.cta}
-            <span aria-hidden="true">→</span>
-          </TransitionLink>
+          <div className="lab-stories-stage" data-thread-box>
+            <div className="lab-band" aria-hidden="true" />
+            <StoryList stories={stories} glossary={glossary} pulse />
+          </div>
         </div>
       </section>
 
