@@ -296,21 +296,34 @@ html[data-threads="sections"] .timeline-background {
 }
 
 .lab-router-link {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   height: 100%;
-  padding: 1rem 1rem 1.1rem;
-  background: rgb(var(--lab-bg) / 0.7);
-  transition: background-color 200ms ease;
+  padding: 1rem 1.25rem 1.25rem;
 }
 
+/* First column lines up with the heading above; the rest sit off the rule */
 .lab-router li:first-child .lab-router-link {
   padding-left: 0;
 }
 
-.lab-router-link:hover {
-  background: rgb(255 255 255 / 0.85);
+/* Hover: the cell's stretch of the top rule turns accent, like the rail */
+.lab-router-link::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto 0;
+  height: 3px;
+  background: var(--lab-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+
+.lab-router-link:hover::before,
+.lab-router-link:focus-visible::before {
+  transform: scaleX(1);
 }
 
 .lab-router-who {
@@ -325,7 +338,8 @@ html[data-threads="sections"] .timeline-background {
   text-underline-offset: 0.3em;
 }
 
-.lab-router-link:hover .lab-router-label {
+.lab-router-link:hover .lab-router-label,
+.lab-router-link:focus-visible .lab-router-label {
   text-decoration-color: currentColor;
 }
 
@@ -2015,7 +2029,8 @@ html[data-threads="sections"] .timeline-background {
 @media (prefers-reduced-motion: reduce) {
   .lab-step,
   .lab-rail button,
-  .lab-rail button::before {
+  .lab-rail button::before,
+  .lab-router-link::before {
     transition: none;
   }
 }
