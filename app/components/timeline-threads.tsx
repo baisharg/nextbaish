@@ -876,6 +876,10 @@ function TimelineThreadsComponent({
         const message: WorkerMessage = { type: "pulse", count };
         animationWorkerRef.current?.postMessage(message);
       },
+      onLift: (count) => {
+        const message: WorkerMessage = { type: "lift", count };
+        animationWorkerRef.current?.postMessage(message);
+      },
     });
   }, [channel]);
 

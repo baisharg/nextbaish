@@ -25,12 +25,15 @@ export type SceneTarget = {
 type Listener = {
   onTargets: (targets: SceneTarget[] | null) => void;
   onPulse: (count: number) => void;
+  onLift: (count: number) => void;
 };
 
 export type ThreadChannel = {
   readonly targets: SceneTarget[] | null;
   setTargets(targets: SceneTarget[]): void;
   pulse(count?: number): void;
+  /** Turn `count` falling threads into rising ones */
+  lift(count?: number): void;
   subscribe(listener: Listener): () => void;
 };
 
@@ -51,6 +54,9 @@ export function createThreadChannel(): ThreadChannel {
     pulse(count = 6) {
       listeners.forEach((l) => l.onPulse(count));
     },
+    lift(count = 1) {
+      listeners.forEach((l) => l.onLift(count));
+    },
     subscribe(listener) {
       listeners.add(listener);
       return () => {
@@ -66,6 +72,11 @@ export function registerChannel(channel: ThreadChannel) {
   return () => {
     live.delete(channel);
   };
+}
+
+/** Turn falling threads into rising ones in every set on the page */
+export function liftAll(count = 1) {
+  live.forEach((channel) => channel.lift(count));
 }
 
 /** Send highlights along a few threads of every set on the page */

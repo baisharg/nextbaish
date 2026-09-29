@@ -69,6 +69,8 @@ export type WorkerMessage =
     }
   // Send a highlight along `count` random threads
   | { type: "pulse"; count: number }
+  // Turn `count` falling threads into rising ones
+  | { type: "lift"; count: number }
   // Reduced motion on/off (see InitMessage.still)
   | { type: "still"; still: boolean };
 

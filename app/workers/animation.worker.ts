@@ -422,13 +422,24 @@ const tintedStopsFor = (thread: WorkerThreadState): ColorStop[] => {
 };
 
 /** How far below the knot the free animation's "down" threads settle */
-const FREE_FLOOR_DEPTH = 0.35;
+/**
+ * Vertical range of the free animation in profile space: from the highest a
+ * rising thread climbs (up profiles reach about PIVOT_Y - 0.85) down to the
+ * floor where falling threads settle (about 0.84–0.89). Mapping this whole
+ * range into the box keeps the rising futures on screen; they are the point.
+ */
+const FREE_Y_TOP = -0.33;
+const FREE_Y_BOTTOM = 0.93;
+
+/** Profile-space y → viewbox y inside `box` */
+const freeY = (y: number, box: SceneBox) =>
+  box[1] + ((y - FREE_Y_TOP) / (FREE_Y_BOTTOM - FREE_Y_TOP)) * (box[3] - box[1]);
 
 /**
- * Free animation re-placed so its knot sits at the centre of `box`. Each side
- * of the knot is stretched separately so the thread ends still reach past
- * the screen edges, and the height is scaled so the settled threads land on
- * the bottom of the box.
+ * Free animation re-placed into `box`: the knot sits on the box's vertical
+ * centre line, low enough that rising threads have the space above it, and
+ * falling threads settle on the box's floor. Each side of the knot is
+ * stretched separately so the thread ends still reach past the screen edges.
  */
 const writeFreePlaced = (
   src: Float32Array,
@@ -439,15 +450,37 @@ const writeFreePlaced = (
   const leftEnd = sceneEdges[0] + X_START * span;
   const rightEnd = sceneEdges[0] + X_END * span;
   const knotX = (box[0] + box[2]) / 2;
-  const knotY = (box[1] + box[3]) / 2;
   const scaleLeft = (knotX - leftEnd) / (PIVOT_X - X_START);
   const scaleRight = (rightEnd - knotX) / (X_END - PIVOT_X);
-  const scaleY = Math.min((box[3] - box[1]) / 2 / FREE_FLOOR_DEPTH, 1);
   for (let p = 0; p < src.length; p += 2) {
     const dx = src[p] - PIVOT_X;
     out[p] = knotX + dx * (dx < 0 ? scaleLeft : scaleRight);
-    out[p + 1] = knotY + (src[p + 1] - PIVOT_Y) * scaleY;
+    out[p + 1] = freeY(src[p + 1], box);
   }
+};
+
+/** Width multiplier for a fully risen thread in the free scene */
+const RISING_WIDTH_BOOST = 2.2;
+
+/** 0 = falling, 1 = rising, in between while a thread changes direction */
+const risingAmount = (thread: WorkerThreadState, now: number) => {
+  const up = (d: Direction) => (d === "up" ? 1 : 0);
+  if (thread.transitionStartTime === 0 || thread.direction === thread.targetDirection) {
+    return up(thread.targetDirection);
+  }
+  const p = Math.min(Math.max((now - thread.transitionStartTime) / thread.duration, 0), 1);
+  return up(thread.direction) + (up(thread.targetDirection) - up(thread.direction)) * easeInOutCubic(p);
+};
+
+/** The free scene, when it carries at least half the weight */
+const dominantFreeScene = (): SceneState | null => {
+  let best: SceneState | null = null;
+  for (const scene of scenes) {
+    if (scene.id === "free" && scene.weight >= 0.5) {
+      if (!best || scene.weight > best.weight) best = scene;
+    }
+  }
+  return best;
 };
 
 /**
@@ -550,6 +583,8 @@ function animate(now: number) {
     }
   }
 
+  const freeScene = scenes.length ? dominantFreeScene() : null;
+
   // Compute animated points for all threads (reuse buffers)
   for (let i = 0; i < threads.length; i++) {
     const thread = threads[i];
@@ -602,10 +637,17 @@ function animate(now: number) {
     const frame = threadFrames[i];
     frame.points = thread.floatingPoints;
     frame.width = thread.weight;
-    if (scenes.length) {
-      // Scenes move threads far from their own profile, so colour by screen
-      // height instead, with the saturated stops: the "down" stops fade to
-      // grey near the floor, which reads as grey threads on tall screens.
+    if (freeScene) {
+      // The free animation keeps its meaning: falling futures fade to dark at
+      // the floor, rising ones stay bright. Gradient bounds follow the same
+      // placement as the points.
+      frame.colorStops = thread.gradientStops[thread.direction];
+      frame.gradientMinY = freeY(thread.gradientBounds.minY, freeScene.box);
+      frame.gradientMaxY = freeY(thread.gradientBounds.maxY, freeScene.box);
+    } else if (scenes.length) {
+      // Shape scenes move threads far from their own profile, so colour by
+      // screen height instead, with the saturated stops: the "down" stops
+      // fade to grey near the floor, which reads as grey threads here.
       frame.colorStops = tintedStopsFor(thread);
       frame.gradientMinY = sceneVerticalEdges[0];
       frame.gradientMaxY = sceneVerticalEdges[1];
@@ -639,6 +681,14 @@ function animate(now: number) {
     // A pulsing thread lifts out of a dimmed scene so the highlight shows.
     frame.opacity =
       thread.opacity * (opacityScale + (1 - opacityScale) * pulseEnvelope);
+
+    // In the free scene the rising threads are the hopeful futures, so they
+    // stand out: thicker and fully opaque, easing in as a thread turns up.
+    if (freeScene) {
+      const rising = risingAmount(thread, now);
+      frame.width = thread.weight * (1 + (RISING_WIDTH_BOOST - 1) * rising);
+      frame.opacity += (1 - frame.opacity) * rising;
+    }
   }
 
   if (!reusablePacket || !renderer) return;
@@ -796,6 +846,26 @@ self.onmessage = (event: MessageEvent<WorkerMessage>) => {
       }
       scenes = next;
       drawStill();
+      break;
+    }
+
+    case "lift": {
+      // Turn falling futures into rising ones (hovering a call to action).
+      if (stillMode) break;
+      const falling = threads.filter(
+        (t) =>
+          t.direction === "down" &&
+          t.targetDirection === "down" &&
+          t.transitionStartTime === 0,
+      );
+      for (let n = 0; n < data.count && falling.length; n++) {
+        const [thread] = falling.splice((Math.random() * falling.length) | 0, 1);
+        thread.targetDirection = "up";
+        thread.duration = directionDuration("up");
+        thread.transitionStartTime = lastAnimateNow;
+        thread.lastFlipAt = lastAnimateNow;
+        transitioningThreadIds.add(thread.id);
+      }
       break;
     }
 

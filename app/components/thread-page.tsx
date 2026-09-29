@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { pulseAll } from "../utils/thread-director";
+import { liftAll, pulseAll } from "../utils/thread-director";
 import { stepScrollY } from "../utils/thread-steps";
 
 const PULSE_THREADS = 14;
@@ -13,6 +13,8 @@ const PULSE_THREADS = 14;
  * - hides the site-wide background canvas (`html[data-threads="sections"]`),
  * - sends highlights along the threads when any `[data-thread-pulse]` element
  *   is hovered or focused,
+ * - turns a falling thread into a rising one when a `[data-thread-lift]`
+ *   element (a call to action) is hovered or focused,
  * - makes `[data-step-target="<index>"]` buttons in a stepped section jump to
  *   that step, and scrolls a step into place when something inside
  *   `[data-step="<index>"]` gets focus, so keyboard users reach every step.
@@ -23,12 +25,15 @@ export function ThreadPage() {
     root.dataset.threads = "sections";
 
     let lastPulsed: Element | null = null;
+    let lastLifted: Element | null = null;
     const handlePulse = (event: Event) => {
-      const target = (event.target as Element | null)?.closest(
-        "[data-thread-pulse]",
-      );
+      const origin = event.target as Element | null;
+      const target = origin?.closest("[data-thread-pulse]");
       if (target && target !== lastPulsed) pulseAll(PULSE_THREADS);
       lastPulsed = target ?? null;
+      const lift = origin?.closest("[data-thread-lift]");
+      if (lift && lift !== lastLifted) liftAll(1);
+      lastLifted = lift ?? null;
     };
 
     const goToStep = (target: Element | null) => {

@@ -22,6 +22,7 @@ export function SmartLink({
   className?: string;
   children: ReactNode;
   "data-thread-pulse"?: boolean;
+  "data-thread-lift"?: boolean;
 }) {
   if (isExternal(href)) {
     return (

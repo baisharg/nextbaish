@@ -312,6 +312,50 @@ html[data-threads="sections"] .timeline-background {
   display: none;
 }
 
+/* The hero animation read as possible futures: they cross "today" (the
+ * knot sits at 69% of the box height; see FREE_Y_TOP/BOTTOM in the worker),
+ * rise toward the top or fall to the floor. */
+.lab-hero-knot {
+  position: relative;
+}
+
+.lab-futures-label {
+  position: absolute;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--lab-mono-size);
+  letter-spacing: 0.01em;
+  color: var(--lab-ink-2);
+  white-space: nowrap;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.3rem;
+  background: rgb(var(--lab-bg) / 0.75);
+}
+
+.lab-futures-good {
+  top: 22%;
+  right: 0;
+}
+
+.lab-futures-now {
+  top: 69%;
+  right: calc(50% + 1.25rem);
+  transform: translateY(-50%);
+}
+
+.lab-futures-bad {
+  bottom: 0;
+  right: 0;
+}
+
+.lab-futures-caption {
+  margin-top: 1.75rem;
+  max-width: 36ch;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--lab-mono-size);
+  line-height: 1.55;
+  color: var(--lab-ink-3);
+}
+
 /* ---------- visitor router ---------- */
 
 .lab-router-title {

@@ -73,7 +73,8 @@ export default async function LabPage({
           locale={currentLocale}
         />
 
-      {/* Hero: the free animation, knotted in the right column */}
+      {/* Hero: the free animation as possible futures. They cross today;
+          most fall to the floor, a few rise. Calls to action lift one. */}
       <section className="lab-hero">
         <ThreadSet scene="free" />
         <div className="lab-wrap lab-hero-grid">
@@ -82,7 +83,7 @@ export default async function LabPage({
             <h1 className="lab-display">{t.mission.title}</h1>
             <p className="lab-lede">{fillImpact(lab.hero.tagline)}</p>
             <div className="lab-actions">
-              <a className="lab-button" href="#programs">
+              <a className="lab-button" href="#programs" data-thread-lift>
                 {anyOpen ? t.hero.primaryCta : lab.hero.seeCourses}
                 <span aria-hidden="true">→</span>
               </a>
@@ -91,17 +92,29 @@ export default async function LabPage({
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-thread-lift
               >
                 {lab.hero.whatsapp}
                 <span aria-hidden="true">↗</span>
               </a>
             </div>
+            <p className="lab-futures-caption">{lab.hero.futures.caption}</p>
           </div>
           <div
             className="lab-hero-knot lab-box-wide"
             data-thread-box
             aria-hidden="true"
-          />
+          >
+            <span className="lab-futures-label lab-futures-good">
+              {lab.hero.futures.good}
+            </span>
+            <span className="lab-futures-label lab-futures-now">
+              {lab.hero.futures.now}
+            </span>
+            <span className="lab-futures-label lab-futures-bad">
+              {lab.hero.futures.bad}
+            </span>
+          </div>
         </div>
 
         {/* One entry point per kind of visitor */}
@@ -114,7 +127,7 @@ export default async function LabPage({
                   href={item.link}
                   locale={currentLocale}
                   className="lab-router-link"
-                  data-thread-pulse
+                  data-thread-lift
                 >
                   <span className="lab-router-who">{item.who}</span>
                   <span className="lab-router-label">
@@ -390,7 +403,7 @@ export default async function LabPage({
                     href={step.link}
                     locale={currentLocale}
                     className={i === 0 ? "lab-button lab-button-sm" : "lab-link lab-link-sm"}
-                    data-thread-pulse
+                    data-thread-lift
                   >
                     {step.cta}
                     {i > 0 && (
