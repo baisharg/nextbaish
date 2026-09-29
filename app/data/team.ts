@@ -354,6 +354,15 @@ export const TEAM: TeamMember[] = [
         "https://scholar.google.com/citations?hl=es&authuser=1&user=sNPb8VgAAAAJ",
     },
   },
+  {
+    id: "mayra-ameneiros",
+    name: "Mayra Ameneiros",
+    group: "advisors",
+    photo: "/images/team/mayra-ameneiros.jpg",
+    links: {
+      linkedin: "https://www.linkedin.com/in/ameneirosmayra/",
+    },
+  },
 ];
 
 export function teamByGroup(group: TeamGroup): TeamMember[] {
