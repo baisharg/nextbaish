@@ -61,7 +61,7 @@
     "timeline": {
       "connect": "Connect",
       "connectTitle": "Join our community",
-      "connectDesc": "350+ members on WhatsApp",
+      "connectDesc": "{communityMembers} members on WhatsApp",
       "foundations": "Foundations",
       "foundationsTitle": "Technical AI Safety Course",
       "foundationsDesc": "Technical foundations for contributing to AI safety",
@@ -128,7 +128,7 @@
         {
           "number": "01",
           "title": "Join our community",
-          "description": "Connect with 350+ members on WhatsApp. Get updates on events and opportunities.",
+          "description": "Connect with {communityMembers} members on WhatsApp. Get updates on events and opportunities.",
           "cta": "Join WhatsApp",
           "link": "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P"
         },

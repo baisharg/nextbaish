@@ -12,7 +12,7 @@
 
 export const IMPACT = {
   /** Members of the BAISH WhatsApp community. */
-  communityMembers: "350+",
+  communityMembers: "400+",
   /** Subscribers to the BAISH Luma events calendar. */
   lumaSubscribers: "500+",
   /** Followers of @baish_arg on Instagram. */
