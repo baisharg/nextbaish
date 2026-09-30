@@ -2264,3 +2264,26 @@ html:has(.lab-dialog[open]) {
     gap: 1.25rem 1rem;
   }
 }
+
+/* ---------- phones: no backdrop blur ---------- */
+
+/*
+ * Frosted surfaces sit on live thread canvases, so their blur is redone
+ * every frame. Phone GPUs struggle with that; a more opaque background
+ * reads the same at this size.
+ */
+@media (max-width: 820px), (pointer: coarse) {
+  .lab-router,
+  .lab-story {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .lab-router {
+    background: rgb(var(--lab-bg) / 0.85);
+  }
+
+  .lab-story {
+    background: rgb(255 255 255 / 0.86);
+  }
+}

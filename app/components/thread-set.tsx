@@ -17,8 +17,22 @@ import type { SceneId } from "../utils/thread-scenes";
  */
 const SCENE_THREAD_SCALE: Partial<Record<SceneId, number>> = {
   horizon: 0.6,
-  // The hero and title bands: a fuller bundle, like the old background
-  free: 1.4,
+};
+
+/**
+ * The hero and title bands draw a fuller bundle on wide screens, like the
+ * old background. Phones keep the normal count: their band is small and
+ * GPU time is scarce.
+ */
+const FREE_THREAD_SCALE_WIDE = 1.4;
+const threadScaleFor = (scene?: SceneId) => {
+  if (!scene) return 1;
+  if (scene === "free") {
+    return typeof window !== "undefined" && window.innerWidth > 820
+      ? FREE_THREAD_SCALE_WIDE
+      : 1;
+  }
+  return SCENE_THREAD_SCALE[scene] ?? 1;
 };
 
 /**
@@ -177,7 +191,7 @@ export function ThreadSet({
         <TimelineThreads
           className="absolute inset-0"
           channel={channel}
-          threadScale={scene ? (SCENE_THREAD_SCALE[scene] ?? 1) : 1}
+          threadScale={threadScaleFor(scene)}
         />
       )}
     </div>
