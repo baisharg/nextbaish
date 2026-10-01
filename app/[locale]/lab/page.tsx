@@ -9,7 +9,7 @@ import {
   getCourseOpportunities,
   resolveApplyUrl,
 } from "@/app/data/course-opportunities";
-import { IMPACT, fillImpact, type ImpactKey } from "@/app/data/impact";
+import { impactValue, fillImpact, type ImpactKey } from "@/app/data/impact";
 import { featuredStories, withStoryCopy } from "@/app/data/stories";
 import { withLocale } from "@/app/utils/locale";
 import type { AppLocale } from "@/i18n.config";
@@ -82,7 +82,7 @@ export default async function LabPage({
           <div className="lab-hero-copy lab-veil">
             <p className="lab-kicker">{t.hero.eyebrow}</p>
             <h1 className="lab-display">{t.mission.title}</h1>
-            <p className="lab-lede">{fillImpact(lab.hero.tagline)}</p>
+            <p className="lab-lede">{fillImpact(lab.hero.tagline, currentLocale)}</p>
             <div className="lab-actions">
               <a className="lab-button" href="#programs" data-thread-lift>
                 {anyOpen ? t.hero.primaryCta : lab.hero.seeCourses}
@@ -208,7 +208,7 @@ export default async function LabPage({
                       {steps[i].stats.map((stat) => (
                         <div key={stat.key}>
                           <dt>{stat.label}</dt>
-                          <dd>{IMPACT[stat.key as ImpactKey]}</dd>
+                          <dd>{impactValue(stat.key as ImpactKey, currentLocale)}</dd>
                         </div>
                       ))}
                     </dl>
@@ -394,7 +394,7 @@ export default async function LabPage({
                   </span>
                   <div>
                     <h3>{step.title}</h3>
-                    <p>{fillImpact(step.text)}</p>
+                    <p>{fillImpact(step.text, currentLocale)}</p>
                   </div>
                   <SmartLink
                     href={step.link}

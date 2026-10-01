@@ -264,7 +264,7 @@ export default async function LabResourcesPage({
                   </span>
                   <div>
                     <h3>{step.title}</h3>
-                    <p>{fillImpact(step.text)}</p>
+                    <p>{fillImpact(step.text, currentLocale)}</p>
                   </div>
                   <SmartLink
                     href={step.link}

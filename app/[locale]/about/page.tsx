@@ -111,10 +111,10 @@ export default async function AboutPage({
                     {t.whoWeAre.title}
                   </h2>
                   <p className="text-base leading-relaxed text-slate-700">
-                    {fillImpact(t.whoWeAre.paragraph1)}
+                    {fillImpact(t.whoWeAre.paragraph1, currentLocale)}
                   </p>
                   <p className="text-base leading-relaxed text-slate-700">
-                    {fillImpact(t.whoWeAre.paragraph2)}
+                    {fillImpact(t.whoWeAre.paragraph2, currentLocale)}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 p-6">
@@ -142,7 +142,7 @@ export default async function AboutPage({
                 <article className="card-glass">
                   <h3 className="card-title">{t.impact.fullTime.title}</h3>
                   <p className="card-body">
-                    {fillImpact(t.impact.fullTime.description)}
+                    {fillImpact(t.impact.fullTime.description, currentLocale)}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {FULL_TIME_ORGS.map((org) => (
@@ -163,7 +163,7 @@ export default async function AboutPage({
                 <article className="card-glass">
                   <h3 className="card-title">{t.impact.fellowships.title}</h3>
                   <p className="card-body">
-                    {fillImpact(t.impact.fellowships.description)}
+                    {fillImpact(t.impact.fellowships.description, currentLocale)}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {FELLOWSHIP_PLACEMENTS.map((program) => (
@@ -190,7 +190,7 @@ export default async function AboutPage({
                               aria-hidden="true"
                               className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent-primary)]"
                             />
-                            <span>{fillImpact(item)}</span>
+                            <span>{fillImpact(item, currentLocale)}</span>
                           </li>
                         ))}
                       </ul>
@@ -349,7 +349,7 @@ export default async function AboutPage({
                     </p>
                     <ul className="list-disc space-y-2 pl-6 text-base text-slate-700">
                       {t.ourApproach.contribution.items.map((item, index) => (
-                        <li key={index}>{fillImpact(item)}</li>
+                        <li key={index}>{fillImpact(item, currentLocale)}</li>
                       ))}
                     </ul>
                   </div>

@@ -15,7 +15,7 @@ import { FUNDERS } from "@/app/data/funders";
 import {
   FELLOWSHIP_PLACEMENTS,
   FULL_TIME_ORGS,
-  IMPACT,
+  impactValue,
   fillImpact,
   type ImpactKey,
 } from "@/app/data/impact";
@@ -110,7 +110,7 @@ export default async function LabAboutPage({
         title={t.whoWeAre.title}
         lede={
           <>
-            <p>{fillImpact(t.whoWeAre.paragraph1)}</p>
+            <p>{fillImpact(t.whoWeAre.paragraph1, currentLocale)}</p>
             <div className="lab-focus">
               <p className="lab-focus-label">{t.ourApproach.focusAreas.title}</p>
               <ul className="lab-chips">
@@ -142,7 +142,7 @@ export default async function LabAboutPage({
             {ledgerKeys.map((key) => (
               <div key={key}>
                 <dt>{statLabels[key]}</dt>
-                <dd>{IMPACT[key]}</dd>
+                <dd>{impactValue(key, currentLocale)}</dd>
               </div>
             ))}
           </dl>
@@ -150,7 +150,7 @@ export default async function LabAboutPage({
           <div className="lab-split">
             <div>
               <h3 className="lab-h3">{lab.aboutPage.fullTimeOrgs}</h3>
-              <p className="lab-body">{fillImpact(t.impact.fullTime.description)}</p>
+              <p className="lab-body">{fillImpact(t.impact.fullTime.description, currentLocale)}</p>
               <ul className="lab-chips lab-chips-lg">
                 {FULL_TIME_ORGS.map((org) => (
                   <li key={org.name}>
@@ -163,7 +163,7 @@ export default async function LabAboutPage({
             </div>
             <div>
               <h3 className="lab-h3">{lab.aboutPage.fellowships}</h3>
-              <p className="lab-body">{fillImpact(t.impact.fellowships.description)}</p>
+              <p className="lab-body">{fillImpact(t.impact.fellowships.description, currentLocale)}</p>
               <ul className="lab-chips lab-chips-lg">
                 {FELLOWSHIP_PLACEMENTS.map((program) => (
                   <li key={program.name}>
@@ -181,7 +181,7 @@ export default async function LabAboutPage({
                   <h3 className="lab-h3">{block.title}</h3>
                   <ul className="lab-list">
                     {block.items.map((item: string) => (
-                      <li key={item}>{fillImpact(item)}</li>
+                      <li key={item}>{fillImpact(item, currentLocale)}</li>
                     ))}
                   </ul>
                 </div>

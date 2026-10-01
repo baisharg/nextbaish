@@ -329,7 +329,7 @@
         "items": [
           "{courseCohorts} cohortes presenciales desde marzo de 2026",
           "{courseApplications} postulaciones para {courseParticipants} lugares",
-          "{courseRecommendScore} de probabilidad de recomendar"
+          "Nota promedio de recomendación: {courseRecommendScore}"
         ]
       },
       "community": {
@@ -356,7 +356,7 @@
         },
         "guido-bergman": {
           "path": "Lead de cursos → Algoverse → Equistamp",
-          "quote": "BAISH me dio la base y las conexiones para transicionar a investigación de AI safety profesionalmente.",
+          "quote": "BAISH me dio la base y las conexiones para transicionar a la investigación de AI safety profesionalmente.",
           "text": "Lideró los cursos de BAISH, pasó por Algoverse, recibió un career transition grant de BlueDot y hoy es Research Engineer en Equistamp."
         },
         "guillermo-bondonno": {
@@ -532,7 +532,7 @@
       "eyebrow": "Cursos",
       "title": "Cursos",
       "description": "Versiones presenciales de los cursos de BlueDot Impact, facilitadas por BAISH. Gratuitos, selectivos y el primer paso estructurado para entrar al campo.",
-      "trackRecord": "Desde marzo de 2026: {courseCohorts} cohortes, {courseApplications} postulaciones para {courseParticipants} lugares, {courseRecommendScore} de probabilidad de recomendar.",
+      "trackRecord": "Desde marzo de 2026: {courseCohorts} cohortes, {courseApplications} postulaciones para {courseParticipants} lugares y una nota promedio de recomendación de {courseRecommendScore}.",
       "upcomingTitle": "Próximamente",
       "upcoming": [
         {
@@ -2076,7 +2076,7 @@
             },
             {
               "key": "courseRecommendScore",
-              "label": "de probabilidad de recomendar"
+              "label": "nota promedio de recomendación"
             }
           ],
           "body": "Technical AI Safety, el Technical AI Safety Project y Frontier AI Governance, dictados en persona en Buenos Aires."

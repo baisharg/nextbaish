@@ -60,7 +60,7 @@ export default async function LabContactPage({
     },
     {
       title: p.community.title,
-      text: fillImpact(p.community.text),
+      text: fillImpact(p.community.text, currentLocale),
       actions: [
         { label: lab.footer.links.whatsapp, href: WHATSAPP_URL, primary: true },
         { label: dict.footer.luma, href: LUMA_URL },

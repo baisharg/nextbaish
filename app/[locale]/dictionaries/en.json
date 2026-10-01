@@ -329,7 +329,7 @@
         "items": [
           "{courseCohorts} in-person cohorts since March 2026",
           "{courseApplications} applications for {courseParticipants} seats",
-          "{courseRecommendScore} likelihood to recommend"
+          "Average recommendation score: {courseRecommendScore}"
         ]
       },
       "community": {
@@ -532,7 +532,7 @@
       "eyebrow": "Courses",
       "title": "Courses",
       "description": "In-person versions of BlueDot Impact's courses, facilitated by BAISH. Free, selective, and the first structured step into the field.",
-      "trackRecord": "Since March 2026: {courseCohorts} cohorts, {courseApplications} applications for {courseParticipants} seats, {courseRecommendScore} likelihood to recommend.",
+      "trackRecord": "Since March 2026: {courseCohorts} cohorts, {courseApplications} applications for {courseParticipants} seats, and an average recommendation score of {courseRecommendScore}.",
       "upcomingTitle": "Coming next",
       "upcoming": [
         {
@@ -2076,7 +2076,7 @@
             },
             {
               "key": "courseRecommendScore",
-              "label": "likelihood to recommend"
+              "label": "average recommendation score"
             }
           ],
           "body": "Technical AI Safety, the Technical AI Safety Project and Frontier AI Governance, taught in person in Buenos Aires."

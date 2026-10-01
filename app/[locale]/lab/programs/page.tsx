@@ -147,7 +147,7 @@ export default async function LabProgramsPage({
             <p className="lab-kicker">{t.courses.eyebrow}</p>
             <h2 className="lab-h2">{t.courses.title}</h2>
             <p className="lab-section-desc">{t.courses.description}</p>
-            <p className="lab-legend">{fillImpact(t.courses.trackRecord)}</p>
+            <p className="lab-legend">{fillImpact(t.courses.trackRecord, currentLocale)}</p>
           </header>
           <div className="lab-table" role="table">
             <div className="lab-trow lab-trow-head" role="row">
@@ -266,7 +266,7 @@ export default async function LabProgramsPage({
             {community.map((item) => (
               <li key={item.id} data-thread-pulse>
                 <h3 className="lab-h3">{item.title}</h3>
-                <p className="lab-body">{fillImpact(item.description)}</p>
+                <p className="lab-body">{fillImpact(item.description, currentLocale)}</p>
                 {item.cta && item.link && (
                   <SmartLink
                     href={item.link}
