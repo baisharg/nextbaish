@@ -12,6 +12,7 @@ import { fillImpact } from "@/app/data/impact";
 import type { AppLocale } from "@/i18n.config";
 import { isAppLocale } from "@/i18n.config";
 import { LabAnnouncement } from "../_components/lab-announcement";
+import { LabEvents } from "../_components/lab-events";
 import { LabFooter } from "../_components/lab-footer";
 import { SmartLink, isExternal } from "../_components/smart-link";
 import { TitleBand } from "../_components/title-band";
@@ -19,7 +20,6 @@ import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
 import "../lab.css";
 
 const AISAR_URL = "https://scholarship.aisafety.ar/";
-const LUMA_URL = "https://luma.com/BAISH";
 
 /** Same photos and alt text as the live Programs page */
 const GALLERY = [
@@ -135,6 +135,7 @@ export default async function LabProgramsPage({
         jumps={[
           { href: "#courses", label: page.jumpCourses },
           { href: "#community", label: page.jumpCommunity },
+          { href: "#events", label: dict.lab.events.jump },
           { href: "#gallery", label: page.jumpGallery },
           { href: "#network", label: page.jumpNetwork },
         ]}
@@ -282,18 +283,18 @@ export default async function LabProgramsPage({
               </li>
             ))}
           </ul>
-          <p className="lab-events-note">
-            {page.events}{" "}
-            <a
-              className="lab-link"
-              href={LUMA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {page.eventsCta}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </p>
+        </div>
+      </section>
+
+      {/* Upcoming events, live from the Luma calendar */}
+      <section className="lab-section lab-section-tight" id="events">
+        <div className="lab-wrap">
+          <header className="lab-section-head">
+            <p className="lab-kicker">{dict.lab.events.eyebrow}</p>
+            <h2 className="lab-h2">{dict.lab.events.title}</h2>
+            <p className="lab-section-desc">{dict.lab.events.description}</p>
+          </header>
+          <LabEvents locale={currentLocale} dict={dict} />
         </div>
       </section>
 

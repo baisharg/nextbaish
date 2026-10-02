@@ -53,6 +53,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        // Luma event covers (app/data/luma.ts)
+        protocol: "https",
+        hostname: "images.lumacdn.com",
+      },
     ],
   },
 

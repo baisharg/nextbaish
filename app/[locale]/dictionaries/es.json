@@ -2299,9 +2299,7 @@
       "jumpCourses": "Cursos",
       "jumpCommunity": "Comunidad",
       "jumpGallery": "Eventos pasados",
-      "jumpNetwork": "Proyectos hermanos",
-      "events": "Los próximos eventos están en Luma",
-      "eventsCta": "Ver el calendario en Luma"
+      "jumpNetwork": "Proyectos hermanos"
     },
     "resourcesPage": {
       "jumpEvidence": "La evidencia",
@@ -2315,6 +2313,21 @@
       "text": "Empezá por el formulario de contacto: contanos un poco sobre vos y qué estás buscando, y te orientamos hacia la persona o el programa indicado.",
       "cta": "Escribinos",
       "call": "O agendá una llamada con Eitan"
+    },
+    "events": {
+      "jump": "Eventos",
+      "eyebrow": "Eventos",
+      "title": "Próximos eventos",
+      "description": "Encuentros, charlas y hackathons en Buenos Aires. Todos gratuitos, todos en Luma.",
+      "register": "Inscribirme",
+      "waitlist": "Anotarme en la lista de espera",
+      "spotsLeft": "Quedan {count} lugares",
+      "online": "Online",
+      "emptyTitle": "Por ahora no hay nada programado",
+      "emptyText": "Anunciamos cada evento primero en Luma. Sumá el calendario al tuyo y los nuevos eventos te van a aparecer ahí.",
+      "subscribe": "Agregar a Google Calendar",
+      "follow": "Seguir en Luma",
+      "pastTitle": "Eventos recientes"
     }
   }
 }

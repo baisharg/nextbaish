@@ -2299,9 +2299,7 @@
       "jumpCourses": "Courses",
       "jumpCommunity": "Community",
       "jumpGallery": "Past events",
-      "jumpNetwork": "Sister projects",
-      "events": "Upcoming events are on Luma",
-      "eventsCta": "See the Luma calendar"
+      "jumpNetwork": "Sister projects"
     },
     "resourcesPage": {
       "jumpEvidence": "The evidence",
@@ -2315,6 +2313,21 @@
       "text": "Start with the contact form: tell us a bit about yourself and what you're looking for, and we'll point you to the right person or program.",
       "cta": "Write to us",
       "call": "Or book a call with Eitan"
+    },
+    "events": {
+      "jump": "Events",
+      "eyebrow": "Events",
+      "title": "Upcoming events",
+      "description": "Socials, talks and hackathons in Buenos Aires. All free, all on Luma.",
+      "register": "Register",
+      "waitlist": "Join the waitlist",
+      "spotsLeft": "{count} spots left",
+      "online": "Online",
+      "emptyTitle": "Nothing scheduled right now",
+      "emptyText": "We announce every event on Luma first. Add the calendar to yours and new events will show up there.",
+      "subscribe": "Add to Google Calendar",
+      "follow": "Follow on Luma",
+      "pastTitle": "Recent events"
     }
   }
 }
