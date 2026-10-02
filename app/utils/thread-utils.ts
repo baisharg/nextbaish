@@ -80,6 +80,10 @@ export const THREAD_WIDTH_SCALE = 2.4;
 
 /** Opacity of the overlay gradient pass */
 export const OVERLAY_OPACITY = 0.25;
+/** Overlay opacity for section canvases (ThreadSet). Each covers only its
+ * section, so any wash would show as a tinted band; the page draws its own
+ * background instead. The overlay colours still screen-blend the threads. */
+export const SCENE_OVERLAY_OPACITY = 0;
 
 /** Color stops per gradient; the shaders are sized/unrolled for this count */
 export const MAX_GRADIENT_STOPS = 5;
@@ -109,6 +113,15 @@ export const PULSE_TRAVEL_MS = 2600;
 export const PULSE_WIDTH = 0.09;
 /** Peak brightness boost at the pulse center */
 export const PULSE_AMPLITUDE = 0.3;
+/**
+ * Pulses a page asks for (hovering a marked element) deepen the thread and
+ * make it opaque instead of brightening it: on the light page, brighter pink
+ * reads as less visible, not more. Both renderers treat a negative pulse
+ * intensity as this deepening pulse.
+ */
+export const DEEPEN_PULSE_AMPLITUDE = 0.9;
+/** Colour multiplier at the centre of a full-strength deepening pulse */
+export const PULSE_DEEPEN = 0.5;
 
 // --- Composite grain ---
 

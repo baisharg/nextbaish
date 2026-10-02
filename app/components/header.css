@@ -7,48 +7,90 @@
 :root {
   --header-easing: cubic-bezier(0.215, 0.61, 0.355, 1);
   --header-duration: 0.4s;
+  /* The redesign's palette (lab.css); the header sits outside `.lab` */
+  --header-ink: #16122b;
+  --header-ink-2: #4a4560;
+  --header-rule: rgb(22 18 43 / 0.1);
+  --header-accent: #6d5bf5;
+  --header-accent-ink: #4b3bc4;
 }
 
 .header-container {
-  contain: layout style paint;
+  /*
+   * A fixed height, and size containment, so the collapse animation inside
+   * (padding, margins, widths) never changes the page's layout: without
+   * them every frame of the transition re-laid out the whole page, which
+   * froze long pages like Resources for up to 300ms. Tall enough for both
+   * states (76px bar, or 16px gap + 60px floating pill).
+   * No paint containment: it would clip the floating bar's shadow.
+   */
+  height: 78px;
+  contain: size layout style;
   will-change: transform;
   transform: translateZ(0);
   transition: transform var(--header-duration) var(--header-easing);
 }
 
 .header-inner {
+  position: relative;
   contain: layout;
   max-width: 1280px;
   margin-top: 0;
+  border: 1px solid transparent;
   border-radius: 0;
-  border-width: 0;
-  background-color: transparent;
+  background-color: rgb(255 255 255 / 0);
   box-shadow: none;
   padding-left: 0;
   padding-right: 0;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  color: var(--header-ink);
   transition:
     max-width var(--header-duration) var(--header-easing),
     margin-top var(--header-duration) var(--header-easing),
     border-radius var(--header-duration) var(--header-easing),
-    border-width var(--header-duration) var(--header-easing),
+    border-color var(--header-duration) var(--header-easing),
     background-color var(--header-duration) var(--header-easing),
     box-shadow var(--header-duration) var(--header-easing),
     padding var(--header-duration) var(--header-easing);
 }
 
+/* Floating: opaque, faintly lavender white. No translucency or backdrop
+ * blur: turning the blur on as the bar floats cost a ~150ms frame, and
+ * without it any translucency lets text behind the bar ghost through. */
 .header-inner[data-scrolled="true"] {
   max-width: 950px;
   margin-top: 1rem;
   border-radius: 9999px;
-  border-width: 1px;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border-color: #fff;
+  background-color: #fdfcff;
+  box-shadow:
+    0 1px 2px rgb(22 18 43 / 0.05),
+    0 14px 36px -18px rgb(22 18 43 / 0.35);
   padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  padding-right: 0.6rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Reading progress: a thread along the bottom edge of the floating bar */
+.header-progress {
+  position: absolute;
+  left: 1.75rem;
+  right: 1.75rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a8c5ff, var(--header-accent) 55%, #c77dda);
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left;
+  opacity: 0;
+  transition: opacity var(--header-duration) var(--header-easing);
+  pointer-events: none;
+}
+
+.header-inner[data-scrolled="true"] .header-progress {
+  opacity: 1;
 }
 
 .logo-container {
@@ -102,25 +144,169 @@
 }
 
 .header-nav {
-  gap: 1.5rem;
-  transition: gap var(--header-duration) var(--header-easing);
+  position: relative;
+  gap: 0.15rem;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.header-nav[data-scrolled="true"] {
-  gap: 0.75rem;
+.header-nav-link {
+  position: relative;
+  z-index: 1;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  color: var(--header-ink-2);
+  transition:
+    color 160ms ease,
+    padding var(--header-duration) var(--header-easing);
+}
+
+.header-nav[data-scrolled="true"] .header-nav-link {
+  padding: 0.4rem 0.65rem;
+}
+
+.header-nav-link:hover,
+.header-nav-link:focus-visible,
+.header-nav-link[aria-current="page"] {
+  color: var(--header-ink);
+}
+
+.header-nav-link:focus-visible {
+  outline: 2px solid var(--header-accent);
+  outline-offset: 1px;
+}
+
+/* The current page: a short accent thread under the label */
+.header-nav-link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.1rem;
+  width: 1rem;
+  height: 2px;
+  margin-left: -0.5rem;
+  border-radius: 2px;
+  background: var(--header-accent);
+}
+
+/* Hover highlight shared by all links; header.tsx moves it */
+.header-nav-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--w, 0px);
+  height: 2.1rem;
+  margin-top: -1.05rem;
+  border-radius: 999px;
+  background: rgb(22 18 43 / 0.06);
+  transform: translateX(var(--x, 0px));
+  opacity: 0;
+  pointer-events: none;
+  transition-property: transform, width, opacity;
+  transition-duration: 280ms, 280ms, 160ms;
+  transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.header-nav-indicator[data-visible="true"] {
+  opacity: 1;
+}
+
+.header-lang {
+  padding: 3px;
+  border: 1px solid var(--header-rule);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.55);
+}
+
+.header-lang-option {
+  display: grid;
+  place-items: center;
+  min-width: 2.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--header-ink-2);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.header-lang-option:hover {
+  color: var(--header-ink);
+}
+
+.header-lang-option[aria-current="true"] {
+  background: var(--header-ink);
+  color: #fff;
+  pointer-events: none;
 }
 
 .header-cta {
-  padding: 0.5rem 1rem;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  background: var(--header-ink);
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0.55rem 1.05rem;
   font-size: 0.875rem;
   transition:
+    background-color 160ms ease,
     padding var(--header-duration) var(--header-easing),
     font-size var(--header-duration) var(--header-easing);
 }
 
+.header-cta:hover {
+  background: var(--header-accent-ink);
+}
+
 .header-cta[data-scrolled="true"] {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8125rem;
+}
+
+.header-cta-arrow {
+  transition: transform 160ms ease;
+}
+
+.header-cta:hover .header-cta-arrow {
+  transform: translateX(3px);
+}
+
+.header-menu-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.header-menu-btn:hover {
+  background: rgb(22 18 43 / 0.06);
+}
+
+.header-menu-btn:focus-visible {
+  outline: 2px solid var(--header-accent);
+  outline-offset: 2px;
+}
+
+.header-menu-btn > div {
+  width: 1.25rem;
+  height: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.header-menu-line {
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--header-ink);
+  transition:
+    transform 300ms ease,
+    opacity 300ms ease;
 }
 
 /* Reduced Motion Support */
@@ -128,9 +314,28 @@
   :root {
     --header-duration: 0.01s;
   }
+
+  .header-nav-indicator {
+    transition-duration: 0.01s;
+  }
 }
 
 .header-container[data-reduced-motion="true"] *,
 .header-container[data-reduced-motion="true"] {
   transition-duration: 0.01s !important;
+}
+
+/* Shown while the mobile menu's code loads on first open; matches its
+   background (mobile-menu.css) */
+.mm-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: #f2eff8;
+}
+
+@media (min-width: 768px) {
+  .mm-loading {
+    display: none;
+  }
 }

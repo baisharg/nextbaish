@@ -29,28 +29,33 @@ export type SuccessStoryCopy = {
 
 export type SuccessStory = SuccessStoryMeta & SuccessStoryCopy;
 
+/**
+ * Most senior first: people with a quote from where they are now lead the
+ * testimonials, then the other paths.
+ */
 export const SUCCESS_STORIES: SuccessStoryMeta[] = [
   {
-    id: "tobias-bersia",
+    id: "tobias-martin",
     featured: true,
-    name: "Tobías Bersia",
-    link: "https://www.linkedin.com/in/tobias-bersia-70a448132/",
+    name: "Tobías Martin",
+    link: "https://www.linkedin.com/in/tobias-martin/",
   },
-  { id: "julian-szere", featured: true, name: "Julián Szereszewski" },
   {
     id: "guido-bergman",
     featured: true,
     name: "Guido Bergman",
     link: "https://www.linkedin.com/in/guido-ernesto-bergman-2251bb203",
   },
-  { id: "guillermo-bondonno", name: "Guillermo Bondonno" },
+  {
+    id: "tobias-bersia",
+    featured: true,
+    name: "Tobías Bersia",
+    link: "https://www.linkedin.com/in/tobias-bersia-70a448132/",
+  },
+  { id: "julian-szere", name: "Julián Szereszewski" },
   { id: "alejandro-wainstock", name: "Alejandro Wainstock" },
   { id: "juan-cadile", name: "Juan P. Cadile" },
-  {
-    id: "tobias-martin",
-    name: "Tobías Martin",
-    link: "https://www.linkedin.com/in/tobias-martin/",
-  },
+  { id: "guillermo-bondonno", name: "Guillermo Bondonno" },
   { id: "ana-vicky", name: "Ana & Vicky" },
 ];
 

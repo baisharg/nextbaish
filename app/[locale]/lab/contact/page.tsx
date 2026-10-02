@@ -1,0 +1,259 @@
+import type { Metadata } from "next";
+import { BreadcrumbJsonLd, FAQJsonLd } from "@/app/components/json-ld";
+import { ThreadPage } from "@/app/components/thread-page";
+import { ThreadSet } from "@/app/components/thread-set";
+import { getDictionary } from "../../dictionaries";
+import { fillImpact } from "@/app/data/impact";
+import {
+  NEWSLETTER_SUBSCRIBE_URL,
+  ORGANIZATION_LINKEDIN_URL,
+} from "@/app/constants/social-links";
+import type { AppLocale } from "@/i18n.config";
+import { isAppLocale } from "@/i18n.config";
+import { LabAnnouncement } from "../_components/lab-announcement";
+import { LabFooter } from "../_components/lab-footer";
+import { SmartLink, isExternal } from "../_components/smart-link";
+import { TitleBand } from "../_components/title-band";
+import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
+import "../lab.css";
+
+const WHATSAPP_URL = "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P";
+const LUMA_URL = "https://luma.com/BAISH";
+const INSTAGRAM_URL = "https://www.instagram.com/baish_arg";
+const FORM_ACTION = "https://formspree.io/f/xjkyoknb";
+
+type Action = { label: string; href: string; primary?: boolean };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  return labPageMetadata("contact", currentLocale);
+}
+
+export default async function LabContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
+  const t = dict.contact;
+  const lab = dict.lab;
+  const page = lab.contactPage;
+  const p = page.purposes;
+  const cta = dict.about.callToAction;
+  const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
+
+  // One row per reason to get in touch, each with the channel that fits it.
+  const rows: { id?: string; title: string; text: string; actions: Action[] }[] = [
+    {
+      title: p.course.title,
+      text: p.course.text,
+      actions: [
+        { label: lab.hero.seeCourses, href: "/#programs", primary: true },
+      ],
+    },
+    {
+      title: p.community.title,
+      text: fillImpact(p.community.text, currentLocale),
+      actions: [
+        { label: lab.footer.links.whatsapp, href: WHATSAPP_URL, primary: true },
+        { label: dict.footer.luma, href: LUMA_URL },
+      ],
+    },
+    {
+      title: p.career.title,
+      text: p.career.text,
+      actions: [
+        { label: page.writeToUs, href: "#contact-form", primary: true },
+        { label: cta.bookWithEitan, href: EITAN_BOOKING_URL },
+      ],
+    },
+    {
+      title: p.research.title,
+      text: dict.research.labs.ctaDescription,
+      actions: [{ label: page.writeToUs, href: "#contact-form" }],
+    },
+    {
+      // Older links point at /contact#press
+      id: "press",
+      title: p.press.title,
+      text: p.press.text,
+      actions: [{ label: page.writeToUs, href: "#contact-form" }],
+    },
+    {
+      title: p.follow.title,
+      text: p.follow.text,
+      actions: [
+        { label: lab.footer.links.newsletter, href: NEWSLETTER_SUBSCRIBE_URL },
+        { label: lab.footer.links.instagram, href: INSTAGRAM_URL },
+        { label: lab.footer.links.linkedin, href: ORGANIZATION_LINKEDIN_URL },
+      ],
+    },
+  ];
+
+  // Plain-text FAQ for structured data (template variables spelled out)
+  const faqItems = t.faq.items.map((faq) => ({
+    question: faq.question,
+    answer: faq.answer
+      .replace("{resourcesLink}", "our resources page")
+      .replace("{email}", "our email"),
+  }));
+
+  // FAQ answers may reference the resources page as {resourcesLink}.
+  const renderAnswer = (answer: string) =>
+    answer.split("{resourcesLink}").flatMap((part, i) =>
+      i === 0
+        ? [part]
+        : [
+            <SmartLink
+              key={i}
+              href="/resources"
+              locale={currentLocale}
+              className="lab-link"
+            >
+              {t.linkText.resourcesPage}
+            </SmartLink>,
+            part,
+          ],
+    );
+
+  return (
+    <div className="lab">
+      <ThreadPage />
+      <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <FAQJsonLd faqs={faqItems} />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.contact.breadcrumb.home, url: "" },
+            { name: dict.contact.breadcrumb.current, url: LAB_PAGE_PATHS.contact },
+          ]}
+          locale={currentLocale}
+        />
+
+      <TitleBand
+        locale={currentLocale}
+        homeLabel={lab.band.home}
+        eyebrow={dict.header.nav.contact}
+        title={t.title}
+        lede={<p>{t.description}</p>}
+      />
+
+      {/* The form comes first: it's where we want people to start */}
+      <section
+        className="lab-section lab-join"
+        id="contact-form"
+      >
+        <ThreadSet scene="knot" />
+        <div className="lab-wrap lab-join-grid">
+          <div className="lab-join-copy lab-veil">
+            <p className="lab-kicker">{t.form.eyebrow}</p>
+            <h2 className="lab-h2">{t.form.title}</h2>
+            <p className="lab-section-desc">{t.form.description}</p>
+            <form action={FORM_ACTION} method="POST" className="lab-form">
+              <label>
+                <span>{t.form.nameLabel}</span>
+                <input type="text" name="name" autoComplete="name" required />
+              </label>
+              <label>
+                <span>{t.form.emailLabel}</span>
+                <input type="email" name="email" autoComplete="email" required />
+              </label>
+              <label>
+                <span>{t.form.messageLabel}</span>
+                <textarea name="message" rows={5} required />
+              </label>
+              <div className="lab-form-actions">
+                <button type="submit" className="lab-button">
+                  {t.form.submit}
+                </button>
+                <button type="reset" className="lab-link lab-link-sm">
+                  {t.form.clearForm}
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="lab-join-knot" data-thread-box aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* Other ways in: purpose → channel */}
+      <section className="lab-section lab-section-tight">
+        <div className="lab-wrap">
+          <header className="lab-section-head">
+            <h2 className="lab-h2">{page.routingTitle}</h2>
+          </header>
+          <div className="lab-table" role="table">
+            <div className="lab-route lab-trow-head" role="row">
+              <span role="columnheader">{page.columns.purpose}</span>
+              <span role="columnheader">{page.columns.how}</span>
+            </div>
+            {rows.map((row) => (
+              <div
+                key={row.title}
+                id={row.id}
+                className="lab-route"
+                role="row"
+              >
+                <div role="cell">
+                  <h3 className="lab-trow-title">{row.title}</h3>
+                  <p className="lab-trow-desc">{row.text}</p>
+                </div>
+                <div role="cell" className="lab-route-actions">
+                  {row.actions.map((action) => (
+                    <SmartLink
+                      key={action.href}
+                      href={action.href}
+                      locale={currentLocale}
+                      className={
+                        action.primary
+                          ? "lab-button lab-button-sm"
+                          : "lab-link lab-link-sm"
+                      }
+                    >
+                      {action.label}
+                      <span aria-hidden="true">
+                        {isExternal(action.href)
+                          ? "↗"
+                          : action.href.startsWith("#")
+                            ? "↑"
+                            : "→"}
+                      </span>
+                    </SmartLink>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="lab-section lab-section-tight">
+        <div className="lab-wrap lab-about">
+          <header>
+            <h2 className="lab-h2">{t.faq.title}</h2>
+          </header>
+          <div className="lab-faq">
+            {t.faq.items.map((item) => (
+              <details key={item.question}>
+                <summary>{item.question}</summary>
+                <p>{renderAnswer(item.answer)}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      </main>
+      <LabFooter locale={currentLocale} dict={dict} />
+    </div>
+  );
+}

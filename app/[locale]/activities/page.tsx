@@ -93,7 +93,7 @@ export default async function Activities({
   const pastProgramCount = pastProgramCards.length;
   const courses = t.courses;
   const upcomingCourses = courses.upcoming as { title: string; description: string }[];
-  const courseTrackRecord = fillImpact(courses.trackRecord);
+  const courseTrackRecord = fillImpact(courses.trackRecord, currentLocale);
   const community = t.community;
   const communityItems = community.items as CommunityItem[];
   const courseOpportunities = await getCourseOpportunities();
@@ -280,7 +280,7 @@ export default async function Activities({
                 {communityItems.map((item) => (
                   <article key={item.id} className="card-glass flex flex-col">
                     <h3 className="card-title">{item.title}</h3>
-                    <p className="card-body">{fillImpact(item.description)}</p>
+                    <p className="card-body">{fillImpact(item.description, currentLocale)}</p>
                     {item.cta && item.link && (
                       <div className="card-footer">
                         {item.external ? (

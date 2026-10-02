@@ -65,6 +65,8 @@ export default tseslint.config(
       "**/build/**",
       "**/.cache/**",
       "**/public/**",
+      // Local git worktree checked out inside this one
+      "skipjack/**",
     ],
   }
 );

@@ -30,7 +30,10 @@ import {
 import type {
   InitMessage,
   RendererReadyMessage,
+  WorkerMessage,
 } from "../workers/animation-types";
+import type { ThreadChannel } from "../utils/thread-director";
+import type { SceneBox } from "../utils/thread-scenes";
 
 // Note: SIN_OFFSETS/COS_OFFSETS computation moved to animation.worker.ts
 // Animation computations run entirely in the web worker now.
@@ -205,6 +208,22 @@ const createThread = (id: number, totalThreads: number): ThreadState => {
 };
 
 // Worker → ThreadState (minimal conversion for worker handoff)
+/**
+ * Kept for the life of the document: generated thread data per thread count,
+ * and whether any canvas has started animating. Client navigations remount
+ * the canvases (switching language remounts the whole tree), and with these
+ * they redraw straight away instead of regenerating threads and waiting for
+ * the browser to go idle again. The idle wait only protects the first load.
+ */
+const generatedThreads = new Map<number, WorkerThreadData[]>();
+let startedOnce = false;
+/**
+ * Some browsers expose WebGPU but have no usable adapter (headless Chrome,
+ * many Android GPUs). Finding out takes a second per canvas, so after the
+ * first fallback the other canvases go straight to WebGL.
+ */
+let webgpuFailed = false;
+
 const workerDataToThreadState = (data: WorkerThreadData): ThreadState => {
   const profile: PathProfile = {
     neutral: data.profileNeutral,
@@ -255,14 +274,43 @@ type TimelineThreadsProps = {
   className?: string;
   style?: CSSProperties;
   overrideParams?: ThreadOverrideParams;
+  /**
+   * Scene channel from a ThreadSet. With one, the canvas belongs to a page
+   * section and draws the shapes it is sent; without one it is the fixed
+   * site-wide background with the free animation and scroll parallax.
+   */
+  channel?: ThreadChannel;
+  /** Multiplier on the device's thread count, for small or faint sets */
+  threadScale?: number;
 };
 
 function TimelineThreadsComponent({
   className,
   style,
   overrideParams,
+  channel,
+  threadScale = 1,
 }: TimelineThreadsProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  // Read by the tick loop, which is created once per renderer.
+  const stillRef = useRef(prefersReducedMotion);
+
+  // The site-wide background stays off while a page draws its own thread
+  // sets (ThreadPage sets html[data-threads="sections"]), instead of running
+  // a hidden worker and GPU context.
+  const [suppressed, setSuppressed] = useState(false);
+  useEffect(() => {
+    if (channel) return;
+    const root = document.documentElement;
+    const check = () => setSuppressed(root.dataset.threads === "sections");
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-threads"],
+    });
+    return () => observer.disconnect();
+  }, [channel]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const isVisibleRef = useRef(true);
@@ -278,7 +326,8 @@ function TimelineThreadsComponent({
 
   // Apply override parameters if provided
   const threadCount =
-    overrideParams?.threadCount ?? performanceProfile.threadCount;
+    overrideParams?.threadCount ??
+    Math.max(8, Math.round(performanceProfile.threadCount * threadScale));
   const blurStdDeviation =
     overrideParams?.blurStdDeviation ?? performanceProfile.blurStdDeviation;
   const effectiveEnableBlur = overrideParams?.enableBlur ?? true;
@@ -375,6 +424,14 @@ function TimelineThreadsComponent({
       syncThreads(mainThreads);
     };
 
+    const cached = generatedThreads.get(totalThreads);
+    if (cached) {
+      syncThreads(cached.map(workerDataToThreadState));
+      return () => {
+        mounted = false;
+      };
+    }
+
     try {
       worker = new Worker(
         new URL("../workers/thread-generator.worker.ts", import.meta.url),
@@ -388,6 +445,7 @@ function TimelineThreadsComponent({
         if (!mounted) return;
         if (event.data.type === "threadsGenerated") {
           if (fallbackTimeout) clearTimeout(fallbackTimeout);
+          generatedThreads.set(totalThreads, event.data.threads);
           const workerThreads = event.data.threads.map(workerDataToThreadState);
           syncThreads(workerThreads);
         }
@@ -412,6 +470,15 @@ function TimelineThreadsComponent({
   // Defer animation until page is fully loaded / idle
   useEffect(() => {
     if (threads.length === 0) return;
+    if (startedOnce) {
+      setShouldAnimate(true);
+      return;
+    }
+
+    const start = () => {
+      startedOnce = true;
+      setShouldAnimate(true);
+    };
 
     const enable = () => {
       const requestIdle =
@@ -427,9 +494,9 @@ function TimelineThreadsComponent({
           : undefined;
 
       if (typeof requestIdle === "function") {
-        requestIdle(() => setShouldAnimate(true), { timeout: 2000 });
+        requestIdle(start, { timeout: 2000 });
       } else {
-        setTimeout(() => setShouldAnimate(true), 100);
+        setTimeout(start, 100);
       }
     };
 
@@ -457,10 +524,34 @@ function TimelineThreadsComponent({
     isVisibleRef.current = isVisible;
   }, [isVisible]);
 
+  // Reduced motion: the worker draws still frames on its own, so the tick
+  // loop stops; turning it off again restarts the loop.
+  useEffect(() => {
+    stillRef.current = prefersReducedMotion;
+    const message: WorkerMessage = {
+      type: "still",
+      still: prefersReducedMotion,
+    };
+    animationWorkerRef.current?.postMessage(message);
+    if (
+      !prefersReducedMotion &&
+      isVisibleRef.current &&
+      tickFnRef.current &&
+      !rafIdRef.current
+    ) {
+      rafIdRef.current = requestAnimationFrame(tickFnRef.current);
+    }
+  }, [prefersReducedMotion]);
+
   // Restart or pause main-thread rAF loop when visibility changes
   useEffect(() => {
     if (!shouldAnimate) return;
-    if (isVisible && tickFnRef.current && !rafIdRef.current) {
+    if (
+      isVisible &&
+      !stillRef.current &&
+      tickFnRef.current &&
+      !rafIdRef.current
+    ) {
       rafIdRef.current = requestAnimationFrame(tickFnRef.current);
     }
     if (!isVisible && rafIdRef.current) {
@@ -515,7 +606,10 @@ function TimelineThreadsComponent({
 
   // Parallax scroll effect (imperative to avoid React re-renders)
   useEffect(() => {
-    if (typeof window === "undefined" || prefersReducedMotion) return;
+    // Section canvases scroll with the page; only the background parallaxes.
+    if (typeof window === "undefined" || prefersReducedMotion || channel) {
+      return;
+    }
 
     let rafId = 0;
     let currentScroll = window.scrollY;
@@ -524,7 +618,10 @@ function TimelineThreadsComponent({
       // window.innerHeight is never larger than the vh the buffer is sized in
       // (on iOS vh tracks the large viewport), so this stays within the buffer.
       const maxOffset = window.innerHeight * PARALLAX_BUFFER_VH;
-      parallaxRef.current = -Math.min(currentScroll * PARALLAX_FACTOR, maxOffset);
+      parallaxRef.current = -Math.min(
+        currentScroll * PARALLAX_FACTOR,
+        maxOffset,
+      );
       if (canvasRef.current) {
         canvasRef.current.style.transform = `translateY(${parallaxRef.current}px)`;
       }
@@ -544,7 +641,7 @@ function TimelineThreadsComponent({
       window.removeEventListener("scroll", handleScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, channel]);
 
   /**
    * WebGL Renderer Initialization
@@ -557,6 +654,7 @@ function TimelineThreadsComponent({
     if (
       !canvasRef.current ||
       !shouldAnimate ||
+      suppressed ||
       threadsRef.current.length === 0
     ) {
       return;
@@ -610,6 +708,7 @@ function TimelineThreadsComponent({
         // container so the active renderer is inspectable in DevTools.
         worker.onmessage = (event: MessageEvent<RendererReadyMessage>) => {
           if (event.data?.type === "rendererReady") {
+            if (event.data.kind === "webgl") webgpuFailed = true;
             containerRef.current?.setAttribute("data-renderer", event.data.kind);
             logTimelineDebug("Renderer:", event.data.kind);
           }
@@ -659,6 +758,8 @@ function TimelineThreadsComponent({
           },
           threads: workerThreads,
           frameInterval,
+          still: stillRef.current,
+          skipWebGPU: webgpuFailed,
         };
 
         worker.postMessage(initMessage, [offscreen]);
@@ -670,7 +771,7 @@ function TimelineThreadsComponent({
         const tick = (now: number) => {
           if (!mounted) return;
 
-          if (!isVisibleRef.current) {
+          if (!isVisibleRef.current || stillRef.current) {
             rafIdRef.current = null;
             return;
           }
@@ -685,6 +786,7 @@ function TimelineThreadsComponent({
 
         tickFnRef.current = tick;
         rafIdRef.current = requestAnimationFrame(tick);
+        postScenesRef.current?.();
       } catch (error) {
         console.error(
           "[Timeline] Failed to initialize canvas renderer:",
@@ -720,13 +822,106 @@ function TimelineThreadsComponent({
     // resize crossing a width threshold, including a phone rotation) resets
     // threads to [], which unmounts the canvas. The replacement element needs a
     // fresh transferControlToOffscreen() or nothing ever draws on it again.
-  }, [shouldAnimate, blurStdDeviation, frameInterval, threads.length, rendererEpoch]);
+  }, [
+    shouldAnimate,
+    suppressed,
+    blurStdDeviation,
+    frameInterval,
+    threads.length,
+    rendererEpoch,
+  ]);
+
+  const offsetXMultiplier = overrideParams?.offsetXMultiplier;
+  const offsetYMultiplier = overrideParams?.offsetYMultiplier;
+
+  /**
+   * Viewport CSS px -> the worker's normalized viewbox space. Both renderers
+   * lay points out in a squareScale x squareScale pixel space
+   * (pixel = point * squareScale + offset) and stretch that square onto the
+   * canvas, so each axis is rescaled by squareScale / canvas size first.
+   * Null until the renderer is built.
+   */
+  const clientToViewbox = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    const size = canvasDeviceSizeRef.current;
+    if (!canvas || !size) return null;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    const squareScale = Math.max(size.w, size.h);
+    const xDev = ((clientX - rect.left) / rect.width) * squareScale;
+    const yDev = ((clientY - rect.top) / rect.height) * squareScale;
+    const offsetX =
+      (size.w - squareScale) *
+      (offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER);
+    const offsetY =
+      (size.h - squareScale) *
+      (offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER);
+    return {
+      x: (xDev - offsetX) / squareScale,
+      y: (yDev - offsetY) / squareScale,
+    };
+  };
+
+  // Scenes: forward the channel's scene targets (fractions of this canvas) to
+  // the worker in viewbox space. Kept in a ref so the renderer init can replay
+  // the latest targets into a fresh worker.
+  const postScenesRef = useRef<(() => void) | null>(null);
+  postScenesRef.current = () => {
+    const worker = animationWorkerRef.current;
+    const canvas = canvasRef.current;
+    if (!worker || !canvas || !channel?.targets) return;
+    // Edges of the canvas itself: shapes run edge to edge across it, and
+    // colours are graded over its height.
+    const rect = canvas.getBoundingClientRect();
+    const topLeft = clientToViewbox(rect.left, rect.top);
+    const bottomRight = clientToViewbox(rect.right, rect.bottom);
+    if (!topLeft || !bottomRight) return;
+    const targets: Extract<WorkerMessage, { type: "scenes" }>["targets"] = [];
+    for (const target of channel.targets) {
+      const a = clientToViewbox(
+        rect.left + target.box[0] * rect.width,
+        rect.top + target.box[1] * rect.height,
+      );
+      const b = clientToViewbox(
+        rect.left + target.box[2] * rect.width,
+        rect.top + target.box[3] * rect.height,
+      );
+      if (!a || !b) continue;
+      const box: SceneBox = [a.x, a.y, b.x, b.y];
+      targets.push({
+        key: target.key,
+        id: target.id,
+        weight: target.weight,
+        box,
+      });
+    }
+    const message: WorkerMessage = {
+      type: "scenes",
+      targets,
+      edges: [topLeft.x, bottomRight.x],
+      verticalEdges: [topLeft.y, bottomRight.y],
+    };
+    worker.postMessage(message);
+  };
+
+  useEffect(() => {
+    if (!channel) return;
+    return channel.subscribe({
+      onTargets: () => postScenesRef.current?.(),
+      onPulse: (count) => {
+        const message: WorkerMessage = { type: "pulse", count };
+        animationWorkerRef.current?.postMessage(message);
+      },
+      onLift: (count) => {
+        const message: WorkerMessage = { type: "lift", count };
+        animationWorkerRef.current?.postMessage(message);
+      },
+    });
+  }, [channel]);
 
   // Pointer interaction: forward mouse position to the worker in the same
   // normalized viewbox space as the thread points. rAF-throttled; the worker
   // eases the response so threads bow lazily away from the cursor.
-  const offsetXMultiplier = overrideParams?.offsetXMultiplier;
-  const offsetYMultiplier = overrideParams?.offsetYMultiplier;
   useEffect(() => {
     if (!shouldAnimate || prefersReducedMotion) return;
     if (typeof window === "undefined") return;
@@ -750,26 +945,10 @@ function TimelineThreadsComponent({
 
     const handlePointerMove = (e: PointerEvent) => {
       if (e.pointerType && e.pointerType !== "mouse") return;
-      const canvas = canvasRef.current;
-      const size = canvasDeviceSizeRef.current;
-      if (!canvas || !size || !animationWorkerRef.current) return;
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-      // CSS px -> device px -> normalized viewbox space (same mapping as
-      // the renderers: pixel = point * squareScale + offset)
-      const xDev = (e.clientX - rect.left) * (size.w / rect.width);
-      const yDev = (e.clientY - rect.top) * (size.h / rect.height);
-      const squareScale = Math.max(size.w, size.h);
-      const offsetX =
-        (size.w - squareScale) *
-        (offsetXMultiplier ?? DEFAULT_OFFSET_X_MULTIPLIER);
-      const offsetY =
-        (size.h - squareScale) *
-        (offsetYMultiplier ?? DEFAULT_OFFSET_Y_MULTIPLIER);
-      pending = {
-        x: (xDev - offsetX) / squareScale,
-        y: (yDev - offsetY) / squareScale,
-      };
+      if (!animationWorkerRef.current) return;
+      const point = clientToViewbox(e.clientX, e.clientY);
+      if (!point) return;
+      pending = point;
       if (!rafId) rafId = requestAnimationFrame(flush);
     };
 
@@ -816,7 +995,7 @@ function TimelineThreadsComponent({
 
   // Keyed on the renderer's inputs so every re-initialization mounts a fresh
   // canvas: transferControlToOffscreen() can only be called once per element.
-  const rendererKey = `${threads.length}:${blurStdDeviation}:${frameInterval}:${rendererEpoch}`;
+  const rendererKey = `${threads.length}:${blurStdDeviation}:${frameInterval}:${rendererEpoch}:${suppressed}`;
 
   return (
     <div
@@ -824,7 +1003,7 @@ function TimelineThreadsComponent({
       className={`pointer-events-none ${className ?? "absolute inset-x-0 top-0"}`}
       style={{
         ...style,
-        height: `calc(100% + ${parallaxBuffer})`,
+        height: channel ? "100%" : `calc(100% + ${parallaxBuffer})`,
         contain: "layout style paint",
       }}
     >

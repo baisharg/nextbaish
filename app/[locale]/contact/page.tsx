@@ -114,7 +114,7 @@ export default async function ContactPage({
                   {dict.home.getInvolved.communityTitle}
                 </h3>
                 <p className="card-body">
-                  {fillImpact(dict.home.getInvolved.communityDescription)}
+                  {fillImpact(dict.home.getInvolved.communityDescription, currentLocale)}
                 </p>
                 <div className="flex flex-col gap-3 mt-auto">
                   <a
@@ -130,7 +130,7 @@ export default async function ContactPage({
                       </span>
                     </div>
                     <span className="text-xs opacity-90">
-                      {fillImpact(dict.home.getInvolved.whatsappMembers)}
+                      {fillImpact(dict.home.getInvolved.whatsappMembers, currentLocale)}
                     </span>
                   </a>
                 </div>
@@ -158,7 +158,7 @@ export default async function ContactPage({
                     <HugeiconsIcon icon={InstagramIcon} size={20} />
                     Instagram
                     <span className="text-xs font-normal text-slate-500">
-                      · {fillImpact(dict.contact.cards.social.instagramFollowers)}
+                      · {fillImpact(dict.contact.cards.social.instagramFollowers, currentLocale)}
                     </span>
                   </a>
                   <a

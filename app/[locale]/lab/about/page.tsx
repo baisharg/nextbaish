@@ -1,0 +1,327 @@
+import Image from "next/image";
+import type { Metadata } from "next";
+import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
+import { ThreadPage } from "@/app/components/thread-page";
+import { ThreadSet } from "@/app/components/thread-set";
+import { TeamLinksRow } from "@/app/components/team-card";
+import { getDictionary } from "../../dictionaries";
+import {
+  teamByGroup,
+  type TeamMember,
+  type TeamMemberId,
+} from "@/app/data/team";
+import { SUCCESS_STORIES, withStoryCopy } from "@/app/data/stories";
+import { FUNDERS } from "@/app/data/funders";
+import {
+  FELLOWSHIP_PLACEMENTS,
+  FULL_TIME_ORGS,
+  impactValue,
+  fillImpact,
+  type ImpactKey,
+} from "@/app/data/impact";
+import type { AppLocale } from "@/i18n.config";
+import { isAppLocale } from "@/i18n.config";
+import { MemberCard } from "../_components/member-card";
+import { SmartLink } from "../_components/smart-link";
+import { LabAnnouncement } from "../_components/lab-announcement";
+import { LabFooter } from "../_components/lab-footer";
+import { StoryList } from "../_components/story-list";
+import { TitleBand } from "../_components/title-band";
+import { labPageMetadata, LAB_PAGE_PATHS } from "../_components/lab-seo";
+import "../lab.css";
+
+const EITAN_BOOKING_URL = "https://calendly.com/eitusprejer";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  return labPageMetadata("about", currentLocale);
+}
+
+export default async function LabAboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const currentLocale: AppLocale = isAppLocale(locale) ? locale : "en";
+  const dict = await getDictionary(currentLocale);
+  const t = dict.about;
+  const lab = dict.lab;
+  const roles = t.team.roles;
+  const bios: Partial<Record<TeamMemberId, string>> = t.team.bios;
+  const stories = withStoryCopy(SUCCESS_STORIES, t.impact.stories);
+
+  // Stat labels come from the path steps on the lab home page.
+  const statLabels = Object.fromEntries(
+    lab.path.steps.flatMap((step) =>
+      step.stats.map((stat) => [stat.key, stat.label]),
+    ),
+  ) as Record<string, string>;
+  const ledgerKeys: ImpactKey[] = [
+    "communityMembers",
+    "fellowshipPlacements",
+    "fullTimeRoles",
+    "publications",
+  ];
+
+  const groups = [
+    { title: t.team.directorsTitle, members: teamByGroup("directors") },
+    { title: t.team.leadsTitle, members: teamByGroup("leads") },
+    // The largest group: rows with small photos on phones
+    { title: t.team.teamTitle, members: teamByGroup("team"), compact: true },
+  ];
+  const advisors = teamByGroup("advisors");
+
+  const memberCard = (member: TeamMember) => (
+    <MemberCard
+      key={member.id}
+      member={member}
+      role={roles[member.id]}
+      bio={bios[member.id]}
+      readBioLabel={lab.aboutPage.readBio}
+      closeLabel={lab.aboutPage.close}
+    />
+  );
+
+  return (
+    <div className="lab">
+      <ThreadPage />
+      <LabAnnouncement locale={currentLocale} dict={dict} />
+      <main>
+        {/* Same structured data as the original page at this route */}
+        <OrganizationJsonLd />
+        <BreadcrumbJsonLd
+          items={[
+            { name: dict.about.breadcrumb.home, url: "" },
+            { name: dict.about.breadcrumb.current, url: LAB_PAGE_PATHS.about },
+          ]}
+          locale={currentLocale}
+        />
+
+      <TitleBand
+        locale={currentLocale}
+        homeLabel={lab.band.home}
+        eyebrow={t.title}
+        title={t.whoWeAre.title}
+        lede={
+          <>
+            <p>{fillImpact(t.whoWeAre.paragraph1, currentLocale)}</p>
+            <div className="lab-focus">
+              <p className="lab-focus-label">{t.ourApproach.focusAreas.title}</p>
+              <ul className="lab-chips">
+                {t.ourApproach.focusAreas.items.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        }
+        jumpLabel={lab.aboutPage.jump}
+        jumps={[
+          { href: "#impact", label: t.impact.title },
+          { href: "#team", label: t.team.title },
+          { href: "#support", label: t.support.title },
+        ]}
+      />
+
+      {/* Track record */}
+      <section className="lab-section" id="impact">
+        <div className="lab-wrap">
+          <header className="lab-section-head">
+            <p className="lab-kicker">{t.impact.eyebrow}</p>
+            <h2 className="lab-h2">{t.impact.title}</h2>
+            <p className="lab-section-desc">{t.impact.description}</p>
+          </header>
+
+          <dl className="lab-ledger">
+            {ledgerKeys.map((key) => (
+              <div key={key}>
+                <dt>{statLabels[key]}</dt>
+                <dd>{impactValue(key, currentLocale)}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="lab-split">
+            <div>
+              <h3 className="lab-h3">{lab.aboutPage.fullTimeOrgs}</h3>
+              <p className="lab-body">{fillImpact(t.impact.fullTime.description, currentLocale)}</p>
+              <ul className="lab-chips lab-chips-lg">
+                {FULL_TIME_ORGS.map((org) => (
+                  <li key={org.name}>
+                    <a href={org.url} target="_blank" rel="noopener noreferrer">
+                      {org.name} <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="lab-h3">{lab.aboutPage.fellowships}</h3>
+              <p className="lab-body">{fillImpact(t.impact.fellowships.description, currentLocale)}</p>
+              <ul className="lab-chips lab-chips-lg">
+                {FELLOWSHIP_PLACEMENTS.map((program) => (
+                  <li key={program.name}>
+                    {program.name} <strong>{program.count}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="lab-columns">
+            {[t.impact.research, t.impact.courses, t.impact.community].map(
+              (block) => (
+                <div key={block.title}>
+                  <h3 className="lab-h3">{block.title}</h3>
+                  <ul className="lab-list">
+                    {block.items.map((item: string) => (
+                      <li key={item}>{fillImpact(item, currentLocale)}</li>
+                    ))}
+                  </ul>
+                </div>
+              ),
+            )}
+          </div>
+
+          <h3 className="lab-h3 lab-stories-title">{t.impact.storiesTitle}</h3>
+          <StoryList
+            stories={stories}
+            glossary={lab.stories.glossary}
+            roles={roles}
+            swipe
+          />
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="lab-section lab-section-tight" id="team">
+        <div className="lab-wrap">
+          <header className="lab-section-head">
+            <h2 className="lab-h2">{t.team.title}</h2>
+          </header>
+
+          {groups.map((group, i) => (
+            <div key={group.title} className="lab-team-group">
+              <h3 className="lab-team-heading">{group.title}</h3>
+              <ul
+                className={
+                  group.compact
+                    ? "lab-team lab-team-compact"
+                    : i === 0
+                      ? "lab-team lab-team-lg"
+                      : "lab-team"
+                }
+              >
+                {group.members.map(memberCard)}
+              </ul>
+
+              {i === 0 && (
+                <div className="lab-trow lab-trow-call" id="get-in-touch">
+                  {/* Older links point at #book-a-call */}
+                  <span id="book-a-call" aria-hidden="true" />
+                  <div className="lab-call-copy">
+                    <h3 className="lab-trow-title">{lab.contactFirst.title}</h3>
+                    <p className="lab-trow-desc">{lab.contactFirst.text}</p>
+                  </div>
+                  <div className="lab-call-actions">
+                    <SmartLink
+                      href="/contact#contact-form"
+                      locale={currentLocale}
+                      className="lab-button lab-button-sm"
+                    >
+                      {lab.contactFirst.cta}
+                    </SmartLink>
+                    <a
+                      className="lab-link lab-link-sm"
+                      href={EITAN_BOOKING_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {lab.contactFirst.call}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div className="lab-team-group">
+            <h3 className="lab-team-heading">{t.team.advisorsTitle}</h3>
+            <ul className="lab-advisors">
+              {advisors.map((member) => (
+                <li key={member.id}>
+                  <span className="lab-member-name">{member.name}</span>
+                  <span className="lab-member-role">{roles[member.id]}</span>
+                  <TeamLinksRow links={member.links} className="mt-2" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Supported by: threads settle into a band above the funders */}
+      <section
+        className="lab-section lab-section-tight"
+        id="support"
+      >
+        <ThreadSet scene="horizon" />
+        <div className="lab-wrap">
+          <div className="lab-band" data-thread-box aria-hidden="true" />
+          <header className="lab-section-head">
+            <h2 className="lab-h2">{t.support.title}</h2>
+            <p className="lab-section-desc">{t.support.description}</p>
+          </header>
+          <div className="lab-table">
+            {FUNDERS.map((funder) => {
+              const copy = t.support[funder.id];
+              return (
+                <div key={funder.id} className="lab-funder">
+                  <div>
+                    {funder.logo ? (
+                      <Image
+                        src={funder.logo.src}
+                        alt={copy.name}
+                        width={funder.logo.width}
+                        height={funder.logo.height}
+                        className="lab-funder-logo"
+                      />
+                    ) : (
+                      <p className="lab-trow-title">{copy.name}</p>
+                    )}
+                    <p className="lab-cell-eyebrow">{copy.program}</p>
+                  </div>
+                  <p className="lab-trow-desc">{copy.description}</p>
+                  <div className="lab-funder-links">
+                    {funder.links.map((link) => (
+                      <a
+                        key={link.url}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="lab-link lab-link-sm"
+                      >
+                        {"label" in link ? link.label : t.support[link.labelKey]}
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      </main>
+      <LabFooter locale={currentLocale} dict={dict} />
+    </div>
+  );
+}

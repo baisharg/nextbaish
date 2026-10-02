@@ -29,11 +29,11 @@ import {
   BEZIER_CONTROL_FACTOR,
   SEGMENTS_PER_CURVE,
   THREAD_WIDTH_SCALE,
-  OVERLAY_OPACITY,
   MAX_GRADIENT_STOPS,
   DEFAULT_OFFSET_X_MULTIPLIER,
   DEFAULT_OFFSET_Y_MULTIPLIER,
   PULSE_WIDTH,
+  PULSE_DEEPEN,
   GRAIN_AMPLITUDE,
   hslToRgb,
   computeLinearGaussianWeights,
@@ -126,6 +126,7 @@ const QUADS: u32 = ${quadsPerThread}u;
 const BEZ_F: f32 = ${BEZIER_CONTROL_FACTOR};
 const SHIMMER_AMP: f32 = ${SHIMMER_AMPLITUDE};
 const PULSE_W: f32 = ${PULSE_WIDTH};
+const PULSE_DEEPEN: f32 = ${PULSE_DEEPEN};
 
 fn threadPoint(t: u32, i: u32) -> vec2f {
   let flat = t * N + i;
@@ -220,9 +221,18 @@ ${GRADIENT_WGSL}
   let shimmer = 1.0 + SHIMMER_AMP * sin(in.lengthPos * 9.0 - globals.g0.w * 1.6 + m.info1.y);
   color *= shimmer;
 
-  // Flip pulse: a brief highlight traveling the thread after a direction flip.
+  // Pulse traveling the thread: positive intensity brightens (direction
+  // flips), negative deepens and turns opaque (pulses the page asks for).
   let pd = (in.lengthPos - m.info1.z) / PULSE_W;
-  color *= 1.0 + m.info1.w * exp(-pd * pd);
+  let pulse = exp(-pd * pd);
+  var alpha = m.info0.y;
+  if (m.info1.w >= 0.0) {
+    color *= 1.0 + m.info1.w * pulse;
+  } else {
+    let k = -m.info1.w * pulse;
+    color = mix(color, color * PULSE_DEEPEN, k);
+    alpha = mix(alpha, 1.0, k);
+  }
 
   // Feathered ribbon edges: a half-pixel coverage ramp in screen space.
   // (1 - |edge|) / fwidth(edge) is the distance to the ribbon edge in pixels;
@@ -232,7 +242,7 @@ ${GRADIENT_WGSL}
   let fw = max(fwidth(in.edge), 1e-4);
   let edgeAlpha = clamp((1.0 - abs(in.edge)) / fw + 0.5, 0.0, 1.0);
 
-  return vec4f(color, m.info0.y * edgeAlpha);
+  return vec4f(color, alpha * edgeAlpha);
 }
 `;
 };
@@ -272,21 +282,19 @@ struct Params {
 
 /**
  * Final composite: scene + two bloom levels, overlay gradient screen-blended
- * on top (full-strength RGB, OVERLAY_OPACITY alpha — exactly the WebGL
+ * on top (full-strength RGB, frame.overlayOpacity alpha — exactly the WebGL
  * overlay pass), then converted to premultiplied alpha for the WebGPU canvas.
  */
 const COMPOSITE_SHADER = /* wgsl */ `
 struct OvBuf {
   stops: array<vec4f, ${MAX_GRADIENT_STOPS}>, // rgb, yPct
-  p0: vec4f, // stopCount, glowWeightHalf, glowWeightQuarter, unused
+  p0: vec4f, // stopCount, glowWeightHalf, glowWeightQuarter, overlayAlpha
 }
 @group(0) @binding(0) var sceneTex: texture_2d<f32>;
 @group(0) @binding(1) var glowHalf: texture_2d<f32>;
 @group(0) @binding(2) var glowQuarter: texture_2d<f32>;
 @group(0) @binding(3) var samp: sampler;
 @group(0) @binding(4) var<uniform> ov: OvBuf;
-
-const OVERLAY_ALPHA: f32 = ${OVERLAY_OPACITY};
 
 ${GRADIENT_WGSL}
 
@@ -304,7 +312,8 @@ ${GRADIENT_WGSL}
 
   // Screen blend, then straight->premultiplied for canvas compositing.
   let outRgb = ovColor + col * (1.0 - ovColor);
-  let outA = OVERLAY_ALPHA + scene.a * (1.0 - OVERLAY_ALPHA);
+  let overlayAlpha = ov.p0.w;
+  let outA = overlayAlpha + scene.a * (1.0 - overlayAlpha);
 
   // Interleaved gradient noise dither: debands the glow gradients and adds
   // the faintest paper grain (same formula as the WebGL composite).
@@ -382,6 +391,7 @@ export class VgpuRenderer implements Renderer {
   private threadStopsCache: (ColorStop[] | null)[] = [];
   private metaDirty = true;
   private lastOverlayGradient: ColorStop[] | null = null;
+  private lastOverlayOpacity = -1;
   private overlayDirty = true;
 
   private squareScale = 1;
@@ -605,11 +615,20 @@ export class VgpuRenderer implements Renderer {
       const base = t * META_FLOATS;
       const i0 = base + MAX_GRADIENT_STOPS * 4;
 
-      // Skip untouched threads: same gradient stops, and no pulse now
-      // (meta[i0 + 7] holds the last written pulse intensity).
+      const halfWidth = (thread.width * dpr * THREAD_WIDTH_SCALE) / 2;
+      const gradientMargin = halfWidth / this.squareScale;
+      const adjustedMinY = thread.gradientMinY - gradientMargin;
+      const adjustedMaxY = thread.gradientMaxY + gradientMargin;
+      const yRange = adjustedMaxY - adjustedMinY;
+
+      // Skip untouched threads: same gradient stops, opacity and gradient
+      // span, and no pulse now (meta[i0 + 7] holds the last written pulse
+      // intensity). meta is float32, so compare against rounded values.
       if (
         !this.metaDirty &&
         this.threadStopsCache[t] === thread.colorStops &&
+        meta[i0 + 1] === Math.fround(thread.opacity) &&
+        meta[i0 + 2] === Math.fround(adjustedMinY) &&
         thread.pulseIntensity === 0 &&
         meta[i0 + 7] === 0
       ) {
@@ -619,12 +638,6 @@ export class VgpuRenderer implements Renderer {
       metaChanged = true;
 
       const stopCount = packStops(meta, base, thread.colorStops);
-
-      const halfWidth = (thread.width * dpr * THREAD_WIDTH_SCALE) / 2;
-      const gradientMargin = halfWidth / this.squareScale;
-      const adjustedMinY = thread.gradientMinY - gradientMargin;
-      const adjustedMaxY = thread.gradientMaxY + gradientMargin;
-      const yRange = adjustedMaxY - adjustedMinY;
 
       meta[i0] = halfWidth;
       meta[i0 + 1] = thread.opacity;
@@ -684,6 +697,7 @@ export class VgpuRenderer implements Renderer {
 
       if (
         framePacket.overlayGradient !== this.lastOverlayGradient ||
+        framePacket.overlayOpacity !== this.lastOverlayOpacity ||
         this.overlayDirty
       ) {
         const ov = this.overlayScratch;
@@ -691,8 +705,10 @@ export class VgpuRenderer implements Renderer {
         ov[base] = packStops(ov, 0, framePacket.overlayGradient);
         ov[base + 1] = bloom ? GLOW_WEIGHT_HALF : 0;
         ov[base + 2] = bloom ? GLOW_WEIGHT_QUARTER : 0;
+        ov[base + 3] = framePacket.overlayOpacity;
         this.overlayUniform!.write(ov);
         this.lastOverlayGradient = framePacket.overlayGradient;
+        this.lastOverlayOpacity = framePacket.overlayOpacity;
         this.overlayDirty = false;
       }
 

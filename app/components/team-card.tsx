@@ -94,7 +94,9 @@ export function TeamLinksRow({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="text-slate-700 transition hover:opacity-70"
+          // Padding with a matching negative margin gives a 28px tap target
+          // without moving the 20px icon
+          className="-m-1 p-1 text-slate-700 transition hover:opacity-70"
         >
           <HugeiconsIcon icon={icon} size={20} />
         </a>
