@@ -53,11 +53,11 @@ describe("BAISH course opportunities", () => {
       }),
       expect.objectContaining({
         id: "technical-ai-safety-project",
-        status: "eoi_open",
+        status: "applications_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
         applicationUrl:
-          "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
+          "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
         learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
       }),
       expect.objectContaining({
@@ -80,14 +80,14 @@ describe("BAISH course opportunities", () => {
     expect(resolveApplyUrl(byId["technical-ai-safety-course"])).toBe(
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
-    expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
-    );
     expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
       "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
     );
 
     // Applications open → application form.
+    expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
+    );
     expect(
       resolveApplyUrl({
         ...byId["technical-ai-safety-course"],

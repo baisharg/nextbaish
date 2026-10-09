@@ -71,11 +71,11 @@ const FALLBACK_COURSE_OPPORTUNITIES = [
   },
   {
     id: "technical-ai-safety-project",
-    status: "eoi_open",
+    status: "applications_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
     applicationUrl:
-      "https://safetytalent.org/org/baish/apply/ps76qq0pjhsa4wqcv7x4qw580s88fyhx",
+      "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
     learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
   },
   {
