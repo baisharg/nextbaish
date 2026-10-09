@@ -29,7 +29,7 @@ export type ThreadFrame = {
   gradientMaxY: number; // Max Y in normalized [0..1] space
   // Flip pulse: highlight traveling along the thread after a direction flip
   pulsePos: number; // Pulse center in [0..1] along-thread space
-  pulseIntensity: number; // Peak brightness boost; 0 = no pulse
+  pulseIntensity: number; // >0 brightens, <0 deepens (page pulses); 0 = none
 };
 
 /**
@@ -40,6 +40,7 @@ export type FramePacket = {
   viewSize: number; // VIEWBOX_SIZE constant
   threads: ThreadFrame[];
   overlayGradient: ColorStop[]; // Overlay gradient stops
+  overlayOpacity: number; // Alpha of the overlay pass (OVERLAY_OPACITY by default)
 };
 
 /**

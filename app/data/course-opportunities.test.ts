@@ -209,7 +209,7 @@ describe("BAISH course opportunities", () => {
     }
   });
 
-  test("removes only Guido's scheduling link from the about page", () => {
+  test("offers only Eitan's scheduling link on the about page", () => {
     const aboutPage = readFileSync(
       new URL("../[locale]/about/page.tsx", import.meta.url),
       "utf8",
@@ -217,6 +217,6 @@ describe("BAISH course opportunities", () => {
 
     expect(aboutPage).not.toContain("https://calendly.com/gbergman-fi/30min");
     expect(aboutPage).toContain("https://calendly.com/eitusprejer");
-    expect(aboutPage).toContain("https://lvca.dev/meet");
+    expect(aboutPage).not.toContain("https://lvca.dev/meet");
   });
 });

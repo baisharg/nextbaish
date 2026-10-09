@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/i18n.config";
+
 /**
  * Headline impact numbers, shared by the home page and the About page so they
  * can never drift apart. Labels are translated in the dictionaries; only the
@@ -12,7 +14,7 @@
 
 export const IMPACT = {
   /** Members of the BAISH WhatsApp community. */
-  communityMembers: "350+",
+  communityMembers: "400+",
   /** Subscribers to the BAISH Luma events calendar. */
   lumaSubscribers: "500+",
   /** Followers of @baish_arg on Instagram. */
@@ -29,7 +31,7 @@ export const IMPACT = {
   courseParticipants: "89",
   courseRecommendScore: "9.4/10",
   /** Typical in-person attendance at a monthly social event. */
-  socialAttendance: "50-80",
+  socialAttendance: "50–80",
   /** Argentine delegation to EAG London 2026 supported by BAISH. */
   eagDelegation: "16",
 } as const;
@@ -39,13 +41,23 @@ export type ImpactKey = keyof typeof IMPACT;
 const PLACEHOLDER = /\{(\w+)\}/g;
 
 /**
- * Replaces `{key}` placeholders in a dictionary string with the matching
- * IMPACT value. Unknown placeholders are left untouched, so strings that also
- * carry other template variables (e.g. `{name}`) pass through safely.
+ * An IMPACT value as written in `locale`: Spanish uses a decimal comma
+ * ("9,4/10"). Values are stored with a decimal point.
  */
-export function fillImpact(text: string): string {
+export function impactValue(key: ImpactKey, locale: AppLocale): string {
+  const value: string = IMPACT[key];
+  return locale === "es" ? value.replace(/(\d)\.(\d)/g, "$1,$2") : value;
+}
+
+/**
+ * Replaces `{key}` placeholders in a dictionary string with the matching
+ * IMPACT value, written for `locale`. Unknown placeholders are left
+ * untouched, so strings that also carry other template variables (e.g.
+ * `{name}`) pass through safely.
+ */
+export function fillImpact(text: string, locale: AppLocale): string {
   return text.replace(PLACEHOLDER, (match, key: string) =>
-    key in IMPACT ? IMPACT[key as ImpactKey] : match,
+    key in IMPACT ? impactValue(key as ImpactKey, locale) : match,
   );
 }
 

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { LAB_ROUTES, SERVE_LAB_AT_MAIN_ROUTES } from "./app/lab-routes";
 const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const withBundleAnalyzer = bundleAnalyzer({
@@ -7,6 +8,25 @@ const withBundleAnalyzer = bundleAnalyzer({
 const projectRoot = process.cwd();
 
 const nextConfig: NextConfig = {
+  // Redesign prototype routes (app/lab-routes.ts). beforeFiles, because
+  // app/[locale]/* would otherwise match first.
+  async rewrites() {
+    return {
+      beforeFiles: SERVE_LAB_AT_MAIN_ROUTES
+        ? LAB_ROUTES.map(([live, lab]) => ({
+            source: `/:locale(en|es)${live}`,
+            destination: `/:locale${lab}`,
+          }))
+        : [],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+
+  // Dev only: let Orca's per-worktree hosts (e.g. nextbaish.orca.localhost)
+  // load /_next dev resources. Without this the page renders without JS.
+  allowedDevOrigins: ["*.orca.localhost"],
+
   // Production optimizations
   // Note: Next.js 16+ uses SWC minification by default (no config needed)
   compiler: {
@@ -32,6 +52,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "placehold.co",
+      },
+      {
+        // Luma event covers (app/data/luma.ts)
+        protocol: "https",
+        hostname: "images.lumacdn.com",
       },
     ],
   },

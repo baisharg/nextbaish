@@ -21,14 +21,16 @@ import { WebGLRenderer } from "../renderers/webgl-renderer";
 export type CreateRendererOptions = {
   canvas: HTMLCanvasElement | OffscreenCanvas;
   config: RendererConfig;
+  /** Go straight to WebGL, e.g. when WebGPU already failed on this page */
+  skipWebGPU?: boolean;
 };
 
 export async function createRenderer(
   options: CreateRendererOptions
 ): Promise<{ renderer: Renderer; kind: RendererKind }> {
-  const { canvas, config } = options;
+  const { canvas, config, skipWebGPU } = options;
 
-  if (supportsWebGPU()) {
+  if (!skipWebGPU && supportsWebGPU()) {
     try {
       // VgpuRenderer requests the device before touching the canvas, so a
       // failure here leaves the canvas free for WebGL below.

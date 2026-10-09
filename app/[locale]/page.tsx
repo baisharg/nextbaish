@@ -147,7 +147,7 @@ export default async function Home({
                   >
                     <div className="card-eyebrow">{item.eyebrow}</div>
                     <h3 className="card-title">{item.title}</h3>
-                    <p className="card-body">{fillImpact(item.description)}</p>
+                    <p className="card-body">{fillImpact(item.description, currentLocale)}</p>
                     <div className="card-footer">
                       <TransitionLink
                         className="link-arrow"
@@ -300,7 +300,7 @@ export default async function Home({
                     {t.getInvolved.communityTitle}
                   </h3>
                   <p className="card-body">
-                    {fillImpact(t.getInvolved.communityDescription)}
+                    {fillImpact(t.getInvolved.communityDescription, currentLocale)}
                   </p>
                   <div className="flex flex-col gap-3 mt-auto">
                     <a
@@ -313,7 +313,7 @@ export default async function Home({
                         <HugeiconsIcon icon={WhatsappIcon} size={20} />
                         <span className="font-semibold">{t.getInvolved.whatsappCta}</span>
                       </div>
-                      <span className="text-xs opacity-90">{fillImpact(t.getInvolved.whatsappMembers)}</span>
+                      <span className="text-xs opacity-90">{fillImpact(t.getInvolved.whatsappMembers, currentLocale)}</span>
                     </a>
                   </div>
                 </article>

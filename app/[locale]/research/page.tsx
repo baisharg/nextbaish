@@ -750,7 +750,7 @@ export default async function ResearchPage({
               </div>
 
               {/* Co-founder Cards with Headshots */}
-              <div className="grid gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
+              <div className="grid gap-6 max-w-sm mx-auto">
                 {/* Eitan Card */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-white/80 border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow">
                   <div className="h-20 w-20 mb-4 rounded-full overflow-hidden border-2 border-[var(--color-accent-primary)]/20">
@@ -779,33 +779,6 @@ export default async function ResearchPage({
                   </a>
                 </div>
 
-                {/* Luca Card */}
-                <div className="flex flex-col items-center p-6 rounded-xl bg-white/80 border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="h-20 w-20 mb-4 rounded-full overflow-hidden border-2 border-[var(--color-accent-primary)]/20">
-                    <Image
-                      src="/images/team/luca-new.png"
-                      alt="Luca De Leo"
-                      width={200}
-                      height={200}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-900">
-                    Luca De Leo
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-4">
-                    {t.cta.lucaSpecialty}
-                  </p>
-                  <a
-                    href="https://lvca.dev/meet"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button-primary inline-flex items-center justify-center gap-2 w-full"
-                  >
-                    {t.cta.bookWithLuca}
-                    <ExternalLinkIcon className="h-4 w-4 opacity-70" />
-                  </a>
-                </div>
               </div>
             </section>
           </FadeInSection>

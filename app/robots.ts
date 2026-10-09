@@ -12,6 +12,10 @@ export default function robots(): MetadataRoute.Robots {
           "/api/", // API routes (if any)
           "/_next/", // Next.js internal routes
           "/private/", // Any private routes
+          // Redesign prototype copies; the same pages are served at the main
+          // routes, whose canonical URLs they point to
+          "/en/lab",
+          "/es/lab",
         ],
       },
     ],
