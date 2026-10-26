@@ -115,7 +115,6 @@ export const TEAM: TeamMember[] = [
     photo: "/images/team/rocio-monjes.png",
     links: {
       linkedin: "https://www.linkedin.com/in/rocio-pilar-monjes-/",
-      instagram: "https://www.instagram.com/originaluniverse.326/",
     },
   },
   {
