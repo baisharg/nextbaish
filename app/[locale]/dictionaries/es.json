@@ -184,6 +184,12 @@
           "title": "Frontier AI Governance",
           "description": "Explorá desafíos de gobernanza de sistemas de IA de frontera: coordinación, gobernanza del cómputo, rendición de cuentas y evaluación de riesgos.",
           "duration": "6 semanas"
+        },
+        "agi-strategy": {
+          "eyebrow": "Curso de estrategia",
+          "title": "Estrategia sobre IA General",
+          "description": "Curso de BlueDot Impact facilitado por BAISH. Recorré qué impulsa el progreso de la IA, por qué caminos podría causar daños catastróficos y qué estrategias hay para orientar la transición. Terminás con una postura propia sobre qué amenazas importan y próximos pasos concretos para empezar a contribuir.",
+          "duration": "5 semanas"
         }
       },
       "joinNow": "Inscribite",
@@ -2155,7 +2161,12 @@
         ],
         "frontier-ai-governance": [
           "Gratis",
-          "Presencial, Buenos Aires"
+          "Presencial (Buenos Aires) u online"
+        ],
+        "agi-strategy": [
+          "Gratis",
+          "Presencial (Buenos Aires) u online",
+          "Textos en inglés"
         ]
       },
       "aisar": {

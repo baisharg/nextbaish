@@ -184,6 +184,12 @@
           "title": "Frontier AI Governance",
           "description": "Explore governance challenges from frontier AI systems: coordination, compute governance, accountability, and risk assessment.",
           "duration": "6 weeks"
+        },
+        "agi-strategy": {
+          "eyebrow": "Strategy course",
+          "title": "AGI Strategy",
+          "description": "BlueDot Impact course facilitated by BAISH. Explore what drives AI progress, how it could cause catastrophic harm, and which strategies could steer the transition well. You finish with your own view on which threats matter and concrete next steps to start contributing.",
+          "duration": "5 weeks"
         }
       },
       "joinNow": "Join now",
@@ -2155,7 +2161,12 @@
         ],
         "frontier-ai-governance": [
           "Free",
-          "In person, Buenos Aires"
+          "In person (Buenos Aires) or online"
+        ],
+        "agi-strategy": [
+          "Free",
+          "In person (Buenos Aires) or online",
+          "Readings in English"
         ]
       },
       "aisar": {

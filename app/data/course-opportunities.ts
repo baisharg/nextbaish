@@ -4,6 +4,7 @@ export const COURSE_OPPORTUNITY_IDS = [
   "technical-ai-safety-course",
   "technical-ai-safety-project",
   "frontier-ai-governance",
+  "agi-strategy",
 ] as const;
 
 export type CourseOpportunityId = (typeof COURSE_OPPORTUNITY_IDS)[number];
@@ -80,10 +81,21 @@ const FALLBACK_COURSE_OPPORTUNITIES = [
   },
   {
     id: "frontier-ai-governance",
-    status: "eoi_open",
+    status: "applications_open",
     eoiUrl:
-      "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
+      "https://safetytalent.org/org/baish/apply/ps76n04hgsqav7j6xb9d25c7qh8cm0s6",
+    applicationUrl:
+      "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
     learnMoreUrl: "https://bluedot.org/courses/ai-governance",
+  },
+  {
+    id: "agi-strategy",
+    status: "applications_open",
+    eoiUrl:
+      "https://safetytalent.org/org/baish/apply/ps74jgrt3kawb0z4xzwev64j4d8ec7q1",
+    applicationUrl:
+      "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
+    learnMoreUrl: "https://bluedot.org/courses/agi-strategy",
   },
 ] as const satisfies readonly CourseOpportunity[];
 
