@@ -27,15 +27,16 @@ function activityEventNames(locale: "en" | "es"): string[] {
 }
 
 describe("BAISH course opportunities", () => {
-  test("exposes the three current public BAISH courses in display order", async () => {
+  test("exposes the four current public BAISH courses in display order", async () => {
     const opportunities = await getCourseOpportunities();
 
     expect(opportunities.map((opportunity) => opportunity.id)).toEqual([
       "technical-ai-safety-course",
       "technical-ai-safety-project",
       "frontier-ai-governance",
+      "agi-strategy",
     ] satisfies typeof COURSE_OPPORTUNITY_IDS);
-    expect(opportunities).toHaveLength(3);
+    expect(opportunities).toHaveLength(4);
   });
 
   test("uses ASTN apply URLs as primary links and BlueDot URLs as learn-more links", async () => {
@@ -62,10 +63,21 @@ describe("BAISH course opportunities", () => {
       }),
       expect.objectContaining({
         id: "frontier-ai-governance",
-        status: "eoi_open",
+        status: "applications_open",
         eoiUrl:
-          "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
+          "https://safetytalent.org/org/baish/apply/ps76n04hgsqav7j6xb9d25c7qh8cm0s6",
+        applicationUrl:
+          "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
         learnMoreUrl: "https://bluedot.org/courses/ai-governance",
+      }),
+      expect.objectContaining({
+        id: "agi-strategy",
+        status: "applications_open",
+        eoiUrl:
+          "https://safetytalent.org/org/baish/apply/ps74jgrt3kawb0z4xzwev64j4d8ec7q1",
+        applicationUrl:
+          "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
+        learnMoreUrl: "https://bluedot.org/courses/agi-strategy",
       }),
     ]);
   });
@@ -80,11 +92,14 @@ describe("BAISH course opportunities", () => {
     expect(resolveApplyUrl(byId["technical-ai-safety-course"])).toBe(
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
     );
-    expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps76h8dydt3nby3vhnwaxn72gs85w9f1",
-    );
 
     // Applications open → application form.
+    expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
+    );
+    expect(resolveApplyUrl(byId["agi-strategy"])).toBe(
+      "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
+    );
     expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
       "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
     );
@@ -130,11 +145,13 @@ describe("BAISH course opportunities", () => {
       "technical-ai-safety-course",
       "technical-ai-safety-project",
       "frontier-ai-governance",
+      "agi-strategy",
     ] satisfies typeof COURSE_OPPORTUNITY_IDS);
     expect(Object.keys(es.home.activities.items)).toEqual([
       "technical-ai-safety-course",
       "technical-ai-safety-project",
       "frontier-ai-governance",
+      "agi-strategy",
     ] satisfies typeof COURSE_OPPORTUNITY_IDS);
 
     expect(en.home.timeline.foundationsTitle).toBe("Technical AI Safety Course");
