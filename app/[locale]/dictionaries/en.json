@@ -840,7 +840,7 @@
       "eyebrow": "BAISH Labs · Research arm",
       "title": "AI safety research, made in Buenos Aires",
       "paragraph1": "BAISH Labs is a research group rooted in Buenos Aires, where researchers can work on AI safety without relocating abroad. Argentina has the talent, the universities and the research culture; what was missing was an institution where that work could happen over sustained periods.",
-      "paragraph2": "The lab grew out of the BAISH community: its founding team took our courses, facilitated them, or came through ARENA and Iliad. It works alongside the AISAR fellowship, which funds junior researchers for six months, and aims to give the strongest of them continuity afterwards.",
+      "paragraph2": "The lab grew out of the BAISH community: its team took our courses, facilitated them, or came through ARENA and Iliad. It works alongside the AISAR fellowship, which funds junior researchers for six months, and aims to give the strongest of them continuity afterwards.",
       "agendaTitle": "Research agenda",
       "agendaIntro": "Our initial focus is interpretability and control:",
       "agenda": [
@@ -850,7 +850,7 @@
         "Model stitching to identify functionally conserved representations of scheming across models"
       ],
       "leadTitle": "Head of Lab",
-      "teamTitle": "Founding team",
+      "teamTitle": "Team",
       "roles": {
         "head": "Head of Lab & Research Lead",
         "lead": "Research Lead",

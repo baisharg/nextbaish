@@ -840,7 +840,7 @@
       "eyebrow": "BAISH Labs · Brazo de investigación",
       "title": "Investigación en AI safety, hecha en Buenos Aires",
       "paragraph1": "BAISH Labs es un grupo de investigación con raíces en Buenos Aires, donde se puede investigar en AI safety sin mudarse al exterior. Argentina tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
-      "paragraph2": "El lab nació de la comunidad de BAISH: su equipo fundador hizo nuestros cursos, los facilitó, o llegó a través de ARENA e Iliad. Trabaja junto a la beca AISAR, que financia a investigadores junior durante seis meses, y busca darles continuidad a los más fuertes después.",
+      "paragraph2": "El lab nació de la comunidad de BAISH: su equipo hizo nuestros cursos, los facilitó, o llegó a través de ARENA e Iliad. Trabaja junto a la beca AISAR, que financia a investigadores junior durante seis meses, y busca darles continuidad a los más fuertes después.",
       "agendaTitle": "Agenda de investigación",
       "agendaIntro": "Nuestro foco inicial es interpretabilidad y control:",
       "agenda": [
@@ -850,7 +850,7 @@
         "Model stitching para identificar representaciones de scheming funcionalmente conservadas entre modelos"
       ],
       "leadTitle": "Head del Lab",
-      "teamTitle": "Equipo fundador",
+      "teamTitle": "Equipo",
       "roles": {
         "head": "Head del Lab y Research Lead",
         "lead": "Research Lead",
