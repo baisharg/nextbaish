@@ -154,7 +154,7 @@ export function TeamTextCard({
 }
 
 /**
- * Wide card with a bio, used for the directors and the Head of Lab.
+ * Wide card with a bio, used for the Head of Lab.
  */
 export function TeamBioCard({
   member,
