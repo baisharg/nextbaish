@@ -749,7 +749,7 @@ export default async function ResearchPage({
                 </p>
               </div>
 
-              {/* Co-founder Cards with Headshots */}
+              {/* Contact card with headshot */}
               <div className="grid gap-6 max-w-sm mx-auto">
                 {/* Eitan Card */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-white/80 border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow">

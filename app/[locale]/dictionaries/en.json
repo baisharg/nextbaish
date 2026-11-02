@@ -448,9 +448,9 @@
       "title": "The team",
       "advisorsTitle": "Advisors",
       "roles": {
-        "eitan-sprejer": "Co-founding Director · Research Manager Lead, Apart Research",
-        "carlos-giudice": "Co-Director · Research Engineer, Equistamp",
-        "luca-de-leo": "Co-founding Director · Product Engineer, 80,000 Hours",
+        "eitan-sprejer": "Research Manager Lead, Apart Research",
+        "carlos-giudice": "Research Engineer, Equistamp",
+        "luca-de-leo": "Product Engineer, 80,000 Hours",
         "nicolas-martorell": "Research Lead · Head of BAISH Labs",
         "nicolas-spinelli": "Communications Lead",
         "marina-romanisio": "Community Lead",
@@ -485,12 +485,8 @@
         "mayra-ameneiros": "Senior Fellow, IBBIS · AI × biosecurity"
       },
       "bios": {
-        "eitan-sprejer": "Eitán is Research Manager Lead at {apartResearchLink} and a co-founding director of BAISH. He has co-authored {eitanPaperLink} accepted to NeurIPS workshops, {eitanArxivPaperLink}, {eitanCoTPaperLink}, and an ICLR 2026 workshop paper on white-box monitoring. He holds a bachelor's and master's degree in Physics from the University of Buenos Aires, was a teaching assistant at {ml4gLink} camps twice, facilitated the {aisesLink} from the Center for AI Safety, and co-founded EA Argentina.",
-        "carlos-giudice": "Carlos is a Research Engineer at {equistampLink} and a co-director of BAISH. His move into a full-time AI safety role came directly out of an EA Global conference, the kind of path BAISH now helps its members take.",
-        "luca-de-leo": "Luca is Product Engineer at {eightyKLink} and a co-founding director of BAISH. Involved in AI safety since 2016, he received grants from {acxLink} and the {ltffLink} to upskill for AI safety research, worked in operations at {nonlinearLink}, and won two first places and one second place at {apartResearchLink} research sprints. He previously ran operations for the {aiSpeciesLink} YouTube channel, which has over 14 million views.",
         "nicolas-martorell": "Nicolás leads BAISH Labs. He is a postdoctoral researcher at UBA-CONICET's Applied Artificial Intelligence Laboratory, where he runs a research line on LLM interpretability, with peer-reviewed work at the xAI World Conference and an ICML 2026 workshop. He holds a PhD in Neuroscience from the University of Buenos Aires, spent four years as a teaching assistant and lead TA at Neuromatch Academy, facilitates BlueDot's Technical AI Safety Projects course, maintains the open-source {conceptProbeLink} interpretability library, and is the author of {nicoBookLink}, a general-audience book on AI published by Siglo XXI."
       },
-      "directorsTitle": "Directors",
       "leadsTitle": "Leads",
       "teamTitle": "Team"
     },
@@ -523,7 +519,7 @@
     },
     "callToAction": {
       "title": "Want to chat?",
-      "description": "Anyone interested in AI safety can book a call with Eitan, one of our directors.",
+      "description": "Anyone interested in AI safety can book a call with Eitan.",
       "bookWithEitan": "Book with Eitan"
     }
   },
@@ -588,7 +584,7 @@
         {
           "id": "careers",
           "title": "Career support",
-          "description": "One-on-ones with the directors, help with fellowship applications like MARS, and travel support for EA Global. {eagDelegation} members went to EAG London 2026.",
+          "description": "One-on-ones with the team, help with fellowship applications like MARS, and travel support for EA Global. {eagDelegation} members went to EAG London 2026.",
           "cta": "Write to us",
           "link": "/contact#contact-form",
           "external": false
@@ -844,7 +840,7 @@
       "eyebrow": "BAISH Labs · Research arm",
       "title": "AI safety research, made in Buenos Aires",
       "paragraph1": "BAISH Labs is a research group rooted in Buenos Aires, where researchers can work on AI safety without relocating abroad. Argentina has the talent, the universities and the research culture; what was missing was an institution where that work could happen over sustained periods.",
-      "paragraph2": "The lab grew out of the BAISH community: its founding team took our courses, facilitated them, or came through ARENA and Iliad. It works alongside the AISAR fellowship, which funds junior researchers for six months, and aims to give the strongest of them continuity afterwards.",
+      "paragraph2": "The lab grew out of the BAISH community: its team took our courses, facilitated them, or came through ARENA and Iliad. It works alongside the AISAR fellowship, which funds junior researchers for six months, and aims to give the strongest of them continuity afterwards.",
       "agendaTitle": "Research agenda",
       "agendaIntro": "Our initial focus is interpretability and control:",
       "agenda": [
@@ -854,7 +850,7 @@
         "Model stitching to identify functionally conserved representations of scheming across models"
       ],
       "leadTitle": "Head of Lab",
-      "teamTitle": "Founding team",
+      "teamTitle": "Team",
       "roles": {
         "head": "Head of Lab & Research Lead",
         "lead": "Research Lead",
@@ -1167,7 +1163,7 @@
     },
     "cta": {
       "title": "Ready to start your research journey?",
-      "description": "Book a call with Eitan, one of our directors, to discuss your interests and find the right path.",
+      "description": "Book a call with Eitan to discuss your interests and find the right path.",
       "bookWithEitan": "Book with Eitan",
       "eitanSpecialty": "Interpretability & Evaluations"
     },

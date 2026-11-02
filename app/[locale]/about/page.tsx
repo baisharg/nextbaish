@@ -6,16 +6,11 @@ import { AnimatedTitle } from "@/app/components/animated-title";
 import { ImpactStats } from "@/app/components/impact-stats";
 import { StoryCard } from "@/app/components/story-card";
 import { FunderCard } from "@/app/components/funder-card";
-import {
-  TeamBioCard,
-  TeamCard,
-  TeamTextCard,
-} from "@/app/components/team-card";
+import { TeamCard, TeamTextCard } from "@/app/components/team-card";
 import { OrganizationJsonLd, BreadcrumbJsonLd } from "@/app/components/json-ld";
 import { getDictionary } from "../dictionaries";
 import { generatePageMetadata, SEO_CONTENT } from "@/app/utils/seo";
-import { renderWithBioLinks } from "@/app/utils/footnotes";
-import { teamByGroup, type TeamMemberId } from "@/app/data/team";
+import { teamByGroup } from "@/app/data/team";
 import { SUCCESS_STORIES, withStoryCopy } from "@/app/data/stories";
 import { FUNDERS } from "@/app/data/funders";
 import {
@@ -54,10 +49,8 @@ export default async function AboutPage({
   const t = dict.about;
   const callToAction = t.callToAction;
   const roles = t.team.roles;
-  const bios: Partial<Record<TeamMemberId, string>> = t.team.bios;
   const stories = withStoryCopy(SUCCESS_STORIES, t.impact.stories);
 
-  const directors = teamByGroup("directors");
   const leads = teamByGroup("leads");
   const team = teamByGroup("team");
   const advisors = teamByGroup("advisors");
@@ -229,22 +222,7 @@ export default async function AboutPage({
                 {t.team.title}
               </h2>
 
-              {/* Directors */}
               <div className="space-y-6">
-                <h3 className="text-2xl font-semibold text-slate-900">
-                  {t.team.directorsTitle}
-                </h3>
-                <div className="grid gap-8">
-                  {directors.map((member) => (
-                    <TeamBioCard
-                      key={member.id}
-                      member={member}
-                      role={roles[member.id]}
-                      bio={renderWithBioLinks(bios[member.id] ?? "")}
-                    />
-                  ))}
-                </div>
-
                 {/* Book a Call CTA */}
                 <div
                   id="book-a-call"

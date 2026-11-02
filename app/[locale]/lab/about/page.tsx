@@ -70,7 +70,6 @@ export default async function LabAboutPage({
   ];
 
   const groups = [
-    { title: t.team.directorsTitle, members: teamByGroup("directors") },
     { title: t.team.leadsTitle, members: teamByGroup("leads") },
     // The largest group: rows with small photos on phones
     { title: t.team.teamTitle, members: teamByGroup("team"), compact: true },

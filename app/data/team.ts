@@ -11,7 +11,7 @@ import type en from "@/app/[locale]/dictionaries/en.json";
  * an initials placeholder, so adding a photo later is a one-line change here.
  */
 
-export type TeamGroup = "directors" | "leads" | "team" | "advisors";
+export type TeamGroup = "leads" | "team" | "advisors";
 
 /**
  * Every member id must have a role label under `about.team.roles` in the
@@ -42,40 +42,6 @@ export type TeamMember = {
 };
 
 export const TEAM: TeamMember[] = [
-  // ─── Directors ────────────────────────────────────────────────
-  {
-    id: "eitan-sprejer",
-    name: "Eitán Sprejer",
-    group: "directors",
-    photo: "/images/team/eitan-new.png",
-    links: {
-      github: "https://github.com/Eitan-Sprejer",
-      linkedin: "https://www.linkedin.com/in/eitan-sprejer-574380204/",
-    },
-  },
-  {
-    id: "carlos-giudice",
-    name: "Carlos Giudice",
-    group: "directors",
-    photo: "/images/team/carlos-new.png",
-    links: {
-      github: "https://github.com/CatOfTheCannals",
-      linkedin: "https://www.linkedin.com/in/carlos-giudice-5237b4144/",
-      website: "https://carlosgiudice.com/",
-    },
-  },
-  {
-    id: "luca-de-leo",
-    name: "Luca De Leo",
-    group: "directors",
-    photo: "/images/team/luca-new.png",
-    links: {
-      github: "https://github.com/lucadeleo",
-      linkedin: "https://www.linkedin.com/in/luca-de-leo/",
-      website: "https://lvca.dev",
-    },
-  },
-
   // ─── Task-force leads ──────────────────────────────────────────────────
   {
     id: "nicolas-martorell",
@@ -243,6 +209,39 @@ export const TEAM: TeamMember[] = [
     name: "Malena Cocozzella",
     group: "team",
     photo: "/images/team/malena-cocozzella.jpg",
+  },
+
+  {
+    id: "eitan-sprejer",
+    name: "Eitán Sprejer",
+    group: "team",
+    photo: "/images/team/eitan-new.png",
+    links: {
+      github: "https://github.com/Eitan-Sprejer",
+      linkedin: "https://www.linkedin.com/in/eitan-sprejer-574380204/",
+    },
+  },
+  {
+    id: "carlos-giudice",
+    name: "Carlos Giudice",
+    group: "team",
+    photo: "/images/team/carlos-new.png",
+    links: {
+      github: "https://github.com/CatOfTheCannals",
+      linkedin: "https://www.linkedin.com/in/carlos-giudice-5237b4144/",
+      website: "https://carlosgiudice.com/",
+    },
+  },
+  {
+    id: "luca-de-leo",
+    name: "Luca De Leo",
+    group: "team",
+    photo: "/images/team/luca-new.png",
+    links: {
+      github: "https://github.com/lucadeleo",
+      linkedin: "https://www.linkedin.com/in/luca-de-leo/",
+      website: "https://lvca.dev",
+    },
   },
 
   // ─── BAISH Labs research fellows (not otherwise on the org chart) ──────
