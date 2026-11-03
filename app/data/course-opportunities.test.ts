@@ -48,79 +48,41 @@ describe("BAISH course opportunities", () => {
         status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
-        applicationUrl:
-          "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
         learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety",
       }),
       expect.objectContaining({
         id: "technical-ai-safety-project",
-        status: "applications_open",
+        status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
-        applicationUrl:
-          "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
         learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
       }),
       expect.objectContaining({
         id: "frontier-ai-governance",
-        status: "applications_open",
+        status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps76n04hgsqav7j6xb9d25c7qh8cm0s6",
-        applicationUrl:
-          "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
         learnMoreUrl: "https://bluedot.org/courses/ai-governance",
       }),
       expect.objectContaining({
         id: "agi-strategy",
-        status: "applications_open",
+        status: "eoi_open",
         eoiUrl:
           "https://safetytalent.org/org/baish/apply/ps74jgrt3kawb0z4xzwev64j4d8ec7q1",
-        applicationUrl:
-          "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
         learnMoreUrl: "https://bluedot.org/courses/agi-strategy",
       }),
     ]);
   });
 
-  test("routes to the application when open and back to the EOI otherwise", async () => {
+  test("always links the EOI, whose ASTN redirect serves any open application", async () => {
     const opportunities = await getCourseOpportunities();
-    const byId = Object.fromEntries(
-      opportunities.map((opportunity) => [opportunity.id, opportunity]),
-    );
 
-    // EOI open → expression-of-interest form, even when an application URL is stored.
-    expect(resolveApplyUrl(byId["technical-ai-safety-course"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
-    );
-
-    // Applications open → application form.
-    expect(resolveApplyUrl(byId["frontier-ai-governance"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
-    );
-    expect(resolveApplyUrl(byId["agi-strategy"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
-    );
-    expect(resolveApplyUrl(byId["technical-ai-safety-project"])).toBe(
-      "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
-    );
-    expect(
-      resolveApplyUrl({
-        ...byId["technical-ai-safety-course"],
-        status: "applications_open",
-      }),
-    ).toBe(
-      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
-    );
-
-    // Falls back to the EOI when an application URL is not yet known.
-    expect(
-      resolveApplyUrl({
-        id: "frontier-ai-governance",
-        status: "applications_open",
-        eoiUrl: "https://example.org/eoi",
-        learnMoreUrl: "https://example.org/learn",
-      }),
-    ).toBe("https://example.org/eoi");
+    for (const opportunity of opportunities) {
+      expect(resolveApplyUrl(opportunity)).toBe(opportunity.eoiUrl);
+      expect(
+        resolveApplyUrl({ ...opportunity, status: "applications_open" }),
+      ).toBe(opportunity.eoiUrl);
+    }
   });
 
   test("supports separate status and CTA labels for EOI vs applications", () => {
