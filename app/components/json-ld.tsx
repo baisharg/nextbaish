@@ -144,7 +144,7 @@ export function OrganizationJsonLd() {
     url: BASE_URL,
     logo: `${BASE_URL}/images/logos/logo-192.png`,
     description:
-      "The largest AI safety hub in Latin America. Courses, a research lab (BAISH Labs), community events and career support in Buenos Aires.",
+      "The largest AI safety hub in Latin America. Courses, a research lab (BAISH Labs), community events and career support in Argentina.",
     foundingDate: "2024",
     sameAs: [
       "https://chat.whatsapp.com/BlgwCkQ8jmpB2ofIxiAi9P",
@@ -178,7 +178,7 @@ export function WebSiteJsonLd() {
     name: "BAISH - Buenos Aires AI Safety Hub",
     url: BASE_URL,
     description:
-      "Supporting your path into AI safety research. Community, courses, and research in Buenos Aires.",
+      "Supporting your path into AI safety research. Community, courses, and research in Argentina.",
     inLanguage: ["en", "es"],
     publisher: {
       "@type": "Organization",

@@ -92,48 +92,48 @@ export const SEO_CONTENT = {
     en: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        `The largest AI safety hub in Latin America. ${IMPACT.communityMembers} members, in-person courses, a research lab and career support in Buenos Aires.`,
+        `The largest AI safety hub in Latin America. ${IMPACT.communityMembers} members, in-person courses, a research lab and career support in Argentina.`,
     },
     es: {
       title: "BAISH — Buenos Aires AI Safety Hub",
       description:
-        `El hub de AI Safety más grande de Latinoamérica. ${IMPACT.communityMembers} miembros, cursos presenciales, un laboratorio de investigación y acompañamiento de carrera en Buenos Aires.`,
+        `El hub de AI Safety más grande de Latinoamérica. ${IMPACT.communityMembers} miembros, cursos presenciales, un laboratorio de investigación y acompañamiento de carrera en Argentina.`,
     },
   },
   about: {
     en: {
       title: "About Us",
       description:
-        "Who we are, what we have achieved and who runs BAISH: 6 full-time placements, 28 fellowship placements, and a team of 30+ volunteers, staff and advisors in Buenos Aires.",
+        "Who we are, what we have achieved and who runs BAISH: 6 full-time placements, 28 fellowship placements, and a team of 30+ volunteers, staff and advisors in Argentina.",
     },
     es: {
       title: "Sobre Nosotros",
       description:
-        "Quiénes somos, qué logramos y quién hace BAISH: 6 roles full-time, 28 placements en fellowships y un equipo de más de 30 voluntarios, staff y asesores en Buenos Aires.",
+        "Quiénes somos, qué logramos y quién hace BAISH: 6 roles full-time, 28 placements en fellowships y un equipo de más de 30 voluntarios, staff y asesores en Argentina.",
     },
   },
   activities: {
     en: {
       title: "Programs",
       description:
-        "BAISH courses, community events and career support: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, monthly socials, hackathons and more, in person in Buenos Aires.",
+        "BAISH courses, community events and career support: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, monthly socials, hackathons and more, in person in Buenos Aires and Córdoba.",
     },
     es: {
       title: "Programas",
       description:
-        "Cursos, eventos de comunidad y acompañamiento de carrera de BAISH: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, eventos mensuales, hackathons y más, presenciales en Buenos Aires.",
+        "Cursos, eventos de comunidad y acompañamiento de carrera de BAISH: Technical AI Safety Course, Technical AI Safety Project, Frontier AI Governance, eventos mensuales, hackathons y más, presenciales en Buenos Aires y Córdoba.",
     },
   },
   "activities/fundamentals": {
     en: {
       title: "Technical AI Safety Course",
       description:
-        "30-hour BlueDot Impact technical AI safety course hosted in person by BAISH in Buenos Aires.",
+        "30-hour BlueDot Impact technical AI safety course hosted in person by BAISH in Buenos Aires and Córdoba.",
     },
     es: {
       title: "Technical AI Safety Course",
       description:
-        "Curso técnico de seguridad en IA de 30 horas de BlueDot Impact, facilitado presencialmente por BAISH en Buenos Aires.",
+        "Curso técnico de seguridad en IA de 30 horas de BlueDot Impact, facilitado presencialmente por BAISH en Buenos Aires y Córdoba.",
     },
   },
   "activities/workshop": {
@@ -164,12 +164,12 @@ export const SEO_CONTENT = {
     en: {
       title: "Research",
       description:
-        "BAISH Labs, our AI safety research arm in Buenos Aires, and 15+ publications by researchers connected to BAISH at NeurIPS, ICLR workshops and beyond.",
+        "BAISH Labs, our AI safety research arm in Argentina, and 15+ publications by researchers connected to BAISH at NeurIPS, ICLR workshops and beyond.",
     },
     es: {
       title: "Investigación",
       description:
-        "BAISH Labs, nuestro brazo de investigación en AI safety en Buenos Aires, y más de 15 publicaciones de investigadores conectados a BAISH en NeurIPS, workshops de ICLR y más.",
+        "BAISH Labs, nuestro brazo de investigación en AI safety en Argentina, y más de 15 publicaciones de investigadores conectados a BAISH en NeurIPS, workshops de ICLR y más.",
     },
   },
   resources: {
