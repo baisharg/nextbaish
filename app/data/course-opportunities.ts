@@ -12,23 +12,23 @@ export type CourseOpportunityStatus = "eoi_open" | "applications_open";
 
 export type CourseOpportunity = {
   id: CourseOpportunityId;
+  /** Only picks the status chip and CTA label; the link is always `eoiUrl`. */
   status: CourseOpportunityStatus;
-  /** Expression-of-interest form. Used while applications are closed. */
+  /**
+   * The course's expression-of-interest form on ASTN. Its "Redirect to"
+   * setting serves the open application behind this same link while that
+   * application is active, and the EOI again once it closes.
+   */
   eoiUrl: string;
-  /** Open application form. Only known once applications are open. */
-  applicationUrl?: string;
   learnMoreUrl: string;
 };
 
 /**
- * The link a CTA should point at right now: the application when it is open,
- * otherwise the expression-of-interest form. Flipping `status` (here or via the
- * remote source) is all it takes to switch a course between the two.
+ * The link a course CTA points at: always the EOI. ASTN decides whether that
+ * link shows the EOI or the open application, so opening or closing a cohort
+ * never needs a site change and the CTA can't point at a closed form.
  */
 export function resolveApplyUrl(opportunity: CourseOpportunity): string {
-  if (opportunity.status === "applications_open" && opportunity.applicationUrl) {
-    return opportunity.applicationUrl;
-  }
   return opportunity.eoiUrl;
 }
 
@@ -66,35 +66,27 @@ const FALLBACK_COURSE_OPPORTUNITIES = [
     status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps71k4skpvx68ssb7c4shzxc2n82b6gj",
-    applicationUrl:
-      "https://safetytalent.org/org/baish/apply/ps7080jc0cvgfq5es0cv925eps88cy0d",
     learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety",
   },
   {
     id: "technical-ai-safety-project",
-    status: "applications_open",
+    status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps716an39tgr4jtz1zd7c11vq982vn0m",
-    applicationUrl:
-      "https://safetytalent.org/org/baish/apply/ps710n63b9j5tjajgcca3dz3ks8e51we",
     learnMoreUrl: "https://bluedot.org/courses/technical-ai-safety-project",
   },
   {
     id: "frontier-ai-governance",
-    status: "applications_open",
+    status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps76n04hgsqav7j6xb9d25c7qh8cm0s6",
-    applicationUrl:
-      "https://safetytalent.org/org/baish/apply/ps7b9k8vv07xsq0789fgnh5dwn8h5aky",
     learnMoreUrl: "https://bluedot.org/courses/ai-governance",
   },
   {
     id: "agi-strategy",
-    status: "applications_open",
+    status: "eoi_open",
     eoiUrl:
       "https://safetytalent.org/org/baish/apply/ps74jgrt3kawb0z4xzwev64j4d8ec7q1",
-    applicationUrl:
-      "https://safetytalent.org/org/baish/apply/ps7evjgadwpjegcqhpsa4g5hc58h5xjy",
     learnMoreUrl: "https://bluedot.org/courses/agi-strategy",
   },
 ] as const satisfies readonly CourseOpportunity[];
@@ -132,9 +124,6 @@ function mergeCourseOpportunities(payload: unknown): readonly CourseOpportunity[
         status: candidate.status,
       }),
       ...(isHttpUrl(candidate.eoiUrl) && { eoiUrl: candidate.eoiUrl }),
-      ...(isHttpUrl(candidate.applicationUrl) && {
-        applicationUrl: candidate.applicationUrl,
-      }),
       ...(isHttpUrl(candidate.learnMoreUrl) && {
         learnMoreUrl: candidate.learnMoreUrl,
       }),
