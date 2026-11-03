@@ -78,13 +78,13 @@
       "tagline": "Apoyando tu camino hacia la investigación en AI safety",
       "paragraph1": "La IA se mueve rápido{footnote1}, y es probable que siga reconfigurando cosas que nos importan{footnote2}. Si sale bien, las ventajas son reales: mejor ciencia, mejor medicina, menos trabajo tedioso. Si no, el daño podría ser difícil de deshacer. En cualquiera de los dos casos, creemos que importa que los sistemas que se están construyendo sean los que los humanos puedan seguir inspeccionando y a los que puedan exigir cuentas{footnote3}.",
       "paragraph2": "Creemos que este es uno de los problemas abiertos más importantes en los que se puede trabajar ahora{footnote4}. No estamos seguros — nadie lo está{footnote5} — y hay gente seria que disiente sobre plazos, modos de falla, incluso sobre si 'riesgo' es la palabra correcta. Pero el campo es chico. La mayoría de las preguntas importantes todavía no tiene a nadie trabajando en ellas. Esa es la clase de situación que una persona cuidadosa puede cambiar{footnote6}.",
-      "paragraph3": "Lo que hacemos en BAISH es ayudar a estudiantes de Buenos Aires a darse cuenta de qué piensan realmente, aprender lo técnico y lo conceptual que necesitan, y empezar a contribuir con investigación de verdad.",
+      "paragraph3": "Lo que hacemos en BAISH es ayudar a estudiantes de Argentina a darse cuenta de qué piensan realmente, aprender lo técnico y lo conceptual que necesitan, y empezar a contribuir con investigación de verdad.",
       "cta": "Participá"
     },
     "whatWeDo": {
       "eyebrow": "Qué hacemos",
       "title": "Del primer curso a la investigación publicada",
-      "description": "BAISH cubre todo el recorrido en Buenos Aires: aprendé el campo, sumate a una comunidad que te mantiene en él, investigá acá y conseguí un rol.",
+      "description": "BAISH cubre todo el recorrido en Argentina: aprendé el campo, sumate a una comunidad que te mantiene en él, investigá acá y conseguí un rol.",
       "items": [
         {
           "id": "courses",
@@ -106,7 +106,7 @@
           "id": "research",
           "eyebrow": "Investigación",
           "title": "BAISH Labs",
-          "description": "Nuestro brazo de investigación: un grupo con base en Buenos Aires que trabaja en interpretabilidad y control, junto a la beca AISAR.",
+          "description": "Nuestro brazo de investigación: un grupo con base en Argentina que trabaja en interpretabilidad y control, junto a la beca AISAR.",
           "cta": "Conocé el lab",
           "link": "/research#labs"
         },
@@ -304,9 +304,9 @@
     },
     "title": "Sobre BAISH",
     "whoWeAre": {
-      "eyebrow": "Fundado en 2024 · Buenos Aires",
+      "eyebrow": "Fundado en 2024 · Argentina",
       "title": "El hub de AI Safety más grande de Latinoamérica",
-      "paragraph1": "BAISH es una comunidad de {communityMembers} estudiantes, investigadores y profesionales de Buenos Aires que trabaja para que la IA avanzada salga bien. Organizamos cursos presenciales, un laboratorio de investigación, encuentros mensuales y acompañamiento 1 a 1 de carrera, para que el talento de acá pueda entrar a AI safety sin tener que irse del país para hacerlo.",
+      "paragraph1": "BAISH es una comunidad de {communityMembers} estudiantes, investigadores y profesionales de Argentina que trabaja para que la IA avanzada salga bien. Organizamos cursos presenciales, un laboratorio de investigación, encuentros mensuales y acompañamiento 1 a 1 de carrera, para que el talento de acá pueda entrar a AI safety sin tener que irse del país para hacerlo.",
       "paragraph2": "Desde 2024 ayudamos a {fullTimeRoles} miembros a conseguir puestos de tiempo completo en AI safety y a {fellowshipPlacements} a entrar en fellowships y programas de investigación externos, y personas vinculadas a BAISH publicaron en workshops de NeurIPS e ICLR. Nos sostiene un equipo de voluntarios y un pequeño equipo rentado, y trabajamos junto a nuestra beca hermana, AISAR."
     },
     "impact": {
@@ -438,7 +438,7 @@
         "intro": "Contribuimos al campo a través de:",
         "items": [
           "Cursos presenciales que llevan a las personas del primer contacto a una primera contribución de investigación",
-          "Un laboratorio de investigación en Buenos Aires, BAISH Labs, junto a la beca AISAR",
+          "Un laboratorio de investigación en Argentina, BAISH Labs, junto a la beca AISAR",
           "Una comunidad de {communityMembers} miembros con encuentros mensuales, retiros y hackathons",
           "Acompañamiento de carrera: 1 a 1, ayuda con postulaciones y delegaciones a conferencias"
         ]
@@ -529,7 +529,7 @@
       "current": "Programas"
     },
     "title": "Cursos, comunidad e investigación",
-    "description": "Todo lo que hacemos, en persona en Buenos Aires. Los cursos y los eventos son gratuitos.",
+    "description": "Todo lo que hacemos, en persona en Buenos Aires y Córdoba. Los cursos y los eventos son gratuitos.",
     "subscribeCalendar": "Suscribite al calendario de eventos",
     "courses": {
       "eyebrow": "Cursos",
@@ -610,7 +610,7 @@
     "agiSafety": {
       "title": "Technical AI Safety Course",
       "status": "EOI abierta",
-      "description": "Curso técnico de seguridad en IA de BlueDot Impact, facilitado presencialmente por BAISH para estudiantes en Buenos Aires.",
+      "description": "Curso técnico de seguridad en IA de BlueDot Impact, facilitado presencialmente por BAISH para estudiantes en Buenos Aires y Córdoba.",
       "overview": "Curso de 30 horas para entender el trabajo técnico actual en seguridad en IA, mapear problemas abiertos y encontrar dónde podés contribuir.",
       "whatToExpect": "Modalidad del Curso",
       "expectations": [
@@ -730,7 +730,7 @@
     },
     "sisterProjects": {
       "title": "Proyectos hermanos",
-      "description": "Grupos con los que trabajamos en Buenos Aires y en América Latina"
+      "description": "Grupos con los que trabajamos en Argentina y en América Latina"
     },
     "lanais": {
       "eyebrow": "Proyecto hermano",
@@ -833,13 +833,13 @@
       "current": "Investigación"
     },
     "title": "Investigación en BAISH",
-    "intro": "BAISH lleva a personas de Buenos Aires desde su primer curso de AI safety hasta investigación publicada. Desde 2026 ese trabajo tiene una casa: BAISH Labs, nuestro brazo de investigación.",
+    "intro": "BAISH lleva a personas de Argentina desde su primer curso de AI safety hasta investigación publicada. Desde 2026 ese trabajo tiene una casa: BAISH Labs, nuestro brazo de investigación.",
     "ctaPublications": "Ver publicaciones",
     "ctaLearnMore": "Conocé más",
     "labs": {
       "eyebrow": "BAISH Labs · Brazo de investigación",
-      "title": "Investigación en AI safety, hecha en Buenos Aires",
-      "paragraph1": "BAISH Labs es un grupo de investigación con raíces en Buenos Aires, donde se puede investigar en AI safety sin mudarse al exterior. Argentina tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
+      "title": "Investigación en AI safety, hecha en Argentina",
+      "paragraph1": "BAISH Labs es un grupo de investigación con base en Argentina, donde se puede investigar en AI safety sin mudarse al exterior. El país tiene el talento, las universidades y la cultura de investigación; lo que faltaba era una institución donde ese trabajo pudiera sostenerse en el tiempo.",
       "paragraph2": "El lab nació de la comunidad de BAISH: su equipo hizo nuestros cursos, los facilitó, o llegó a través de ARENA e Iliad. Trabaja junto a la beca AISAR, que financia a investigadores junior durante seis meses, y busca darles continuidad a los más fuertes después.",
       "agendaTitle": "Agenda de investigación",
       "agendaIntro": "Nuestro foco inicial es interpretabilidad y control:",
@@ -897,7 +897,7 @@
           "number": "04",
           "title": "Lanzarte",
           "program": "BAISH Labs y carreras",
-          "description": "Sumate a BAISH Labs, nuestro laboratorio de investigación en Buenos Aires, o pasá a un puesto de tiempo completo en AI safety.",
+          "description": "Sumate a BAISH Labs, nuestro laboratorio de investigación en Argentina, o pasá a un puesto de tiempo completo en AI safety.",
           "duration": "Continuo",
           "link": "/research#labs",
           "icon": "rocket"
@@ -2017,7 +2017,7 @@
   "lab": {
     "metaTitle": "Prototipo de diseño con hilos",
     "hero": {
-      "tagline": "Cursos presenciales, un laboratorio de investigación y una comunidad de {communityMembers} personas en Buenos Aires, para quien quiera ayudar a que la IA salga bien.",
+      "tagline": "Cursos presenciales, un laboratorio de investigación y una comunidad de {communityMembers} personas en Argentina, para quien quiera ayudar a que la IA salga bien.",
       "seeCourses": "Ver cursos",
       "whatsapp": "Sumate al grupo de WhatsApp"
     },
@@ -2082,7 +2082,7 @@
               "label": "nota promedio de recomendación"
             }
           ],
-          "body": "Technical AI Safety, el Technical AI Safety Project y Frontier AI Governance, dictados en persona en Buenos Aires."
+          "body": "Technical AI Safety, el Technical AI Safety Project y Frontier AI Governance, dictados en persona en Buenos Aires y Córdoba."
         },
         {
           "label": "Pertenecer",
@@ -2101,14 +2101,14 @@
         },
         {
           "label": "Investigar",
-          "headline": "Investigación en BAISH Labs, desde Buenos Aires",
+          "headline": "Investigación en BAISH Labs, desde Argentina",
           "stats": [
             {
               "key": "publications",
               "label": "publicaciones de investigadores vinculados a BAISH"
             }
           ],
-          "body": "Nuestro brazo de investigación: un grupo con base en Buenos Aires que trabaja en interpretabilidad y control, junto a la beca AISAR."
+          "body": "Nuestro brazo de investigación: un grupo con base en Argentina que trabaja en interpretabilidad y control, junto a la beca AISAR."
         },
         {
           "label": "Despegar",
@@ -2145,7 +2145,7 @@
       "chips": {
         "technical-ai-safety-course": [
           "Gratis",
-          "Presencial, Buenos Aires",
+          "Presencial, Buenos Aires o Córdoba",
           "Requiere buen nivel de inglés"
         ],
         "technical-ai-safety-project": [
@@ -2268,7 +2268,7 @@
       "purposes": {
         "course": {
           "title": "Hacer un curso",
-          "text": "Cursos presenciales y gratuitos de BlueDot en Buenos Aires."
+          "text": "Cursos presenciales y gratuitos de BlueDot en Buenos Aires y Córdoba."
         },
         "community": {
           "title": "Conocer a la comunidad",
