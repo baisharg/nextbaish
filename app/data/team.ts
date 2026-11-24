@@ -182,6 +182,12 @@ export const TEAM: TeamMember[] = [
     },
   },
   {
+    id: "agustin-brusco",
+    name: "Agustín Brusco",
+    group: "team",
+    photo: "/images/team/agustin-brusco.jpg",
+  },
+  {
     id: "josefina-zappettini",
     name: "Josefina Zappettini",
     group: "team",
